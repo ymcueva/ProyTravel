@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="cliente">
+
+	<typeAlias alias="clienteBean" type="pe.com.paxtravel.bean.ClienteBean" />
+
+	<resultMap id="resultCliente" class="clienteBean">
+		<result property="codigo"		column="chr_cliecodigo" />
+		<result property="paterno" 		column="vch_cliepaterno" />
+		<result property="materno" 		column="vch_cliematerno" />
+		<result property="nombre" 		column="vch_clienombre" />
+		<result property="dni" 			column="chr_cliedni" />
+		<result property="ciudad" 		column="vch_clieciudad" />
+		<result property="direccion" 	column="vch_cliedireccion" />
+		<result property="telefono" 	column="vch_clietelefono" />
+		<result property="email" 		column="vch_clieemail" />
+		<result property="estado" 		column="vch_clieestado" />
+	</resultMap>
+
+	<update id="update">
+		UPDATE empleado SET emp_nom='111' WHERE emp_id='0001'
+	</update>
+
+	<select id="listarCliente" parameterClass="clienteBean" resultMap="resultCliente">
+		SELECT   chr_cliecodigo,
+				 vch_cliepaterno, vch_cliematerno, vch_clienombre, chr_cliedni, vch_clieciudad, 
+			   vch_cliedireccion, vch_clietelefono, vch_clieemail, vch_clieestado
+		FROM cliente
+<!-- 		WHERE chr_cliecodigo = #codigo# -->
+	</select>
+
+
+</sqlMap>

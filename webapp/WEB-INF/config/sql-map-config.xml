@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig 
+	PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" 
+	"http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+
+	<settings cacheModelsEnabled="true" enhancementEnabled="true" useStatementNamespaces="true" maxSessions="64" maxTransactions="8" maxRequests="128" />
+
+	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/cliente.xml" />
+	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/empleado.xml" />
+	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/inseminacion.xml" />
+	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/animal.xml" />
+	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/usuario.xml" />
+	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/cotizacion.xml" />
+	
+	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/paqueteturistico.xml" />
+	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/ordenplanificacion.xml" />
+	
+</sqlMapConfig>

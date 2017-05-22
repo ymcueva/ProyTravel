@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="cotizacion">
+
+	<typeAlias alias="cotizacionDetalleTicketVueloBean" type="pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean" />
+	<typeAlias alias="fareInfoBean" type="pe.com.paxtravel.bean.FareInfoBean" />
+	
+	<typeAlias alias="cotizacionBean" type="pe.com.paxtravel.bean.CotizacionBean" />
+	<typeAlias alias="cotizacionDetalleBean" type="pe.com.paxtravel.bean.CotizacionDetalleBean" />
+	<typeAlias alias="ciudadBean" type="pe.com.paxtravel.bean.CiudadBean" />
+	<typeAlias alias="paisBean" type="pe.com.paxtravel.bean.PaisBean" />
+	<typeAlias alias="motivoViajeBean" type="pe.com.paxtravel.bean.MotivoViajeBean" />
+	<typeAlias alias="servicioAdicionalBean" type="pe.com.paxtravel.bean.ServicioAdicionalBean" />
+	<typeAlias alias="clienteBean" type="pe.com.paxtravel.bean.ClienteBean" />
+	
+	<typeAlias alias="string" type="java.lang.String" />
+	
+	<resultMap id="resultFareInfo" class="fareInfoBean">
+						
+		<result property="comision"		    column="comision" />
+		<result property="nombreProveedor" 		    column="proveedor" />
+		<result property="nombreAerolinea" 		    column="aerolinea" />	
+		<result property="idProveedor" 		    column="id_proveedor" />
+		<result property="idAerolinea" 		    column="id_aerolinea" />		
+		
+	</resultMap>
+
+	<resultMap id="resultCotizacion" class="cotizacionBean">
+		<result property="numeroFila"			    column="ca_nume_fila" />
+		<result property="idCotizacion"			    column="id_cotiza" />
+		<result property="numeroCotizacion"		    column="nu_cotiza" />
+		<result property="fechaCotizacion" 		    column="fe_cotiza" />
+		<result property="nombreCliente" 		    column="cliente" />
+		<result property="nombreEstadoCotizacion" 	column="no_estado" />
+		<result property="descripcion" 		        column="descripcion" />
+		
+<!-- 		<result property="tiempoMinimo" 	     	column="tiempo_min" /> -->
+<!-- 		<result property="tiempoMaximo" 	    	column="tiempo_max" /> -->
+<!-- 		<result property="seguroViaje" 				column="seguro_viaje" /> -->
+		<result property="fechaSalida" 	        	column="fe_partida" />
+		<result property="fechaRetorno" 			column="fe_retorno" />
+		
+		<result property="idOrigen" 			column="origen_partida" />
+		<result property="idDestino" 			column="id_destino" />
+		
+<!-- 		<result property="boletoAvion" 				column="boleto_avion" /> -->
+		<result property="observacion" 				column="observacion" />
+		<result property="tipoAlojamiento" 				column="id_tipo_alojamiento" />
+		<result property="categoriaAlojamiento" 				column="id_categoria_alojamiento" />
+		<result property="cantidadAdultos" 				column="nu_adultos" />
+		<result property="cantidadNinos" 				column="nu_ninos" />
+		<result property="presupuestoMinimo" 				column="im_presupuesto_minimo" />
+		<result property="presupuestoMaximo" 				column="im_presupuesto_maximo" />
+		
+		<result property="observacion" 				column="observacion" />
+		
+	</resultMap>
+	
+	<resultMap id="resultPais" class="paisBean">
+		<result property="idPais"			    column="id_destino" />
+		<result property="nomPais"			    column="descripcion" />
+	</resultMap>
+	
+	<resultMap id="resultCiudad" class="ciudadBean">
+		<result property="idCiudad"			    column="id_destino_ciudad" />
+		<result property="idPais"			    column="id_destino_pais" />
+		<result property="nomCiudad"			    column="descripcion" />
+	</resultMap>
+	
+	
+	<resultMap id="resultCliente" class="clienteBean">
+		<result property="idCliente"			    column="id_cliente" />
+		<result property="nombre"	        column="nombre_cliente" />
+		<result property="age"	        column="age" />		
+	</resultMap>
+	
+	<select id="listarCotizacion" parameterClass="cotizacionBean" resultMap="resultCotizacion">
+		SELECT  @rownum:=@rownum+1 AS ca_nume_fila, coti.id_cotiza, coti.nu_cotiza,
+                DATE_FORMAT(coti.fe_cotiza,'%d-%m-%Y') fe_cotiza,
+                CONCAT(clie.nombres,' ',clie.apellidos) cliente, esta.no_estado,
+                coti.descripcion,               
+                coti.fe_partida, coti.fe_retorno, 
+                coti.observacion,
+                
+                coti.origen_partida,				 
+				coti.id_cliente, 
+				coti.id_estado, 
+				coti.id_destino, 
+				coti.id_tipo_programa, 
+				coti.id_tipo_cotiza, 
+				coti.nu_adultos, 
+				coti.nu_ninos, 
+				coti.id_tipo_alojamiento, 
+				coti.id_categoria_alojamiento, 
+				coti.im_presupuesto_minimo, 
+				coti.im_presupuesto_maximo
+                
+          FROM (SELECT @rownum:=0) r, cotizacion coti 
+       INNER JOIN cliente clie ON coti.id_cliente=clie.id_cliente
+       INNER JOIN estado esta  ON coti.id_estado=esta.id_estado  
+		  WHERE 1 = 1
+	      <isNotEmpty prepend="AND" property="fechaCotizacion"> DATE_FORMAT(coti.fe_cotiza,'%Y-%m-%d')  = #fechaCotizacion# </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="numeroCotizacion"> coti.nu_cotiza = #numeroCotizacion# </isNotEmpty> 
+	      <isNotEmpty prepend="AND" property="codigoEstadoCotizacion"> coti.id_estado = #codigoEstadoCotizacion# </isNotEmpty> 
+	      <isNotEmpty prepend="AND" property="nombreCliente"> CONCAT(clie.nombres,' ',clie.apellidos) LIKE %#nombreCliente#% </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="documentoCliente"> clie.nu_documento = #documentoCliente# </isNotEmpty>
+	</select>
+	
+	<select id="obtenerNumeroCotizacion" resultClass="string">
+		SELECT CONCAT('COTI',
+               YEAR(NOW()), 
+               IF( LENGTH(MONTH(NOW()))=1,CONCAT('0',MONTH(NOW())),MONTH(NOW()) ),
+               MAX( SUBSTR( NU_COTIZA, 11) ) +1 
+               ) AS NRO_COTIZA
+         FROM COTIZACION;
+	</select>
+	
+	<select id="listarCiudad" parameterClass="ciudadBean" resultMap="resultCiudad">
+		SELECT id_destino_ciudad, id_destino_pais, descripcion FROM destino_ciudad 
+         WHERE 1=1
+		<isNotEmpty prepend="AND" property="idPais"> id_destino_pais = #idPais# </isNotEmpty>
+	</select>
+	
+	<select id="listarPais" parameterClass="paisBean" resultMap="resultPais">
+		SELECT id_destino, descripcion FROM destino_pais 
+		WHERE 1=1
+		<isNotEmpty prepend="AND" property="idPais"> id_destino != #idPais# </isNotEmpty>
+	</select>	
+	
+	<insert id="insertarCotizacion" parameterClass="cotizacionBean" >
+		INSERT INTO cotizacion(
+			nu_cotiza,
+			fe_cotiza,			
+			fe_partida,
+			fe_retorno,
+			origen_partida,
+			id_tipo_cotiza,
+			id_tipo_programa,
+			id_tipo_alojamiento,
+			id_categoria_alojamiento,
+			nu_adultos,
+			nu_ninos,
+			im_presupuesto_minimo,
+			im_presupuesto_maximo,
+			observacion,
+			id_cliente,
+			fe_ins
+		) VALUES (
+			#numeroCotizacion#,
+			#fechaCotizacion#,						
+			#fechaSalida#,
+			#fechaRetorno#,
+			#idOrigenPartida#,
+			#idTipoCotizacion#,
+			#idTipoPrograma#,
+			#tipoAlojamiento#,
+			#categoriaAlojamiento#,
+			#cantidadAdultos#,
+			#cantidadNinos#,
+			#presupuestoMinimo#,
+			#presupuestoMaximo#,
+			#observacion#,
+			#idCliente#,
+			sysdate()
+		)
+		<selectKey keyProperty="idCotizacion" resultClass="int">
+            select LAST_INSERT_ID();
+        </selectKey>
+	</insert>
+	
+	<insert id="insertarMotivoViaje" parameterClass="motivoViajeBean">
+		INSERT INTO cotizacion_motivo(
+			id_cotiza,
+			id_motivo
+		) VALUES (
+			#numeroCotizacion#,
+			#codigoMotivo#
+		)
+	</insert>
+	
+	<insert id="insertarServicioAdicional" parameterClass="servicioAdicionalBean">
+		INSERT INTO cotizacion_servicio(
+			id_cotiza,
+			id_servicio
+		) VALUES (
+			#numeroCotizacion#,
+			#codigoServicio#
+		)
+	</insert>
+	
+	<insert id="insertarCotizacionDetalle" parameterClass="cotizacionDetalleBean">
+		INSERT INTO cotizacion_deta(
+			id_cotiza,
+			id_destino_origen,
+			id_destino
+		) VALUES (
+			#numeroCotizacion#,
+			#origen#,
+			#destino#
+		)
+	</insert>
+	
+	<insert id="insertarCotizacionTicket" parameterClass="cotizacionBean">
+		INSERT INTO cotizacion(
+			nu_cotiza,
+			fe_cotiza,
+			descripcion,
+			fe_partida,
+			fe_retorno,
+			nu_adultos,
+			nu_ninos,
+			id_cliente
+		) VALUES (
+			#numeroCotizacion#,
+			#fechaCotizacion#,
+			#descripcion#,
+			#fechaSalida#,
+			#fechaRetorno#,
+			#cantidadAdultos#,
+			#cantidadNinos#,
+			#idCliente#
+		)
+	</insert>
+	
+	<insert id="insertarCotizacionDetalleTicket" parameterClass="cotizacionDetalleBean">
+		INSERT INTO cotizacion_deta(
+			id_cotiza,
+			id_destino_origen,
+			id_destino,
+			nu_ninos,
+			nu_adultos,
+			ida_vuelta,
+			vuelta,
+			fe_partida,
+			fe_retorno,
+			ruta
+		) VALUES (
+			#numeroCotizacion#,
+			#origen#,
+			#destino#,
+			#cantidadNino#,
+			#cantidadAdulto#,
+			#idaVuelta#,
+			#ida#,
+			#fechaPartida#,
+			#fechaRetorno#,
+			#ruta#
+		)
+	</insert>
+		
+	<select id="obtenerNombreCliente" parameterClass="clienteBean" resultMap="resultCliente">
+		SELECT id_cliente, CONCAT(nombres, ' ', apellidos) AS nombre_cliente, TIMESTAMPDIFF(YEAR,fecha_nac,NOW()) AS age  
+		  FROM cliente
+         WHERE tipo_docu = #tipoDocumento# AND nu_documento = #numeroDocumento#
+	</select>
+
+	<insert id="insertarCotizacionDetalleTicketVueloTab2" parameterClass="cotizacionDetalleTicketVueloBean">
+		INSERT INTO cotizacion_deta_ticket(
+				id_cotiza_deta,
+				id_cotiza,
+				id_aerolinea,
+				im_precio,
+				id_proveedor,
+				url_shop
+		) VALUES (
+				#idCotizaDeta#,
+				#idCotiza#,
+				#idAerolinea#,
+				#imPrecio#,
+				#idProveedor#,
+				#urlShop#
+		)
+	</insert>
+	
+	<select id="getConsolidador" parameterClass="fareInfoBean" resultMap="resultFareInfo">	
+	
+		SELECT  				
+				pad.comision,
+			    p.nombre as proveedor,
+			    a.nombre as aerolinea,
+			    p.id_proveedor,
+			    a.id_aerolinea
+                
+       FROM 
+	       		aerolinea a
+				inner join proveedor_aerolinea_destino pad on (a.id_aerolinea = pad.id_aerolinea )
+				inner join destino_ciudad d on (d.id_destino_ciudad = pad.id_destino_ciudad)
+				inner join proveedor p on (p.id_proveedor = pad.id_proveedor) 
+         
+	   WHERE 
+
+				a.code_aerolinea  = #airlineCode# AND 
+	   			d.descripcion = #destino#
+	      
+	  ORDER BY pad.comision DESC   
+	    	      
+	  LIMIT 1
+	      
+	</select>
+	
+	
+	
+
+</sqlMap>

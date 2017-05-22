@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans 
+			http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+			http://www.springframework.org/schema/tx 
+			http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+			http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-3.1.xsd
+			http://www.springframework.org/schema/jee 
+			http://www.springframework.org/schema/jee/spring-jee-2.5.xsd">
+
+	<!-- ibatis -->
+	<bean id="SqlMapClientConfig" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+	 	<property name="configLocation" value="/WEB-INF/config/sql-map-config.xml" /> 
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- Bean para poder utilizar los metodos de Persona relacionados con la BD -->
+	<bean id="EmpleadoDAO" class="pe.com.paxtravel.model.dao.ibatis.SqlMapEmpleadoDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMapClient" ref="SqlMapClientConfig" />
+	</bean>
+	
+	<bean id="InseminacionDAO" class="pe.com.paxtravel.model.dao.ibatis.SqlMapInseminacionDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMapClient" ref="SqlMapClientConfig" />
+	</bean>
+	
+	<bean id="AnimalDAO" class="pe.com.paxtravel.model.dao.ibatis.SqlMapAnimalDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMapClient" ref="SqlMapClientConfig" />
+	</bean>
+	
+	<bean id="LoginDAO" class="pe.com.paxtravel.model.dao.ibatis.SqlMapLoginDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMapClient" ref="SqlMapClientConfig" />
+	</bean>
+
+	<bean id="CotizacionDAO" class="pe.com.paxtravel.model.dao.ibatis.SqlMapCotizacionDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMapClient" ref="SqlMapClientConfig" />
+	</bean>
+	
+	<bean id="PaqueteTuristicoDAO" class="pe.com.paxtravel.model.dao.ibatis.SqlMapPaqueteTuristicoDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMapClient" ref="SqlMapClientConfig" />
+	</bean>
+	
+	<bean id="OrdenPlanificacionDAO" class="pe.com.paxtravel.model.dao.ibatis.SqlMapOrdenPlanificacionDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMapClient" ref="SqlMapClientConfig" />
+	</bean>
+
+	
+
+	
+	
+	<!-- BEANS NECESARIOS PARA LA INJECCION DE DAO -->
+	<!-- Injeccion del bean persona dao en el controllador de PersonaController -->
+	<bean id="empleadoService" class="pe.com.paxtravel.service.EmpleadoServiceImpl">
+		<property name="empleadoDAO"> <ref bean="EmpleadoDAO" /> </property>
+	</bean>
+	
+	<bean id="inseminacionService" class="pe.com.paxtravel.service.InseminacionServiceImpl">
+		<property name="inseminacionDAO"> <ref bean="InseminacionDAO" /> </property>
+	</bean>
+	
+	<bean id="animalService" class="pe.com.paxtravel.service.AnimalServiceImpl">
+		<property name="animalDAO"> <ref bean="AnimalDAO" /> </property>
+	</bean>
+	
+	<bean id="loginService" class="pe.com.paxtravel.service.LoginServiceImpl">
+		<property name="loginDAO"> <ref bean="LoginDAO" /> </property>
+	</bean>
+
+	<bean id="cotizacionService" class="pe.com.paxtravel.service.CotizacionServiceImpl">
+		<property name="cotizacionDAO"> <ref bean="CotizacionDAO" /> </property>
+	</bean>
+	
+	<bean id="paqueteTuristicoService" class="pe.com.paxtravel.service.PaqueteTuristicoServiceImpl">
+		<property name="paqueteTuristicoDAO"> <ref bean="PaqueteTuristicoDAO" /> </property>
+	</bean>
+	
+	<bean id="objService" class="pe.com.paxtravel.service.OrdenPlanificacionServiceImpl">
+		<property name="objDAO"> <ref bean="OrdenPlanificacionDAO" /> </property>
+	</bean>
+	
+	
+
+	<!-- Para recoger la configuracion de la base de datos de nuestro fichero properties -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>/WEB-INF/config/jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- CONFIGURACION ESTATICA DE LA BASE DE DATOS MYSQL -->
+	<!-- Datos de la conexion a la BD, son insertados desde el jdbc.properties -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+
+	<!-- CONFIGURACION ESTATICA DE LA BASE DE DATOS ORACLE -->
+<!-- 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" -->
+<!-- 		destroy-method="close"> -->
+<!-- 		<property name="driverClassName" value="oracle.jdbc.OracleDriver" /> -->
+<!-- 		<property name="url" value="jdbc:oracle:thin:@localhost:1521:XE" /> -->
+<!-- 		<property name="username" value="system" /> -->
+<!-- 		<property name="password" value="oracle" /> -->
+<!-- 	</bean> -->
+</beans>

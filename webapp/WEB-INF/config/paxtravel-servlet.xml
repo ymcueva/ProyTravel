@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+    
+	<!-- Bean necesario para poder resolver las diferentes paginas jsp sin necesidad de usar el .jsp ni poner la ruta absoluta -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">       
+        <property name="prefix" value="/WEB-INF/paginas/"></property>
+        <property name="suffix" value=".jsp"></property>        
+    </bean>
+    
+    <bean id="jsonViewResolver" class="org.springframework.web.servlet.view.XmlViewResolver">
+		<property name="order" value="1" />
+		<property name="location" value="/WEB-INF/config/jsonView.xml" />
+	</bean>
+	
+	<bean name="empleadoController" class="pe.com.paxtravel.controller.EmpleadoController">
+ 		<property name="jsonView" value="jsonView"/> 
+    </bean>
+
+   	<bean name="cotizacionController" class="pe.com.paxtravel.controller.CotizacionController">
+ 		<property name="jsonView" value="jsonView"/> 
+    </bean>
+    
+    <bean name="paqueteTuristicoController" class="pe.com.paxtravel.controller.PaqueteTuristicoController">
+ 		<property name="jsonView" value="jsonView"/> 
+    </bean>
+    
+       
+    
+   	<bean name="inseminacionController" class="pe.com.paxtravel.controller.InseminacionController">
+ 		<property name="jsonView" value="jsonView"/>
+    </bean>
+</beans>

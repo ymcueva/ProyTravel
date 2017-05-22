@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="paqueteturistico">
+	
+	<typeAlias alias="paqueteTuristicoBean" type="pe.com.paxtravel.bean.PaqueteTuristicoBean" />
+	<typeAlias alias="string" type="java.lang.String" />
+	
+	<resultMap id="listadoPaqueteTuristico" class="paqueteTuristicoBean">	
+		<result property="numeroFila"			    column="ca_nume_fila" />		
+		<result property="idPaquete"			    column="id_paquete" />
+		<result property="nombre" 		    		column="nombre" />
+		<result property="idEstado" 				column="id_estado" />
+		<result property="observacion" 		    	column="observacion" />
+		<result property="idOrden"			    	column="id_orden" />
+		<result property="fecha" 		    		column="fecha" />
+		<result property="feInicio" 		    	column="fe_inicio" />
+		<result property="feFin" 		    		column="fe_fin" />
+		<result property="idTrabajador"			    column="id_trabajador" />		
+	</resultMap>
+
+	<resultMap id="resultPaqueteTuristico" class="paqueteTuristicoBean">			
+		<result property="idPaquete"			    column="id_paquete" />
+		<result property="nombre" 		    		column="nombre" />
+		<result property="idEstado" 				column="id_estado" />
+		<result property="observacion" 		    	column="observacion" />
+		<result property="idOrden"			    	column="id_orden" />
+		<result property="fecha" 		    		column="fecha" />
+		<result property="feInicio" 		    	column="fe_inicio" />
+		<result property="feFin" 		    		column="fe_fin" />
+		<result property="idTrabajador"			    column="id_trabajador" />
+		<result property="nuNinos"					column="nu_ninos"/>
+		<result property="nuAdultos"				column="nu_adultos"/>
+		<result property="idMoneda"			    	column="id_moneda" />
+		<result property="imMin" 					column="im_min" />
+		<result property="imMax" 					column="im_max" />
+	</resultMap>	
+	
+	<select id="obtenerCodigoPaqTuristico" resultClass="java.lang.String">
+		SELECT CONCAT('ORDE',
+               YEAR(NOW()), 
+               IF( LENGTH(MONTH(NOW()))=1,CONCAT('0',MONTH(NOW())),MONTH(NOW()) ),
+               MAX( SUBSTR( numeroFila, 11) ) +1 
+               ) AS nu_Fila
+         FROM paquete_turistico;
+	</select>	
+	
+	<select id="listarPaqueteTuristico" parameterClass="paqueteTuristicoBean" resultMap="listadoPaqueteTuristico">		
+		SELECT 		
+			   @rownum:=@rownum+1 AS ca_nume_fila,
+			   paquete.id_paquete ,  
+			   paquete.nombre , 
+			   paquete.id_estado , 
+			   paquete.observacion ,  
+			   paquete.id_orden , 
+			   DATE_FORMAT(paquete.fecha,'%d-%m-%Y') fecha,
+			   DATE_FORMAT(paquete.fe_inicio,'%d-%m-%Y') fe_inicio,
+			   DATE_FORMAT(paquete.fe_fin,'%d-%m-%Y') fe_fin,
+			   paquete.id_trabajador,
+				CONCAT(clie.nombres,' ',clie.apellidos) cliente,
+			    orden.nu_orden,
+			    orden.autorizacion,
+			    orden.im_presupuesto_minimo,
+			    orden.im_presupuesto_maximo, 
+			    orden.observacion
+         FROM (SELECT @rownum:=0) r, paquete_turistico paquete  
+         INNER JOIN orden_planificacion orden ON orden.id_orden=paquete.id_orden
+         INNER JOIN cliente clie ON orden.id_cliente=clie.id_cliente                
+		 WHERE 1 = 1
+	</select>
+  
+	<insert id="insertarPaqueteTuristico" parameterClass="paqueteTuristicoBean">
+		INSERT INTO paquete_turistico(
+			nombre,
+			id_estado,
+			observacion,
+			id_orden,
+			fecha,
+			fe_inicio,
+			fe_fin,
+			id_trabajador,
+			nu_ninos,
+			nu_adultos,
+			id_moneda,
+			im_min,
+			im_max
+		) 
+		VALUES 
+		(
+			#nombre#,
+			#idEstado#,
+			#observacion#,
+			#idOrden#,
+			#fecha#,
+			#feInicio#,
+			#feFin#,
+			#idTrabajador#,
+			#nuNinos#,
+			#nuAdultos#,
+			#idMoneda#,
+			#imMin#,
+			#imMax#			
+		)		
+	</insert>
+
+	<select id="obtenerNumeroPaqTuristico" resultClass="string">
+		SELECT CONCAT('COTI',
+               YEAR(NOW()), 
+               IF( LENGTH(MONTH(NOW()))=1,CONCAT('0',MONTH(NOW())),MONTH(NOW()) ),
+               MAX( SUBSTR( NU_COTIZA, 11) ) +1 
+               ) AS NRO_COTIZA
+        FROM COTIZACION;
+	</select>
+	
+</sqlMap>

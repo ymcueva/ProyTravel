@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="empleado">
+
+	<typeAlias alias="empleadoBean" type="pe.com.paxtravel.bean.EmpleadoBean" />
+	<typeAlias alias="string" type="java.lang.String" />
+
+	<resultMap id="resultEmpleado" class="empleadoBean">
+		<result property="codigo"			column="emp_id" />
+		<result property="username"			column="emp_username" />
+		<result property="paterno" 			column="emp_apepat" />
+		<result property="materno" 			column="emp_apemat" />
+		<result property="nombre" 			column="emp_nom" />
+		<result property="password" 		column="emp_pass" />
+		<result property="direccionIP" 		column="emp_last_ip" />
+		<result property="fechaNacimiento" 	column="emp_fec_nac" />
+		<result property="estadoOnLine" 	column="emp_on_line" />
+		<result property="estado" 			column="emp_state" />
+		<result property="dni" 				column="emp_dni" />
+		<result property="tipoUsuario" 		column="emp_id_tipo_usua" />
+	</resultMap>
+	
+	<resultMap id="resultEmpleadoOracle" class="empleadoBean">
+		<result property="codigo"			column="employee_id" />
+		<result property="paterno" 			column="first_name" />
+	</resultMap>
+
+
+<!-- 	<select id="listarEmpleado" parameterClass="empleadoBean" resultMap="resultEmpleadoOracle"> -->
+<!-- 		SELECT employee_id, first_name -->
+<!-- 		  FROM employees  -->
+<!-- 	</select> -->
+
+	<select id="listarEmpleado" parameterClass="empleadoBean" resultMap="resultEmpleado">
+		SELECT emp_id, emp_username, 
+			   IFNULL(emp_apepat,'') emp_apepat,
+			   IFNULL(emp_apemat,'') emp_apemat,
+			   IFNULL(emp_nom, '') emp_nom, emp_pass,
+			   emp_last_ip,
+			   IFNULL(DATE_FORMAT(emp_fec_nac,'%d/%m/%Y'), '') AS emp_fec_nac,
+		 	   IFNULL(emp_on_line, 0) AS emp_on_line,
+		 	   IFNULL(emp_state,'') emp_state,
+		 	   IFNULL(emp_dni,'') emp_dni,
+		 	   IFNULL(emp_id_tipo_usua,'') emp_id_tipo_usua
+		  FROM empleado 
+		  WHERE 1 = 1
+	      <isNotEmpty prepend="AND" property="username"> emp_username = #username# </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="nombre"> emp_nom = #nombre# </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="paterno"> emp_apepat = #paterno# </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="materno"> emp_apemat = #materno# </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="dni"> emp_dni = #dni# </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="fechaNacimiento"> DATE_FORMAT(emp_fec_nac,'%d/%m/%Y') = #fechaNacimiento# </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="tipoUsuario"> emp_id_tipo_usua = #tipoUsuario# </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="codigo"> emp_id = #codigo# </isNotEmpty>
+	</select>
+	
+	<select id="obtenerCodigoEmpleado" resultClass="string">
+		SELECT LPAD(MAX(emp_id)+1,4,0) AS codigoEmpleado FROM empleado
+	</select>
+	
+	<insert id="insertarEmpleado" parameterClass="empleadoBean">
+		INSERT INTO empleado(
+			emp_id,
+			emp_username,
+			emp_apepat,
+			emp_apemat,
+			emp_nom,
+			emp_pass,
+			emp_last_ip,
+			emp_fec_nac,
+			emp_on_line,
+			emp_state,
+			emp_dni, 
+			emp_id_tipo_usua
+		) VALUES (
+			#codigo#,
+			#username#,
+			#paterno#,
+			#materno#,
+			#nombre#,
+			#password#,
+			#direccionIP#,
+			#fechaNacimiento#,
+			#estadoOnLine#,
+			#estado#,
+			#dni#,
+			#tipoUsuario#
+		)
+	</insert>
+	
+	
+	
+	
+</sqlMap>

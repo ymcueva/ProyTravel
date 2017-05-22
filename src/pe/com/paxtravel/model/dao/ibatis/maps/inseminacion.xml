@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="inseminacion">
+
+	<typeAlias alias="inseminacionBean" type="pe.com.paxtravel.bean.InseminacionBean" />
+	
+	<typeAlias alias="string" type="java.lang.String" />
+
+	<resultMap id="resultInseminacion" class="inseminacionBean">
+		<result property="numeroFila"			column="ca_nume_fila" />
+		<result property="codigoInseminacion"	column="co_inse" />
+		<result property="fechaInseminacion"	column="fe_inse" />
+		<result property="codigoVaca" 		    column="co_anim_vaca" />
+		<result property="nombreVaca" 		    column="no_anim" />
+		<result property="codigoToro" 		    column="co_anim_toro" />
+		<result property="observacion" 		    column="tx_obse" />
+		<result property="estadoInseminacion" 	column="es_inse" />
+		<result property="diasInseminado"		column="ca_dias_inse" />
+		<result property="usuario" 				column="id_usua_crea" />
+		<result property="tipoInseminacion" 	column="ti_inse" />
+	</resultMap>
+	
+	<select id="obtenerCodigoInseminacion" resultClass="java.lang.String">
+		SELECT CONCAT (MAX(co_inse)+1 , '') AS maximo
+		  FROM INSEMINACION
+	</select>
+	
+	<select id="listaInseminacion" parameterClass="inseminacionBean" resultMap="resultInseminacion">
+		SELECT @rownum:=@rownum+1 AS ca_nume_fila, ins.co_inse, DATE_FORMAT(ins.fe_inse,'%d-%m-%Y') fe_inse, 
+               DATEDIFF(NOW(), ins.fe_inse) AS ca_dias_inse,
+		       ins.co_anim_vaca, ani.no_anim, ins.co_anim_toro, IF(ins.tx_obse IS NULL,'', ins.tx_obse) AS tx_obse, ins.es_inse,
+		       'ocalderon' id_usua_crea, ins.ti_inse
+		  FROM (SELECT @rownum:=0) r, INSEMINACION ins
+		 INNER JOIN animal ani
+		    ON ins.co_anim_vaca = ani.co_anim
+		 WHERE 1=1 AND ins.es_inse = '1'
+		   AND ani.es_proc_evol='2'
+		<isNotEmpty prepend="AND" property="nombreVaca"> ani.no_anim = #nombreVaca# </isNotEmpty>
+		<isNotEmpty prepend="AND" property="fechaInseminacion"> ins.fe_inse = #fechaInseminacion# </isNotEmpty>
+		<isNotEmpty prepend="AND" property="codigoVaca"> ani.co_anim = #codigoVaca# </isNotEmpty>
+	</select>
+	
+	<select id="verDetalleInseminacion" parameterClass="inseminacionBean" resultMap="resultInseminacion">
+		SELECT @rownum:=@rownum+1 AS ca_nume_fila, ins.co_inse, DATE_FORMAT(ins.fe_inse,'%d-%m-%Y') fe_inse, 
+               DATEDIFF(NOW(), ins.fe_inse) AS ca_dias_inse,
+		       ins.co_anim_vaca, ani.no_anim, ins.co_anim_toro, IF(ins.tx_obse IS NULL,'', ins.tx_obse) AS tx_obse, ins.es_inse,
+		       'ocalderon' id_usua_crea, ins.ti_inse 
+		  FROM (SELECT @rownum:=0) r, INSEMINACION ins
+		 INNER JOIN animal ani
+		    ON ins.co_anim_vaca = ani.co_anim
+		 WHERE 1=1 AND ins.es_inse = '1'
+           AND ins.co_inse = #codigoInseminacion#		
+	</select>
+	
+	<insert id="insertarInseminacion" parameterClass="inseminacionBean">
+		INSERT INTO inseminacion(
+			CO_INSE,
+			FE_INSE,
+			TI_INSE,
+			CO_ANIM_VACA,
+			CO_ANIM_TORO,
+			TX_OBSE,
+			ES_INSE,
+			ID_USUA_CREA,
+			FE_USUA_CREA
+		) VALUES (
+			#codigoInseminacion#,
+			#fechaInseminacion#,
+			#tipoInseminacion#,
+			#codigoVaca#,
+			#codigoToro#,
+			#observacion#,
+			'1',
+			#usuario#,
+			now()
+		)
+	</insert>
+	
+	<update id="editarInseminacion" parameterClass="inseminacionBean">
+		UPDATE inseminacion SET FE_INSE = #fechaInseminacion#, CO_ANIM_TORO = #codigoToro#, 
+			   TX_OBSE = #observacion#, ID_USUA_MODI = #usuario#, FE_USUA_MODI = now()
+		WHERE CO_INSE = #codigoInseminacion#
+	</update>
+	
+	<update id="eliminarInseminacion" parameterClass="inseminacionBean">
+		UPDATE inseminacion SET ES_INSE = 0, id_usua_modi=#usuario#, fe_usua_modi=now() WHERE CO_INSE = #codigoInseminacion#
+	</update>
+	
+</sqlMap>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<sqlMap namespace="ordenplanificacion">
+	
+	<typeAlias alias="objbean" type="pe.com.paxtravel.bean.OrdenPlanificacionBean" />
+	<typeAlias alias="string" type="java.lang.String" />
+	
+		<resultMap id="resultOrdenPlanificacion" class="objbean">
+		
+			 	
+			<result property="idOrden"			    		column="id_orden" />			
+			<result property="idCotiza" 		    		column="id_cotiza" />			
+			<result property="nuOrden" 		    			column="nu_orden" />			 
+			<result property="observacion" 		    		column="observacion" />			
+			<result property="idTrabajador" 		    	column="id_trabajador" />
+			<result property="descripcion" 		    		column="descripcion" />
+			<result property="feOrder"			    		column="fe_order" />
+			<result property="autorizacion" 				column="autorizacion" />			
+			<result property="imPresupuestoMinimo"			column="im_presupuesto_minimo" />
+			<result property="imPresupuestoPaximo"			column="im_presupuesto_maximo" />			
+			<result property="idCliente" 					column="id_cliente"/>
+			<result property="idEstado"						column="id_estado"  /> 
+			<result property="idMoneda"						column="id_moneda" />
+			<result property="feInicio"  					column="fe_inicio"/>
+			<result property="feFin"						column="fe_fin"/>
+			
+			
+		
+		</resultMap>
+		
+	
+		
+		  
+		  
+		<select id="obtenerOrdenPlanificacion" parameterClass="objbean" resultMap="resultOrdenPlanificacion">
+			
+			SELECT id_orden, id_cotiza, nu_orden, observacion, id_trabajador, descripcion, fe_order, autorizacion,
+    			im_presupuesto_minimo, im_presupuesto_maximo, id_cliente, id_estado, id_moneda, fe_inicio, fe_fin
+			FROM orden_planificacion 
+			where nu_orden= #nuOrden#
+			
+		</select>  
+		
+	
+		
+		
+
+</sqlMap>

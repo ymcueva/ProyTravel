@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="usuario">
+
+	<typeAlias alias="usuarioBean" type="pe.com.paxtravel.bean.UsuarioBean" />
+	
+	<typeAlias alias="string" type="java.lang.String" />
+
+	<resultMap id="resultUsuario" class="usuarioBean">
+		<result property="codigoUsuario"	column="co_usua" />
+		<result property="codigoPerfil"   	column="id_perf" />
+		<result property="idUsuario"     	column="id_usua" />
+	</resultMap>
+	
+	<select id="obtenerLogin" parameterClass="usuarioBean" resultMap="resultUsuario">
+		SELECT co_usua, id_perf, id_usua
+		  FROM usuario
+		 WHERE co_usua = #codigoUsuario#
+		   AND ca_pass_usua = #claveUsuario#
+	</select>
+
+</sqlMap>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="animal">
+
+	<typeAlias alias="animalBean" type="pe.com.paxtravel.bean.AnimalBean" />
+	
+	<resultMap id="resultAnimal" class="animalBean">
+		<result property="numeroFila"			column="ca_nume_fila" />
+		<result property="codigoAnimal" 		column="co_anim" />
+		<result property="nombreAnimal" 		column="no_anim" />
+		<result property="fechaNacimiento"  	column="fe_nac" />
+	</resultMap>
+	
+	<resultMap id="resultVacasAInseminar" class="animalBean">
+		<result property="numeroFila"			column="ca_nume_fila" />
+		<result property="codigoAnimal" 		column="co_anim" />
+		<result property="nombreAnimal" 		column="no_anim" />
+	</resultMap>
+	
+	<resultMap id="resultVacasAParir" class="animalBean">
+		<result property="numeroFila"			column="ca_nume_fila" />
+		<result property="codigoAnimal" 		column="co_anim" />
+		<result property="nombreAnimal" 		column="no_anim" />
+		<result property="codigoToro"  	    	column="co_anim_toro" />
+		<result property="nombreToro"  	    	column="no_toro" />
+		<result property="fechaInseminacion"  	column="fe_inse" />
+		<result property="numeroDiasPrenez"  	column="nu_dias_pren" />
+		<result property="numeroMesesParto"  	column="nu_mese_part" />
+	</resultMap>
+	
+	<select id="listaVacasAInseminar" parameterClass="animalBean" resultMap="resultVacasAInseminar">
+		SELECT @rownum:=@rownum+1 AS ca_nume_fila, anim.co_anim, anim.no_anim
+          FROM (SELECT @rownum:=0) r, animal anim
+         WHERE DATEDIFF(NOW(), fe_nac)>100
+           AND anim.ti_sexo='H'
+           AND anim.co_anim NOT IN (SELECT co_anim_vaca FROM inseminacion where es_inse=1)
+           AND anim.es_proc_evol = '1'
+        <isNotEmpty prepend="AND" property="codigoAnimal"> anim.co_anim = #codigoAnimal# </isNotEmpty>
+        <isNotEmpty prepend="AND" property="nombreAnimal"> anim.no_anim = #nombreAnimal# </isNotEmpty>
+	</select>
+	
+	<select id="listaVacasAParir" parameterClass="animalBean" resultMap="resultVacasAParir">
+				
+		SELECT @rownum:=@rownum+1 AS ca_nume_fila, anim.co_anim, anim.no_anim,
+		       ( SELECT a.no_anim FROM animal a
+			  	  WHERE a.co_anim = (
+					SELECT co_anim_toro FROM inseminacion i WHERE i.co_anim_vaca = anim.co_anim AND es_inse='1'
+			  	  )
+		       ) AS no_toro, inse.fe_inse,
+		       DATEDIFF(NOW(), inse.fe_inse) nu_dias_pren,
+		       TIMESTAMPDIFF(MONTH, DATE_FORMAT(anim.fe_nac,'%Y-%m-%d') ,CURDATE())  nu_mese_part,
+		       inse.co_anim_toro
+		  FROM (SELECT @rownum:=0) r, animal anim
+		 INNER JOIN inseminacion inse ON anim.co_anim = inse.co_anim_vaca
+		 INNER JOIN prenez pren ON inse.co_anim_vaca = pren.co_anim
+		 WHERE DATEDIFF(NOW(), fe_nac) > 200
+		   AND anim.ti_sexo = 'H'
+		   AND anim.es_proc_evol = '3'
+		   AND inse.es_inse='1'
+
+	</select>
+	
+	<select id="listaToro" resultMap="resultAnimal">
+		SELECT '' ca_nume_fila, co_anim, no_anim, fe_nac
+          FROM animal
+         WHERE ti_sexo='M'
+	</select>
+	
+	<insert id="actualizaEstadoProcesoEvolutivo" parameterClass="animalBean">
+		UPDATE animal SET es_proc_evol = #estadoProcesoEvolutivo#
+		 WHERE co_anim = #codigoAnimal#
+	</insert>
+	
+	
+	<insert id="insertarAnimal" parameterClass="animalBean">
+	
+		INSERT INTO animal(
+			co_anim,
+			no_anim,
+			fe_nac,
+			ti_sexo,
+			nu_peso,
+			ti_raza,
+			tx_obse,
+			es_proc_evol,
+			id_usua_crea,
+			fe_usua_crea
+		) VALUES (
+			#codigoAnimal#,
+			#nombreAnimal#,
+			#fechaNacimiento#,
+			#tipoSexo#,
+			#peso#,
+			#tipoRaza#,
+			#observacion#,
+			'1',
+			#usuarioRegistro#,
+			now()
+		)
+	</insert>
+	
+</sqlMap>

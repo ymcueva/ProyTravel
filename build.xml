@@ -1,0 +1,164 @@
+<!--<project name="PaxTravelInternational" default="autodeploy-create" basedir=".">-->
+<project name="ProyTravel" default="ear-gen" basedir=".">
+
+	<echo>iniciando build.xml ......</echo>
+	<property file="build.properties" />
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="servlet-api.jar" />
+	</path>
+
+	<!--limpiando la carpeta build -->
+	<target name="clean">
+		<echo>Cleaning the ${build.dir}</echo>
+		<delete dir="${build.dir}" />
+	</target>
+	
+	<!-- Crear carpetas -->
+	<target name="init" depends="clean">
+		<echo>Creating the build directory</echo>
+		<mkdir dir="${build.dir}/WEB-INF/classes" />
+		<mkdir dir="${build.dir}/WEB-INF/lib" />
+		<mkdir dir="${build.dir}/META-INF" />
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${build.dir}/lib"/>
+	</target>
+	
+	
+	<target name="intranet">
+		<echo>Building the war file</echo>
+		<jar jarfile="${build.dir}/ProyTravel.war" basedir="${webapp.dir}">
+			<!-- <include name="resources/**"/> !-->
+			<include name="WEB-INF/paginas/cliente/*.jsp"/>
+			<include name="WEB-INF/paginas/commons/*.*"/>
+			<include name="WEB-INF/paginas/empleado/*.*"/>
+			<include name="WEB-INF/paginas/produccion/*.*"/>
+			<include name="WEB-INF/paginas/inseminacion/*.*"/>
+			<include name="WEB-INF/paginas/parto/*.*"/>
+			<include name="WEB-INF/paginas/login/*.*"/>
+			<include name="WEB-INF/paginas/controlAnimal/*.*"/>
+			<include name="WEB-INF/paginas/diagnostico/*.*"/>
+			<include name="WEB-INF/paginas/tratamiento/*.*"/>
+			<include name="WEB-INF/paginas/cotizacion/*.*"/>
+			<include name="WEB-INF/paginas/paqueteTuristico/*.*"/>
+			<include name="WEB-INF/config/*.*"/>
+			<include name="WEB-INF/*.xml"/>
+			<include name="index.jsp"/>
+			<include name="**/*.tld" />
+		</jar>
+	</target>
+
+	<target name="controllers">
+		<echo>Building the war file</echo>
+		<jar jarfile="${project.lib}/controllers.jar">
+			<fileset dir="${classes.dir}">
+				<include name="pe/com/paxtravel/controller/*.class" />
+			</fileset>
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<section name="common">
+					<attribute name="Specification-Title" value="Controladores" />
+					<attribute name="Specification-Version" value="1.0" />
+					<attribute name="Specification-Vendor" value="SUNAT - PLCPE" />
+					<attribute name="Implementation-Title" value="controllers.jar" />
+					<attribute name="Implementation-Version" value="build[1]" />
+					<attribute name="Implementation-Vendor" value="PRIVADO - ECLIPSE" />
+				</section>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="services">
+		<echo>Building the war file</echo>
+		<jar jarfile="${project.lib}/services.jar">
+			<fileset dir="${classes.dir}">
+				<include name="pe/com/paxtravel/service/*.class" />
+			</fileset>
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<section name="common">
+					<attribute name="Specification-Title" value="Services" />
+					<attribute name="Specification-Version" value="1.0" />
+					<attribute name="Specification-Vendor" value="SUNAT - PLCPE" />
+					<attribute name="Implementation-Title" value="services.jar" />
+					<attribute name="Implementation-Version" value="build[1]" />
+					<attribute name="Implementation-Vendor" value="PRIVADO - ECLIPSE" />
+				</section>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="model">
+		<echo>Building the war file</echo>
+		<jar jarfile="${project.lib}/model.jar">
+			<fileset dir="${classes.dir}">
+				<include name="pe/com/paxtravel/bean/*.class" />
+				<include name="pe/com/paxtravel/model/dao/*.class" />
+				<include name="pe/com/paxtravel/model/dao/ibatis/*.class" />
+				<include name="pe/com/paxtravel/model/dao/ibatis/maps/*.xml" />
+				<include name="pe/com/paxtravel/util/*.class" />
+			</fileset>
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<section name="common">
+					<attribute name="Specification-Title" value="Modelos" />
+					<attribute name="Specification-Version" value="1.0" />
+					<attribute name="Specification-Vendor" value="SUNAT - PLCPE" />
+					<attribute name="Implementation-Title" value="model.jar" />
+					<attribute name="Implementation-Version" value="build[1]" />
+					<attribute name="Implementation-Vendor" value="PRIVADO - ECLIPSE" />
+				</section>
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="ear-gen" depends="intranet, controllers, services, model">
+		<echo>Building the ear file</echo>
+		
+		<!-- copiando las librerias del spring a mi EAR -->
+		<copy todir="${project.lib}">
+			<fileset dir="${java.lib.dir}">
+				<include name="**" />
+			</fileset>
+		</copy>
+
+		<jar jarfile="${build.dir}/${project.name}.ear" >
+			<fileset dir="${build.dir}">
+				<include name="ProyTravel.war"/>
+				<include name="lib/**" />
+				<!--<include name="lib/controller.jar"/>-->
+			</fileset>
+			
+			<fileset dir="${webapp.dir}">
+				<include name="META-INF/*.xml"/>
+			</fileset>
+		</jar>
+		
+		<copy todir="${tomcat.dir}">
+			<fileset dir="${build.dir}">
+				<include name="${project.name}.ear" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- publicando el EAR en la carpeta de despliegue -->
+	<target name="deploy_local" depends="ear-gen">
+		<echo>Deploying .war to WebLogic</echo>
+	</target>
+
+	<target name="autodeploy-create" depends="autodeploy-delete, ear-gen, deploy_local">
+		<copy file="${dist.dir}/${project.name}.ear" todir="${autodeploy.dir}" />
+	</target>
+
+	<target name="autodeploy-delete">
+		<delete>
+			<fileset dir="${autodeploy.dir}">
+				<include name="${project.name}.ear"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	
+	
+
+</project>
