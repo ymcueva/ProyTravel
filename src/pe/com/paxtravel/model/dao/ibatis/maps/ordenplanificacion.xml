@@ -15,7 +15,7 @@
 			<result property="idCotiza" 		    		column="id_cotiza" />			
 			<result property="nuOrden" 		    			column="nu_orden" />			 
 			<result property="observacion" 		    		column="observacion" />			
-			<result property="idTrabajador" 		    	column="id_trabajador" />
+			<result property="idTrabajador" 		    	column="id_usuario_ins" />
 			<result property="descripcion" 		    		column="descripcion" />
 			<result property="feOrder"			    		column="fe_order" />
 			<result property="autorizacion" 				column="autorizacion" />			
@@ -37,10 +37,10 @@
 		  
 		<select id="obtenerOrdenPlanificacion" parameterClass="objbean" resultMap="resultOrdenPlanificacion">
 			
-			SELECT id_orden, id_cotiza, nu_orden, observacion, id_trabajador, descripcion, fe_order, autorizacion,
+			SELECT id_orden, id_cotiza, nu_orden, observacion, id_usuario_ins, descripcion, fe_order, autorizacion,
     			im_presupuesto_minimo, im_presupuesto_maximo, id_cliente, id_estado, id_moneda, fe_inicio, fe_fin
-			FROM orden_planificacion 
-			where nu_orden= #nuOrden#
+			FROM orden  
+			where nu_orden= #nuOrden# 
 			
 		</select>  
 		

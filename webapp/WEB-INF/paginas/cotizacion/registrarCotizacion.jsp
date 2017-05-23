@@ -1574,14 +1574,14 @@ function guardarDetalleFareInfo(){
 													<div class="form-group">
 														<label class="col-sm-2" style="text-align:right;">Viaje:</label>
 														<div class="col-sm-9" style="text-align: left">
+														
+															<label style="width:120px;" for="radTipoticket">
+																<input type="radio" name="tipoTicket" id="radTipoticket2" value="2">Ida</input>
+															</label>
 															
 															<label style="width:120px;" for="radTipoticket">
 																<input type="radio" name="tipoTicket" id="radTipoticket1" value="1">Ida y vuelta</input>
-															</label>
-															
-															<label style="width:120px;" for="radTipoticket">
-																<input type="radio" name="tipoTicket" id="radTipoticket2" value="2">Sólo Ida</input>
-															</label>
+															</label>																														
 															
 														</div>
 													</div>

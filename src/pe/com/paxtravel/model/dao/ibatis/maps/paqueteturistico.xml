@@ -15,9 +15,9 @@
 		<result property="observacion" 		    	column="observacion" />
 		<result property="idOrden"			    	column="id_orden" />
 		<result property="fecha" 		    		column="fecha" />
-		<result property="feInicio" 		    	column="fe_inicio" />
-		<result property="feFin" 		    		column="fe_fin" />
-		<result property="idTrabajador"			    column="id_trabajador" />		
+		<result property="feInicio" 		    	column="fe_partida" />
+		<result property="feFin" 		    		column="fe_retorno" />
+		<result property="idTrabajador"			    column="id_usuario_ins" />		
 	</resultMap>
 
 	<resultMap id="resultPaqueteTuristico" class="paqueteTuristicoBean">			
@@ -27,12 +27,11 @@
 		<result property="observacion" 		    	column="observacion" />
 		<result property="idOrden"			    	column="id_orden" />
 		<result property="fecha" 		    		column="fecha" />
-		<result property="feInicio" 		    	column="fe_inicio" />
-		<result property="feFin" 		    		column="fe_fin" />
-		<result property="idTrabajador"			    column="id_trabajador" />
+		<result property="feInicio" 		    	column="fe_partida" />
+		<result property="feFin" 		    		column="fe_retorno" />
+		<result property="idTrabajador"			    column="id_usuario_ins" />
 		<result property="nuNinos"					column="nu_ninos"/>
-		<result property="nuAdultos"				column="nu_adultos"/>
-		<result property="idMoneda"			    	column="id_moneda" />
+		<result property="nuAdultos"				column="nu_adultos"/>		
 		<result property="imMin" 					column="im_min" />
 		<result property="imMax" 					column="im_max" />
 	</resultMap>	
@@ -55,9 +54,9 @@
 			   paquete.observacion ,  
 			   paquete.id_orden , 
 			   DATE_FORMAT(paquete.fecha,'%d-%m-%Y') fecha,
-			   DATE_FORMAT(paquete.fe_inicio,'%d-%m-%Y') fe_inicio,
-			   DATE_FORMAT(paquete.fe_fin,'%d-%m-%Y') fe_fin,
-			   paquete.id_trabajador,
+			   DATE_FORMAT(paquete.fe_partida,'%d-%m-%Y') fe_partida,
+			   DATE_FORMAT(paquete.fe_partida,'%d-%m-%Y') fe_partida,
+			   paquete.id_usuario_ins,
 				CONCAT(clie.nombres,' ',clie.apellidos) cliente,
 			    orden.nu_orden,
 			    orden.autorizacion,
@@ -65,7 +64,7 @@
 			    orden.im_presupuesto_maximo, 
 			    orden.observacion
          FROM (SELECT @rownum:=0) r, paquete_turistico paquete  
-         INNER JOIN orden_planificacion orden ON orden.id_orden=paquete.id_orden
+         INNER JOIN orden orden ON orden.id_orden=paquete.id_orden
          INNER JOIN cliente clie ON orden.id_cliente=clie.id_cliente                
 		 WHERE 1 = 1
 	</select>
@@ -77,14 +76,11 @@
 			observacion,
 			id_orden,
 			fecha,
-			fe_inicio,
-			fe_fin,
-			id_trabajador,
+			fe_partida,
+			fe_retorno,
+			id_usuario_ins,
 			nu_ninos,
-			nu_adultos,
-			id_moneda,
-			im_min,
-			im_max
+			nu_adultos
 		) 
 		VALUES 
 		(
@@ -97,10 +93,7 @@
 			#feFin#,
 			#idTrabajador#,
 			#nuNinos#,
-			#nuAdultos#,
-			#idMoneda#,
-			#imMin#,
-			#imMax#			
+			#nuAdultos#		
 		)		
 	</insert>
 
