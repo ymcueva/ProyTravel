@@ -5,14 +5,14 @@
 <sqlMap namespace="cotizacion">
 
 	<typeAlias alias="cotizacionDetalleTicketVueloBean" type="pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean" />
-	<typeAlias alias="fareInfoBean" type="pe.com.paxtravel.bean.FareInfoBean" />
-	
+	<typeAlias alias="fareInfoBean" type="pe.com.paxtravel.bean.FareInfoBean" />	
 	<typeAlias alias="cotizacionBean" type="pe.com.paxtravel.bean.CotizacionBean" />
 	<typeAlias alias="cotizacionDetalleBean" type="pe.com.paxtravel.bean.CotizacionDetalleBean" />
 	<typeAlias alias="ciudadBean" type="pe.com.paxtravel.bean.CiudadBean" />
 	<typeAlias alias="paisBean" type="pe.com.paxtravel.bean.PaisBean" />
 	<typeAlias alias="motivoViajeBean" type="pe.com.paxtravel.bean.MotivoViajeBean" />
 	<typeAlias alias="servicioAdicionalBean" type="pe.com.paxtravel.bean.ServicioAdicionalBean" />
+	<typeAlias alias="hotelHabitacionBean" type="pe.com.paxtravel.bean.HotelHabitacionBean" />
 	<typeAlias alias="clienteBean" type="pe.com.paxtravel.bean.ClienteBean" />
 	
 	<typeAlias alias="string" type="java.lang.String" />
@@ -79,7 +79,7 @@
 	<select id="listarCotizacion" parameterClass="cotizacionBean" resultMap="resultCotizacion">
 		SELECT  @rownum:=@rownum+1 AS ca_nume_fila, coti.id_cotiza, coti.nu_cotiza,
                 DATE_FORMAT(coti.fe_cotiza,'%d-%m-%Y') fe_cotiza,
-                CONCAT(clie.nombres,' ',clie.apellidos) cliente, esta.no_estado,
+                CONCAT(clie.nombres,' ',clie.apellidos) cliente, 'STATUS' as no_estado,
                 coti.descripcion,               
                 coti.fe_partida, coti.fe_retorno, 
                 coti.observacion,
@@ -98,8 +98,7 @@
 				coti.im_presupuesto_maximo
                 
           FROM (SELECT @rownum:=0) r, cotizacion coti 
-       INNER JOIN cliente clie ON coti.id_cliente=clie.id_cliente
-       INNER JOIN estado esta  ON coti.id_estado=esta.id_estado  
+       INNER JOIN cliente clie ON coti.id_cliente=clie.id_cliente       
 		  WHERE 1 = 1
 	      <isNotEmpty prepend="AND" property="fechaCotizacion"> DATE_FORMAT(coti.fe_cotiza,'%Y-%m-%d')  = #fechaCotizacion# </isNotEmpty>
 	      <isNotEmpty prepend="AND" property="numeroCotizacion"> coti.nu_cotiza = #numeroCotizacion# </isNotEmpty> 
@@ -229,24 +228,16 @@
 			id_cotiza,
 			id_destino_origen,
 			id_destino,
-			nu_ninos,
-			nu_adultos,
-			ida_vuelta,
-			vuelta,
+			ti_ida,
 			fe_partida,
-			fe_retorno,
-			ruta
+			fe_retorno			
 		) VALUES (
 			#numeroCotizacion#,
 			#origen#,
 			#destino#,
-			#cantidadNino#,
-			#cantidadAdulto#,
-			#idaVuelta#,
-			#ida#,
+			#tiIda#,
 			#fechaPartida#,
-			#fechaRetorno#,
-			#ruta#
+			#fechaRetorno#			
 		)
 	</insert>
 		
@@ -300,7 +291,17 @@
 	      
 	</select>
 	
-	
+	<insert id="insertarHabitacionHotel" parameterClass="hotelHabitacionBean">
+		INSERT INTO cotizacion_deta_habitacion(
+			id_cotiza,
+			id_tipo_habitacion,
+			nu_habitacion
+		) VALUES (
+			#idCotiza#,
+			#idTipoHabitacion#,
+			#nuHabitacion#
+		)
+	</insert>
 	
 
 </sqlMap>

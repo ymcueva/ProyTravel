@@ -21,6 +21,18 @@ public class CotizacionDetalleBean {
 	private String fechaRetorno;
 	
 	private int ruta;
+	
+	private int tiIda;
+	
+	
+
+	public int getTiIda() {
+		return tiIda;
+	}
+
+	public void setTiIda(int tiIda) {
+		this.tiIda = tiIda;
+	}
 
 	public String getNumeroCotizacion() {
 		return numeroCotizacion;

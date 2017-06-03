@@ -7,6 +7,7 @@ import java.sql.Date;
 public class EmpleadoBean {
 
 	private String codigo;
+	
 	private String username;
 	private String paterno;
 	private String materno;

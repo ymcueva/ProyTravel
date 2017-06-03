@@ -13,6 +13,7 @@ import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
 import pe.com.paxtravel.bean.FareInfoBean;
+import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.InseminacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.PaisBean;
@@ -66,6 +67,12 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements Cotiz
 	@Override
 	public int registrarMotivo(MotivoViajeBean motivoViajeBean) {
 		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).update("cotizacion.insertarMotivoViaje", motivoViajeBean);
+		return 1;
+	}
+	
+	@Override
+	public int registrarHabitacion(HotelHabitacionBean hotelHabitacionBean) {
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).update("cotizacion.insertarHabitacionHotel", hotelHabitacionBean);
 		return 1;
 	}
 

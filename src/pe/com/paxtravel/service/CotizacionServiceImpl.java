@@ -18,6 +18,7 @@ import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
 import pe.com.paxtravel.bean.FareInfoBean;
+import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.ProduccionBean;
@@ -73,6 +74,11 @@ public class CotizacionServiceImpl implements CotizacionService {
 	@Override
 	public int registrarMotivo(MotivoViajeBean motivoViajeBean) {
 		return cotizacionDAO.registrarMotivo(motivoViajeBean);
+	}
+	
+	@Override
+	public int registrarHabitacion(HotelHabitacionBean hotelHabitacionBean) {
+		return cotizacionDAO.registrarHabitacion(hotelHabitacionBean);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
 import pe.com.paxtravel.bean.FareInfoBean;
+import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.ProduccionBean;
@@ -29,6 +30,8 @@ public interface CotizacionDAO {
 	int registrarCotizacionTicket(CotizacionBean cotizacionBean);
 
 	int registrarMotivo(MotivoViajeBean motivoViajeBean);
+	
+	int registrarHabitacion(HotelHabitacionBean hotelHabitacionBean);
 	
 	int registrarServicio(ServicioAdicionalBean servicioAdicionalBean);
 	

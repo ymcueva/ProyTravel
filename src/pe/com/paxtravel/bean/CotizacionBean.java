@@ -18,6 +18,7 @@ public class CotizacionBean {
 	private String fechaRetorno;
 	private String seguroViaje;
 	
+	
 	private String boletoAvion;
 	
 	private String idOrigen;
