@@ -2,50 +2,104 @@
 <!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
-
 <sqlMap namespace="ordenplanificacion">
-	
-	<typeAlias alias="objbean" type="pe.com.paxtravel.bean.OrdenPlanificacionBean" />
+
+	<typeAlias alias="ordenPlanificacionBean"
+		type="pe.com.paxtravel.bean.OrdenPlanificacionBean" />
 	<typeAlias alias="string" type="java.lang.String" />
-	
-		<resultMap id="resultOrdenPlanificacion" class="objbean">
-		
-			 	
-			<result property="idOrden"			    		column="id_orden" />			
-			<result property="idCotiza" 		    		column="id_cotiza" />			
-			<result property="nuOrden" 		    			column="nu_orden" />			 
-			<result property="observacion" 		    		column="observacion" />			
-			<result property="idTrabajador" 		    	column="id_usuario_ins" />
-			<result property="descripcion" 		    		column="descripcion" />
-			<result property="feOrder"			    		column="fe_order" />
-			<result property="autorizacion" 				column="autorizacion" />			
-			<result property="imPresupuestoMinimo"			column="im_presupuesto_minimo" />
-			<result property="imPresupuestoPaximo"			column="im_presupuesto_maximo" />			
-			<result property="idCliente" 					column="id_cliente"/>
-			<result property="idEstado"						column="id_estado"  /> 
-			<result property="idMoneda"						column="id_moneda" />
-			<result property="feInicio"  					column="fe_inicio"/>
-			<result property="feFin"						column="fe_fin"/>
-			
-			
-		
-		</resultMap>
-		
-	
-		
-		  
-		  
-		<select id="obtenerOrdenPlanificacion" parameterClass="objbean" resultMap="resultOrdenPlanificacion">
-			
-			SELECT id_orden, id_cotiza, nu_orden, observacion, id_usuario_ins, descripcion, fe_order, autorizacion,
-    			im_presupuesto_minimo, im_presupuesto_maximo, id_cliente, id_estado, id_moneda, fe_inicio, fe_fin
-			FROM orden  
-			where nu_orden= #nuOrden# 
-			
-		</select>  
-		
-	
-		
-		
+
+	<resultMap id="resultOrdenPlanificacion" class="ordenPlanificacionBean">
+
+		<result property="idOrden" column="id_orden" />
+		<result property="idCotiza" column="id_cotiza" />
+		<result property="nuOrden" column="nu_orden" />
+		<result property="observacion" column="observacion" />
+		<result property="idTrabajador" column="id_usuario_ins" />
+		<result property="descripcion" column="descripcion" />
+		<result property="feOrder" column="fe_order" />
+		<result property="autorizacion" column="autorizacion" />
+		<result property="imPresupuestoMinimo" column="im_presupuesto_minimo" />
+		<result property="imPresupuestoMaximo" column="im_presupuesto_maximo" />
+		<result property="idCliente" column="id_cliente" />
+		<result property="idEstado" column="id_estado" />
+		<result property="idMoneda" column="id_moneda" />
+		<result property="feInicio" column="fe_inicio" />
+		<result property="feFin" column="fe_fin" />
+	</resultMap>
+
+	<select id="listarOrdenPlanificacion" parameterClass="ordenPlanificacionBean">
+		select o.nu_orden as `Numero de Orden`, o.fe_order as `Fecha
+		de Orden`,	c.nu_documento as `Numero Documento`, e.no_estado as
+		`estado` from	orden o
+		inner join cliente c on o.id_cliente =	c.id_cliente
+		inner join	estado e on o.id_estado = e.id_estado
+		where
+		o.nu_orden = #nuOrden# or
+		o.fe_order = #feOrder# or e.no_estado =
+		#idEstado#
+
+	</select>
+
+	<select id="obtenerDataCotizacion" resultClass="hashmap">
+
+		SELECT
+		cz.fe_cotiza as `Fecha cotizacion`, c.nombres as `Nombres`,
+		c.apellidos as `Apellidos`, cz.nu_adultos as `Numero de Adultos`,
+		cz.nu_ninos as `Numero de Niños`, cz.observacion as `Observacion`,
+		cz.fe_partida as `Fecha de Partida`, cz.fe_retorno as `Fecha de
+		Retorno`,
+		cm.descripcion as `descripcion mot`, cz.im_presupuesto_maximo
+		as `Presupuesto
+		Maximo`, cz.im_presupuesto_minimo as `Presupuesto
+		Minimo`,
+		mv.descripcion as `Motivo de Viaje`, sv.nombre as `Servicios`,
+		tp.nombre as `Tipo de Programa`, ta.descripcion as `Tipo Alojamiento`,
+		tc.nombre as `Categoria Alojamiento`, dc.descripcion as `Ciudad
+		Destino`
+		FROM cliente as c INNER JOIN cotizacion cz ON cz.id_cliente =
+		c.id_cliente
+		INNER JOIN cotizacion_motivo cm ON cm.id_cotiza =
+		cz.id_cotiza INNER
+		JOIN motivo_viaje mv ON mv.id_motivo = cm.id_motivo
+		INNER JOIN cotizacion_deta ct ON ct.id_cotiza = cz.id_cotiza INNER
+		JOIN
+		cotizacion_servicio cs on cs.id_cotiza = cz.id_cotiza
+		INNER JOIN
+		servicios sv on sv.id_servicio = cs.id_servicio INNER JOIN
+		tipo_programa tp on cz.id_tipo_programa = tp.id_programa
+		INNER JOIN
+		tipo_alojamiento ta on cz.id_tipo_alojamiento =
+		ta.id_tipo_alojamiento
+		INNER JOIN tipo_categoria_alojamiento tc on
+		cz.id_categoria_alojamiento =
+		tc.id_tipo
+		Inner JOIN destino_ciudad dc on
+		cz.id_destino = dc.id_destino_ciudad
+		where cz.nu_cotiza = #nuCotiza#;
+
+	</select>
+	<select id="obtenerArrayDestinos" resultClass="hashmap">
+		SELECT * FROM
+		proytraveldb.cotizacion_deta cd
+		INNER JOIN cotizacion cz on
+		cz.id_cotiza = cd.id_cotiza
+		where cz.nu_cotiza = #nuCotiza#;
+	</select>
+
+	<insert id="insertarOrdenPlanificacion" parameterClass="ordenPlanificacionBean">
+		INSERT
+		INTO orden(
+		id_cotiza, nu_orden, observacion, descripcion, fe_order,
+		autorizacion,
+		im_presupuesto_minimo, im_presupuesto_maximo,
+		id_cliente,
+		id_estado, id_moneda, fe_inicio, fe_fin )
+		VALUES ( #idCotiza#,
+		#nuOrden#, #observacion#, #descripcion#, #feOrder#,
+		#autorizacion#,
+		#imPresupuestoMinimo#,
+		#imPresupuestoMaximo#, #idCliente#, #idEstado#,
+		#idMoneda#, #feInicio#, #feFin# )
+	</insert>
 
 </sqlMap>

@@ -13,7 +13,7 @@ public class OrdenPlanificacionBean {
 	private String feOrder;
 	private int autorizacion;
 	private Double imPresupuestoMinimo;
-	private Double imPresupuestoPaximo;
+	private Double imPresupuestoMaximo;
 	private int idCliente;
 	private int idEstado;
 	private int idMoneda;
@@ -73,11 +73,11 @@ public class OrdenPlanificacionBean {
 	public void setImPresupuestoMinimo(Double imPresupuestoMinimo) {
 		this.imPresupuestoMinimo = imPresupuestoMinimo;
 	}
-	public Double getImPresupuestoPaximo() {
-		return imPresupuestoPaximo;
+	public Double getImPresupuestoMaximo() {
+		return imPresupuestoMaximo;
 	}
-	public void setImPresupuestoPaximo(Double imPresupuestoPaximo) {
-		this.imPresupuestoPaximo = imPresupuestoPaximo;
+	public void setImPresupuestoMaximo(Double imPresupuestoMaximo) {
+		this.imPresupuestoMaximo = imPresupuestoMaximo;
 	}
 	public int getIdCliente() {
 		return idCliente;
@@ -109,9 +109,4 @@ public class OrdenPlanificacionBean {
 	public void setFeFin(String feFin) {
 		this.feFin = feFin;
 	}
-	
-	
-	
-	
-
 }

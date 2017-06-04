@@ -7,6 +7,8 @@ import pe.com.paxtravel.bean.OrdenPlanificacionBean;
 
 public interface OrdenPlanificacionService {
 	
-	public List<OrdenPlanificacionBean> obtenerOrdenPlanificacion(OrdenPlanificacionBean objBean);
+	public List<OrdenPlanificacionBean> listarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
+	
+	int GrabarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
 
 }
