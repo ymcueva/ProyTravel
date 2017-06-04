@@ -12,7 +12,7 @@ public class DataManagerTest2 {
 		System.out.println(tm2);
 		
 		//Test 2: Observing the best objective value for value Rojo.
-		System.out.println("Getting the best objective value for value Rojo.");
+		System.out.println("Getting the best objective value for value 1 (Habitacion).");
 		if(!tm2.getBestObjectiveValueFromAttribute("Habitacion", "1").equals("Alto")) throw new RuntimeException("Test 2 failed.");
 		System.out.println("Second test passed.");
 		
