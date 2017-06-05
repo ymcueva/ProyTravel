@@ -81,9 +81,9 @@
                 DATE_FORMAT(coti.fe_cotiza,'%d-%m-%Y') fe_cotiza,
                 CONCAT(clie.nombres,' ',clie.apellidos) cliente, 'STATUS' as no_estado,
                 coti.descripcion,               
-                coti.fe_partida, coti.fe_retorno, 
+				IF(coti.fe_partida='00-00-0000', NULL, coti.fe_partida) as fe_partida,                 
+                IF(coti.fe_retorno='00-00-0000', NULL, coti.fe_retorno) as fe_retorno, 
                 coti.observacion,
-                
                 coti.origen_partida,				 
 				coti.id_cliente, 
 				coti.id_estado, 
@@ -96,6 +96,7 @@
 				coti.id_categoria_alojamiento, 
 				coti.im_presupuesto_minimo, 
 				coti.im_presupuesto_maximo
+				
                 
           FROM (SELECT @rownum:=0) r, cotizacion coti 
        INNER JOIN cliente clie ON coti.id_cliente=clie.id_cliente       
