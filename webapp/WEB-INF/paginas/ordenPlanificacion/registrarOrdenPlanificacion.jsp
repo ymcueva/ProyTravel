@@ -1613,7 +1613,7 @@ legend {
 				<div class="panel panel-primary">
 
 					<div class="panel-heading">
-						<h3 class="panel-title" align="center" id="tituloInseminacion">${titulo}</h3>
+						<h3 class="panel-title" align="left" id="tituloInseminacion">${titulo}</h3>
 					</div>
 
 					<div class="panel-body">
@@ -1627,9 +1627,9 @@ legend {
 										<div class="col-sm-3"
 											style="text-align: right; font-weight: bold">Fecha
 											Orden:</div>
-										<div class="col-sm-3" id="divCodigoAnimal">${fechaCotizacion}
+										<div class="col-sm-3" id="divCodigoAnimal">${fechaOrden}
 											<span style="display: none"> <input type="text"
-												name="txtfecorden" id="txtidfecorden" value="${fechaCotizacion}" />
+												name="txtfecorden" id="txtidfecorden" value="${fechaOrden}" />
 											</span>
 										</div>
 
@@ -1688,7 +1688,7 @@ legend {
 														<div class="form-group">
 															<div class="col-sm-2"
 																style="text-align: right; font-weight: bold">Cliente:</div>
-															<div class="col-sm-5">
+															<div class="col-sm-9">
 																<input name="txtcliente" id="txtidcliente" type="text"
 																	class="form-control" />
 															</div>
@@ -1697,7 +1697,7 @@ legend {
 														<div class="form-group">
 
 															<div class="col-sm-2"
-																style="text-align: right; font-weight: bold">Tipo
+																style="text-align: right; font-weight: bold">Tipo de
 																Programa:</div>
 															<div class="col-sm-2" id="divNombreAnimal">
 																<select name="seltipprog" id="selidtipprog"
@@ -1799,6 +1799,31 @@ legend {
 														</div>
 
 														<div class="form-group">
+															<div class="col-sm-1"
+																style="text-align: right; font-weight: bold">
+																<div id="divNacional">
+																	<div class="col-sm-12">Destinos:</div>
+																</div>
+																<div class="col-sm-12">&nbsp;</div>
+															</div>
+
+															<div class="col-sm-8">
+																<table id="tblDestino"
+																	class="table table-bordered responsive"
+																	style="width: 100%">
+																	<thead>
+																		<tr>
+																			<th width="5%" class="text-center">Item</th>
+																			<th width="15%" class="text-center">Destino</th>
+																			<th width="15%" class="text-center">Cantidad
+																				Dias</th>
+																			<th width="15%" class="text-center">Opciones</th>
+																		</tr>
+																	</thead>
+																</table>
+															</div>
+														</div>
+																												<div class="form-group">
 															<div class="col-sm-12">
 																<div class="col-sm-2"
 																	style="text-align: right; font-weight: bold">Tipo
@@ -1829,35 +1854,6 @@ legend {
 																		<option value="7">Premium</option>
 																	</select>
 																</div>
-															</div>
-														</div>
-
-														<div class="form-group">
-															<div class="col-sm-1"
-																style="text-align: right; font-weight: bold">
-
-																<div id="divNacional">
-																	<div class="col-sm-12">Destinos:</div>
-																</div>
-
-																<div class="col-sm-12">&nbsp;</div>
-
-															</div>
-
-															<div class="col-sm-8">
-																<table id="tblDestino"
-																	class="table table-bordered responsive"
-																	style="width: 100%">
-																	<thead>
-																		<tr>
-																			<th width="5%" class="text-center">Item</th>
-																			<th width="15%" class="text-center">Destino</th>
-																			<th width="15%" class="text-center">Cantidad
-																				Dias</th>
-																			<th width="15%" class="text-center">Opciones</th>
-																		</tr>
-																	</thead>
-																</table>
 															</div>
 														</div>
 
@@ -1925,7 +1921,7 @@ legend {
 															</div>
 															<div class="col-sm-2"
 																style="text-align: right; font-weight: bold">Presupuesto
-																Miximo:</div>
+																Minimo:</div>
 															<div class="col-sm-2">
 																<input class="form-control" type="number" min="0"
 																	id="txtidpmin" name="txtpmin">
@@ -1963,7 +1959,7 @@ legend {
 											</select>
 										</div>
 
-										<div class="col-sm-2">
+										<div class="col-sm-3">
 											<label for="chkreservahis"> <input type="checkbox"
 												name="chkreservahis" id="chkreservahis"> Autorizar
 												Reservas Historicas

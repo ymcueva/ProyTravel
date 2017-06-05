@@ -68,9 +68,9 @@ public class SqlMapOrdenPlanificacionDAO extends SqlMapClientDaoSupport implemen
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CiudadBean> listaCiudad(CiudadBean ciudadBean) {
-		List<CiudadBean> listaPais = null;
-		listaPais = getSqlMapClientTemplate().queryForList("ordenplanificacion.listarPais", ciudadBean);
-		return listaPais;
+		List<CiudadBean> listaciudad = null;
+		listaciudad = getSqlMapClientTemplate().queryForList("ordenplanificacion.listarCiudad", ciudadBean);
+		return listaciudad;
 	}
 	
 }

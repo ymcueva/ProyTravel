@@ -148,7 +148,7 @@ public class OrdenPlanificacionController {
 			listaCiudad = ordenPlanificacionService.listarCiudad(ciudadBean);
 			listaPais = ordenPlanificacionService.listarPais(paisBean);
 			// List<PaisBean> listaPais = new ArrayList<PaisBean>();
-			mapaDatos.put("titulo", "REGISTRAR ORDEN PLANIFICACION");
+			mapaDatos.put("titulo", "Orden de Planificacion - Registrar Orden");
 
 			Map<String, Object> mapaListaCiudad = new HashMap<String, Object>();
 			for (CiudadBean ciudadBean1 : listaCiudad) {
@@ -159,7 +159,7 @@ public class OrdenPlanificacionController {
 			mapaDatos.put("listCotizacion", listaCiudad);
 			mapaDatos.put("listPais", listaPais);
 
-			modelAndView.addObject("titulo", "REGISTRAR ORDEN PLANIFICACION");
+			modelAndView.addObject("titulo", "Orden de Planificacion - Registrar Orden");
 			modelAndView.addObject("mapaDatos", mapaDatos);
 			modelAndView.addObject("fechaOrden",
 					Utils.dateUtilToStringDDMMYYYY(new Date()));
@@ -300,7 +300,7 @@ public class OrdenPlanificacionController {
 			ordenPlanificacionBeanMap.remove("motivoViajeOrden[]");
 			ordenPlanificacionBeanMap.remove("servicioAdicional[]");
 
-			System.out.println("FechaCotizacion: " + ordenPlanificacionBeanMap.get("fechaCotizacion"));
+			System.out.println("FechaCotizacion: " + ordenPlanificacionBeanMap.get("fechaOrden"));
 			System.out.println("fechaSalida: " + ordenPlanificacionBeanMap.get("fechaSalida"));
 			System.out.println("fechaRetorno: " + ordenPlanificacionBeanMap.get("fechaRetorno"));
 			System.out.println("idTipoCotizacion: " + ordenPlanificacionBeanMap.get("idTipoCotizacion"));

@@ -198,7 +198,7 @@
 					} ]
 				});
 	}
-	function limpiarForm(){
+	function limpiarForm() {
 		document.getElementById("formConsuCotiza").reset();
 	}
 
@@ -231,7 +231,7 @@
 											<form id="formConsuCotiza" class="form-horizontal"
 												method="POST">
 												<div class="form-group">
-													<label class="col-sm-2 control-label alignDerecha">Nro.
+													<label class="col-sm-2 control-label alignIzquierda">Nro.
 														Orden:</label>
 													<div class="col-sm-2">
 														<input id="txtNumero"
@@ -239,12 +239,23 @@
 															name="nuOrden" type="text" maxlength="30"
 															class="form-control">
 													</div>
-													<label class="col-sm-2 control-label alignDerecha">Cliente</label>
+													<label class="col-sm-1 control-label">Cliente:</label>
 													<div class="col-sm-2">
-														<input id="txtnomcli"
-															name="nuOrden" type="text" maxlength="30"
+														<select name="tipoBusqueda" id="selTipoBusqueda"
+															class="form-control">
+															<option value="">--- Seleccione ---</option>
+															<option value="1">DNI</option>
+															<option value="2">Nombre</option>
+														</select>
+													</div>
+
+													<div class="col-sm-2">
+														<input id="txtNombreCliente"
+															onkeypress="return validarNumeroLetra(event)"
+															name="nombreCliente" type="text" maxlength="30"
 															class="form-control">
 													</div>
+
 												</div>
 												<div class="form-group">
 													<label class="col-sm-2 control-label alignDerecha">Estado
@@ -259,11 +270,9 @@
 															<option value="4">Disponible</option>
 														</select>
 													</div>
-													<label class="col-sm-2 control-label alignDerecha">Fecha
-														Orden:</label>
+													<label class="col-sm-2 control-label">Fecha Orden:</label>
 													<div class="col-sm-3">
-														<div class="input-group date tamanoMaximo"
-															id="divFechaBusq">
+														<div class="input-group date" id="divFechaBusq">
 															<input id="txtFechaCotizacionBusq" name="fechaIni"
 																type="text" maxlength="30" readonly
 																class="form-control txtFecha" /> <span
