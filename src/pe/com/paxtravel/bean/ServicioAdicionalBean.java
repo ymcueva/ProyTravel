@@ -4,7 +4,17 @@ public class ServicioAdicionalBean {
 
 	private String numeroCotizacion;
 	
+	private String numeroOrden;
+	
 	private int codigoServicio;
+
+	public String getNumeroOrden() {
+		return numeroOrden;
+	}
+
+	public void setNumeroOrden(String numeroOrden) {
+		this.numeroOrden = numeroOrden;
+	}
 
 	public String getNumeroCotizacion() {
 		return numeroCotizacion;

@@ -4,9 +4,15 @@
 
 <sqlMap namespace="ordenplanificacion">
 
-	<typeAlias alias="ordenPlanificacionBean"
-		type="pe.com.paxtravel.bean.OrdenPlanificacionBean" />
+	<typeAlias alias="ordenPlanificacionBean" type="pe.com.paxtravel.bean.OrdenPlanificacionBean" />
 	<typeAlias alias="string" type="java.lang.String" />
+	<typeAlias alias="ordenDestinoBean" type="pe.com.paxtravel.bean.OrdenDestinoBean" />
+	<typeAlias alias="ciudadBean" type="pe.com.paxtravel.bean.CiudadBean" />
+	<typeAlias alias="paisBean" type="pe.com.paxtravel.bean.PaisBean" />
+	<typeAlias alias="motivoViajeBean" type="pe.com.paxtravel.bean.MotivoViajeBean" />
+	<typeAlias alias="servicioAdicionalBean" type="pe.com.paxtravel.bean.ServicioAdicionalBean" />
+	
+	
 
 	<resultMap id="resultOrdenPlanificacion" class="ordenPlanificacionBean">
 
@@ -26,6 +32,29 @@
 		<result property="feInicio" column="fe_inicio" />
 		<result property="feFin" column="fe_fin" />
 	</resultMap>
+	<resultMap id="resultPais" class="paisBean">
+		<result property="idPais"			    column="id_destino" />
+		<result property="nomPais"			    column="descripcion" />
+	</resultMap>
+	
+	<resultMap id="resultCiudad" class="ciudadBean">
+		<result property="idCiudad"			    column="id_destino_ciudad" />
+		<result property="idPais"			    column="id_destino_pais" />
+		<result property="nomCiudad"			    column="descripcion" />
+	</resultMap>
+
+	<insert id="insertarOrdenDestino" parameterClass="ordenDestinoBean">
+		INSERT INTO orden_destino(
+			id_detalle
+			id_orden,
+			id_destino
+		) VALUES (
+			#idDetalle#
+			#idorden#,
+			#destino#
+		)
+	</insert>
+
 
 	<select id="listarOrdenPlanificacion" parameterClass="ordenPlanificacionBean">
 		select o.nu_orden as `Numero de Orden`, o.fe_order as `Fecha
@@ -89,17 +118,56 @@
 	<insert id="insertarOrdenPlanificacion" parameterClass="ordenPlanificacionBean">
 		INSERT
 		INTO orden(
-		id_cotiza, nu_orden, observacion, descripcion, fe_order,
+		nu_orden, observacion, descripcion, fe_order,
 		autorizacion,
 		im_presupuesto_minimo, im_presupuesto_maximo,
-		id_cliente,
-		id_estado, id_moneda, fe_inicio, fe_fin )
-		VALUES ( #idCotiza#,
+		id_cliente, fe_inicio, fe_fin, nu_adultos, nu_ninos)
+		VALUES ( 
 		#nuOrden#, #observacion#, #descripcion#, #feOrder#,
 		#autorizacion#,
 		#imPresupuestoMinimo#,
-		#imPresupuestoMaximo#, #idCliente#, #idEstado#,
-		#idMoneda#, #feInicio#, #feFin# )
+		#imPresupuestoMaximo#, #idCliente#,
+		 #feInicio#, #feFin#, #nuAdultos#, #nuNinos# )
 	</insert>
+		<select id="obtenerNumeroOrden" resultClass="string">
+		SELECT CONCAT('ORD',
+               YEAR(NOW()), 
+               IF( LENGTH(MONTH(NOW()))=1,CONCAT('0',MONTH(NOW())),MONTH(NOW()) ),
+               MAX( SUBSTR( nu_orden, 11) ) +1 
+               ) AS NRO_Orden
+         FROM orden;
+	</select>
+	
+	
+		<insert id="insertarMotivoViaje" parameterClass="motivoViajeBean">
+		INSERT INTO orden_motivo(
+			id_orden,
+			id_motivo
+		) VALUES (
+			#numeroOrden#,
+			#codigoMotivo#
+		)
+	</insert>
+	
+	<insert id="insertarServicioAdicional" parameterClass="servicioAdicionalBean">
+		INSERT INTO orden_servicio(
+			id_orden,
+			id_servicio
+		) VALUES (
+			#numeroOrden#,
+			#codigoServicio#
+		)
+	</insert>
+		
+	<select id="listarCiudad" parameterClass="ciudadBean" resultMap="resultCiudad">
+		SELECT id_destino_ciudad, id_destino_pais, descripcion FROM destino_ciudad 
+         WHERE 1=1
+		<isNotEmpty prepend="AND" property="idPais"> id_destino_pais = #idPais# </isNotEmpty>
+	</select>
+	<select id="listarPais" parameterClass="paisBean" resultMap="resultPais">
+		SELECT id_destino, descripcion FROM destino_pais 
+		WHERE 1=1
+		<isNotEmpty prepend="AND" property="idPais"> id_destino != #idPais# </isNotEmpty>
+	</select>	
 
 </sqlMap>

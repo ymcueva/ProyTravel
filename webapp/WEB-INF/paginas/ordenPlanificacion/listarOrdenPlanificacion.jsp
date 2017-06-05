@@ -81,9 +81,9 @@
 		;
 		console.log("Ingresooooooooooo");
 		construirTablaListaCotizacion(listaPaqueteTuristico);
-		$("#btnBuscarCotizacion").on('click', function(e) {
+		$("#btnbuscarOrdenPlan").on('click', function(e) {
 			e.preventDefault();
-			buscarCotizacion();
+			buscarOrdenPlan();
 		})
 	});
 
@@ -108,105 +108,106 @@
 		return ((key == 32) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90));
 	}
 
-	function buscarCotizacion() {
-
+	function buscarOrdenPlan() {
 		var grabarFormParams = {
 			'cotizacionBean' : formToObject('#formConsuCotiza')
 		};
 		//alert("params: " + JSON.stringify(grabarFormParams));
 		$
-				.ajax({
-					url : '${pageContext.request.contextPath}/listarCotizacion?btnBuscar=1',
-					data : JSON.stringify(grabarFormParams),
-					cache : false,
-					async : true,
-					type : 'POST',
-					contentType : "application/json; charset=utf-8",
-					dataType : 'json',
-					success : function(response) {
-						var rpta = response.dataJson;
-						// actualizando lista
-						var listaCotizacion = [];
-						if (rpta.listaCotizacion != null) {
-							listaCotizacion = rpta.listaCotizacion;
-						}
-						construirTablaListaCotizacion(listaCotizacion);
-					},
-					error : function(data, textStatus, errorThrown) {
+			.ajax({
+				url : '${pageContext.request.contextPath}/listarCotizacion?btnBuscar=1',
+				data : JSON.stringify(grabarFormParams),
+				cache : false,
+				async : true,
+				type : 'POST',
+				contentType : "application/json; charset=utf-8",
+				dataType : 'json',
+				success : function(response) {
+					var rpta = response.dataJson;
+					// actualizando lista
+					var listaCotizacion = [];
+					if (rpta.listaCotizacion != null) {
+						listaCotizacion = rpta.listaCotizacion;
 					}
-				});
+					construirTablaListaCotizacion(listaCotizacion);
+				},
+				error : function(data, textStatus, errorThrown) {}
+			});
 	}
 
 	function construirTablaListaCotizacion(dataGrilla) {
 		//alert(dataGrilla);
 		var table = $('#tblListaOrdPL')
-				.dataTable(
-						{
-							data : dataGrilla,
-							bDestroy : true,
-							ordering : false,
-							searching : false,
-							paging : true,
-							bScrollAutoCss : true,
-							bStateSave : false,
-							bAutoWidth : false,
-							bScrollCollapse : false,
-							pagingType : "full_numbers",
-							iDisplayLength : 10,
-							responsive : true,
-							bLengthChange : false,
-							info : false,
-							fnDrawCallback : function(oSettings) {
-								if (oSettings.fnRecordsTotal() == 0) {
-									$('#tblListaOrdPL_paginate').addClass(
-											'hiddenDiv');
-								} else {
-									$('#tblListaOrdPL_paginate').removeClass(
-											'hiddenDiv');
-								}
-							},
-							fnRowCallback : function(nRow, aData, iDisplayIndex) {
-								$(nRow).attr('id', aData[5]);
-								$(nRow).attr('align', 'center');
-								$(nRow).attr('rowClasses', 'tableOddRow');
-								return nRow;
-							},
-							language : {
-								url : "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
-							},
-							columnDefs : [ {
-								targets : 5,
-								render : function(data, type, row) {
-									if (row != null
-											&& typeof row != 'undefined') {
-										var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleCotizacion(\""
-												+ row.idCotizacion
-												+ "\")' title='Ver Cotizaci&oacute;n' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";
-										return VerDetalle;
-									}
-									return '';
-								}
-							} ],
-							columns : [ {
-								data : "numeroFila"
-							}, {
-								data : "idOrden"
-							}, {
-								data : "feInicio"
-							}, {
-								data : "feFin"
-							}, {
-								data : "observacion"
-							} ]
-						});
+			.dataTable(
+				{
+					data : dataGrilla,
+					bDestroy : true,
+					ordering : false,
+					searching : false,
+					paging : true,
+					bScrollAutoCss : true,
+					bStateSave : false,
+					bAutoWidth : false,
+					bScrollCollapse : false,
+					pagingType : "full_numbers",
+					iDisplayLength : 10,
+					responsive : true,
+					bLengthChange : false,
+					info : false,
+					fnDrawCallback : function(oSettings) {
+						if (oSettings.fnRecordsTotal() == 0) {
+							$('#tblListaOrdPL_paginate').addClass(
+								'hiddenDiv');
+						} else {
+							$('#tblListaOrdPL_paginate').removeClass(
+								'hiddenDiv');
+						}
+					},
+					fnRowCallback : function(nRow, aData, iDisplayIndex) {
+						$(nRow).attr('id', aData[5]);
+						$(nRow).attr('align', 'center');
+						$(nRow).attr('rowClasses', 'tableOddRow');
+						return nRow;
+					},
+					language : {
+						url : "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
+					},
+					columnDefs : [ {
+						targets : 5,
+						render : function(data, type, row) {
+							if (row != null
+								&& typeof row != 'undefined') {
+								var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleCotizacion(\""
+									+ row.idCotizacion
+									+ "\")' title='Ver Cotizaci&oacute;n' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";
+								return VerDetalle;
+							}
+							return '';
+						}
+					} ],
+					columns : [ {
+						data : "numeroFila"
+					}, {
+						data : "idOrden"
+					}, {
+						data : "feInicio"
+					}, {
+						data : "feFin"
+					}, {
+						data : "observacion"
+					} ]
+				});
+	}
+	function limpiarForm(){
+		document.getElementById("formConsuCotiza").reset();
 	}
 
 	function salir() {
 		location.href = '${pageContext.request.contextPath}/principal';
 	}
 
-	function registrarCotizacion() {
-		location.href = '${pageContext.request.contextPath}/cargarFormRegistrarPaqueteTuristico';
+	function registrarOrdenPlan() {
+		location.href = '${pageContext.request.contextPath}/formRegistrarOrdenPlanificacion';
 	}
 </script>
 </head>
@@ -240,8 +241,7 @@
 													</div>
 													<label class="col-sm-2 control-label alignDerecha">Cliente</label>
 													<div class="col-sm-2">
-														<input id="txtNumdoc"
-															onkeypress="return validarNumeroLetra(event)"
+														<input id="txtnomcli"
 															name="nuOrden" type="text" maxlength="30"
 															class="form-control">
 													</div>
@@ -286,15 +286,15 @@
 								<div class="form-group">
 									<div class="col-sm-2" align="center">
 										<input type="button" class="btn btn-primary" value="Buscar"
-											id="btnBuscarOrden" onclick="buscarOrden()"></input>
+											id="btnBuscarOrden" onclick="buscarOrdenPlan()"></input>
 									</div>
 									<div class="col-sm-2" align="center">
 										<input type="button" class="btn btn-primary" value="Limpiar"
-											id="clean" onclick=""></input>
+											id="clean" onclick="limpiarForm()"></input>
 									</div>
 									<div class="col-sm-2" align="right">
 										<input type="button" class="btn btn-primary" value="Nuevo"
-											id="btnNuevaOrden" onclick=""></input>
+											id="btnNuevaOrden" onclick="registrarOrdenPlan()"></input>
 									</div>
 								</div>
 							</div>

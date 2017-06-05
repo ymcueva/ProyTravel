@@ -19,6 +19,22 @@ public class OrdenPlanificacionBean {
 	private int idMoneda;
 	private String feInicio;
 	private String feFin;
+	private int nuAdultos;
+	private int nuNinos;
+	
+	
+	public int getNuAdultos() {
+		return nuAdultos;
+	}
+	public void setNuAdultos(int nuAdultos) {
+		this.nuAdultos = nuAdultos;
+	}
+	public int getNuNinos() {
+		return nuNinos;
+	}
+	public void setNuNinos(int nuNinos) {
+		this.nuNinos = nuNinos;
+	}
 	public int getIdOrden() {
 		return idOrden;
 	}
