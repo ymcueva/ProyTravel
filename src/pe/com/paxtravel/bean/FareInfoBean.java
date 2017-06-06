@@ -12,7 +12,8 @@ public class FareInfoBean {
 	private String nombreProveedor;
 	private String destino;
 	private String nombreAerolinea;
-	
+	private int idDestino;
+	private double precio;
 	
 		
 	
@@ -75,6 +76,18 @@ public class FareInfoBean {
 	public String toString() {
 		return this.href + "," + this.fare + "," + this.airlineCode + "," + this.nombreProveedor + "," + this.comision + "," + this.idAerolinea + "," + 
 				this.idProveedor + "," + this.nombreAerolinea + "," + this.destino;
+	}
+	public int getIdDestino() {
+		return idDestino;
+	}
+	public void setIdDestino(int idDestino) {
+		this.idDestino = idDestino;
+	}
+	public double getPrecio() {
+		return precio;
+	}
+	public void setPrecio(double precio) {
+		this.precio = precio;
 	}
 	
 	

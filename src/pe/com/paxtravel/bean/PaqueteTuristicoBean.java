@@ -19,6 +19,12 @@ public class PaqueteTuristicoBean {
 	private int idMoneda;
 	private Double imMin;
 	private Double imMax;
+	private String noEstado;
+	private String noCliente;
+	private String fechRango;
+	private String numDocCliente;
+	private String cliente;
+	private int tipoBusqueda;
 	
 	public int getNumeroFila() {
 		return numeroFila;
@@ -101,6 +107,31 @@ public class PaqueteTuristicoBean {
 	public Double getImMin() {
 		return imMin;
 	}
+	
+	public String getNoEstado(){
+		return noEstado;
+	}
+	
+	public String getNoCliente(){
+		return noCliente;
+	}
+	
+	public String getFechRango(){
+		return fechRango;
+	}
+	
+	public String getNumDocCliente(){
+		return numDocCliente;
+	}
+	
+	public String getCliente() {
+		return cliente;
+	}
+	
+	public int getTipoBusqueda() {
+		return tipoBusqueda;
+	}
+	
 	public void setImMin(Double imMin) {
 		this.imMin = imMin;
 	}
@@ -110,8 +141,30 @@ public class PaqueteTuristicoBean {
 	public void setImMax(Double imMax) {
 		this.imMax = imMax;
 	}
+	public void setNoEstado(String noEstado) {
+		this.noEstado = noEstado;
+	}
 	
+	public void setNoCliente(String noCliente) {
+		this.noCliente = noCliente;
+	}
 	
+	public void setFechRango(String fechRango) {
+		this.fechRango = fechRango;
+	}
+	
+	public void setNumDocCliente(String numDocCliente) {
+		this.numDocCliente = numDocCliente;
+	}
+	
+	public void setCliente(String cliente) {
+	   this.cliente = cliente;
+	}
+	
+	public void setTipoBusqueda(int tipobusqueda) {
+		this.tipoBusqueda = tipobusqueda;
+	
+	}
 	
 	public String toString(){
 		return  "PaqueteTuristicoBean [idPaquete=" + idPaquete+ " ," +
@@ -127,7 +180,10 @@ public class PaqueteTuristicoBean {
 				"nuAdultos=" + nuAdultos+ " ," +
 				"idMoneda=" + idMoneda+ " ," +
 				"imMin=" + imMin+ " ," +
-				"imMax=" + imMax + "]";
+				"imMax=" + imMax + " ," +
+				"noEstado=" + noEstado + " ," +
+				"Cliente=" + noCliente + " ," +
+				"FechRango=" + fechRango + "]";
 	}
 	
 }

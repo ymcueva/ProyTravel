@@ -20,6 +20,37 @@ public class SqlMapOrdenPlanificacionDAO extends SqlMapClientDaoSupport implemen
 	
 	@SuppressWarnings("unchecked")
 	@Override
+
+	public List<OrdenPlanificacionBean> obtenerOrdenPlanificacion(OrdenPlanificacionBean objBean){
+		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
+		ordenes = getSqlMapClientTemplate().queryForList("ordenplanificacion.obtenerOrdenPlanificacion", objBean);
+		return ordenes;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<OrdenPlanificacionBean> obtenerOrdenMotivo(OrdenPlanificacionBean objBean){
+		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
+		ordenes = getSqlMapClientTemplate().queryForList("ordenplanificacion.obtenerOrdenMotivo", objBean);
+		return ordenes;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<OrdenPlanificacionBean> obtenerOrdenDestino(OrdenPlanificacionBean objBean){
+		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
+		ordenes = getSqlMapClientTemplate().queryForList("ordenplanificacion.obtenerOrdenDestino", objBean);
+		return ordenes;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<OrdenPlanificacionBean> obtenerOrdenServicio(OrdenPlanificacionBean objBean){
+		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
+		ordenes = getSqlMapClientTemplate().queryForList("ordenplanificacion.obtenerOrdenServicio", objBean);
+		return ordenes;
+	}
+
 	public List<OrdenPlanificacionBean> listarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean){
 		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
 		ordenes = getSqlMapClientTemplate().queryForList("ordenplanificacion.listarOrdenPlanificacion", ordenPlanificacionBean);

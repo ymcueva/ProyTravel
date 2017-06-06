@@ -5,6 +5,8 @@
 <sqlMap namespace="paqueteturistico">
 	
 	<typeAlias alias="paqueteTuristicoBean" type="pe.com.paxtravel.bean.PaqueteTuristicoBean" />
+	<typeAlias alias="tourBean" type="pe.com.paxtravel.bean.TourBean" />
+	
 	<typeAlias alias="string" type="java.lang.String" />
 	
 	<resultMap id="listadoPaqueteTuristico" class="paqueteTuristicoBean">	
@@ -17,7 +19,10 @@
 		<result property="fecha" 		    		column="fecha" />
 		<result property="feInicio" 		    	column="fe_partida" />
 		<result property="feFin" 		    		column="fe_retorno" />
-		<result property="idTrabajador"			    column="id_usuario_ins" />		
+		<result property="idTrabajador"			    column="id_usuario_ins" />
+		<result property="noEstado"				    column="no_estado"/>
+		<result property="noCliente"				column="cliente"/>	
+		<result property="fechRango"				column="fech_rango"/>			
 	</resultMap>
 
 	<resultMap id="resultPaqueteTuristico" class="paqueteTuristicoBean">			
@@ -31,10 +36,22 @@
 		<result property="feFin" 		    		column="fe_retorno" />
 		<result property="idTrabajador"			    column="id_usuario_ins" />
 		<result property="nuNinos"					column="nu_ninos"/>
-		<result property="nuAdultos"				column="nu_adultos"/>		
-		<result property="imMin" 					column="im_min" />
-		<result property="imMax" 					column="im_max" />
-	</resultMap>	
+		<result property="nuAdultos"				column="nu_adultos"/>
+		<result property="noEstado"				    column="no_estado"/>
+		<result property="noCliente"				column="cliente"/>	
+		<result property="fechRango"				column="fech_rango"/>	
+	</resultMap>
+	
+	<resultMap id="resultTour"             class="tourBean">			
+		<result property="idTour"			    column="id_tour" />
+		<result property="idDestinoCiudad" 		column="id_destino_ciudad" />
+		<result property="duracion" 			column="duracion" />
+		<result property="precioAdulto" 		column="precio_adulto" />
+		<result property="precioNino"			column="precio_niño" />
+		<result property="descripcion" 		    column="descripcion" />
+		<result property="itinerario" 		    column="itinerario" />
+		<result property="servicios" 		    column="servicios" />
+	</resultMap>		
 	
 	<select id="obtenerCodigoPaqTuristico" resultClass="java.lang.String">
 		SELECT CONCAT('ORDE',
@@ -43,6 +60,19 @@
                MAX( SUBSTR( numeroFila, 11) ) +1 
                ) AS nu_Fila
          FROM paquete_turistico;
+	</select>
+	
+	<select id="listarTour" parameterClass="tourBean" resultMap="resultTour">
+			select id_tour,
+			       id_destino_ciudad,
+			       duracion,
+			       precio_adulto,
+			       precio_niño,
+			       descripcion,
+			       itinerario,
+			       servicios
+			 from tour
+			 where id_destino_ciudad = #idDestinoCiudad#      
 	</select>	
 	
 	<select id="listarPaqueteTuristico" parameterClass="paqueteTuristicoBean" resultMap="listadoPaqueteTuristico">		
@@ -55,18 +85,29 @@
 			   paquete.id_orden , 
 			   DATE_FORMAT(paquete.fecha,'%d-%m-%Y') fecha,
 			   DATE_FORMAT(paquete.fe_partida,'%d-%m-%Y') fe_partida,
-			   DATE_FORMAT(paquete.fe_partida,'%d-%m-%Y') fe_partida,
+			   DATE_FORMAT(paquete.fe_retorno,'%d-%m-%Y') fe_retorno,
 			   paquete.id_usuario_ins,
-				CONCAT(clie.nombres,' ',clie.apellidos) cliente,
-			    orden.nu_orden,
-			    orden.autorizacion,
-			    orden.im_presupuesto_minimo,
-			    orden.im_presupuesto_maximo, 
-			    orden.observacion
+			   paquete.nu_ninos,
+			   paquete.nu_adultos,
+			   est.no_estado,
+			   CONCAT(clie.nombres,' ',clie.apellidos) cliente,	
+			   CONCAT(convert(DATE_FORMAT(paquete.fe_partida,'%d-%m-%Y'),char),"/",convert(DATE_FORMAT(paquete.fe_retorno,'%d-%m-%Y'),char)) fech_rango
          FROM (SELECT @rownum:=0) r, paquete_turistico paquete  
-         INNER JOIN orden orden ON orden.id_orden=paquete.id_orden
-         INNER JOIN cliente clie ON orden.id_cliente=clie.id_cliente                
+         inner JOIN orden orden ON orden.id_orden=paquete.id_orden
+         inner JOIN cliente clie ON orden.id_cliente=clie.id_cliente
+         inner join estado est on paquete.id_estado = est.id_estado                
 		 WHERE 1 = 1
+		 <isGreaterThan compareValue="0" prepend="AND" property="idOrden"> paquete.id_orden = #idOrden# </isGreaterThan>
+	     <isGreaterThan compareValue="0" prepend="AND" property="idEstado"> paquete.id_estado = #idEstado# </isGreaterThan>
+		 <isNotEmpty prepend="AND" property="noCliente"> CONCAT(clie.nombres,' ',clie.apellidos) LIKE #noCliente# </isNotEmpty>
+		 <isNotEmpty prepend="AND" property="numDocCliente"> clie.nu_documento = #numDocCliente# </isNotEmpty>
+		 <isNotEmpty prepend="AND" property="feInicio" >
+	         <isNotEmpty property="feFin" >
+	            DATE_FORMAT(paquete.fecha,'%Y-%m-%d') between #feInicio# AND #feFin#
+	         </isNotEmpty>
+   		 </isNotEmpty>
+		 
+		
 	</select>
   
 	<insert id="insertarPaqueteTuristico" parameterClass="paqueteTuristicoBean">

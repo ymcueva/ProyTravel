@@ -4,6 +4,11 @@
 
 <sqlMap namespace="ordenplanificacion">
 
+
+	
+	<typeAlias alias="objBean" type="pe.com.paxtravel.bean.OrdenPlanificacionBean" />
+
+
 	<typeAlias alias="ordenPlanificacionBean" type="pe.com.paxtravel.bean.OrdenPlanificacionBean" />
 	<typeAlias alias="string" type="java.lang.String" />
 	<typeAlias alias="ordenDestinoBean" type="pe.com.paxtravel.bean.OrdenDestinoBean" />
@@ -11,8 +16,106 @@
 	<typeAlias alias="paisBean" type="pe.com.paxtravel.bean.PaisBean" />
 	<typeAlias alias="motivoViajeBean" type="pe.com.paxtravel.bean.MotivoViajeBean" />
 	<typeAlias alias="servicioAdicionalBean" type="pe.com.paxtravel.bean.ServicioAdicionalBean" />
+		<resultMap id="resultOrdenPlanificacion" class="objBean">		 	
+			<result property="idOrden"			    		column="id_orden" />			
+			<result property="idCotiza" 		    		column="id_cotiza" />			
+			<result property="nuOrden" 		    			column="nu_orden" />			 
+			<result property="observacion" 		    		column="observacion" />			
+			<result property="idTrabajador" 		    	column="id_usuario_ins" />
+			<result property="descripcion" 		    		column="descripcion" />
+			<result property="feOrder"			    		column="fe_order" />
+			<result property="autorizacion" 				column="autorizacion" />			
+			<result property="imPresupuestoMinimo"			column="im_presupuesto_minimo" />
+			<result property="imPresupuestoPaximo"			column="im_presupuesto_maximo" />			
+			<result property="idCliente" 					column="id_cliente"/>
+			<result property="idEstado"						column="id_estado"  /> 
+			<result property="idMoneda"						column="id_moneda" />
+			<result property="feInicio"  					column="fe_inicio"/>
+			<result property="feFin"						column="fe_fin"/>
+			<result property="nomCliente"					column="nomcliente"/>
+			<result property="fePartida"					column="fe_partida"/>
+			<result property="feRetorno"					column="fe_retorno"/>
+			<result property="nuAdultos"					column="nu_adultos"/>
+			<result property="nuNinos"					    column="nu_ninos"/>
+		</resultMap>
+		
+		<resultMap id="resultOrdenMotivo" class="objBean">
+			<result property="idOrden"			    		column="id_orden" />			
+			<result property="idMotivo"			    		column="id_motivo" />			
+			<result property="nomMotivo"			    	column="descripcion" />			
+		</resultMap>
+		
+		<resultMap id="resultOrdenDestino" class="objBean">
+			<result property="idOrden"			    		column="id_orden" />
+			<result property="nuOrden"			    		column="nu_orden" />			
+			<result property="idDetalle"			    	column="id_detalle" />
+			<result property="nomOrigen"			    	column="origen" />			
+			<result property="nomDestino"			    	column="destino" />
+			<result property="idOrigen"			    		column="id_origen" />			
+			<result property="idDestino"			    	column="id_destino" />
+			<result property="nuDias"			    	    column="nu_dias" />
+			<result property="idaVuelta"			    	column="ida_vuelta" />			
+		</resultMap>
+		
+		<resultMap id="resultOrdenServicio" class="objBean">
+			<result property="idOrden"			    		column="id_orden" />
+			<result property="nuOrden"			    		column="nu_orden" />
+			<result property="idServicio"			    	column="id_servicio" />			
+			<result property="nomServicio"			    	column="nombre" />				
+		</resultMap>
+		
 	
-	
+		<select id="obtenerOrdenPlanificacion" parameterClass="objBean" resultMap="resultOrdenPlanificacion">
+			
+			SELECT ord.id_orden, ord.id_cotiza, ord.nu_orden, ord.observacion, ord.id_usuario_ins, 
+			       ord.descripcion, 
+			       DATE_FORMAT(ord.fe_order,'%d-%m-%Y') fe_order, 
+			       ord.autorizacion,
+    			   ord.im_presupuesto_minimo, ord.im_presupuesto_maximo, ord.id_cliente, ord.id_estado, 
+    			   ord.id_moneda, ord.fe_inicio, ord.fe_fin,
+    			   CONCAT(cli.nombres,' ',cli.apellidos)nomcliente,
+    			   DATE_FORMAT(ord.fe_partida,'%d-%m-%Y %H:%i:%s')fe_partida,
+    			   DATE_FORMAT(ord.fe_retorno,'%d-%m-%Y %H:%i:%s')fe_retorno,
+    			   ord.nu_adultos,
+    			   ord.nu_ninos
+			FROM orden ord 
+			inner join cliente cli on ord.id_cliente = cli.id_cliente
+			where nu_orden= #nuOrden# 
+			
+		</select>  
+		
+		<select id="obtenerOrdenMotivo" parameterClass="objBean" resultMap="resultOrdenMotivo">
+			select ord.id_orden,ord.id_motivo,mot.descripcion
+			from orden_motivo ord
+			inner join motivo_viaje mot on (ord.id_motivo = mot.id_motivo)
+			where ord.id_orden = #idOrden#
+		
+		</select>  
+		
+		<select id="obtenerOrdenDestino" parameterClass="objBean" resultMap="resultOrdenDestino">	
+			select od.id_orden,
+       			   ord.nu_orden,
+       			   od.id_detalle,
+       			   ori.descripcion origen,
+       			   des.descripcion destino,
+       			   ord.id_origen,
+       			   od.id_destino,
+       			   od.nu_dias,
+       			   case when od.ida_vuelta= 0 then 'Ida' when od.ida_vuelta = 1 then 'Vuelta' else '' end ida_vuelta 
+			from orden_destino od
+			inner join orden ord on od.id_orden = ord.id_orden
+			inner join destino_ciudad des on od.id_destino = des.id_destino_ciudad
+			inner join destino_ciudad ori on ord.id_origen =  ori.id_destino_ciudad
+			where ord.nu_orden = #nuOrden#
+		</select>  
+		
+		<select id="obtenerOrdenServicio" parameterClass="objBean" resultMap="resultOrdenServicio">	
+			select os.id_orden,ord.nu_orden,serv.id_servicio,serv.nombre 
+			from orden_servicio os
+			inner join orden ord on os.id_orden = ord.id_orden
+			inner join servicios serv on os.id_servicio = serv.id_servicio
+			where ord.nu_orden = #nuOrden#
+		</select>  
 
 	<resultMap id="resultOrdenPlanificacion" class="ordenPlanificacionBean">
 

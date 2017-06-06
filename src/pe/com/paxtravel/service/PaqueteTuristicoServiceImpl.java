@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pe.com.paxtravel.bean.PaqueteTuristicoBean;
+import pe.com.paxtravel.bean.TourBean;
 import pe.com.paxtravel.model.dao.PaqueteTuristicoDAO;
 
 public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
@@ -35,5 +36,11 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
 		return (String) paqueteTuristicoDAO.obtenerCodigoPaqTuristico();
 	}
 	
+	@Override
+	public List<TourBean> listarTour(TourBean tourBean) {
+		List<TourBean> listaTour = new ArrayList<TourBean>();
+		listaTour = paqueteTuristicoDAO.listaTour(tourBean);
+		return listaTour;
+	}
 	
 }

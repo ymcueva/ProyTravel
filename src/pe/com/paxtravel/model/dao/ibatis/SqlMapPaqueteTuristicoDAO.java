@@ -7,6 +7,7 @@ import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
 import pe.com.paxtravel.bean.CotizacionBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoBean;
+import pe.com.paxtravel.bean.TourBean;
 import pe.com.paxtravel.model.dao.PaqueteTuristicoDAO;
 
 public class SqlMapPaqueteTuristicoDAO extends SqlMapClientDaoSupport implements PaqueteTuristicoDAO {
@@ -18,6 +19,14 @@ public class SqlMapPaqueteTuristicoDAO extends SqlMapClientDaoSupport implements
 		List<PaqueteTuristicoBean> listaPaquete = null;
 		listaPaquete = getSqlMapClientTemplate().queryForList("paqueteturistico.listarPaqueteTuristico", paqueteTuristicoBean);
 		return listaPaquete;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<TourBean> listaTour(TourBean tourBean) {
+		List<TourBean> listaTour = null;
+		listaTour = getSqlMapClientTemplate().queryForList("paqueteturistico.listarTour", tourBean);
+		return listaTour;
 	}
 	
 	

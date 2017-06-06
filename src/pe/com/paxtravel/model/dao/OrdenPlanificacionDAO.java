@@ -11,20 +11,25 @@ import pe.com.paxtravel.bean.ServicioAdicionalBean;
 
 public interface OrdenPlanificacionDAO {
 	
-	List<OrdenPlanificacionBean> listarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
+	public List<OrdenPlanificacionBean> listarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
 
 	public int GrabarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
 	
+	public List<OrdenPlanificacionBean> obtenerOrdenPlanificacion(OrdenPlanificacionBean objBean);
+	public List<OrdenPlanificacionBean> obtenerOrdenMotivo(OrdenPlanificacionBean objBean);
+	public List<OrdenPlanificacionBean> obtenerOrdenDestino(OrdenPlanificacionBean objBean);
+	public List<OrdenPlanificacionBean> obtenerOrdenServicio(OrdenPlanificacionBean objBean);
+
 	public int registrarServicio(ServicioAdicionalBean servicioAdicionalBean);
 
 	public int registrarMotivo(MotivoViajeBean motivoViajeBean);
 
-	String generarNumeroOrden();
+	public String generarNumeroOrden();
 
 	public int registrarOrdenDestino(OrdenDestinoBean ordenDestinoBean);
 
-	List<PaisBean> listaPais(PaisBean paisBean);
+	public List<PaisBean> listaPais(PaisBean paisBean);
 
-	List<CiudadBean> listaCiudad(CiudadBean ciudadBean);
+	public List<CiudadBean> listaCiudad(CiudadBean ciudadBean);
 
 }

@@ -15,15 +15,20 @@ import pe.com.paxtravel.bean.ServicioAdicionalBean;
 
 public interface OrdenPlanificacionService {
 	
-	public List<OrdenPlanificacionBean> listarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
+	List<OrdenPlanificacionBean> obtenerOrdenPlanificacion(OrdenPlanificacionBean objBean);
+	public List<OrdenPlanificacionBean> obtenerOrdenMotivo(OrdenPlanificacionBean objBean);
+	public List<OrdenPlanificacionBean> obtenerOrdenDestino(OrdenPlanificacionBean objBean);
+	public List<OrdenPlanificacionBean> obtenerOrdenServicio(OrdenPlanificacionBean objBean);
 	
-	public int GrabarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
-	
-	public String generarNumeroOrden();
-		
-	public int registrarMotivo(MotivoViajeBean motivoViajeBean);
-	
-	public int registrarServicio(ServicioAdicionalBean servicioAdicionalBean);
+    public List<OrdenPlanificacionBean> listarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);    
+        
+    public int GrabarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
+    
+    public String generarNumeroOrden();
+        
+    public int registrarMotivo(MotivoViajeBean motivoViajeBean);
+    
+    public int registrarServicio(ServicioAdicionalBean servicioAdicionalBean);
 
 	public int registrarOrdenDestino(OrdenDestinoBean ordenDestinoBean);
 	

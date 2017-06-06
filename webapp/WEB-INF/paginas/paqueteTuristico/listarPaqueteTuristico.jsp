@@ -67,11 +67,11 @@
  				
 		console.log("Ingresooooooooooo");
 		
- 		construirTablaListaCotizacion(listaPaqueteTuristico);
+		construirTablaListaPaquete(listaPaqueteTuristico);
 		
-		$("#btnBuscarCotizacion").on('click', function(e){
+		$("#btnBuscarPaquete").on('click', function(e){
 			e.preventDefault();
- 			buscarCotizacion();
+ 			buscarPaquete();
 		})
 		
  	});
@@ -88,10 +88,25 @@
 			useCurrent: false
         });
 		
+		$('#divFechaFinBusq').datetimepicker({
+			language : 'es',
+            autoClose : true,
+ 			minDate: '01/01/2000',
+			
+            format: 'DD/MM/YYYY',
+            pickTime: false,
+			useCurrent: false
+        });
+		
 		$("#eliminarFecha").on("click", function(e){
 			e.preventDefault();
 			$("#txtFechaCotizacionBusq").val("");
-		})
+		});
+		
+		$("#eliminarFechaFin").on("click", function(e){
+			e.preventDefault();
+			$("#txtFechaFinBusq").val("");
+		});
 	}
 	
 	function validarNumeroLetra(e){
@@ -99,15 +114,15 @@
 		return ( (key==32 ) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90) );
  	}
  	
-	function buscarCotizacion(){
+	function buscarPaquete(){
 		
 		var grabarFormParams = {
-			'cotizacionBean' : formToObject( '#formConsuCotiza' )
+			'paqueteBean' : formToObject( '#formConsuPaquete' )
 		};
 		//alert("params: " + JSON.stringify(grabarFormParams));
 		
 		$.ajax({
-			url: '${pageContext.request.contextPath}/listarCotizacion?btnBuscar=1',
+			url: '${pageContext.request.contextPath}/listarPaqueteTuristico?btnBuscar=1',
 			data: JSON.stringify(grabarFormParams),
 			cache: false,
 			async: true,
@@ -118,20 +133,20 @@
 				
 				var rpta = response.dataJson;
                 // actualizando lista
-                var listaCotizacion = [];
-                if (rpta.listaCotizacion != null) {
-                    listaCotizacion = rpta.listaCotizacion;
+                var listaPaqueteTuristico = [];
+                if (rpta.listaPaqueteTuristico != null) {
+                	listaPaqueteTuristico = rpta.listaPaqueteTuristico;
                 }
-				construirTablaListaCotizacion(listaCotizacion);
+				construirTablaListaPaquete(listaPaqueteTuristico);
 			},
 			error: function(data, textStatus, errorThrown) {
 			}
 		});
 	}
 	
- 	function construirTablaListaCotizacion( dataGrilla ){
+ 	function construirTablaListaPaquete( dataGrilla ){
 		//alert(dataGrilla);
-		var table = $('#tblListaCotizacion').dataTable({
+		var table = $('#tblListaPaquete').dataTable({
 			data: dataGrilla,
 			bDestroy: true,
 			ordering: false,
@@ -149,9 +164,9 @@
 			
 			fnDrawCallback: function(oSettings) {
 				if (oSettings.fnRecordsTotal() == 0) {
-					$('#tblListaCotizacion_paginate').addClass('hiddenDiv');
+					$('#tblListaPaquete_paginate').addClass('hiddenDiv');
 				} else {
-					$('#tblListaCotizacion_paginate').removeClass('hiddenDiv');
+					$('#tblListaPaquete_paginate').removeClass('hiddenDiv');
 				}
 			},
 			
@@ -169,7 +184,7 @@
 				targets: 5,
 				render: function(data, type, row){
 					if (row !=null && typeof row != 'undefined') {
-						var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleCotizacion(\""+row.idCotizacion+"\")' title='Ver Cotizaci&oacute;n' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";
+						var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleCotizacion(\""+row.idCotizacion+"\")' title='Modificar' ><span class='glyphicon glyphicon-pencil'></span></a> </span>";
 						return VerDetalle;
 					}
 					return '';
@@ -178,9 +193,9 @@
 			columns: [
 				{data: "numeroFila"},
 				{data: "idOrden"},
-				{data: "feInicio"},
-				{data: "feFin"},
-				{data: "observacion"}
+				{data: "fechRango"},
+				{data: "noCliente"},
+				{data: "noEstado"}
 			]
 		});
  	}
@@ -287,42 +302,13 @@
 												
 								<div class="row">
 									<div class="col-sm-12">
-										<form id="formConsuCotiza" class="form-horizontal" method="POST">
+										<form id="formConsuPaquete" class="form-horizontal" method="POST">
 
 											<div class="form-group">
 												<label class="col-sm-2 control-label alignDerecha">Nro. Orden:</label>
 												<div class="col-sm-3">
-													<input id="txtNumero" onkeypress="return validarNumeroLetra(event)" name="nuOrden" type="text" maxlength="30" class="form-control">
+													<input id="txtNumero" name="idOrden" type="text" maxlength="30" class="form-control">
 												</div>
-												
-												<label class="col-sm-1 control-label alignDerecha">Estado:</label>
-												<div class="col-sm-4">
-													<select name="codigoEstadoCotizacion" id="selcodigoEstadoCotizacion" class="form-control tamanoMaximo"> 
-														<option value="">--- Seleccione ---</option>
-														<option value="1">Pendiente</option>
-														<option value="2">Finalizado</option> 
-														<option value="3">Asignado</option>
-														<option value="4">Disponible</option>
-													</select>
-												</div>
-												
-												
-											</div>
-											
-											<div class="form-group">
-												<label class="col-sm-2 control-label alignDerecha">Fecha Inicio/Fin:</label>
-												<div class="col-sm-3">
-													<div class="input-group date tamanoMaximo" id="divFechaCotizacionBusq">
-														<input id="txtFechaCotizacionBusq" name="fechaIni" type="text" maxlength="30" readonly="yes" class="form-control txtFecha" />
-														<span class="input-group-addon datepickerbutton">
-															<span class="glyphicon glyphicon-calendar"></span>
-														</span>
-														<span class="input-group-addon" id="eliminarFecha">
-															<span class="glyphicon glyphicon-remove"></span>
-														</span>
-													</div>
-												</div>
-												
 												
 												<label class="col-sm-1 control-label alignDerecha">Cliente:</label>
 												<div class="col-sm-2">
@@ -334,14 +320,58 @@
 												</div>
 												
 												<div class="col-sm-3">
-													<input id="txtNombreCliente" onkeypress="return validarNumeroLetra(event)" name="nombreCliente" type="text" maxlength="30" class="form-control">
+													<input name="cliente" id="txtNombreCliente"  type="text" maxlength="30" class="form-control" />
 												</div>
+												
+												
+												
+											</div>
+											
+											<div class="form-group">
+												<label class="col-sm-2 control-label alignDerecha">Fecha Inicio</label>
+												<div class="col-sm-2">
+													<div class="input-group date tamanoMaximo" id="divFechaCotizacionBusq">
+														<input id="txtFechaCotizacionBusq" name="feInicio" type="text" maxlength="30" readonly="yes" class="form-control txtFecha" />
+														<span class="input-group-addon datepickerbutton">
+															<span class="glyphicon glyphicon-calendar"></span>
+														</span>
+														<span class="input-group-addon" id="eliminarFecha">
+															<span class="glyphicon glyphicon-remove"></span>
+														</span>
+													</div>
+												</div>
+												
+												<label class="col-sm-2 control-label alignDerecha">Fecha Fin</label>
+												<div class="col-sm-2">
+													<div class="input-group date tamanoMaximo" id="divFechaFinBusq">
+														<input id="txtFechaFinBusq" name="feFin" type="text" maxlength="30" readonly="yes" class="form-control txtFecha" />
+														<span class="input-group-addon datepickerbutton">
+															<span class="glyphicon glyphicon-calendar"></span>
+														</span>
+														<span class="input-group-addon" id="eliminarFechaFin">
+															<span class="glyphicon glyphicon-remove"></span>
+														</span>
+													</div>
+												</div>
+												
+												<label class="col-sm-1 control-label alignDerecha">Estado:</label>
+												<div class="col-sm-2">
+													<select name="idEstado" id="selcodigoEstadoCotizacion" class="form-control tamanoMaximo"> 
+														<option value="">--- Seleccione ---</option>
+														<option value="4">Pendiente</option>
+														<option value="5">Finalizado</option> 
+														<option value="6">Asignado</option>
+														<option value="7">Disponible</option>
+													</select>
+												</div>
+												
+												
 												
 											</div>
 											
 											<div class="form-group">
 												<div class="col-sm-10" style="text-align:center">
-													<button id="btnBuscarCotizacion" class="btn btn-primary" title="Buscar">Buscar</button>
+													<button id="btnBuscarPaquete" class="btn btn-primary" title="Buscar">Buscar</button>
 													<button id="btnLimpiarCotizacion" class="btn btn-primary" title="Buscar">Limpiar</button>
 												</div>
 												
@@ -368,7 +398,7 @@
 								<div id="dvSubSecCotizacion">
 									<div class="col-sm-12" id="divTblListaCotizacion">
 										
-										<table id ="tblListaCotizacion" class="table table-bordered responsive" style="width:100%">
+										<table id ="tblListaPaquete" class="table table-bordered responsive" style="width:100%">
 											<thead>
 												<tr>
 													<th width="10%" class="text-center">N&deg;</td>

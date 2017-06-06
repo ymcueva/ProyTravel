@@ -26,15 +26,31 @@ public class OrdenPlanificacionServiceImpl implements OrdenPlanificacionService{
 	}
 
 	@Override
-	public List<OrdenPlanificacionBean> listarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean) {
+	public List<OrdenPlanificacionBean> obtenerOrdenPlanificacion(OrdenPlanificacionBean objBean) {
 		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
-		ordenes = objDAO.listarOrdenPlanificacion(ordenPlanificacionBean);
+		ordenes = objDAO.obtenerOrdenPlanificacion(objBean);
 		return ordenes;
 	}
 
 	@Override
-	public int GrabarOrdenPlanificacion(OrdenPlanificacionBean Opb) {
-		return objDAO.GrabarOrdenPlanificacion(Opb);
+	public List<OrdenPlanificacionBean> obtenerOrdenMotivo(OrdenPlanificacionBean objBean) {
+		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
+		ordenes = objDAO.obtenerOrdenMotivo(objBean);
+		return ordenes;
+	}
+	
+	@Override
+	public List<OrdenPlanificacionBean> obtenerOrdenDestino(OrdenPlanificacionBean objBean) {
+		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
+		ordenes = objDAO.obtenerOrdenDestino(objBean);
+		return ordenes;
+	}
+	
+	@Override
+	public List<OrdenPlanificacionBean> obtenerOrdenServicio(OrdenPlanificacionBean objBean) {
+		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
+		ordenes = objDAO.obtenerOrdenServicio(objBean);
+		return ordenes;
 	}
 	
 	@Override
@@ -64,10 +80,30 @@ public class OrdenPlanificacionServiceImpl implements OrdenPlanificacionService{
 		return listaCiudad;
 	}
 
+    @Override
+    public List<PaisBean> listarPais(PaisBean paisBean) {
+        List<PaisBean> listaPais = new ArrayList<PaisBean>();
+        listaPais = objDAO.listaPais(paisBean);
+        return listaPais;
+    }
+
+
 	@Override
-	public List<PaisBean> listarPais(PaisBean paisBean) {
-		List<PaisBean> listaPais = new ArrayList<PaisBean>();
-		listaPais = objDAO.listaPais(paisBean);
-		return listaPais;
+	public List<OrdenPlanificacionBean> listarOrdenPlanificacion(
+			OrdenPlanificacionBean ordenPlanificacionBean) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+
+	@Override
+	public int GrabarOrdenPlanificacion(
+			OrdenPlanificacionBean ordenPlanificacionBean) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	
+	
+	
 }

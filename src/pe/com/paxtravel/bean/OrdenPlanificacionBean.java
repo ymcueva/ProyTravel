@@ -19,8 +19,23 @@ public class OrdenPlanificacionBean {
 	private int idMoneda;
 	private String feInicio;
 	private String feFin;
+
+	private String nomCliente;
+	private int idMotivo;
+	private String nomMotivo;
+	private int idDetalle;
+	private String nomDestino;
+	private String nomOrigen;
+	private String idaVuelta;
+	private int nuDias;
+	private int idServicio;
+	private String nomServicio;
+	private String fePartida;
+	private String feRetorno;
 	private int nuAdultos;
 	private int nuNinos;
+	private int idOrigen;
+	private int idDestino;
 	
 	
 	public int getNuAdultos() {
@@ -125,4 +140,96 @@ public class OrdenPlanificacionBean {
 	public void setFeFin(String feFin) {
 		this.feFin = feFin;
 	}
+	
+	public String getNomCliente(){
+		return nomCliente;
+	}
+	
+	public int getIdMotivo() {
+		return idMotivo;
+	}
+	
+	public String getNomMotivo() {
+		return nomMotivo;
+	}
+	
+	public void setNomCliente(String nomCliente) {
+		this.nomCliente = nomCliente;
+	}
+	
+	public void setIdMotivo(int idMotivo) {
+		this.idMotivo = idMotivo;
+	}
+	
+	public void setNomMotivo(String nomMotivo) {
+		this.nomMotivo = nomMotivo;
+	}
+	public int getIdDetalle() {
+		return idDetalle;
+	}
+	public void setIdDetalle(int idDetalle) {
+		this.idDetalle = idDetalle;
+	}
+	public int getNuDias() {
+		return nuDias;
+	}
+	public void setNuDias(int nuDias) {
+		this.nuDias = nuDias;
+	}
+	public String getNomDestino() {
+		return nomDestino;
+	}
+	public void setNomDestino(String nomDestino) {
+		this.nomDestino = nomDestino;
+	}
+	public int getIdServicio() {
+		return idServicio;
+	}
+	public void setIdServicio(int idServicio) {
+		this.idServicio = idServicio;
+	}
+	public String getNomServicio() {
+		return nomServicio;
+	}
+	public void setNomServicio(String nomServicio) {
+		this.nomServicio = nomServicio;
+	}
+	public String getFePartida() {
+		return fePartida;
+	}
+	public void setFePartida(String fePartida) {
+		this.fePartida = fePartida;
+	}
+	public String getFeRetorno() {
+		return feRetorno;
+	}
+	public void setFeRetorno(String feRetorno) {
+		this.feRetorno = feRetorno;
+	}
+
+	public String getNomOrigen() {
+		return nomOrigen;
+	}
+	public void setNomOrigen(String nomOrigen) {
+		this.nomOrigen = nomOrigen;
+	}
+	public String getIdaVuelta() {
+		return idaVuelta;
+	}
+	public void setIdaVuelta(String idaVuelta) {
+		this.idaVuelta = idaVuelta;
+	}
+	public int getIdOrigen() {
+		return idOrigen;
+	}
+	public void setIdOrigen(int idOrigen) {
+		this.idOrigen = idOrigen;
+	}
+	public int getIdDestino() {
+		return idDestino;
+	}
+	public void setIdDestino(int idDestino) {
+		this.idDestino = idDestino;
+	}
+
 }
