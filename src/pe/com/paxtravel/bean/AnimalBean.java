@@ -8,7 +8,7 @@ public class AnimalBean {
 	private String codigoAnimal;
 	
 	
-	
+	//animal
 	private String nombreAnimal;
 	//toro
 	private String codigoToro;
