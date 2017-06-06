@@ -3,7 +3,7 @@ package pe.com.paxtravel.bean;
 public class AnimalBean {
 
 	private int numeroFila;
-	//codigo
+	//codigos
 	
 	private String codigoAnimal;
 	
