@@ -1,7 +1,21 @@
-package com.pe.paxtravel.tree.decision;
+package pe.com.paxtravel.tree.decision;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import pe.com.paxtravel.service.CotizacionService;
+import pe.com.paxtravel.tree.data.PaqueteManagerBean;
 
 public class DataManagerTest2 {
+	
+		
+	
 	public static void main(String[] args) {
+		
+		
+		
 		TableManager tm = new DataManager("test.csv");
 		System.out.println("Initialiting test.csv.\n");
 		System.out.println(tm);
@@ -31,7 +45,9 @@ public class DataManagerTest2 {
 		tm2=tm.getTrainAndProbeSet(75.0);
 		System.out.println(tm);
 		System.out.println(tm2.getAttributes());
-		System.out.println(tm2);
+		System.out.println(tm2); 
+		
+		
 	}
 
 }

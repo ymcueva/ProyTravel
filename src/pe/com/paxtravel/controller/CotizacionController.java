@@ -53,6 +53,8 @@ import pe.com.paxtravel.service.AnimalService;
 import pe.com.paxtravel.service.CotizacionService;
 import pe.com.paxtravel.service.EmpleadoService;
 import pe.com.paxtravel.service.InseminacionService;
+import pe.com.paxtravel.tree.data.PaqueteManagerBean;
+import pe.com.paxtravel.tree.decision.DataManagerTest2;
 //import pe.com.paxtravel.service.ProduccionService;
 import pe.com.paxtravel.util.ControllerUtil;
 import pe.com.paxtravel.util.DataJsonBean;
@@ -162,6 +164,53 @@ public class CotizacionController {
 		DataJsonBean dataJSON = new DataJsonBean();
 
 		try {
+			
+			
+			///////////////////////
+			
+			//BUSQUEDA DE PAQUETES
+			
+			//1- TIPO DE PROGRAMA
+			int tipoPrograma = 1;
+			
+			//2- PRESUPUESTO: ALTO, MEDIO, BAJO
+			double precioPresupuestoPrograma = 5200.00;			
+			PaqueteManagerBean oPaquete = new PaqueteManagerBean();			
+			oPaquete.setImPrecio(precioPresupuestoPrograma);
+			
+			System.out.println("precio A max" + oPaquete.getImPrecioMaxAlto());
+			System.out.println("precio A min" + oPaquete.getImPrecioMinAlto());
+			System.out.println("precio B max" + oPaquete.getImPrecioMaxMedio());
+			System.out.println("precio B min" + oPaquete.getImPrecioMinMedio());
+			System.out.println("precio C max" + oPaquete.getImPrecioMaxBajo());
+			System.out.println("precio C min" + oPaquete.getImPrecioMinBajo());
+					
+			oPaquete.setIdTipoPaquete(tipoPrograma);
+			
+			//3- MODELO DESTINOS: A, B Y C
+			List<PaqueteManagerBean> listPaqueteSearch = new ArrayList<PaqueteManagerBean>();
+			List<PaqueteManagerBean> listCotizacionManBeanAlto = null;
+			List<PaqueteManagerBean> listCotizacionManBeanMedio = null;
+			List<PaqueteManagerBean> listCotizacionManBeanBajo = null;
+			
+			//3.1- Primera Iteracion: Presupuesto ALTO					
+			oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxAlto());
+			oPaquete.setImPrecioMin(oPaquete.getImPrecioMinAlto());
+			oPaquete.setTiPresupuestoValue("Alto");
+			
+			System.out.println( "precio max: " + oPaquete.getImPrecioMax() );
+			System.out.println( "precio min: " + oPaquete.getImPrecioMin() );
+						 	
+			listCotizacionManBeanAlto = cotizacionService.listarPaquete(oPaquete);
+			
+			System.out.println("size: " + listCotizacionManBeanAlto.size());
+			
+			
+			/////////////////////
+			
+			
+			
+			
 			modelAndView = new ModelAndView();
 			List<CiudadBean> listaCiudad = new ArrayList<CiudadBean>();
 			List<PaisBean> listaPais = new ArrayList<PaisBean>();
@@ -411,6 +460,8 @@ public class CotizacionController {
 			System.out.println("Iniciando grabar Destinos");
 
 			String datosDestino = request.getParameter("datosDestino");
+			
+			List<CotizacionDetalleBean> cotizacionDestinos = null;			
 
 			if ( datosDestino.length() > 0 ) {
 
@@ -424,6 +475,7 @@ public class CotizacionController {
 				cotizacionDetalleBean.setNumeroCotizacion(cotizacionBean.getNumeroCotizacion());
 
 				String g[];
+				cotizacionDestinos = new ArrayList<CotizacionDetalleBean>();
 
 				if (destino.length > 0){
 					for (int i = 0; i < destino.length; i++) {
@@ -434,6 +486,9 @@ public class CotizacionController {
 						cotizacionDetalleBean.setDestino( Integer.parseInt( g[1] ));
 
 						int res = cotizacionService.registrarCotizacionDetalleTicket(cotizacionDetalleBean);
+						
+						cotizacionDetalleBean.setIdCotizacion(cotizacionBean.getIdCotizacion());
+						cotizacionDestinos.add(cotizacionDetalleBean);
 
 						System.out.println("registrarMotivo("+g[0] + "/" + g[1] +") " + res);
 
@@ -502,9 +557,93 @@ public class CotizacionController {
 						System.out.println("registrar servicio Tipo Habitacion("+servicio[i] +") " + res);
 					}
 				}
-
 			}
-
+			
+			
+			
+			////////////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////////////
+			//BUSQUEDA DE PAQUETES
+			
+			//1- TIPO DE PROGRAMA
+			int tipoPrograma = cotizacionBean.getIdTipoPrograma();
+			
+			//2- PRESUPUESTO: ALTO, MEDIO, BAJO
+			double precioPresupuestoPrograma = cotizacionBean.getPresupuestoMaximo();			
+			PaqueteManagerBean oPaquete = new PaqueteManagerBean();			
+			oPaquete.setImPrecio(precioPresupuestoPrograma);
+			oPaquete.setIdTipoPaquete(tipoPrograma);			
+			
+			//3- MODELO DESTINOS: A, B Y C
+			List<PaqueteManagerBean> listPaqueteSearch = new ArrayList<PaqueteManagerBean>();
+			List<PaqueteManagerBean> listCotizacionManBeanAlto = null;
+			List<PaqueteManagerBean> listCotizacionManBeanMedio = null;
+			List<PaqueteManagerBean> listCotizacionManBeanBajo = null;
+			
+			//Se realizan 3 iteracciones, uno por categoria de presupuesto: Alto, Medio y Bajo
+			for ( int i=0; i<3; i++ ) {
+								
+				if (i == 0) {
+					//3.1- Primera Iteracion: Presupuesto ALTO					
+					oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxAlto());
+					oPaquete.setImPrecioMin(oPaquete.getImPrecioMinAlto());
+					oPaquete.setTiPresupuestoValue("Alto");
+					listCotizacionManBeanAlto = cotizacionService.listarPaquete(oPaquete);					
+					for (PaqueteManagerBean o:listCotizacionManBeanAlto){
+						if ( !listPaqueteSearch.contains(o) ) {
+							System.out.println("listPaqueteSearch[id_paquete:"+o.getIdPaquete()+", nombre:"+o.getNomPaquete()+", comentario:"+o.getComentario()+", im_precio:"+o.getImPrecio()+", tipoPresupuesto:"+o.getTiPresupuestoValue()+"]");
+							listPaqueteSearch.add(o);
+						}
+					}					
+				} else if (i ==1){
+					//3.2- Segunda Iteracion: Presupuesto MEDIO					
+					oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxMedio());
+					oPaquete.setImPrecioMin(oPaquete.getImPrecioMinMedio());
+					oPaquete.setTiPresupuestoValue("Medio");
+					listCotizacionManBeanMedio = cotizacionService.listarPaquete(oPaquete);					
+					for (PaqueteManagerBean o:listCotizacionManBeanMedio){
+						if ( !listPaqueteSearch.contains(o) ) {
+							System.out.println("listPaqueteSearch[id_paquete:"+o.getIdPaquete()+", nombre:"+o.getNomPaquete()+", comentario:"+o.getComentario()+", im_precio:"+o.getImPrecio()+", tipoPresupuesto:"+o.getTiPresupuestoValue()+"]");
+							listPaqueteSearch.add(o);
+						}
+					}
+				} else if (i == 2){
+					//3.3- Tercera Iteracion: Presupuesto BAJO					
+					oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxBajo());
+					oPaquete.setImPrecioMin(oPaquete.getImPrecioMinBajo());
+					oPaquete.setTiPresupuestoValue("Bajo");
+					listCotizacionManBeanBajo = cotizacionService.listarPaquete(oPaquete);					
+					for (PaqueteManagerBean o:listCotizacionManBeanBajo){
+						if ( !listPaqueteSearch.contains(o) ) {
+							System.out.println("listPaqueteSearch[id_paquete:"+o.getIdPaquete()+", nombre:"+o.getNomPaquete()+", comentario:"+o.getComentario()+", im_precio:"+o.getImPrecio()+", tipoPresupuesto:"+o.getTiPresupuestoValue()+"]");
+							listPaqueteSearch.add(o);
+						}
+					}
+				}
+				
+			}
+			//Se obtienen todos los paquetes disponibles en: listPaqueteSearch();	
+			
+			//Se filtran todos los destinos para estos paquetes y se guardan en: destinosList();
+			oPaquete.setList(cotizacionDestinos);
+			List<PaqueteManagerBean> destinosList = cotizacionService.listarPaqueteDestino(oPaquete);
+			List<Integer> paqueteIds = new ArrayList<Integer>();
+						
+			//4- PAQUETES
+			System.out.println("Paquetes finales.......................");
+			for (PaqueteManagerBean  o:destinosList) {															
+				if ( !paqueteIds.contains(o.getIdPaquete()) ) {
+					paqueteIds.add(o.getIdPaquete());
+					System.out.println("PaqueteID: " + o.getIdPaquete());
+				}
+			}
+			
+			//5- CARACTERISTICAS
+			
+			
+			
 			status = "ok";
 		} catch (Exception e) {
 			e.printStackTrace();

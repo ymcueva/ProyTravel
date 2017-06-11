@@ -25,6 +25,7 @@ import pe.com.paxtravel.bean.ProduccionBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
 import pe.com.paxtravel.model.dao.CotizacionDAO;
 import pe.com.paxtravel.model.dao.EmpleadoDAO;
+import pe.com.paxtravel.tree.data.PaqueteManagerBean;
 import pe.com.paxtravel.util.ExcelUtil;
 
 @Service
@@ -114,6 +115,20 @@ public class CotizacionServiceImpl implements CotizacionService {
 	@Override
 	public int registrarConsolidador(CotizacionDetalleTicketVueloBean fareInfoBean){
 		return cotizacionDAO.registrarConsolidador(fareInfoBean); 
+	}
+	
+	@Override
+	public List<PaqueteManagerBean> listarPaquete(PaqueteManagerBean p){		
+		List<PaqueteManagerBean> listaPaquete = new ArrayList<PaqueteManagerBean>();
+		listaPaquete = cotizacionDAO.listarPaquete(p);
+		return listaPaquete;
+	}
+		
+	@Override
+	public List<PaqueteManagerBean> listarPaqueteDestino(PaqueteManagerBean p){
+		List<PaqueteManagerBean> listaPaquete = new ArrayList<PaqueteManagerBean>();
+		listaPaquete = cotizacionDAO.listarPaqueteDestino(p);
+		return listaPaquete;
 	}
 	
 	

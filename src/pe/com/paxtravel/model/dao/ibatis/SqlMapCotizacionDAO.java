@@ -21,6 +21,7 @@ import pe.com.paxtravel.bean.ProduccionBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
 import pe.com.paxtravel.model.dao.CotizacionDAO;
 import pe.com.paxtravel.model.dao.EmpleadoDAO;
+import pe.com.paxtravel.tree.data.PaqueteManagerBean;
 
 public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements CotizacionDAO{
 	
@@ -113,6 +114,22 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements Cotiz
 	public int registrarConsolidador(CotizacionDetalleTicketVueloBean fareInfoBean){
 		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).update("cotizacion.insertarCotizacionDetalleTicketVueloTab2", fareInfoBean);
 		return 1;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PaqueteManagerBean> listarPaquete(PaqueteManagerBean p){
+		List<PaqueteManagerBean> listaPaquete = null;
+		listaPaquete = getSqlMapClientTemplate().queryForList("cotizacion.listarPaquetes", p);
+		return listaPaquete;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PaqueteManagerBean> listarPaqueteDestino(PaqueteManagerBean p){
+		List<PaqueteManagerBean> listaPaqueteDestino = null;
+		listaPaqueteDestino = getSqlMapClientTemplate().queryForList("cotizacion.listarPaqueteDestinos", p);
+		return listaPaqueteDestino;
 	}
 	
 }

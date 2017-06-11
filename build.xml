@@ -1,5 +1,5 @@
 <!--<project name="PaxTravelInternational" default="autodeploy-create" basedir=".">-->
-<project name="ProyTravel" default="ear-gen" basedir=".">
+<project name="PaxTravelv2" default="ear-gen" basedir=".">
 
 	<echo>iniciando build.xml ......</echo>
 	<property file="build.properties" />
@@ -27,7 +27,7 @@
 	
 	<target name="intranet">
 		<echo>Building the war file</echo>
-		<jar jarfile="${build.dir}/ProyTravel.war" basedir="${webapp.dir}">
+		<jar jarfile="${build.dir}/PaxTravelv2.war" basedir="${webapp.dir}">
 			<!-- <include name="resources/**"/> !-->
 			<include name="WEB-INF/paginas/cliente/*.jsp"/>
 			<include name="WEB-INF/paginas/commons/*.*"/>
@@ -94,6 +94,7 @@
 		<jar jarfile="${project.lib}/model.jar">
 			<fileset dir="${classes.dir}">
 				<include name="pe/com/paxtravel/bean/*.class" />
+				<include name="pe/com/paxtravel/tree/data/*.class" />				
 				<include name="pe/com/paxtravel/model/dao/*.class" />
 				<include name="pe/com/paxtravel/model/dao/ibatis/*.class" />
 				<include name="pe/com/paxtravel/model/dao/ibatis/maps/*.xml" />
@@ -125,7 +126,7 @@
 
 		<jar jarfile="${build.dir}/${project.name}.ear" >
 			<fileset dir="${build.dir}">
-				<include name="ProyTravel.war"/>
+				<include name="PaxTravelv2.war"/>
 				<include name="lib/**" />
 				<!--<include name="lib/controller.jar"/>-->
 			</fileset>

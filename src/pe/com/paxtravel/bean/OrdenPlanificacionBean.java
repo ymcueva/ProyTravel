@@ -37,7 +37,16 @@ public class OrdenPlanificacionBean {
 	private int idOrigen;
 	private int idDestino;
 	
+	private double imPresupuestoPaximo;
 	
+	
+	
+	public double getImPresupuestoPaximo() {
+		return imPresupuestoPaximo;
+	}
+	public void setImPresupuestoPaximo(double imPresupuestoPaximo) {
+		this.imPresupuestoPaximo = imPresupuestoPaximo;
+	}
 	public int getNuAdultos() {
 		return nuAdultos;
 	}

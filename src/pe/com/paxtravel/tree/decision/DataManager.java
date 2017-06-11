@@ -1,4 +1,4 @@
-package com.pe.paxtravel.tree.decision;
+package pe.com.paxtravel.tree.decision;
 
 import java.io.File;
 import java.io.FileNotFoundException;

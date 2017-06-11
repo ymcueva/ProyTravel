@@ -2,6 +2,8 @@ package pe.com.paxtravel.bean;
 
 public class CotizacionDetalleBean {
 	
+	
+	private int idCotizacion;
 	private String numeroCotizacion;
 	
 	private int origen;
@@ -25,6 +27,14 @@ public class CotizacionDetalleBean {
 	private int tiIda;
 	
 	
+
+	public int getIdCotizacion() {
+		return idCotizacion;
+	}
+
+	public void setIdCotizacion(int idCotizacion) {
+		this.idCotizacion = idCotizacion;
+	}
 
 	public int getTiIda() {
 		return tiIda;

@@ -15,6 +15,7 @@ import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.ProduccionBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
+import pe.com.paxtravel.tree.data.PaqueteManagerBean;
 
 public interface CotizacionService {
 
@@ -43,5 +44,9 @@ public interface CotizacionService {
 	public FareInfoBean getConsolidador(FareInfoBean fareInfoBean);
 	
 	public int registrarConsolidador(CotizacionDetalleTicketVueloBean fareInfoBean);
+	
+	public List<PaqueteManagerBean> listarPaquete(PaqueteManagerBean paqueteBean);
+	
+	public List<PaqueteManagerBean> listarPaqueteDestino(PaqueteManagerBean paqueteBean);
 	
 }

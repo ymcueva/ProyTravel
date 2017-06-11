@@ -15,6 +15,12 @@
 	<typeAlias alias="hotelHabitacionBean" type="pe.com.paxtravel.bean.HotelHabitacionBean" />
 	<typeAlias alias="clienteBean" type="pe.com.paxtravel.bean.ClienteBean" />
 	
+	<!-- Bean Busqueda de Paquetes - Inicio -->
+	
+	<typeAlias alias="paqueteManagerBean" type="pe.com.paxtravel.tree.data.PaqueteManagerBean" />
+	
+	<!-- Bean Busqueda de Paquetes - Fin -->
+	
 	<typeAlias alias="string" type="java.lang.String" />
 	
 	<resultMap id="resultFareInfo" class="fareInfoBean">
@@ -75,6 +81,58 @@
 		<result property="nombre"	        column="nombre_cliente" />
 		<result property="age"	        column="age" />		
 	</resultMap>
+	
+	
+	
+	<resultMap id="resultPaquetes" class="paqueteManagerBean">
+		<result property="idPaquete"			    column="id_paquete" />
+		<result property="nomPaquete"			    column="nombre" />
+		<result property="comentario"			    column="observacion" />
+		<result property="imPrecio"			    column="im_precio" />
+		<result property="tiPresupuestoValue"	column="ti_presupuesto" />
+	</resultMap>
+	
+	<resultMap id="resultPaqueteDestinos" class="paqueteManagerBean">
+		<result property="idPaqueteDestino"			    column="id" />
+		<result property="idPaquete"			    column="id_destino_ciudad" />		
+		<result property="nomPaquete"			    column="nom_ciudad" />
+		<result property="nuDias"			    column="nu_dias" />
+	</resultMap>		
+	
+	<resultMap id="resultPaqueteDestinoTour" class="paqueteManagerBean">
+		<result property="idPaqueteDestinoTour"			    column="id_paquete_destino_tour" />
+		<result property="idPaqueteDestino"			    column="id_paquete_destino" />
+		<result property="idTour"			    column="id_tour" />
+		<result property="desTour"			    column="descripcion" />
+		<result property="imPrecioAdulto"			    column="im_precio_adulto" />
+		<result property="imPrecioNino"			    column="im_precio_nino" />
+	</resultMap>		
+	
+	<resultMap id="resultPaqueteDestinoHotel" class="paqueteManagerBean">
+		<result property="idPaqueteDestinoHotel"    column="id_paquete_destino_hotel" />
+		<result property="idPaqueteDestino"			    column="id_paquete_destino" />
+		<result property="idHotel"			    column="id_hotel" />
+		<result property="idProveedor"			    column="id_proveedor" />
+		<result property="idTipoAlojamiento"			    column="id_tipo_alojamiento" />
+		<result property="idCategoriaAlojamiento"			    column="id_categoria_alojamiento" />
+		<result property="idHotelHabitacion"			    column="id_hotel_habitacion" />
+		<result property="nomTipoAlojamiento"			    column="tipo_alojamiento" />
+		<result property="nomProveedor"			    column="proveedor" />
+		<result property="nomHotel"			    column="hotel" />
+		<result property="nomCategoriaAlojamiento"    column="categoria_alojamiento" />
+		<result property="desAlojamiento"			    column="descripcion_alojamiento" />
+		<result property="imPrecio"			    column="im_precio" />		
+	</resultMap>
+	
+	<resultMap id="resultPaqueteDestinoTicket" class="paqueteManagerBean">
+		 	<result property="idPaqueteTicket"			    column="id_paquete_ticket" />
+		 	<result property="idPaquete"			    column="id_paquete_turistico" />
+		 	<result property="nomAerolinea"			    column="nom_aerolinea" />
+		 	<result property="codeAerolinea"			    column="code_aerolinea" />
+		 	<result property="imPrecio"			    column="im_precio" />		 
+	</resultMap>
+	
+	
 	
 	<select id="listarCotizacion" parameterClass="cotizacionBean" resultMap="resultCotizacion">
 		SELECT  @rownum:=@rownum+1 AS ca_nume_fila, coti.id_cotiza, coti.nu_cotiza,
@@ -304,5 +362,67 @@
 		)
 	</insert>
 	
+		
+	
+	<select id="listarPaqueteDestinos" parameterClass="paqueteManagerBean" resultMap="resultPaqueteDestinos">
+		SELECT ptD.id_destino_ciudad as id_destino_ciudad, cD.descripcion AS nom_ciudad, ptD.nu_dias ,
+			ptD.id_paquete_destino as id
+		FROM paquete_turistico_destino AS ptD 
+        	INNER JOIN destino_ciudad AS cD ON (cD.id_destino_ciudad = ptD.id_destino_ciudad)
+    	WHERE ptD.id_paquete_turistico = #idPaquete# AND id_destino_ciudad IN 
+    		<iterate open="(" close=")" conjunction=",">
+			   #list.destino#
+			</iterate>
+    	 ;
+	</select>
+	
+	<select id="listarPaquetes" parameterClass="paqueteManagerBean" resultMap="resultPaquetes">
+		SELECT id_paquete, nombre, observacion, im_precio, #tiPresupuestoValue# AS ti_presupuesto 
+			FROM paquete_turistico  
+		WHERE id_estado = 1 and id_tipo_paquete = 1 AND <![CDATA[im_precio<=#imPrecioMax# and im_precio>=#imPrecioMin#]]> 		
+	</select>
+	
+	<select id="listarPaqueteDestinoTours" parameterClass="paqueteManagerBean" resultMap="resultPaqueteDestinoTour">
+		SELECT id_paquete_destino_tour, id_paquete_destino, id_tour, descripcion, im_precio_adulto, im_precio_nino 
+		FROM proytraveldb.paquete_turistico_destino_tour
+	</select>
+	
+	<select id="listarPaqueteDestinoHoteles" parameterClass="paqueteManagerBean" resultMap="resultPaqueteDestinoHotel">
+		SELECT 
+			pTDH.id_paquete_destino_hotel, 
+		    pTDH.id_paquete_destino, 
+		    pTDH.id_hotel, 
+		    pTDH.id_proveedor, 
+		    pTDH.id_tipo_alojamiento, 
+		    pTDH.id_categoria_alojamiento, 
+		    pTDH.id_hotel_habitacion, 
+		    tA.descripcion AS tipo_alojamiento,
+		    P.nombre AS proveedor,
+		    H.descripcion AS hotel,
+		    tCA.nombre AS categoria_alojamiento,    	
+		    pTDH.descripcion_alojamiento, 
+		    pTDH.im_precio     
+		FROM proytraveldb.paquete_turistico_destino_hotel AS pTDH 
+			INNER JOIN proveedor AS P ON (pTDH.id_proveedor = P.id_proveedor)
+		    INNER JOIN hotel as H ON (pTDH.id_hotel = H.id_hotel)
+		    INNER JOIN tipo_alojamiento as tA ON (tA.id_tipo_alojamiento=pTDH.id_tipo_alojamiento)
+		    INNER JOIN tipo_categoria_alojamiento AS tCA ON (pTDH.id_categoria_alojamiento=tCA.id_tipo)
+		    INNER JOIN hotel_habitacion AS hH ON (pTDH.id_hotel_habitacion=hH.id_hotel_habitacion) 
+	</select>
+	
+	<select id="listarPaqueteDestinoTickets" parameterClass="paqueteManagerBean" resultMap="resultPaqueteDestinoTicket">
+		SELECT 
+			pTT.id_paquete_ticket,
+			pTT.id_paquete_turistico,
+			A.nombre AS nom_aerolinea, 
+			A.code_aerolinea,
+		    pTT.im_precio
+		 FROM proytraveldb.paquete_turistico_ticket AS pTT		
+		INNER JOIN aerolinea AS A ON (pTT.id_aerolinea = A.id_aerolinea)
+		INNER JOIN proveedor AS P ON (pTT.id_proveedor = P.id_proveedor)
+		
+	</select>	
+	
+		
 
 </sqlMap>

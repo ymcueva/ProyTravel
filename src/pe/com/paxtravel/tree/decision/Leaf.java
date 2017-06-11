@@ -1,10 +1,10 @@
-package com.pe.paxtravel.tree.decision;
+package pe.com.paxtravel.tree.decision;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
 
-import com.pe.paxtravel.tree.*;
+import pe.com.paxtravel.tree.*;
 
 public class Leaf implements Tree {
 

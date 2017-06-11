@@ -14,6 +14,7 @@ import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.ProduccionBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
+import pe.com.paxtravel.tree.data.PaqueteManagerBean;
 
 public interface CotizacionDAO {
 	
@@ -42,5 +43,9 @@ public interface CotizacionDAO {
 	FareInfoBean getConsolidador(FareInfoBean fareInfoBean);
 	
 	int registrarConsolidador(CotizacionDetalleTicketVueloBean fareInfoBean);
+	
+	List<PaqueteManagerBean> listarPaquete(PaqueteManagerBean paqueteBean);
+	
+	List<PaqueteManagerBean> listarPaqueteDestino(PaqueteManagerBean paqueteBean);
 	
 }

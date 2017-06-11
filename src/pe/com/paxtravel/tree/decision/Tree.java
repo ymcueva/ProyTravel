@@ -1,8 +1,9 @@
-package com.pe.paxtravel.tree.decision;
+package pe.com.paxtravel.tree.decision;
 
 import java.util.List;
 
-import com.pe.paxtravel.tree.data.*;
+import pe.com.paxtravel.tree.data.*;
+
 
 public interface Tree {
 	
