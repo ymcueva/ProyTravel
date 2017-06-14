@@ -62,10 +62,12 @@ public class OrdenPlanificacionBean {
 	private double precioAerolinea;
 	private String nombreAerolinea;
 	private int comision;
+	private String urlAerolinea;
 	
 	private String isoOrigen;
 	private String isoDestino;
-	
+	private int tiIda;
+	private int nuPersonastour;
 	
 	public double getImPresupuestoPaximo() {
 		return imPresupuestoPaximo;
@@ -409,6 +411,24 @@ public class OrdenPlanificacionBean {
 	}
 	public void setIsoDestino(String isoDestino) {
 		this.isoDestino = isoDestino;
+	}
+	public int getTiIda() {
+		return tiIda;
+	}
+	public void setTiIda(int tiIda) {
+		this.tiIda = tiIda;
+	}
+	public int getNuPersonastour() {
+		return nuPersonastour;
+	}
+	public void setNuPersonastour(int nuPersonastour) {
+		this.nuPersonastour = nuPersonastour;
+	}
+	public String getUrlAerolinea() {
+		return urlAerolinea;
+	}
+	public void setUrlAerolinea(String urlAerolinea) {
+		this.urlAerolinea = urlAerolinea;
 	}
 
 }
