@@ -1379,6 +1379,7 @@
 							 $("#hdnTotalHotel").val(totalHotel);
 							 
 							 var totalPackage = parseFloat(totalTours) + parseFloat(totalTicket) + parseFloat(totalHotel);
+							 $("#txtTotalGasto").val(totalPackage);
 							 var presupuesto = $("#txtPresupuestoMaximo").val();
 							 
 							 if(busInteligente == 1){
