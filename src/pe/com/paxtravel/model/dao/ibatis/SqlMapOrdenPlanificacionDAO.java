@@ -45,12 +45,22 @@ public class SqlMapOrdenPlanificacionDAO extends SqlMapClientDaoSupport implemen
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<OrdenPlanificacionBean> obtenerOrdenDestinoPrograma(OrdenPlanificacionBean objBean){
+		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
+		ordenes = getSqlMapClientTemplate().queryForList("ordenplanificacion.obtenerOrdenDestinoPrograma", objBean);
+		return ordenes;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<OrdenPlanificacionBean> obtenerOrdenServicio(OrdenPlanificacionBean objBean){
 		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
 		ordenes = getSqlMapClientTemplate().queryForList("ordenplanificacion.obtenerOrdenServicio", objBean);
 		return ordenes;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<OrdenPlanificacionBean> listarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean){
 		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
 		ordenes = getSqlMapClientTemplate().queryForList("ordenplanificacion.listarOrdenPlanificacion", ordenPlanificacionBean);
@@ -85,6 +95,12 @@ public class SqlMapOrdenPlanificacionDAO extends SqlMapClientDaoSupport implemen
 	@Override
 	public int registrarOrdenDestino(OrdenDestinoBean ordenDestinoBean) {
 		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).update("ordenplanificacion.insertarOrdenDestino", ordenDestinoBean);
+		return 1;
+	}
+	
+	@Override
+	public int actualizarEstadoOrden(OrdenPlanificacionBean ordenPlanificacionBean){
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).update("ordenplanificacion.actualizarEstadoOrden", ordenPlanificacionBean);
 		return 1;
 	}
 

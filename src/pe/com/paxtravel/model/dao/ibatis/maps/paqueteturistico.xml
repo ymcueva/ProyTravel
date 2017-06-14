@@ -5,9 +5,18 @@
 <sqlMap namespace="paqueteturistico">
 	
 	<typeAlias alias="paqueteTuristicoBean" type="pe.com.paxtravel.bean.PaqueteTuristicoBean" />
-	<typeAlias alias="tourBean" type="pe.com.paxtravel.bean.TourBean" />
+	<typeAlias alias="tourBean"  type="pe.com.paxtravel.bean.TourBean" />
+	<typeAlias alias="hotelBean" type="pe.com.paxtravel.bean.HotelBean" />
+	<typeAlias alias="hotelHabitacionBean" type="pe.com.paxtravel.bean.HotelHabitacionBean" />
+	<typeAlias alias="paqueteTuristicoDestinoBean" type="pe.com.paxtravel.bean.PaqueteTuristicoDestinoBean" />
+	<typeAlias alias="paqueteTuristicoDestinoTourBean" type="pe.com.paxtravel.bean.PaqueteTuristicoDestinoTourBean" />
+	<typeAlias alias="paqueteTuristicoTicketBean" type="pe.com.paxtravel.bean.PaqueteTuristicoTicketBean" />
+	<typeAlias alias="paqueteTuristicoTicketBean" type="pe.com.paxtravel.bean.PaqueteTuristicoTicketBean" />
+	<typeAlias alias="paqueteTuristicoDestinoHotelBean" type="pe.com.paxtravel.bean.PaqueteTuristicoDestinoHotelBean"/>
 	
 	<typeAlias alias="string" type="java.lang.String" />
+	<typeAlias alias="integer" type="java.lang.Integer" />
+	
 	
 	<resultMap id="listadoPaqueteTuristico" class="paqueteTuristicoBean">	
 		<result property="numeroFila"			    column="ca_nume_fila" />		
@@ -22,7 +31,9 @@
 		<result property="idTrabajador"			    column="id_usuario_ins" />
 		<result property="noEstado"				    column="no_estado"/>
 		<result property="noCliente"				column="cliente"/>	
-		<result property="fechRango"				column="fech_rango"/>			
+		<result property="fechRango"				column="fech_rango"/>
+		<result property="nuOrden"				    column="nu_orden"/>
+					
 	</resultMap>
 
 	<resultMap id="resultPaqueteTuristico" class="paqueteTuristicoBean">			
@@ -40,6 +51,11 @@
 		<result property="noEstado"				    column="no_estado"/>
 		<result property="noCliente"				column="cliente"/>	
 		<result property="fechRango"				column="fech_rango"/>	
+		<result property="nuOrden"				    column="nu_orden"/>
+		<result property="totalGasto"				column="total_gasto"/>
+		<result property="totalTour"				column="total_tour"/>
+		<result property="totalTicket"				column="total_ticket"/>
+		<result property="totalHotel"				column="total_hotel"/>																													
 	</resultMap>
 	
 	<resultMap id="resultTour"             class="tourBean">			
@@ -52,6 +68,85 @@
 		<result property="itinerario" 		    column="itinerario" />
 		<result property="servicios" 		    column="servicios" />
 	</resultMap>		
+	
+	<resultMap id="resultTourBusqueda"          class="tourBean">	
+		<result property="idTour"			    column="id_tour" />
+		<result property="flagServicios"		column="flag_servicios" />
+		<result property="descripcion" 		    column="descripcion" />
+		<result property="precioAdulto" 		column="precio_adulto" />
+		<result property="precioNino"			column="precio_niño" />
+		<result property="duracion" 			column="duracion" />
+	</resultMap>
+	
+	<resultMap  id="resultHotel"	class="hotelBean" >
+		<result property="idHotel"			    		column="id_hotel" />
+		<result property="descripcion"					column="descripcion" />
+		<result property="idTipoAlojamiento"			column="id_tipo_alojamiento" />
+		<result property="idCategoriaAlojamiento"		column="id_categoria_alojamiento" />
+		<result property="nomTipo"						column="tipo" />
+		<result property="nomCategoria"					column="categoria" />
+		<result property="idProveedor"					column="id_proveedor" />
+		
+		
+	</resultMap>
+	
+	<resultMap  id="resultTipoHabitacion"				class="hotelHabitacionBean" >
+		<result property="idTipoHabitacion"			    column="id_tipo_habitacion" />
+		<result property="nomTipoHabitacion"			column="nombre" />
+		
+	</resultMap>
+	
+	<resultMap  id="resultTipoHabitacion"				class="hotelHabitacionBean" >
+		<result property="idTipoHabitacion"			    column="id_tipo_habitacion" />
+		<result property="nomTipoHabitacion"			column="nombre" />
+		
+	</resultMap>
+	
+	<resultMap  id="resultDatosTipoHabitacion"			class="hotelHabitacionBean" >
+		<result property="idHotelHabitacion"			column="id_hotel_habitacion" />
+		<result property="idTipoHabitacion"			    column="id_tipo_habitacion" />
+		<result property="nomTipoHabitacion"			column="nombre" />
+		<result property="precio"						column="precio" />
+		
+		
+	</resultMap>
+	
+	<resultMap  id="resultHotelBusqueda"				class="hotelHabitacionBean" >
+		<result property="idHotel"						column="id_hotel" />
+		<result property="subtotal"			    		column="subtotal" />	
+	</resultMap>
+	
+	<resultMap id="resultDetalleHotelBusqueda" 			class="hotelHabitacionBean" >
+		<result property="idHotel"						column="id_hotel" />
+		<result property="idProveedor"					column="id_proveedor" />
+		<result property="idTipoAlojamiento"			column="id_tipo_alojamiento" />
+		<result property="idCategoriaAlojamiento"		column="id_categoria_alojamiento" />
+		<result property="idHotelHabitacion"			column="id_hotel_habitacion" />
+		<result property="idTipo"						column="id_tipo_habitacion" />
+		<result property="precio"						column="im_precio" />
+		<result property="cantidad"						column="cantidad" />
+		<result property="nomHotel"						column="nomHotel" />
+		<result property="nomTipo"						column="nomtipo" />
+		<result property="nomCategoria"					column="categoria" />
+	</resultMap>
+	
+	<resultMap id="resultDetalleHotel" 					class="paqueteTuristicoDestinoHotelBean" >
+		<result property="idHotel"						column="id_hotel" />
+		<result property="idProveedor"					column="id_proveedor" />
+		<result property="idTipoAlojamiento"			column="id_tipo_alojamiento" />
+		<result property="idCategoriaAlojamiento"		column="id_categoria_alojamiento" />
+		<result property="idHotelHabitacion"			column="id_hotel_habitacion" />
+		<result property="idTipo"						column="id_tipo_habitacion" />
+		<result property="imPrecio"						column="im_precio" />
+		<result property="cantidad"						column="cantidad" />
+		<result property="idDestino"					column="id_destino" />
+		<result property="nomHotel"						column="nomHotel" />
+		<result property="nomTipo"						column="nomtipo" />
+		<result property="nomCategoria"					column="categoria" />
+		<result property="dias"							column="dias" />
+		
+		
+	</resultMap>
 	
 	<select id="obtenerCodigoPaqTuristico" resultClass="java.lang.String">
 		SELECT CONCAT('ORDE',
@@ -75,6 +170,154 @@
 			 where id_destino_ciudad = #idDestinoCiudad#      
 	</select>	
 	
+	<select id="listarTourBusqueda" parameterClass="tourBean" resultMap="resultTourBusqueda">
+		select id_tour,
+   			   ifnull(flag_deportes,0) + ifnull(flag_cultural,0) + ifnull(flag_playa,0) + ifnull(flag_relajacion,0) flag_servicios,
+   			   descripcion,
+  			   precio_adulto,
+   			   precio_niño,
+   		       duracion
+   		from tour
+   		where id_destino_ciudad = #idDestinoCiudad#
+   		order by 2 desc
+   		limit 1
+	</select>
+	
+	<select id="listarHoteles" parameterClass="hotelBean" resultMap="resultHotel">
+			select h.id_hotel,
+				   h.descripcion,
+				   h.id_tipo_alojamiento,
+				   h.id_categoria_alojamiento,
+				   t.descripcion tipo,
+				   cat.nombre categoria,
+				   h.id_proveedor
+			from hotel h
+			inner join tipo_alojamiento t on h.id_tipo_alojamiento = t.id_tipo_alojamiento
+			inner join tipo_categoria_alojamiento cat on h.id_categoria_alojamiento = cat.id_tipo
+			where id_destino = #idDestino#
+			<isGreaterThan compareValue="0" prepend="AND" property="idTipoAlojamiento"> h.id_tipo_alojamiento = #idTipoAlojamiento# </isGreaterThan>
+	        <isGreaterThan compareValue="0" prepend="AND" property="idCategoriaAlojamiento"> h.id_categoria_alojamiento = #idCategoriaAlojamiento# </isGreaterThan>
+	     
+	</select>
+	
+	<select id="listarTipoHabitacion" parameterClass="hotelHabitacionBean" resultMap="resultTipoHabitacion">
+			select h.id_tipo_habitacion,
+				   t.descripcion nombre
+			from hotel_habitacion h
+			inner join tipo_habitacion t on h.id_tipo_habitacion = t.id_tipo_habitacion
+			where id_hotel = #idHotel#
+	     
+	</select>
+	
+	<select id="obtenerHotelBusqueda" parameterClass="hotelHabitacionBean" resultMap="resultHotelBusqueda">
+			select ho.id_hotel , 
+			       sum(hohab.precio * chab.nu_habitacion * odes.nu_dias) subtotal
+   			from cotizacion cot
+   			inner join orden ord on(cot.id_cotiza = ord.id_cotiza)
+   			inner join orden_destino odes on(ord.id_orden = odes.id_orden)
+   			inner join hotel ho on(cot.id_tipo_alojamiento = ho.id_tipo_alojamiento) 
+		               and cot.id_categoria_alojamiento = ho.id_categoria_alojamiento and odes.id_destino = ho.id_destino
+   			inner join cotizacion_deta_habitacion chab on(cot.id_cotiza = chab.id_cotiza)  
+   			inner join hotel_habitacion hohab on(ho.id_hotel = hohab.id_hotel) and chab.id_tipo_habitacion = hohab.id_tipo_habitacion
+   			where cot.id_cotiza = #idCotiza#
+   			and	  odes.id_destino = #idDestino#	
+   			group by id_hotel
+   			order by 2
+   			limit 1
+	</select>
+	
+	
+	
+	<select id="listarDetalleHotelBusqueda" parameterClass="hotelHabitacionBean" resultMap="resultDetalleHotelBusqueda">
+			select ho.id_hotel , 
+			       ho.id_proveedor,
+			       ho.id_tipo_alojamiento,
+			       ho.id_categoria_alojamiento,
+			       hohab.id_hotel_habitacion,
+			       hohab.id_tipo_habitacion,
+			       hohab.precio,
+			       chab.nu_habitacion cantidad,
+			       ho.descripcion nomHotel,
+			       tipo.descripcion nomtipo,
+				   cat.nombre categoria
+   			from cotizacion cot
+   			inner join hotel ho on(cot.id_tipo_alojamiento = ho.id_tipo_alojamiento) 
+		               and cot.id_categoria_alojamiento = ho.id_categoria_alojamiento
+   			inner join cotizacion_deta_habitacion chab on(cot.id_cotiza = chab.id_cotiza)  
+   			inner join hotel_habitacion hohab on(ho.id_hotel = hohab.id_hotel) and chab.id_tipo_habitacion = hohab.id_tipo_habitacion
+   			inner join tipo_alojamiento tipo on ho.id_tipo_alojamiento = tipo.id_tipo_alojamiento
+			inner join tipo_categoria_alojamiento cat on ho.id_categoria_alojamiento = cat.id_tipo
+   			where cot.id_cotiza = #idCotiza#
+   			and	  ho.id_destino = #idDestino#	
+			and	  ho.id_hotel   = #idHotel#	
+	
+	</select>
+	
+	<select id="listarDetalleHotel" parameterClass="paqueteTuristicoDestinoHotelBean" resultMap="resultDetalleHotel">
+			select ph.id_hotel,
+				   ph.id_proveedor,
+				   ph.id_tipo_alojamiento,
+				   ph.id_categoria_alojamiento,
+				   ph.id_hotel_habitacion,
+				   h.id_tipo_habitacion,
+				   ph.im_precio,
+				   ph.cantidad,
+				   ph.id_destino,
+				   ho.descripcion nomHotel,
+				   tipo.descripcion nomtipo,
+				   cat.nombre categoria,
+				   od.nu_dias dias	
+			from paquete_turistico_destino_hotel ph
+			inner join hotel_habitacion h on ph.id_hotel_habitacion = h.id_hotel_habitacion
+			inner join hotel ho on h.id_hotel = ho.id_hotel
+			inner join tipo_alojamiento tipo on ho.id_tipo_alojamiento = tipo.id_tipo_alojamiento
+			inner join tipo_categoria_alojamiento cat on ho.id_categoria_alojamiento = cat.id_tipo
+			inner join paquete_turistico pqt on(ph.id_paquete = pqt.id_paquete)
+			inner join orden_destino od on(pqt.id_orden = od.id_orden) and ph.id_destino = od.id_destino
+			where ph.id_paquete = #idPaquete#
+	</select>
+	
+	<select id="obtenerDatosTipoHabitacion" parameterClass="hotelHabitacionBean" resultMap="resultDatosTipoHabitacion">
+			select h.id_hotel_habitacion,
+				   h.id_tipo_habitacion,
+				   t.descripcion nombre,
+				   h.precio
+			from hotel_habitacion h
+			inner join tipo_habitacion t on h.id_tipo_habitacion = t.id_tipo_habitacion
+			where id_hotel = #idHotel# and h.id_tipo_habitacion = #idTipoHabitacion#
+	     
+	</select>
+	
+	
+	<select id="obtenerPaqueteTuristico" parameterClass="paqueteTuristicoBean" resultMap="resultPaqueteTuristico">		
+		SELECT
+		       paquete.id_paquete ,  
+			   paquete.nombre , 
+			   paquete.id_estado , 
+			   paquete.observacion ,  
+			   paquete.id_orden , 
+			   DATE_FORMAT(paquete.fecha,'%d-%m-%Y') fecha,
+			   DATE_FORMAT(paquete.fe_partida,'%d-%m-%Y') fe_partida,
+			   DATE_FORMAT(paquete.fe_retorno,'%d-%m-%Y') fe_retorno,
+			   paquete.id_usuario_ins,
+			   paquete.nu_ninos,
+			   paquete.nu_adultos,
+			   est.no_estado,
+			   CONCAT(clie.nombres,' ',clie.apellidos) cliente,	
+			   CONCAT(convert(DATE_FORMAT(paquete.fe_partida,'%d-%m-%Y'),char),"/",convert(DATE_FORMAT(paquete.fe_retorno,'%d-%m-%Y'),char)) fech_rango,
+			   orden.nu_orden,
+			   ifnull(paquete.total_gasto,0) total_gasto,
+			   ifnull(paquete.total_tour,0) total_tour,
+			   ifnull(paquete.total_ticket,0) total_ticket,
+			   ifnull(paquete.total_hotel,0) total_hotel
+         FROM paquete_turistico paquete  
+         inner JOIN orden orden ON orden.id_orden=paquete.id_orden
+         inner JOIN cliente clie ON orden.id_cliente=clie.id_cliente
+         inner join estado est on paquete.id_estado = est.id_estado                
+		 WHERE paquete.id_paquete = #idPaquete#
+			
+	</select>
+	
 	<select id="listarPaqueteTuristico" parameterClass="paqueteTuristicoBean" resultMap="listadoPaqueteTuristico">		
 		SELECT 		
 			   @rownum:=@rownum+1 AS ca_nume_fila,
@@ -91,13 +334,14 @@
 			   paquete.nu_adultos,
 			   est.no_estado,
 			   CONCAT(clie.nombres,' ',clie.apellidos) cliente,	
-			   CONCAT(convert(DATE_FORMAT(paquete.fe_partida,'%d-%m-%Y'),char),"/",convert(DATE_FORMAT(paquete.fe_retorno,'%d-%m-%Y'),char)) fech_rango
+			   CONCAT(convert(DATE_FORMAT(paquete.fe_partida,'%d-%m-%Y'),char),"/",convert(DATE_FORMAT(paquete.fe_retorno,'%d-%m-%Y'),char)) fech_rango,
+			   orden.nu_orden
          FROM (SELECT @rownum:=0) r, paquete_turistico paquete  
          inner JOIN orden orden ON orden.id_orden=paquete.id_orden
          inner JOIN cliente clie ON orden.id_cliente=clie.id_cliente
          inner join estado est on paquete.id_estado = est.id_estado                
 		 WHERE 1 = 1
-		 <isGreaterThan compareValue="0" prepend="AND" property="idOrden"> paquete.id_orden = #idOrden# </isGreaterThan>
+		 <isGreaterThan compareValue="0" prepend="AND" property="idOrden"> orden.nu_orden = #nuOrden# </isGreaterThan>
 	     <isGreaterThan compareValue="0" prepend="AND" property="idEstado"> paquete.id_estado = #idEstado# </isGreaterThan>
 		 <isNotEmpty prepend="AND" property="noCliente"> CONCAT(clie.nombres,' ',clie.apellidos) LIKE #noCliente# </isNotEmpty>
 		 <isNotEmpty prepend="AND" property="numDocCliente"> clie.nu_documento = #numDocCliente# </isNotEmpty>
@@ -106,9 +350,11 @@
 	            DATE_FORMAT(paquete.fecha,'%Y-%m-%d') between #feInicio# AND #feFin#
 	         </isNotEmpty>
    		 </isNotEmpty>
-		 
+		 order by paquete.id_paquete desc
 		
 	</select>
+	
+	
   
 	<insert id="insertarPaqueteTuristico" parameterClass="paqueteTuristicoBean">
 		INSERT INTO paquete_turistico(
@@ -121,7 +367,11 @@
 			fe_retorno,
 			id_usuario_ins,
 			nu_ninos,
-			nu_adultos
+			nu_adultos,
+			total_gasto,
+			total_tour,
+			total_ticket,
+			total_hotel
 		) 
 		VALUES 
 		(
@@ -134,9 +384,151 @@
 			#feFin#,
 			#idTrabajador#,
 			#nuNinos#,
-			#nuAdultos#		
+			#nuAdultos#,
+			#totalGasto#,
+			#totalTour#,
+			#totalTicket#,
+			#totalHotel#			
 		)		
+		<selectKey keyProperty="idPaquete" resultClass="integer">
+            select LAST_INSERT_ID();
+        </selectKey>
 	</insert>
+	
+	<insert id="insertarPaqueteTuristicoDestino" parameterClass="paqueteTuristicoDestinoBean">
+		
+		
+		INSERT INTO paquete_turistico_destino(
+			id_paquete_turistico,
+			id_destino_ciudad,
+			item,
+			nu_dias
+		) 
+		VALUES 
+		(
+			#idPaqueteTuristico#,
+			#idDestinoCiudad#,
+			#item#,
+			#nuDias#		
+		)
+		
+	</insert>
+	
+	<insert id="insertarPaqueteTuristicoDestinoTour" parameterClass="paqueteTuristicoDestinoTourBean">
+		
+		
+		INSERT INTO paquete_turistico_destino_tour(
+			id_tour,
+			descripcion,
+			nu_personas,
+			im_precio_adulto,
+			im_precio_niño,
+			id_paquete,
+			id_destino
+		) 
+		VALUES 
+		(
+			#idTour#,
+			#descripcion#,
+			#nuPersonas#,
+			#imPrecioAdulto#,
+			#imPrecioNino#,	
+			#idPaquete#,
+			#idDestino#	
+		)
+		
+	</insert>
+	
+	<insert id="insertarPaqueteTuristicoTicket" parameterClass="paqueteTuristicoTicketBean">
+	
+		INSERT INTO paquete_turistico_ticket(
+			id_paquete_turistico,
+			id_proveedor,
+			id_aerolinea,
+			im_precio,
+			id_destino_destino,
+			nu_adultos,
+			nu_ninos,
+			tipo_ticket
+		)
+		VALUES
+		(
+			#idPaqueteTuristico#,
+			#idProveedor#,
+			#idAerolinea#,
+			#imPrecio#,
+			#idDestino#,
+			#nuAdultos#,
+			#nuNinos#,
+			#tipoTicket#
+			
+		)
+		
+	
+	</insert>
+	
+	<insert id="insertarPaqueteTuristicoDestinoHotel" parameterClass="paqueteTuristicoDestinoHotelBean">
+			INSERT INTO paquete_turistico_destino_hotel(
+				id_hotel,
+				id_proveedor,
+				id_tipo_alojamiento,
+				id_categoria_alojamiento,
+				im_precio,
+				nu_adultos,
+				nu_ninos,
+				id_hotel_habitacion,
+				cantidad,
+				id_paquete,
+				id_destino
+			)
+			VALUES
+			(
+				#idHotel#,
+				#idProveedor#,
+				#idTipoAlojamiento#,
+				#idCategoriaAlojamiento#,
+				#imPrecio#,
+				#nuAdultos#,
+				#niNinos#,
+				#idHotelHabitacion#,
+				#cantidad#,
+				#idPaquete#,
+				#idDestino#
+			)
+	</insert>
+	
+	<delete id="eliminaPaqueteDestino" parameterClass="paqueteTuristicoBean">
+		delete from paquete_turistico_destino
+		where id_paquete_turistico = #idPaquete#
+	</delete>
+	
+	<delete id="eliminaPaqueteDestinoHotel" parameterClass="paqueteTuristicoBean">
+		delete from paquete_turistico_destino_hotel
+		where id_paquete = #idPaquete#
+	</delete>
+	
+	<delete id="eliminaPaqueteDestinoTour" parameterClass="paqueteTuristicoBean">
+		delete from paquete_turistico_destino_tour
+		where id_paquete = #idPaquete#
+	</delete>
+	
+	<delete id="eliminaPaqueteDestinoTicket" parameterClass="paqueteTuristicoBean">
+		delete from paquete_turistico_ticket
+		where id_paquete_turistico = #idPaquete#
+	</delete>
+	
+	<update id="actualizaPaqueteTuristico" parameterClass="paqueteTuristicoBean">
+		update paquete_turistico set nombre = #nombre#,
+									 id_estado = #idEstado#,
+									 observacion = #observacion#,
+									 total_gasto = #totalGasto#,
+									 total_tour = #totalTour#,
+									 total_ticket = #totalTicket#,
+									 total_hotel = #totalHotel#,
+									 fe_upd = now()
+		where id_paquete = #idPaquete#
+	
+	</update>
 
 	<select id="obtenerNumeroPaqTuristico" resultClass="string">
 		SELECT CONCAT('COTI',

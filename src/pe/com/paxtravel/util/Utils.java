@@ -1,8 +1,14 @@
 
 package pe.com.paxtravel.util;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,8 +22,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 //import org.apache.commons.beanutils.BeanUtils;
 
+import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.util.Constantes;
 
 /**
@@ -442,6 +452,14 @@ public class Utils {
        
        return cadena.substring(indexInicio, indexFin);
     }
+    
+    public static Date sumarDiasAFecha(Date fecha, int dias){
+        if (dias==0) return fecha;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha); 
+        calendar.add(Calendar.DAY_OF_YEAR, dias);  
+        return calendar.getTime(); 
+  }
 
     public static Date stringToDate(String string, Integer option) {
         SimpleDateFormat formatter = null;
@@ -472,6 +490,7 @@ public class Utils {
         return anio+"-"+mes+"-"+dia;
     }
     
+        
     public static String stringToStringddMMyyyy(String fecha) {
         String dia = fecha.substring(0,2);
         String mes = fecha.substring(3,5);

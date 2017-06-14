@@ -47,6 +47,13 @@ public class OrdenPlanificacionServiceImpl implements OrdenPlanificacionService{
 	}
 	
 	@Override
+	public List<OrdenPlanificacionBean> obtenerOrdenDestinoPrograma(OrdenPlanificacionBean objBean){
+		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
+		ordenes = objDAO.obtenerOrdenDestinoPrograma(objBean);
+		return ordenes;
+	}
+	
+	@Override
 	public List<OrdenPlanificacionBean> obtenerOrdenServicio(OrdenPlanificacionBean objBean) {
 		List<OrdenPlanificacionBean> ordenes = new ArrayList<OrdenPlanificacionBean>();
 		ordenes = objDAO.obtenerOrdenServicio(objBean);
@@ -73,6 +80,11 @@ public class OrdenPlanificacionServiceImpl implements OrdenPlanificacionService{
 		return objDAO.registrarOrdenDestino(ordenDestinoBean);
 	}
 
+	@Override
+	public int actualizarEstadoOrden(OrdenPlanificacionBean objBean){
+		return objDAO.actualizarEstadoOrden(objBean);
+	}
+	
 	@Override
 	public List<CiudadBean> listarCiudad(CiudadBean ciudadBean) {
 		List<CiudadBean> listaCiudad = new ArrayList<CiudadBean>();

@@ -6,6 +6,8 @@
 	<div class="row">
 		<div class="col-sm-12">
 			<div id="divListadoVuelos">
+				<input type="hidden" id="hdnAerolinea" value="">
+				
 				<div class="col-sm-12">
 					<table id ="tblDetalleVuelos" class="table table-bordered responsive" style="width:100%">
 						<thead>
@@ -32,7 +34,7 @@
 				<div class="form-group">
 					<div class="col-sm-12" style="text-align: center">
 						<button id="btnGuardarVuelo" type="button"
-							class="btn btn-primary centro"
+							class="btn btn-primary centro" onclick="aceptarVuelo();"
 							title="Aceptar">Aceptar</button>
 						&nbsp;	
 						<button id="btnCerrarVuelo" type="button"

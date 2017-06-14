@@ -2,7 +2,13 @@ package pe.com.paxtravel.model.dao;
 
 import java.util.List;
 
+import pe.com.paxtravel.bean.HotelBean;
+import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoBean;
+import pe.com.paxtravel.bean.PaqueteTuristicoDestinoBean;
+import pe.com.paxtravel.bean.PaqueteTuristicoDestinoHotelBean;
+import pe.com.paxtravel.bean.PaqueteTuristicoDestinoTourBean;
+import pe.com.paxtravel.bean.PaqueteTuristicoTicketBean;
 import pe.com.paxtravel.bean.TourBean;
 
 public interface PaqueteTuristicoDAO {
@@ -14,5 +20,37 @@ public interface PaqueteTuristicoDAO {
 	String obtenerCodigoPaqTuristico();
 	
 	List<TourBean> listaTour(TourBean tourBean);
-
+	
+	List<HotelBean> listaHotel(HotelBean hotelBean);
+	
+	List<HotelHabitacionBean> listaTipoHabitacion(HotelHabitacionBean hotelHabitacionBean);
+	
+	List<HotelHabitacionBean> obtenerTipoHabitacion(HotelHabitacionBean hotelHabitacionBean);
+	
+	int RegistrarPaqueteTuristicoDestino(PaqueteTuristicoDestinoBean paqueteTuristicoDestinoBean);
+	
+	int RegistrarPaqueteTuristicoDestinoTour(PaqueteTuristicoDestinoTourBean paqueteTuristicoDestinoTourBean);
+	
+	int RegistrarPaqueteTuristicoTicket(PaqueteTuristicoTicketBean paqueteTuristicoTicketBean);
+	
+	int RegistrarPaqueteTuristicoDestinoHotel(PaqueteTuristicoDestinoHotelBean paqueteTuristicoDestinoHotelBean);
+	
+	List<PaqueteTuristicoBean> obtenerPaqueteTuristico(PaqueteTuristicoBean paqueteTuristicoBean);
+	
+	List<PaqueteTuristicoDestinoHotelBean> obtenerDetalleHotelPaquete(PaqueteTuristicoDestinoHotelBean paqueteTuristicoDestinoHotelBean);
+	
+	int eliminaDestinoPaqueteTuristico(PaqueteTuristicoBean paqueteTuristicoBean);
+	int eliminaDestinoHotelPaqueteTuristico(PaqueteTuristicoBean paqueteTuristicoBean);
+	int eliminaDestinoTourPaqueteTuristico(PaqueteTuristicoBean paqueteTuristicoBean);
+	int eliminaDestinoTicketPaqueteTuristico(PaqueteTuristicoBean paqueteTuristicoBean);
+	
+	int actualizaPaqueteTuristico(PaqueteTuristicoBean paqueteTuristicoBean);
+	
+	List<HotelHabitacionBean> obtenerHotelBusqueda(HotelHabitacionBean hotelHabitacionBean);
+	
+	List<HotelHabitacionBean> listarDetalleHotelBusqueda(HotelHabitacionBean hotelHabitacionBean);
+	
+	List<TourBean> listaTourBusqueda(TourBean tourBean);
+	
+	
 }

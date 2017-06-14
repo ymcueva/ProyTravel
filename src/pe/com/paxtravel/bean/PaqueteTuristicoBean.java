@@ -25,6 +25,12 @@ public class PaqueteTuristicoBean {
 	private String numDocCliente;
 	private String cliente;
 	private int tipoBusqueda;
+	private String nuOrden;
+	private double totalGasto;
+	private double totalTour;
+	private double totalTicket;
+	private double totalHotel;
+	private String comentario;
 	
 	public int getNumeroFila() {
 		return numeroFila;
@@ -183,7 +189,44 @@ public class PaqueteTuristicoBean {
 				"imMax=" + imMax + " ," +
 				"noEstado=" + noEstado + " ," +
 				"Cliente=" + noCliente + " ," +
-				"FechRango=" + fechRango + "]";
+				"FechRango=" + fechRango +  " ," +
+				"NuOrden=" + nuOrden + "]";
+	}
+	public String getNuOrden() {
+		return nuOrden;
+	}
+	public void setNuOrden(String nuOrden) {
+		this.nuOrden = nuOrden;
+	}
+	public double getTotalGasto() {
+		return totalGasto;
+	}
+	public void setTotalGasto(double totalGasto) {
+		this.totalGasto = totalGasto;
+	}
+	public double getTotalTour() {
+		return totalTour;
+	}
+	public void setTotalTour(double totalTour) {
+		this.totalTour = totalTour;
+	}
+	public double getTotalTicket() {
+		return totalTicket;
+	}
+	public void setTotalTicket(double totalTicket) {
+		this.totalTicket = totalTicket;
+	}
+	public double getTotalHotel() {
+		return totalHotel;
+	}
+	public void setTotalHotel(double totalHotel) {
+		this.totalHotel = totalHotel;
+	}
+	public String getComentario() {
+		return comentario;
+	}
+	public void setComentario(String comentario) {
+		this.comentario = comentario;
 	}
 	
 }

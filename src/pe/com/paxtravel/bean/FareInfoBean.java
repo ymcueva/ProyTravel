@@ -14,6 +14,7 @@ public class FareInfoBean {
 	private String nombreAerolinea;
 	private int idDestino;
 	private double precio;
+	private String url;
 	
 		
 	
@@ -88,6 +89,12 @@ public class FareInfoBean {
 	}
 	public void setPrecio(double precio) {
 		this.precio = precio;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 	

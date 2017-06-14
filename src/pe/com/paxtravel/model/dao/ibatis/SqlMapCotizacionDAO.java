@@ -11,6 +11,7 @@ import pe.com.paxtravel.bean.ClienteBean;
 import pe.com.paxtravel.bean.CotizacionBean;
 import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
+import pe.com.paxtravel.bean.CotizacionServicioBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
@@ -55,6 +56,8 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements Cotiz
 		listaPais = getSqlMapClientTemplate().queryForList("cotizacion.listarPais", paisBean);
 		return listaPais;
 	}
+	
+	
 	
 	@Override
 	public int registrarCotizacion(CotizacionBean cotizacionBean) {
@@ -104,6 +107,13 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements Cotiz
 		return cliente;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CotizacionServicioBean> listarCotizacionServicio(CotizacionServicioBean cotizacionServicioBean) {
+		List<CotizacionServicioBean> lista = null;
+		lista = getSqlMapClientTemplate().queryForList("cotizacion.listarCotizacionServicio", cotizacionServicioBean);
+		return lista;
+	}
 	
 	@Override
 	public FareInfoBean getConsolidador(FareInfoBean fareInfoBean) {		

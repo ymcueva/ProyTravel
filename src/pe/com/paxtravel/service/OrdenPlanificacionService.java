@@ -35,4 +35,10 @@ public interface OrdenPlanificacionService {
 	public List<CiudadBean> listarCiudad(CiudadBean ciudadBean);
 	
 	public List<PaisBean> listarPais(PaisBean paisBean);
+	
+	int actualizarEstadoOrden(OrdenPlanificacionBean objBean);
+	
+	List<OrdenPlanificacionBean> obtenerOrdenDestinoPrograma(OrdenPlanificacionBean objBean);
+	
+	
 }

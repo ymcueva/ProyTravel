@@ -31,5 +31,9 @@ public interface OrdenPlanificacionDAO {
 	public List<PaisBean> listaPais(PaisBean paisBean);
 
 	public List<CiudadBean> listaCiudad(CiudadBean ciudadBean);
+	
+	int actualizarEstadoOrden(OrdenPlanificacionBean ordenPlanificacionBean);
+	
+	List<OrdenPlanificacionBean> obtenerOrdenDestinoPrograma(OrdenPlanificacionBean objBean);
 
 }

@@ -1,21 +1,31 @@
 package pe.com.paxtravel.service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import pe.com.paxtravel.bean.CiudadBean;
 import pe.com.paxtravel.bean.ClienteBean;
 import pe.com.paxtravel.bean.CotizacionBean;
 import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
+import pe.com.paxtravel.bean.CotizacionServicioBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
@@ -65,6 +75,13 @@ public class CotizacionServiceImpl implements CotizacionService {
 		List<PaisBean> listaPais = new ArrayList<PaisBean>();
 		listaPais = cotizacionDAO.listaPais(paisBean);
 		return listaPais;
+	}
+	
+	@Override
+	public List<CotizacionServicioBean> listarCotizacionServicio(CotizacionServicioBean cotizacionServicioBean){
+		List<CotizacionServicioBean> lista = new ArrayList<CotizacionServicioBean>();
+		lista = cotizacionDAO.listarCotizacionServicio(cotizacionServicioBean);
+		return lista;
 	}
 	
 	@Override
@@ -129,6 +146,111 @@ public class CotizacionServiceImpl implements CotizacionService {
 		List<PaqueteManagerBean> listaPaquete = new ArrayList<PaqueteManagerBean>();
 		listaPaquete = cotizacionDAO.listarPaqueteDestino(p);
 		return listaPaquete;
+	}
+	
+	@Override
+	public List<FareInfoBean> listarTickets(String cadenaVuelo){
+		
+		List<FareInfoBean> fareInfoList = null;
+		List<FareInfoBean> fareInfoDetaList = null;
+		
+		
+		try {
+		
+		String[] vuelo = cadenaVuelo.split("-");
+        String origen = vuelo[0];
+        String destino = vuelo[1];
+        String fechaPartida = vuelo[2];
+        
+        System.out.println("origen? " + origen);
+        System.out.println("destino? " + destino);
+        System.out.println("fechaPartida? " + fechaPartida);
+        
+        URL url = new URL("http://api.decom.pe/public/reserveAir/search");
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setDoOutput(true);
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Content-Type", "application/json");
+		
+		String input = "{\"origin\":\"" + origen + "\",\"destination\":\"" + destino + "\",\"date\":\"" + fechaPartida + "\"}";
+		OutputStream os = conn.getOutputStream();
+		os.write(input.getBytes());
+		os.flush();
+		
+		if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+			throw new RuntimeException("Failed : HTTP error code : "
+				+ conn.getResponseCode());
+		}
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				(conn.getInputStream())));
+		
+		String output;
+		System.out.println("Output from Server .... \n");
+		
+		boolean encontro = false;
+		while ((output = br.readLine()) != null) {
+			final Gson gson = new Gson();
+			final Type listaFareInfo = new TypeToken<List<FareInfoBean>>(){}.getType();
+			fareInfoList = gson.fromJson(output, listaFareInfo);
+			fareInfoDetaList = new ArrayList<FareInfoBean>();
+			
+			for ( FareInfoBean item: fareInfoList ) {
+				System.out.println("airlineCode? " + item.getAirlineCode());
+				System.out.println("fare? " + item.getFare());
+				System.out.println("href? " + item.getHref());
+				System.out.println("item? " + item.toString());
+				item.setDestino(destino);
+				
+				//consulta los consolidadores y la mayor comision:
+				
+				FareInfoBean o = getConsolidador(item);
+				
+				if(o != null){
+					item.setComision(o.getComision());
+					item.setNombreProveedor(o.getNombreProveedor());
+					item.setNombreAerolinea(o.getNombreAerolinea());
+					item.setIdProveedor(o.getIdProveedor());
+					item.setIdAerolinea(o.getIdAerolinea());
+					item.setPrecio(Double.parseDouble(item.getFare()));
+					encontro = true;
+				}
+				else {
+					item.setComision("");
+					item.setNombreProveedor("");
+					item.setNombreAerolinea("");
+					item.setIdProveedor(0);
+					item.setIdAerolinea(0);
+					item.setPrecio(0);
+					encontro = false;
+				}
+				
+				
+				System.out.println("item comision? " + item.getComision());
+				System.out.println("item proveedor? " + item.getNombreProveedor());
+				System.out.println("item aerolinea? " + item.getNombreAerolinea());
+				
+				
+				System.out.println("fareinfobean toString? " + item.toString());
+				
+				if(encontro == true)
+					fareInfoDetaList.add(item);
+				
+				System.out.println("Lista Agregada");
+				
+			}
+			
+		}
+		
+		System.out.println("Total Vuelos : " + fareInfoDetaList.size());
+		
+		}
+		catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return fareInfoDetaList;
+		
 	}
 	
 	

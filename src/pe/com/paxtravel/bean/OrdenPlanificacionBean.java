@@ -36,9 +36,35 @@ public class OrdenPlanificacionBean {
 	private int nuNinos;
 	private int idOrigen;
 	private int idDestino;
+	private int idTipoPrograma;
+	private int idPaquete;
+	private String fePartidaDestino;
+	private int idHotel;
+	private double totalHotel;
+	private int idTipoAlojamiento;
+	private int idCategoriaAlojamiento;
+	private String nomHotel;
+	private String nomTipoAlojamiento;
+	private String nomCatAlojamiento;
+	private String habitaciones;
+	
+	private int idTour;;
+	private String nomTour;
+	private double preAdultoTour;
+	private double preNinoTour;
+	private int diasTour;
+	private double subtotalTour;
 	
 	private double imPresupuestoPaximo;
 	
+	private int idAerolinea;
+	private int idProveedorAerolinea;
+	private double precioAerolinea;
+	private String nombreAerolinea;
+	private int comision;
+	
+	private String isoOrigen;
+	private String isoDestino;
 	
 	
 	public double getImPresupuestoPaximo() {
@@ -239,6 +265,150 @@ public class OrdenPlanificacionBean {
 	}
 	public void setIdDestino(int idDestino) {
 		this.idDestino = idDestino;
+	}
+	public int getIdTipoPrograma() {
+		return idTipoPrograma;
+	}
+	public void setIdTipoPrograma(int idTipoPrograma) {
+		this.idTipoPrograma = idTipoPrograma;
+	}
+	public int getIdPaquete() {
+		return idPaquete;
+	}
+	public void setIdPaquete(int idPaquete) {
+		this.idPaquete = idPaquete;
+	}
+	public String getFePartidaDestino() {
+		return fePartidaDestino;
+	}
+	public void setFePartidaDestino(String fePartidaDestino) {
+		this.fePartidaDestino = fePartidaDestino;
+	}
+	public int getIdHotel() {
+		return idHotel;
+	}
+	public void setIdHotel(int idHotel) {
+		this.idHotel = idHotel;
+	}
+	public double getTotalHotel() {
+		return totalHotel;
+	}
+	public void setTotalHotel(double totalHotel) {
+		this.totalHotel = totalHotel;
+	}
+	public int getIdTipoAlojamiento() {
+		return idTipoAlojamiento;
+	}
+	public void setIdTipoAlojamiento(int idTipoAlojamiento) {
+		this.idTipoAlojamiento = idTipoAlojamiento;
+	}
+	public int getIdCategoriaAlojamiento() {
+		return idCategoriaAlojamiento;
+	}
+	public void setIdCategoriaAlojamiento(int idCategoriaAlojamiento) {
+		this.idCategoriaAlojamiento = idCategoriaAlojamiento;
+	}
+	public String getNomHotel() {
+		return nomHotel;
+	}
+	public void setNomHotel(String nomHotel) {
+		this.nomHotel = nomHotel;
+	}
+	public String getNomTipoAlojamiento() {
+		return nomTipoAlojamiento;
+	}
+	public void setNomTipoAlojamiento(String nomTipoAlojamiento) {
+		this.nomTipoAlojamiento = nomTipoAlojamiento;
+	}
+	public String getNomCatAlojamiento() {
+		return nomCatAlojamiento;
+	}
+	public void setNomCatAlojamiento(String nomCatAlojamiento) {
+		this.nomCatAlojamiento = nomCatAlojamiento;
+	}
+	public String getHabitaciones() {
+		return habitaciones;
+	}
+	public void setHabitaciones(String habitaciones) {
+		this.habitaciones = habitaciones;
+	}
+	public int getIdTour() {
+		return idTour;
+	}
+	public void setIdTour(int idTour) {
+		this.idTour = idTour;
+	}
+	public String getNomTour() {
+		return nomTour;
+	}
+	public void setNomTour(String nomTour) {
+		this.nomTour = nomTour;
+	}
+	public double getPreAdultoTour() {
+		return preAdultoTour;
+	}
+	public void setPreAdultoTour(double preAdultoTour) {
+		this.preAdultoTour = preAdultoTour;
+	}
+	public double getPreNinoTour() {
+		return preNinoTour;
+	}
+	public void setPreNinoTour(double preNinoTour) {
+		this.preNinoTour = preNinoTour;
+	}
+	public int getDiasTour() {
+		return diasTour;
+	}
+	public void setDiasTour(int diasTour) {
+		this.diasTour = diasTour;
+	}
+	public double getSubtotalTour() {
+		return subtotalTour;
+	}
+	public void setSubtotalTour(double subtotalTour) {
+		this.subtotalTour = subtotalTour;
+	}
+	public int getIdAerolinea() {
+		return idAerolinea;
+	}
+	public void setIdAerolinea(int idAerolinea) {
+		this.idAerolinea = idAerolinea;
+	}
+	public int getIdProveedorAerolinea() {
+		return idProveedorAerolinea;
+	}
+	public void setIdProveedorAerolinea(int idProveedorAerolinea) {
+		this.idProveedorAerolinea = idProveedorAerolinea;
+	}
+	public double getPrecioAerolinea() {
+		return precioAerolinea;
+	}
+	public void setPrecioAerolinea(double precioAerolinea) {
+		this.precioAerolinea = precioAerolinea;
+	}
+	public String getNombreAerolinea() {
+		return nombreAerolinea;
+	}
+	public void setNombreAerolinea(String nombreAerolinea) {
+		this.nombreAerolinea = nombreAerolinea;
+	}
+	public int getComision() {
+		return comision;
+	}
+	public void setComision(int comision) {
+		this.comision = comision;
+	}
+	public String getIsoOrigen() {
+		return isoOrigen;
+	}
+	public void setIsoOrigen(String isoOrigen) {
+		this.isoOrigen = isoOrigen;
+	}
+	public String getIsoDestino() {
+		return isoDestino;
+	}
+	public void setIsoDestino(String isoDestino) {
+		this.isoDestino = isoDestino;
 	}
 
 }

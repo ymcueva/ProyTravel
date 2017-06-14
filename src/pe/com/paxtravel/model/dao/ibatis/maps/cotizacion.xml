@@ -14,6 +14,7 @@
 	<typeAlias alias="servicioAdicionalBean" type="pe.com.paxtravel.bean.ServicioAdicionalBean" />
 	<typeAlias alias="hotelHabitacionBean" type="pe.com.paxtravel.bean.HotelHabitacionBean" />
 	<typeAlias alias="clienteBean" type="pe.com.paxtravel.bean.ClienteBean" />
+	<typeAlias alias="cotizacionServicioBean" type="pe.com.paxtravel.bean.CotizacionServicioBean" />
 	
 	<!-- Bean Busqueda de Paquetes - Inicio -->
 	
@@ -67,6 +68,11 @@
 	<resultMap id="resultPais" class="paisBean">
 		<result property="idPais"			    column="id_destino" />
 		<result property="nomPais"			    column="descripcion" />
+	</resultMap>
+	
+	<resultMap id="resultCotizacionServicio" class="cotizacionServicioBean">
+		<result property="idCotiza"			    column="id_cotiza" />
+		<result property="idServicio"			    column="id_servicio" />
 	</resultMap>
 	
 	<resultMap id="resultCiudad" class="ciudadBean">
@@ -180,6 +186,14 @@
          WHERE 1=1
 		<isNotEmpty prepend="AND" property="idPais"> id_destino_pais = #idPais# </isNotEmpty>
 	</select>
+	
+	<select id="listarCotizacionServicio" parameterClass="cotizacionServicioBean" resultMap="resultCotizacionServicio">
+		select id_cotiza,
+			   id_servicio
+		from cotizacion_servicio
+		where id_cotiza = #idCotiza#
+		and	  id_servicio = #idServicio# 			
+	</select>	
 	
 	<select id="listarPais" parameterClass="paisBean" resultMap="resultPais">
 		SELECT id_destino, descripcion FROM destino_pais 
