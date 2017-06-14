@@ -63,7 +63,7 @@
 		<result property="idDestinoCiudad" 		column="id_destino_ciudad" />
 		<result property="duracion" 			column="duracion" />
 		<result property="precioAdulto" 		column="precio_adulto" />
-		<result property="precioNino"			column="precio_niño" />
+		<result property="precioNino"			column="precio_nino" />
 		<result property="descripcion" 		    column="descripcion" />
 		<result property="itinerario" 		    column="itinerario" />
 		<result property="servicios" 		    column="servicios" />
@@ -74,7 +74,7 @@
 		<result property="flagServicios"		column="flag_servicios" />
 		<result property="descripcion" 		    column="descripcion" />
 		<result property="precioAdulto" 		column="precio_adulto" />
-		<result property="precioNino"			column="precio_niño" />
+		<result property="precioNino"			column="precio_nino" />
 		<result property="duracion" 			column="duracion" />
 	</resultMap>
 	
@@ -162,7 +162,7 @@
 			       id_destino_ciudad,
 			       duracion,
 			       precio_adulto,
-			       precio_niño,
+			       precio_nino,
 			       descripcion,
 			       itinerario,
 			       servicios

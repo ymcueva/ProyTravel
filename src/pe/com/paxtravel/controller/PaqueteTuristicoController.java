@@ -634,9 +634,10 @@ public class PaqueteTuristicoController {
 					
 					//Obtener tour si tiene tour
 					if(tieneTour == true){
+						System.out.println("Verificando si tiene tours disponibles");
 						tour.setIdDestinoCiudad(bean.getIdDestino());
 						listaTour = paqueteTuristicoService.listaTourBusqueda(tour);
-						
+						System.out.println("Total Tour :" + listaTour.size() + " Destino :" + bean.getIdDestino());
 						if(listaTour.size() > 0){
 							contTours = listaTour.size();
 							bean.setIdTour(listaTour.get(0).getIdTour());
