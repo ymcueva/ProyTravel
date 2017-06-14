@@ -38,6 +38,9 @@
 			<result property="nuAdultos"					column="nu_adultos"/>
 			<result property="nuNinos"					    column="nu_ninos"/>
 			<result property="idTipoPrograma"				column="id_tipo_programa"/>
+			<result property="nuCotizacion"				    column="nu_cotiza"/>
+			
+			
 			
 		</resultMap>
 		
@@ -116,9 +119,11 @@
     			   DATE_FORMAT(ord.fe_retorno,'%d-%m-%Y %H:%i:%s')fe_retorno,
     			   ord.nu_adultos,
     			   ord.nu_ninos,
-    			   ord.id_tipo_programa
+    			   ord.id_tipo_programa,
+    			   cot.nu_cotiza
 			FROM orden ord 
 			inner join cliente cli on ord.id_cliente = cli.id_cliente
+			inner join cotizacion cot on ord.id_cotiza = cot.id_cotiza
 			where nu_orden= #nuOrden# 
 			
 		</select>  

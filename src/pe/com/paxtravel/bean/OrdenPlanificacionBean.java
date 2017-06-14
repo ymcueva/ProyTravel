@@ -68,6 +68,7 @@ public class OrdenPlanificacionBean {
 	private String isoDestino;
 	private int tiIda;
 	private int nuPersonastour;
+	private String nuCotizacion;
 	
 	
 	public double getImPresupuestoPaximo() {
@@ -430,6 +431,12 @@ public class OrdenPlanificacionBean {
 	}
 	public void setUrlAerolinea(String urlAerolinea) {
 		this.urlAerolinea = urlAerolinea;
+	}
+	public String getNuCotizacion() {
+		return nuCotizacion;
+	}
+	public void setNuCotizacion(String nuCotizacion) {
+		this.nuCotizacion = nuCotizacion;
 	}
 
 }

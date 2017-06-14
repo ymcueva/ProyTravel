@@ -469,6 +469,7 @@ public class PaqueteTuristicoController {
 			String tipoPrograma = "";
 			String fechaPartida = "";
 			int idCotizacion = 0;
+			String nuCotizacion = "";
 			
 			if(request.getParameter("idpaquete") != null)
 				idPaquete = request.getParameter("idpaquete").toString();
@@ -493,11 +494,12 @@ public class PaqueteTuristicoController {
 			if(listaOrden.size() > 0){
 				idCotizacion = listaOrden.get(0).getIdCotiza();	
 				fechaPartida = listaOrden.get(0).getFePartida();
+				nuCotizacion = listaOrden.get(0).getNuCotizacion();
 			}
 			
 			System.out.println("Id Cotizacion:" + idCotizacion);
 			System.out.println("Fecha Partida:" + fechaPartida);
-			
+			System.out.println("Numero Cotizacion:" + nuCotizacion);
 			
 			if(!idPaquete.equals(""))
 				orden.setIdPaquete(Integer.parseInt(idPaquete));
@@ -526,31 +528,33 @@ public class PaqueteTuristicoController {
 			    int contTours = 0;
 			    int contHoteles = 0;
 				
-				cotizacionServicioBean.setIdCotiza(String.valueOf(idCotizacion));
+				cotizacionServicioBean.setIdCotiza(nuCotizacion);
 				
 				//Verifica tiene tour
 				cotizacionServicioBean.setIdServicio(3);
 				listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
+				System.out.println("Total Servicios Cotizacion :" + listaCotizacionServicio.size());
 				if(listaCotizacionServicio.size() > 0 ){
 					tieneTour = true;
-					System.out.println("Tiene Tour :" + tieneTour);
 				}
+				System.out.println("Tiene Tour :" + tieneTour);
 					
 				//Verifica tiene ticket
 				cotizacionServicioBean.setIdServicio(2);
 				listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
 				if(listaCotizacionServicio.size() > 0 ){
 					tieneTicket = true;
-					System.out.println("Tiene Ticket :" + tieneTicket);
 				}
+				System.out.println("Tiene Ticket :" + tieneTicket);
+				
 					
 				//Verifica tiene hotel
 				cotizacionServicioBean.setIdServicio(6);
 				listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
 				if(listaCotizacionServicio.size() > 0 ){
 					tieneHotel = true;
-					System.out.println("Tiene Hotel :" + tieneHotel);
 				}
+				System.out.println("Tiene Hotel :" + tieneHotel);
 					
 				List<HotelHabitacionBean> listaHotel = new ArrayList<HotelHabitacionBean>();
 				List<HotelHabitacionBean> listaHabitaciones = new ArrayList<HotelHabitacionBean>();
@@ -646,6 +650,7 @@ public class PaqueteTuristicoController {
 					}
 					
 					if(tieneTicket == true){
+						System.out.println("Cadena Vuelo :" + cadenaVuelo);
 						cadenaVuelo = bean.getIsoOrigen() + "-" + bean.getIsoDestino() + "-" + bean.getFePartidaDestino();
 						listaTickets = cotizacionService.listarTickets(cadenaVuelo);
 						

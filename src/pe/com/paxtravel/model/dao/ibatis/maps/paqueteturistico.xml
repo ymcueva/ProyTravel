@@ -175,7 +175,7 @@
    			   ifnull(flag_deportes,0) + ifnull(flag_cultural,0) + ifnull(flag_playa,0) + ifnull(flag_relajacion,0) flag_servicios,
    			   descripcion,
   			   precio_adulto,
-   			   precio_niño,
+   			   precio_nino,
    		       duracion
    		from tour
    		where id_destino_ciudad = #idDestinoCiudad#
