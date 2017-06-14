@@ -131,6 +131,9 @@
 		
 		</select>  
 		
+		
+		
+		
 		<select id="obtenerOrdenDestinoPrograma" parameterClass="objBean" resultMap="resultOrdenDestinoPrograma">	
 			select od.id_orden,
        			   ord.nu_orden,

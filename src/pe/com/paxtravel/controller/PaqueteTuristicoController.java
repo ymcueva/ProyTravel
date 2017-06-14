@@ -743,6 +743,8 @@ public class PaqueteTuristicoController {
 	
 	@RequestMapping( value = "/listarPaqueteTuristico", method ={RequestMethod.GET, RequestMethod.POST} )
 	public ModelAndView listarPaqueteTuristico(HttpServletRequest request, HttpServletResponse response){
+	
+		System.out.println("Entro a listar Paquete turistico");
 		
 		ModelAndView modelAndView = null;
 		HashMap<String, Object> mapa = new HashMap<String, Object>();

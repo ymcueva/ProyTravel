@@ -69,6 +69,7 @@ public class OrdenPlanificacionBean {
 	private int tiIda;
 	private int nuPersonastour;
 	
+	
 	public double getImPresupuestoPaximo() {
 		return imPresupuestoPaximo;
 	}
