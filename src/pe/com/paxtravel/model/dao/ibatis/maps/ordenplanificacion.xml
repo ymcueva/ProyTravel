@@ -142,10 +142,10 @@
        			   od.nu_dias,
        			   case when od.ida_vuelta= 1 then 'Ida' when od.ida_vuelta = 0 then 'Ida y vuelta' else '' end ida_vuelta ,
        			   od.ida_vuelta tipo,
-       			   od.id_cotiza,
+       			   ord.id_cotiza,
        			   ord.nu_adultos,
        			   ord.nu_ninos,
-       			   ori.codigo_iso iso_origen
+       			   ori.codigo_iso iso_origen,
        			   des.codigo_iso iso_destino
        		from orden_destino od
 			inner join orden ord on od.id_orden = ord.id_orden
