@@ -1510,7 +1510,7 @@
 							
 							$("#txtDescripcionOrden").val("");
 							$("#txtObservacion").val("");
-							$("#txtPresupuestoMinimo").val("");
+							//$("#txtPresupuestoMinimo").val("");
 							$("#txtPresupuestoMaximo").val("");
 							$("#txtCliente").val("");
 							$("#txtFechaOrden").val("");
@@ -1539,7 +1539,7 @@
 						
 						$("#txtDescripcionOrden").val(rpta.descripcion);
 						$("#txtObservacion").val(rpta.observacion);
-						$("#txtPresupuestoMinimo").val(rpta.presupuestomin);
+						//$("#txtPresupuestoMinimo").val(rpta.presupuestomin);
 						$("#txtPresupuestoMaximo").val(rpta.presupuestomax);
 						$("#txtCliente").val(rpta.cliente);
 						$("#txtFechaOrden").val(rpta.fechaorden);
@@ -1573,7 +1573,7 @@
 					else {
 						$("#txtDescripcionOrden").val("");
 						$("#txtObservacion").val("");
-						$("#txtPresupuestoMinimo").val("");
+						//$("#txtPresupuestoMinimo").val("");
 						$("#txtPresupuestoMaximo").val("");
 						$("#txtCliente").val("");
 						$("#txtFechaOrden").val("");
@@ -1840,7 +1840,7 @@
 	//Function Limpiar Formulario 
 	function limpiarFormularioPaqTuristico(){
 		$('#frmRegPaqueteTuristico').bootstrapValidator('resetForm', true);		
-		$("#txtPresupuestoMinimo").val("");
+		//$("#txtPresupuestoMinimo").val("");
 		$("#txtPresupuestoMaximo").val("");
 		$("#txtDescripcion").val("");
 	}
@@ -2057,12 +2057,8 @@
 															</div>
 															
 															<div class="form-group">
-																<div class="col-sm-2" style="text-align:right; font-weight:bold">Presupuesto M&iacute;nimo:</div>
-																<div class="col-sm-3">
-																	<input name="ImMin" id="txtPresupuestoMinimo" type="text" class="form-control tamanoMaximo" value="${presupuestomin}"></input>
-																</div>
 																
-																<div class="col-sm-2 col-md-offset-1" style="text-align:right; font-weight:bold">Presupuesto M&aacute;ximo:</div>
+																<label class=" control-label col-sm-2">Presupuesto:</label>	
 																<div class="col-sm-3">
 																	<input name="ImMax" id="txtPresupuestoMaximo" type="text" class="form-control tamanoMaximo" value="${presupuestomax}"></input>
 																</div>

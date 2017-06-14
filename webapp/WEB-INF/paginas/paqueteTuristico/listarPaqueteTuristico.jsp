@@ -184,7 +184,11 @@
 				targets: 5,
 				render: function(data, type, row){
 					if (row !=null && typeof row != 'undefined') {
-						var VerDetalle = "<span> <a href='javascript:;' onclick='mostrarPaquete(\""+row.idPaquete+"\",\""+row.idOrden+"\",\""+row.nuOrden+"\")' title='Modificar' ><span class='glyphicon glyphicon-pencil'></span></a> </span>";
+						
+						var VerDetalle = "";
+						
+						if(row.idEstado != 5)
+							VerDetalle = "<span> <a href='javascript:;' onclick='mostrarPaquete(\""+row.idPaquete+"\",\""+row.idOrden+"\",\""+row.nuOrden+"\")' title='Modificar' ><span class='glyphicon glyphicon-pencil'></span></a> </span>";
 						return VerDetalle;
 					}
 					return '';
