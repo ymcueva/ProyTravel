@@ -510,8 +510,11 @@ public class PaqueteTuristicoController {
 				System.out.println("Busqueda Inteligente");
 				orden.setIdTipoPrograma(Integer.parseInt(tipoPrograma));
 				
+				System.out.println("Tipo Programa :" + orden.getIdTipoPrograma());
 				//Nodo 1 leer los destinos de la orden que se encuentran en ciudad por tipo de programa
 				listaOrdenDestino = ordenPlanificacionService.obtenerOrdenDestinoPrograma(orden);
+				
+				System.out.println("Total Destinos Programa :" + listaOrdenDestino.size());
 				
 				//Verificar si tienes los servicios de ticket , Tour y hotel
 				List<CotizacionServicioBean> listaCotizacionServicio = new ArrayList<CotizacionServicioBean>();
@@ -528,20 +531,26 @@ public class PaqueteTuristicoController {
 				//Verifica tiene tour
 				cotizacionServicioBean.setIdServicio(3);
 				listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
-				if(listaCotizacionServicio.size() > 0 )
+				if(listaCotizacionServicio.size() > 0 ){
 					tieneTour = true;
-				
+					System.out.println("Tiene Tour :" + tieneTour);
+				}
+					
 				//Verifica tiene ticket
 				cotizacionServicioBean.setIdServicio(2);
 				listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
-				if(listaCotizacionServicio.size() > 0 )
+				if(listaCotizacionServicio.size() > 0 ){
 					tieneTicket = true;
-				
+					System.out.println("Tiene Ticket :" + tieneTicket);
+				}
+					
 				//Verifica tiene hotel
 				cotizacionServicioBean.setIdServicio(6);
 				listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
-				if(listaCotizacionServicio.size() > 0 )
+				if(listaCotizacionServicio.size() > 0 ){
 					tieneHotel = true;
+					System.out.println("Tiene Hotel :" + tieneHotel);
+				}
 					
 				List<HotelHabitacionBean> listaHotel = new ArrayList<HotelHabitacionBean>();
 				List<HotelHabitacionBean> listaHabitaciones = new ArrayList<HotelHabitacionBean>();
@@ -577,6 +586,7 @@ public class PaqueteTuristicoController {
 						hotel.setIdDestino(bean.getIdDestino());
 						listaHotel = paqueteTuristicoService.obtenerHotelBusqueda(hotel);
 						
+						System.out.println("Destino : " + hotel.getIdDestino() + " Total Hoteles :" + listaHotel.size());
 						if(listaHotel.size()>0){
 							contHoteles = listaHotel.size();
 							idHotel = listaHotel.get(0).getIdHotel();
@@ -608,8 +618,14 @@ public class PaqueteTuristicoController {
 							bean.setHabitaciones(habitaciones);
 							
 						}
+						else {
+							bean.setHabitaciones("");
+						}
 						
 						
+					}
+					else {
+						bean.setHabitaciones("");
 					}
 					
 					//Obtener tour si tiene tour
