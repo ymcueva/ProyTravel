@@ -1028,6 +1028,31 @@ public class CotizacionController {
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
 	}
 
+	
+	@RequestMapping( value = "/buscarPaquete", method ={RequestMethod.GET, RequestMethod.POST} )
+	public String buscarPaquete(HttpServletRequest request, HttpServletResponse response){
+		
+		System.out.println("buscar paquete ...");
+
+		try {
+			
+			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));
+			
+			
+			
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("e: " + e.getMessage() );
+		}
+
+		return "";
+		
+	}
+	
+	
 	@RequestMapping( value = "/verDetalleVuelos", method ={RequestMethod.GET, RequestMethod.POST} )
 	public String verDetalleVuelos(HttpServletRequest request, HttpServletResponse response){
 

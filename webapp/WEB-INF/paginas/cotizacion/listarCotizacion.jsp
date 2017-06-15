@@ -253,16 +253,16 @@
 					$("#divMotivos").html(response.dataJson.cotizacion.motivos);
 					$("#divServicios").html(response.dataJson.cotizacion.servicios);
 					
-					/* if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) { //Paquete Turistico
-					
-					} else {//Ticket Aereo
-						
+					/* if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) { //Paquete Turistico					
+					} else {//Ticket Aereo						
 					} */
-										
-					if ( response.dataJson.cotizacion.idEstado == 4 ) {	//Estado Pendiente
-						$("#divBotonCotizacionBuscar").css("display", "inline");											
-					} else if ( response.dataJson.cotizacion.idEstado == 6 ) { //Estado Asignado
-						$("#divBotonCotizacionEnviar").css("display", "inline");
+					
+					if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) {										
+						if ( response.dataJson.cotizacion.idEstado == 4 ) {	//Estado Pendiente
+							$("#divBotonCotizacionBuscar").css("display", "inline");											
+						} else if ( response.dataJson.cotizacion.idEstado == 6 ) { //Estado Asignado
+							$("#divBotonCotizacionEnviar").css("display", "inline");
+						}					
 					}
 					
 					$("#divVerDetalleInseminacion").modal({
@@ -341,16 +341,59 @@
 	
 	function buscarDetalleCotizacion() {
 		var tipoCotizacion = $("#inpIdTipoCotizacion").val();
-		if ( tipoCotizacion == 1 ){
+		var idCotizacion = $("#inpIdCotizacion").val("");
+		
+		if ( tipoCotizacion == 1 ) {
 			console.log("paquete");
+			
+			$.ajax({
+				url: '${pageContext.request.contextPath}/buscarPaquete?idCotizacion='+idCotizacion,
+				cache: false,
+				async: true,
+				type: 'GET',
+				contentType : "application/json; charset=utf-8",
+				dataType: 'json',
+				success: function(response) {
+					
+					if (response.estado = "ok") {
+						
+					}
+					
+				},
+				error: function(data, textStatus, errorThrown) {
+					
+				},
+			});
+			
 		} else {
 			console.log("ticket");
+			
+			
+			$.ajax({
+				url: '${pageContext.request.contextPath}/?idCotizacion='+idCotizacion,
+				cache: false,
+				async: true,
+				type: 'GET',
+				contentType : "application/json; charset=utf-8",
+				dataType: 'json',
+				success: function(response) {
+					
+					if (response.estado = "ok") {
+						
+					}
+					
+				},
+				error: function(data, textStatus, errorThrown) {
+					
+				},
+			});
+			
 		}
 	}
 	
 	function enviarCotizacion() {
 		var tipoCotizacion = $("#inpIdTipoCotizacion").val();
-		console.log("enviando");
+		console.log("enviando.......");
 	}
 	
 </script>
