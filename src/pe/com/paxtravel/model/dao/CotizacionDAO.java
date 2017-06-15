@@ -51,4 +51,6 @@ public interface CotizacionDAO {
 	
 	List<CotizacionServicioBean> listarCotizacionServicio(CotizacionServicioBean cotizacionServicioBean);
 	
+	CotizacionBean cotizacion(CotizacionBean cotizacionBean);
+	
 }

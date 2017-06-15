@@ -138,12 +138,28 @@
 		 	<result property="imPrecio"			    column="im_precio" />		 
 	</resultMap>
 	
-	
+	<resultMap id="resultCotizacionResume" class="cotizacionBean">
+		<result property="idCotizacion" column="id_cotiza" />
+		<result property="numeroCotizacion" column="nu_cotiza" />
+		<result property="nombreCliente" column="cliente" />
+		<result property="fechaCotizacion" column="fe_cotiza" />		
+		<result property="tipoCotizacion" column="cotizacion" />
+		<result property="tipoPrograma" column="programa" />
+		<result property="estado" column="estado" />
+		<result property="tipoAlojamiento" column="alojamiento" />
+		<result property="categoriaAlojamiento" column="categoriaAlojamiento" />
+		<result property="destinos" column="destinos" />
+		<result property="habitaciones" column="habitaciones" />
+		<result property="motivos" column="motivos" />
+		<result property="servicios" column="servicios" />
+		<result property="idTipoCotizacion" column="id_tipo_cotizacion" />
+		<result property="idEstado" column="id_estado" />
+	</resultMap>
 	
 	<select id="listarCotizacion" parameterClass="cotizacionBean" resultMap="resultCotizacion">
 		SELECT  @rownum:=@rownum+1 AS ca_nume_fila, coti.id_cotiza, coti.nu_cotiza,
                 DATE_FORMAT(coti.fe_cotiza,'%d-%m-%Y') fe_cotiza,
-                CONCAT(clie.nombres,' ',clie.apellidos) cliente, 'STATUS' as no_estado,
+                CONCAT(clie.nombres,' ',clie.apellidos) cliente, e.no_estado as no_estado,
                 coti.descripcion,               
 				IF(coti.fe_partida='00-00-0000', NULL, coti.fe_partida) as fe_partida,                 
                 IF(coti.fe_retorno='00-00-0000', NULL, coti.fe_retorno) as fe_retorno, 
@@ -160,15 +176,14 @@
 				coti.id_categoria_alojamiento, 
 				coti.im_presupuesto_minimo, 
 				coti.im_presupuesto_maximo
-				
-                
           FROM (SELECT @rownum:=0) r, cotizacion coti 
-       INNER JOIN cliente clie ON coti.id_cliente=clie.id_cliente       
+       INNER JOIN cliente clie ON coti.id_cliente=clie.id_cliente   
+       INNER JOIN estado as e ON (coti.id_estado=e.id_estado)    
 		  WHERE 1 = 1
 	      <isNotEmpty prepend="AND" property="fechaCotizacion"> DATE_FORMAT(coti.fe_cotiza,'%Y-%m-%d')  = #fechaCotizacion# </isNotEmpty>
 	      <isNotEmpty prepend="AND" property="numeroCotizacion"> coti.nu_cotiza = #numeroCotizacion# </isNotEmpty> 
 	      <isNotEmpty prepend="AND" property="codigoEstadoCotizacion"> coti.id_estado = #codigoEstadoCotizacion# </isNotEmpty> 
-	      <isNotEmpty prepend="AND" property="nombreCliente"> CONCAT(clie.nombres,' ',clie.apellidos) LIKE %#nombreCliente#% </isNotEmpty>
+	      <isNotEmpty prepend="AND" property="nombreCliente"> CONCAT(clie.nombres,' ',clie.apellidos) LIKE #nombreCliente# </isNotEmpty>
 	      <isNotEmpty prepend="AND" property="documentoCliente"> clie.nu_documento = #documentoCliente# </isNotEmpty>
 	</select>
 	
@@ -433,10 +448,44 @@
 		    pTT.im_precio
 		 FROM proytraveldb.paquete_turistico_ticket AS pTT		
 		INNER JOIN aerolinea AS A ON (pTT.id_aerolinea = A.id_aerolinea)
-		INNER JOIN proveedor AS P ON (pTT.id_proveedor = P.id_proveedor)
-		
+		INNER JOIN proveedor AS P ON (pTT.id_proveedor = P.id_proveedor)		
 	</select>	
-	
 		
+	<select id="rowCotizacionResume" parameterClass="cotizacionBean" resultMap="resultCotizacionResume">	
+	SELECT c.nu_cotiza, c.id_cotiza, c.fe_cotiza, concat(cli.nombres, ' ',cli.apellidos) AS cliente, tc.nombre AS cotizacion,
+		tc.id_tipo AS id_tipo_cotizacion, 
+		tp.nombre AS programa,
+		e.no_estado as estado, e.id_estado, ta.descripcion AS alojamiento, tca.nombre AS categoriaAlojamiento, 		
+        GROUP_CONCAT(DISTINCT d.descripcion
+					ORDER BY d.descripcion ASC
+					SEPARATOR '-') AS destinos,
+		GROUP_CONCAT(DISTINCT th.descripcion
+					ORDER BY th.descripcion ASC
+					SEPARATOR '-') AS habitaciones,
+		GROUP_CONCAT(DISTINCT tm.descripcion
+					ORDER BY tm.descripcion ASC
+					SEPARATOR '-') AS motivos,
+		GROUP_CONCAT(DISTINCT s.nombre
+					ORDER BY s.nombre ASC
+					SEPARATOR '-') AS servicios		
+	FROM `cotizacion` as c 
+		INNER JOIN `cliente` AS cli ON (c.id_cliente = cli.id_cliente)
+	    INNER JOIN `tipo_cotizacion` AS tc ON (c.id_tipo_cotiza=tc.id_tipo)    
+	    INNER JOIN `estado` AS e ON (e.id_estado=c.id_estado)
+	    LEFT JOIN `tipo_alojamiento` AS ta ON (c.id_tipo_alojamiento=ta.id_tipo_alojamiento)
+	    LEFT JOIN `tipo_categoria_alojamiento` AS tca ON (c.id_categoria_alojamiento=tca.id_tipo)    
+	    LEFT JOIN `tipo_programa` AS tp ON (c.id_tipo_programa=tp.id_programa)    
+		LEFT JOIN `cotizacion_deta` AS cd ON (c.nu_cotiza=cd.id_cotiza)
+	    LEFT JOIN `cotizacion_deta_habitacion` AS cdh ON (c.nu_cotiza=cdh.id_cotiza)
+	    LEFT JOIN `cotizacion_motivo` AS cm ON (c.nu_cotiza=cm.id_cotiza)
+	    LEFT JOIN `cotizacion_servicio` AS cs ON (c.nu_cotiza=cs.id_cotiza)
+	    LEFT JOIN `tipo_habitacion` AS th ON (cdh.id_tipo_habitacion=th.id_tipo_habitacion)
+	    LEFT JOIN `servicios` AS s ON (cs.id_servicio=s.id_servicio)
+	    LEFT JOIN `destino_ciudad` AS d ON (cd.id_destino=d.id_destino_ciudad)
+	    LEFT JOIN `motivo_viaje` AS tm ON (cm.id_motivo=tm.id_motivo) 
+	WHERE
+		c.id_cotiza = #idCotizacion#
+	GROUP BY c.nu_cotiza
+	</select>
 
 </sqlMap>

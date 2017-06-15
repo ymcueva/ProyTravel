@@ -252,6 +252,11 @@ public class CotizacionServiceImpl implements CotizacionService {
 		return fareInfoDetaList;
 		
 	}
+
+	@Override
+	public CotizacionBean cotizacion(CotizacionBean cotizacionBean) {
+		return cotizacionDAO.cotizacion(cotizacionBean);
+	}
 	
 	
 //	@Override
