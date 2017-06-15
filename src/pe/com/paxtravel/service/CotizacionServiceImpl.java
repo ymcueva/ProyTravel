@@ -164,14 +164,17 @@ public class CotizacionServiceImpl implements CotizacionService {
 		
 		try {
 		
-		String[] vuelo = cadenaVuelo.split("-");
+		String[] vuelo = cadenaVuelo.split(",");
         String origen = vuelo[0];
         String destino = vuelo[1];
         String fechaPartida = vuelo[2];
+        int idDestino = Integer.parseInt(vuelo[3]);
         
         System.out.println("origen? " + origen);
         System.out.println("destino? " + destino);
         System.out.println("fechaPartida? " + fechaPartida);
+        System.out.println("idDestino? " + idDestino);
+        
         
         URL url = new URL("http://api.decom.pe/public/reserveAir/search");
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -208,7 +211,7 @@ public class CotizacionServiceImpl implements CotizacionService {
 				System.out.println("href? " + item.getHref());
 				System.out.println("item? " + item.toString());
 				item.setDestino(destino);
-				
+				item.setIdDestino(idDestino);
 				//consulta los consolidadores y la mayor comision:
 				
 				FareInfoBean o = getConsolidador(item);

@@ -377,7 +377,7 @@
 	   WHERE 
 
 				a.code_aerolinea  = #airlineCode# AND 
-	   			d.descripcion = #destino#
+	   			pad.id_destino_ciudad = #idDestino#
 	      
 	  ORDER BY pad.comision DESC   
 	    	      

@@ -15,7 +15,7 @@ public class FareInfoBean {
 	private int idDestino;
 	private double precio;
 	private String url;
-	
+
 		
 	
 	

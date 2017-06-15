@@ -395,6 +395,9 @@
 					row.find('input[id="tmp_idCategoriaAlojamiento"]').val(idcategoria);
 					row.find('input[id="tmp_Habitaciones"]').val(detallehabitacion);
 					row.find('input[id="tmp_totalHotel"]').val(costo);
+					row.find('input[id="tmp_nomTipoAlojamiento"]').val(costo);
+					row.find('input[id="tmp_nomCategoriaAlojamiento"]').val(costo);
+					row.find('input[id="tmp_nomHotel"]').val(costo);
 					
 
 					var dias = row.find('input[id="tmp_dias"]').val();
@@ -894,6 +897,9 @@
 					
 					
 					$("#tblHoteles tbody").html("");
+					$("#tblTipoHabitacion tbody").html("");
+					$("#tipoHabitacion").val("");
+					$("#txtCantidad").val("");
 	                for(var i = 0;i< listaHotel.length;i++){
 	                	 cont++;
 						 nuevaFila+= "<tr>";
@@ -996,8 +1002,8 @@
 			return false;
 		}
 		
-		function buscarVuelos(idOrigen,idDestino,fechPartida){
-			var cadena = idOrigen + "-" + idDestino + "-" + fechPartida;
+		function buscarVuelos(idOrigen,idDestino,fechPartida,destino){
+			var cadena = idOrigen + "," + idDestino + "," + fechPartida + "," + destino;
 			params = "?cadenaVuelo="+cadena;
 			$.ajax({
 				url: '${pageContext.request.contextPath}/verVuelos'+params,
@@ -1080,12 +1086,12 @@
 			var html = $(item).parents("tr").html();
 			
 			//var fechapartida = $("#txtFechaPartida").val();
-			var fechapartida = tr.find('input[id="tmp_fechaPartida"]').val();
 			var origen = tr.find('input[id="tmp_idOrigen"]').val();
 			var destino = tr.find('input[id="tmp_idDestino"]').val();
 			var dias = tr.find('input[id="tmp_dias"]').val();
 			var isoOrigen = tr.find('input[id="tmp_isoOrigen"]').val();
-			var isoDestino = tr.find('input[id="isoDestino"]').val();
+			var isoDestino = tr.find('input[id="tmp_isoDestino"]').val();
+			var fechapartida = tr.find('input[id="tmp_fechaPartida"]').val();
 			
 			
 			$("#hdnDiasHotel").val(dias);
@@ -1100,7 +1106,7 @@
 			
 			//Servicio Ticket Aereo
 			else if(idservicio == 2){
-				buscarVuelos(isoOrigen,isoDestino,fechapartida);
+				buscarVuelos(isoOrigen,isoDestino,fechapartida,destino);
 			}
 			
 			//Servicio Tour

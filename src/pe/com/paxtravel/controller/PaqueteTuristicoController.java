@@ -133,8 +133,9 @@ public class PaqueteTuristicoController {
 	        String cadenaVuelo = request.getParameter("cadenaVuelo");
 	        
 	        List<FareInfoBean> fareInfoDetaList = new ArrayList<FareInfoBean>();
+	        System.out.println("Cadena Vuelo :" +cadenaVuelo);
 	        fareInfoDetaList = cotizacionService.listarTickets(cadenaVuelo);
-	        
+	       
 	        /*
 	        String[] vuelo = cadenaVuelo.split("-");
 	        String origen = vuelo[0];
@@ -603,6 +604,14 @@ public class PaqueteTuristicoController {
 					bean.setNomTipoAlojamiento("");
 					bean.setNomCatAlojamiento("");
 					bean.setIdProveedorHotel(0);
+					bean.setTotalHotel(0);
+					//Inicializar variables de vuelo
+					bean.setIdAerolinea(0);
+					bean.setIdProveedorAerolinea(0);
+					bean.setPrecioAerolinea(0);
+					bean.setUrlAerolinea("");
+					bean.setNombreAerolinea("");
+					bean.setComision(0);
 					
 					//Obtener Hotel y sus habitaciones si tiene el servicio de hotel
 					if(tieneHotel == true){
@@ -671,8 +680,9 @@ public class PaqueteTuristicoController {
 					}
 					
 					if(tieneTicket == true){
+						cadenaVuelo = bean.getIsoOrigen() + "," + bean.getIsoDestino() + "," + bean.getFePartidaDestino() + "," + bean.getIdDestino();
 						System.out.println("Cadena Vuelo :" + cadenaVuelo);
-						cadenaVuelo = bean.getIsoOrigen() + "-" + bean.getIsoDestino() + "-" + bean.getFePartidaDestino();
+						
 						listaTickets = cotizacionService.listarTickets(cadenaVuelo);
 						
 						//Obtener el ticket que tiene el menor precio si es que hay mas de uno
@@ -1406,6 +1416,9 @@ public class PaqueteTuristicoController {
 						
 					}
 					
+					System.out.println("Actualiza estado de la orden y cotizacion");
+					System.out.println("Id Estado :" + objbean.getIdEstado());
+					System.out.println("Id Orden :" + objbean.getIdOrden());
 					
 					if(objbean.getIdEstado() == 5) {
 						//Actualizando la orden a finalizado
