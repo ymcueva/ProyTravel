@@ -178,7 +178,7 @@
        			   ifnull(pt.descripcion,'') destour,
        			   ifnull(pt.nu_personas,0) personastour,
        			   ifnull(pt.im_precio_adulto,0) preadultotour,
-       			   ifnull(pt.im_precio_niño,0) preninotour,
+       			   ifnull(pt.im_precio_nino,0) preninotour,
        			   ifnull(ptick.id_aerolinea,0) id_aerolinea,
        			   ifnull(ptick.id_proveedor,0) id_proveedor_aerolinea,
        			   ifnull(ptick.im_precio,0) precio_aerolinea,

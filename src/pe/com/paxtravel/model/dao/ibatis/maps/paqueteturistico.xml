@@ -422,7 +422,7 @@
 			descripcion,
 			nu_personas,
 			im_precio_adulto,
-			im_precio_niño,
+			im_precio_nino,
 			id_paquete,
 			id_destino
 		) 
