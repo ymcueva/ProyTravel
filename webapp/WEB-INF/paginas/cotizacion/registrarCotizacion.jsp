@@ -2248,7 +2248,9 @@ function guardarDetalleFareInfo(){
 		<div class="panel panel-info">
 			<div class="panel-heading"> <strong>Registro Satisfactorio</strong></div>
 			<div class="panel-body">
-				<div class="modal-body"> <p class="text-center" id="mensajeTransaccion">Se registro satisfactoriamente la Cotizaci&oacute;n</p></div>
+				<div class="modal-body"> <p class="text-center" id="mensajeTransaccion">Se registro satisfactoriamente la Cotizaci&oacute;n</p>
+				<p id="mensajeDetalleTransaccion"></p>
+				</div>
 				<div class="modal-footer">
 					<div class="col-sm-12" align="center">
 						<input type="button" id="btnRegistro" class="btn btn-primary" onclick="aceptar()" value="Aceptar"/>

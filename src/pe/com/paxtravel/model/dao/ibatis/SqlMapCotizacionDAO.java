@@ -147,5 +147,10 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements Cotiz
 		listaPaqueteDestino = getSqlMapClientTemplate().queryForList("cotizacion.listarPaqueteDestinos", p);
 		return listaPaqueteDestino;
 	}
+
+	@Override
+	public CotizacionBean cotizacion(CotizacionBean cotizacionBean) {
+		return (CotizacionBean) getSqlMapClientTemplate().queryForObject("cotizacion.rowCotizacionResume", cotizacionBean);
+	}
 	
 }

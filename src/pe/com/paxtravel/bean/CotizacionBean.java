@@ -3,8 +3,7 @@ package pe.com.paxtravel.bean;
 public class CotizacionBean {
 
 	private int numeroFila;
-	private int idCotizacion;
-	
+	private int idCotizacion;	
 	private String numeroCotizacion;
 	private String fechaCotizacion;
 	private String nombreCliente;
@@ -17,13 +16,9 @@ public class CotizacionBean {
 	private String fechaSalida;
 	private String fechaRetorno;
 	private String seguroViaje;
-	
-	
 	private String boletoAvion;
-	
 	private String idOrigen;
 	private String idDestino;
-	
 	private String[] motivoViaje;
 	private String tipoAlojamiento;
 	private String categoriaAlojamiento;
@@ -31,15 +26,88 @@ public class CotizacionBean {
 	private int cantidadNinos;
 	private Double presupuestoMinimo;
 	private Double presupuestoMaximo;
-
 	private String observacion;
-	
-	private int idCliente;
+	private String tipoCotizacion;
+	private String tipoPrograma;
+	private String estado;	
+	private String destinos;
+	private String habitaciones;
+	private String motivos;
+	private String servicios;
+	private int idCliente;	
 	private int idTipoCotizacion;
 	private int idOrigenPartida;
-	private int idTipoPrograma;
+
+
+	private int idTipoPrograma;	
+	private int tipoBusqueda;
 	private int idEstado;
 	
+	
+	public int getTipoBusqueda() {
+		return tipoBusqueda;
+	}
+
+	public void setTipoBusqueda(int tipoBusqueda) {
+		this.tipoBusqueda = tipoBusqueda;
+	}
+
+	public String getTipoCotizacion() {
+		return tipoCotizacion;
+	}
+
+	public void setTipoCotizacion(String tipoCotizacion) {
+		this.tipoCotizacion = tipoCotizacion;
+	}
+
+	public String getTipoPrograma() {
+		return tipoPrograma;
+	}
+
+	public void setTipoPrograma(String tipoPrograma) {
+		this.tipoPrograma = tipoPrograma;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String getDestinos() {
+		return destinos;
+	}
+
+	public void setDestinos(String destinos) {
+		this.destinos = destinos;
+	}
+
+	public String getHabitaciones() {
+		return habitaciones;
+	}
+
+	public void setHabitaciones(String habitaciones) {
+		this.habitaciones = habitaciones;
+	}
+
+	public String getMotivos() {
+		return motivos;
+	}
+
+	public void setMotivos(String motivos) {
+		this.motivos = motivos;
+	}
+
+	public String getServicios() {
+		return servicios;
+	}
+
+	public void setServicios(String servicios) {
+		this.servicios = servicios;
+	}
+
 	public int getIdTipoPrograma() {
 		return idTipoPrograma;
 	}

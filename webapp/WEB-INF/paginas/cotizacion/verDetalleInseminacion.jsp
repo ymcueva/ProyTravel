@@ -1,5 +1,5 @@
 <div class="panel-heading" >
-	<h3 class="panel-title" align="center" id="tituloInseminacion"></h3>
+	<h3 class="panel-title" align="center" id="tituloCotizacion"></h3>
 </div>
 
 <div class="panel-body">
@@ -7,66 +7,88 @@
 		<div class="col-sm-12">
 
 			<div class="form-group">
-				<div class="col-sm-5" style="text-align:right; font-weight:bold">C&oacute;digo Inseminaci&oacute;n:</div>
-				<div class="col-sm-7" id="divCodigoInseminacion" ></div>
+				<div class="col-sm-5" style="text-align:right; font-weight:bold">N&uacute;mero Cotizaci&oacute;n:</div>
+				<div class="col-sm-7" id="divCodigo" ></div>
 			</div>
 			
 			<div class="row">&nbsp;</div>
 			
 			<div class="form-group">
-				<div class="col-sm-5" style="text-align:right; font-weight:bold">Fecha Inseminaci&oacute;n:</div>
-				<div class="col-sm-7" id="divFechaInseminacionDeta"></div>
+				<div class="col-sm-5" style="text-align:right; font-weight:bold">Fecha:</div>
+				<div class="col-sm-7" id="divFecha"></div>
 			</div>
 			
 			<div class="row">&nbsp;</div>
 			
 			<div class="form-group">
-				<div class="col-sm-5" style="text-align:right; font-weight:bold">Tipo Inseminaci&oacute;n:</div>
-				<div class="col-sm-7" id="divTipoInseminacion"></div>
+				<div class="col-sm-5" style="text-align:right; font-weight:bold">Tipo:</div>
+				<div class="col-sm-7" id="divTipo"></div>
 			</div>
 			
 			<div class="row">&nbsp;</div>
 			
 			<div class="form-group">
-				<div class="col-sm-5" style="text-align:right; font-weight:bold">C&oacute;digo Vaca:</div>
-				<div class="col-sm-7" id="divCodigoVaca"></div>
+				<div class="col-sm-5" style="text-align:right; font-weight:bold">Cliente:</div>
+				<div class="col-sm-7" id="divCliente"></div>
 			</div>
 			
 			<div class="row">&nbsp;</div>
 			
 			<div class="form-group">
-				<div class="col-sm-5" style="text-align:right; font-weight:bold">Nombre Vaca:</div>
-				<div class="col-sm-7" id="divNombreVaca"></div>
+				<div class="col-sm-5" style="text-align:right; font-weight:bold">Estado:</div>
+				<div class="col-sm-7" id="divEstado"></div>
 			</div>
 			
 			<div class="row">&nbsp;</div>
 			
 			<div class="form-group">
-				<div class="col-sm-5" style="text-align:right; font-weight:bold">C&oacute;digo Toro:</div>
-				<div class="col-sm-7" id="divCodigoToro"></div>
+				<div class="col-sm-5" style="text-align:right; font-weight:bold">Destinos:</div>
+				<div class="col-sm-7" id="divDestinos"></div>
 			</div>
 			
 			<div class="row">&nbsp;</div>
 			
 			<div class="form-group">
-				<div class="col-sm-5" style="text-align:right; font-weight:bold">D&iacute;as Inseminado:</div>
-				<div class="col-sm-7" id="divDiasInseminado"></div>
+				<div class="col-sm-5" style="text-align:right; font-weight:bold">Motivos:</div>
+				<div class="col-sm-7" id="divMotivos"></div>
 			</div>
 			
 			<div class="row">&nbsp;</div>
 			
 			<div class="form-group">
-				<div class="col-sm-5" style="text-align:right; font-weight:bold">Observaci&oacute;n:</div>
-				<div class="col-sm-7" id="divObservacion"></div>
+				<div class="col-sm-5" style="text-align:right; font-weight:bold">Servicios:</div>
+				<div class="col-sm-7" id="divServicios"></div>
 			</div>
 			
-			<div class="row">&nbsp;</div>
-			
-			<div class="form-group">
-				<div class="col-sm-5" style="text-align:right; font-weight:bold">Usuario:</div>
-				<div class="col-sm-7" id="divUsuario"></div>
+			<div id="divBotonCotizacionBuscar" style="display: none;">	
+				<div class="row">&nbsp;</div>		
+				<div class="form-group">
+					<div class="col-sm-12" style="text-align: center">
+						<button id="btnBuscar" type="button"
+							class="btn btn-primary centro" onclick="buscarDetalleCotizacion()"
+							title="Buscar">Buscar</button>
+					</div>					
+				</div>
 			</div>
-
+			
+			<div id="divInfoDetalleCotizacion" style="display: none;">	
+				<div class="row">&nbsp;</div>		
+				<div class="form-group">
+					<div class="col-sm-12" style="text-align: center" id="infoDetalleCotizacion">
+							
+					</div>					
+				</div>
+			</div>			
+			
+			<div id="divBotonCotizacionEnviar" style="display: none;">	
+				<div class="row">&nbsp;</div>
+				<div class="col-sm-12" style="text-align: center">
+					<button id="btnEnviar" type="button"
+						class="btn btn-primary centro" onclick="enviarCotizacion()"
+						title="Enviar">Enviar</button>
+				</div>
+			</div>
+			
 			<div class="row">&nbsp;</div>
 
 			<div class="form-group">

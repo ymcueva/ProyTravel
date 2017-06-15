@@ -53,5 +53,7 @@ public interface CotizacionDAO {
 	
 	int actualizarCotizacion(CotizacionBean cotizacionBean);
 
+	CotizacionBean cotizacion(CotizacionBean cotizacionBean);
+
 	
 }

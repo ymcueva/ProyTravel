@@ -31,7 +31,7 @@ public class PaqueteManagerBean {
 	
 	private int idHotelHabitacion;
 	private int idCategoriaAlojamiento;
-	private int idTipoAlojamiento;
+	private int idTipoAlojamiento;  
 	private int idHotel;
 	private int idPaqueteDestino;
 	private int idPaqueteDestinoHotel;
@@ -43,6 +43,66 @@ public class PaqueteManagerBean {
 	private double imPrecioAdulto;
 	private double imPrecioNino;
 	
+	private String tiDestinos;
+	private String tiTours;
+	private String tiHotel;
+	private String tiTicket;
+	
+	private int nuDestinos;
+	
+	private int perServicio;
+	
+	
+	
+	
+	public int getPerServicio() {
+		return perServicio;
+	}
+
+	public void setPerServicio(int perServicio) {
+		this.perServicio = perServicio;
+	}
+
+	public int getNuDestinos() {
+		return nuDestinos;
+	}
+
+	public void setNuDestinos(int nuDestinos) {
+		this.nuDestinos = nuDestinos;
+	}
+
+	public String getTiDestinos() {
+		return tiDestinos;
+	}
+
+	public void setTiDestinos(String tiDestinos) {
+		this.tiDestinos = tiDestinos;
+	}
+
+	public String getTiTours() {
+		return tiTours;
+	}
+
+	public void setTiTours(String tiTours) {
+		this.tiTours = tiTours;
+	}
+
+	public String getTiHotel() {
+		return tiHotel;
+	}
+
+	public void setTiHotel(String tiHotel) {
+		this.tiHotel = tiHotel;
+	}
+
+	public String getTiTicket() {
+		return tiTicket;
+	}
+
+	public void setTiTicket(String tiTicket) {
+		this.tiTicket = tiTicket;
+	}
+
 	public String getNomAerolinea() {
 		return nomAerolinea;
 	}

@@ -88,10 +88,14 @@
 		})
 	}
 	
-	function validarNumeroLetra(e){
+	function validarNumeroLetra(e) {
+		
+	}
+	
+	/* function validarNumeroLetra(e){
 		var key = window.Event ? e.which : e.keyCode;
 		return ( (key==32 ) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90) );
- 	}
+ 	} */
  	
 	function buscarCotizacion(){
 		
@@ -187,7 +191,96 @@
 		location.href= '${pageContext.request.contextPath}/cargarFormRegistrarCotizacion';
 	}
 	
-	function verDetalleCotizacion(numeroCotizacion){
+	function verDetalleCotizacion(idCotizacion){
+		
+		console.log("Detalle de la cotizacion..." + idCotizacion);
+		
+		$("#divInfoDetalleCotizacion").css("display", "none");
+		$("#divBotonCotizacionBuscar").css("display", "none");
+		$("#divBotonCotizacionEnviar").css("display", "none");
+		
+		$("#divCodigo").html("");
+		$("#divCliente").html("");
+		$("#tituloCotizacion").html("");
+		
+		$("#divFecha").html("");
+		$("#divTipo").html("");
+		$("#divEstado").html("");
+		
+		//$("#").val(response.dataJson.cotizacion.tipoAlojamiento);
+		//$("#").val(response.dataJson.cotizacion.categoriaAlojamiento);
+		//$("#").val(response.dataJson.cotizacion.habitaciones);
+		
+		$("#divDestinos").html("");					
+		$("#divMotivos").html("");
+		$("#divServicios").html("");
+		
+		$("#inpIdTipoCotizacion").val("");
+		$("#inpIdCotizacion").val("");
+		$("#inpIdEstado").val("");
+		
+		$.ajax({
+			url: '${pageContext.request.contextPath}/verDetalleCotizacion?idCotizacion='+idCotizacion,
+			cache: false,
+			async: true,
+			type: 'GET',
+			contentType : "application/json; charset=utf-8",
+			dataType: 'json',
+			success: function(response) {
+				
+				if (response.estado = "ok") {
+					
+					console.log(response.dataJson);
+					console.log(response);
+					
+					$("#inpIdTipoCotizacion").val(response.dataJson.cotizacion.idTipoCotizacion);
+					$("#inpIdCotizacion").val(response.dataJson.cotizacion.IdCotizacion);
+					$("#inpIdEstado").val(response.dataJson.cotizacion.idEstado);									
+					
+					$("#divCodigo").html(response.dataJson.cotizacion.numeroCotizacion);
+					$("#divCliente").html(response.dataJson.cotizacion.nombreCliente);
+					$("#tituloCotizacion").html(response.dataJson.cotizacion.tipoCotizacion);
+					
+					$("#divFecha").html(response.dataJson.cotizacion.fechaCotizacion);
+					$("#divTipo").html(response.dataJson.cotizacion.tipoPrograma);
+					$("#divEstado").html(response.dataJson.cotizacion.estado);
+					
+					//$("#").val(response.dataJson.cotizacion.tipoAlojamiento);
+					//$("#").val(response.dataJson.cotizacion.categoriaAlojamiento);
+					//$("#").val(response.dataJson.cotizacion.habitaciones);
+					
+					$("#divDestinos").html(response.dataJson.cotizacion.destinos);					
+					$("#divMotivos").html(response.dataJson.cotizacion.motivos);
+					$("#divServicios").html(response.dataJson.cotizacion.servicios);
+					
+					/* if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) { //Paquete Turistico
+					
+					} else {//Ticket Aereo
+						
+					} */
+										
+					if ( response.dataJson.cotizacion.idEstado == 4 ) {	//Estado Pendiente
+						$("#divBotonCotizacionBuscar").css("display", "inline");											
+					} else if ( response.dataJson.cotizacion.idEstado == 6 ) { //Estado Asignado
+						$("#divBotonCotizacionEnviar").css("display", "inline");
+					}
+					
+					$("#divVerDetalleInseminacion").modal({
+						backdrop: 'static',
+						keyboard: false
+					});										
+					
+				}
+				
+			},
+			error: function(data, textStatus, errorThrown) {
+				
+			},
+		});
+		
+		
+		
+		/*
 		$.ajax({
 			url: '${pageContext.request.contextPath}/verDetalleCotizacion?numCotizacion='+numeroCotizacion,
 			cache: false,
@@ -219,7 +312,7 @@
 			},
 			error: function(data, textStatus, errorThrown) {
 			}
-		});
+		}); */
 	}
 	
 	function limpiarFormularioInseminacion(){
@@ -244,6 +337,20 @@
 	        formularioObject[v.name] = v.value;
 	    });
 	    return formularioObject;
+	}
+	
+	function buscarDetalleCotizacion() {
+		var tipoCotizacion = $("#inpIdTipoCotizacion").val();
+		if ( tipoCotizacion == 1 ){
+			console.log("paquete");
+		} else {
+			console.log("ticket");
+		}
+	}
+	
+	function enviarCotizacion() {
+		var tipoCotizacion = $("#inpIdTipoCotizacion").val();
+		console.log("enviando");
 	}
 	
 </script>
@@ -296,6 +403,8 @@
 														<option value="1">Por Pagar</option>
 														<option value="2">Pagado</option>
 														<option value="3">Cancelado</option>
+														<option value="4">Pendiente</option>
+														<option value="5">Finalizado</option>
 													</select>
 												</div>
 												
@@ -421,6 +530,10 @@
 		</div>
 	</div>
 </div>
+
+<input type="hidden" id="inpTipoCotizacion" name="idTipoCotizacion" />
+<input type="hidden" id="inpIdCotizacion" name="idCotizacion" />
+<input type="hidden" id="inpIdEstado" name="idEstado" />
 
 </body>
 
