@@ -1757,19 +1757,19 @@
 				
 				
 				//registrando tours
-				if(idTour != "") {
+				if(idTour != "0") {
 					filaTour = idTour + "," + desTour + "," + personas + "," +  preAdultoTour + "," + preNinoTour + "," + destinoRow ;
 					tours += filaTour + ";";
 				}
 				
 				//registrando tickets	
-				if(idAerolinea != ""){
+				if(idAerolinea != "0"){
 					filaTicket = idProvAerolinea + "," + idAerolinea + "," + precioAerolinea + "," + destinoRow + "," + adultos + "," + ninos + "," + tipo;
 					tickets += filaTicket + ";";
 				}
 				
 				//registrando hoteles
-				if(idhotel != ""){
+				if(idhotel != "0"){
 					
 					filaHotel = destinoRow + "," + idhotel + "," + idprovhotel + "," + idtipoalojamiento + "," + idcatalojamiento + "," + desHotel + "," + adultos + "," + ninos + "," + habitaciones;
 					hoteles += filaHotel + ";";

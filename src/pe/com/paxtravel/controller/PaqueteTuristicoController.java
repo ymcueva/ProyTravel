@@ -1339,7 +1339,7 @@ public class PaqueteTuristicoController {
 						PaqueteTuristicoDestinoHotelBean paqueteTuristicoDestinoHotelBean = new PaqueteTuristicoDestinoHotelBean();
 						
 						String detalle = "";
-						
+						System.out.println("Id Paquete :" + registro);
 						System.out.println("Inicio Recorriendo Hoteles");
 						for(int i = 0;i<listaHoteles.length;i++){
 							
