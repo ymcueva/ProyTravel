@@ -153,8 +153,8 @@
        			   ord.id_cotiza,
        			   ord.nu_adultos,
        			   ord.nu_ninos,
-       			   ori.codigo_iso iso_origen,
-       			   des.codigo_iso iso_destino
+       			   ifnull(ori.codigo_iso,'') iso_origen,
+       			   ifnull(des.codigo_iso,'') iso_destino
        		from orden_destino od
 			inner join orden ord on od.id_orden = ord.id_orden
 			inner join destino_ciudad des on od.id_destino = des.id_destino_ciudad
@@ -186,8 +186,8 @@
        			   a.nombre nombre_aerolinea,
        			   ifnull(pad.comision,0) comision,
        			   ifnull(t.duracion,0) duracion,
-       			   ori.codigo_iso iso_origen,
-       			   des.codigo_iso iso_destino
+       			   ifnull(ori.codigo_iso,'') iso_origen,
+       			   ifnull(des.codigo_iso,'') iso_destino
 			from orden_destino od
 			inner join orden ord on od.id_orden = ord.id_orden
 			inner join destino_ciudad des on od.id_destino = des.id_destino_ciudad

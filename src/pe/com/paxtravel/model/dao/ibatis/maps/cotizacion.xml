@@ -296,6 +296,12 @@
 		)
 	</insert>
 	
+	<update id="actualizarEstadoCotizacion" parameterClass="cotizacionBean" >
+		update cotizacion set id_estado = #idEstado#
+		where id_cotiza = #idCotizacion#
+	
+	</update>
+	
 	<insert id="insertarCotizacionDetalleTicket" parameterClass="cotizacionDetalleBean">
 		INSERT INTO cotizacion_deta(
 			id_cotiza,

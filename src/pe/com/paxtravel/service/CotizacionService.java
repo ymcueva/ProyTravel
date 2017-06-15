@@ -54,4 +54,6 @@ public interface CotizacionService {
 	
 	List<CotizacionServicioBean> listarCotizacionServicio(CotizacionServicioBean cotizacionServicioBean);
 	
+	int actualizarCotizacion(CotizacionBean cotizacionBean);
+	
 }

@@ -126,6 +126,12 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements Cotiz
 		return 1;
 	}
 	
+	@Override
+	public int actualizarCotizacion(CotizacionBean cotizacionBean){
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).update("cotizacion.actualizarEstadoCotizacion", cotizacionBean);
+		return 1;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PaqueteManagerBean> listarPaquete(PaqueteManagerBean p){

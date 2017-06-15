@@ -47,6 +47,7 @@ public class OrdenPlanificacionBean {
 	private String nomTipoAlojamiento;
 	private String nomCatAlojamiento;
 	private String habitaciones;
+	private int idProveedorHotel;
 	
 	private int idTour;;
 	private String nomTour;
@@ -437,6 +438,12 @@ public class OrdenPlanificacionBean {
 	}
 	public void setNuCotizacion(String nuCotizacion) {
 		this.nuCotizacion = nuCotizacion;
+	}
+	public int getIdProveedorHotel() {
+		return idProveedorHotel;
+	}
+	public void setIdProveedorHotel(int idProveedorHotel) {
+		this.idProveedorHotel = idProveedorHotel;
 	}
 
 }

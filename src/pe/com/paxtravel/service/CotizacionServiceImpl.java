@@ -77,6 +77,8 @@ public class CotizacionServiceImpl implements CotizacionService {
 		return listaPais;
 	}
 	
+	
+	
 	@Override
 	public List<CotizacionServicioBean> listarCotizacionServicio(CotizacionServicioBean cotizacionServicioBean){
 		List<CotizacionServicioBean> lista = new ArrayList<CotizacionServicioBean>();
@@ -97,6 +99,11 @@ public class CotizacionServiceImpl implements CotizacionService {
 	@Override
 	public int registrarHabitacion(HotelHabitacionBean hotelHabitacionBean) {
 		return cotizacionDAO.registrarHabitacion(hotelHabitacionBean);
+	}
+	
+	@Override
+	public int actualizarCotizacion(CotizacionBean cotizacionBean){
+		return cotizacionDAO.actualizarCotizacion(cotizacionBean);
 	}
 
 	@Override

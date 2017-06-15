@@ -395,6 +395,7 @@ public class PaqueteTuristicoController {
 			listaOrdenPlanificacion = ordenPlanificacionService.obtenerOrdenPlanificacion(orden);
 			System.out.println("Size Orden :" + listaOrdenPlanificacion.size());
 			int idorden = 0;
+			String motivo = "";
 			if(listaOrdenPlanificacion.size() > 0){
 				mapa.put("idestado",listaOrdenPlanificacion.get(0).getIdEstado());
 				mapa.put("descripcion",listaOrdenPlanificacion.get(0).getDescripcion());
@@ -418,6 +419,14 @@ public class PaqueteTuristicoController {
 				
 				mapa.put("listaOrdenMotivo", listaOrdenMotivo);
 				
+				for(int i = 0;i<listaOrdenMotivo.size();i++){
+					if(i == listaOrdenMotivo.size() -1)
+						motivo += listaOrdenMotivo.get(i).getNomMotivo();
+					else
+						motivo += listaOrdenMotivo.get(i).getNomMotivo() + " - ";
+				}
+				
+				mapa.put("motivo", motivo);
 				
 			}
 			else {
@@ -437,6 +446,7 @@ public class PaqueteTuristicoController {
 				mapa.put("idorden", "");
 				mapa.put("tipoPrograma", "0");
 				mapa.put("listaOrdenMotivo", null);
+				mapa.put("motivo",motivo);
 			}
 			
 			 dataJSON.setRespuesta("ok", null, mapa);
@@ -583,6 +593,16 @@ public class PaqueteTuristicoController {
 					System.out.println("Fecha Parseada :" + parseador.format(fechaDate));
 					System.out.println("Id Destino : " +bean.getIdDestino() + " Fecha partida :" +  bean.getFePartidaDestino());
 					dias = bean.getNuDias();
+					
+					//Inicializar variables de hotel
+					bean.setIdHotel(0);
+					bean.setIdTipoAlojamiento(0);
+					bean.setIdCategoriaAlojamiento(0);
+					bean.setNomHotel("");
+					bean.setHabitaciones("");
+					bean.setNomTipoAlojamiento("");
+					bean.setNomCatAlojamiento("");
+					bean.setIdProveedorHotel(0);
 					
 					//Obtener Hotel y sus habitaciones si tiene el servicio de hotel
 					if(tieneHotel == true){
@@ -1386,9 +1406,33 @@ public class PaqueteTuristicoController {
 						
 					}
 					
-					//Actualizar Orden de Planificacion
-					ordenPlanificacionBean.setIdEstado(8);
-					ordenPlanificacionService.actualizarEstadoOrden(ordenPlanificacionBean);
+					
+					if(objbean.getIdEstado() == 5) {
+						//Actualizando la orden a finalizado
+						ordenPlanificacionBean.setIdEstado(5);
+						ordenPlanificacionService.actualizarEstadoOrden(ordenPlanificacionBean);
+						
+						//Actualizar la cotizacion
+						List<OrdenPlanificacionBean> listaOrden = new ArrayList<OrdenPlanificacionBean>();
+						listaOrden = ordenPlanificacionService.obtenerOrdenPlanificacion(ordenPlanificacionBean);
+						int idCotizacion = 0;
+						if(listaOrden.size() >0)
+							idCotizacion = listaOrden.get(0).getIdCotiza();
+						
+						CotizacionBean cotizacionBean = new CotizacionBean();
+						cotizacionBean.setIdCotizacion(idCotizacion);
+						cotizacionBean.setIdEstado(5);
+						
+						cotizacionService.actualizarCotizacion(cotizacionBean);
+						
+						
+					}
+					else {
+						//Actualizar Orden de Planificacion
+						ordenPlanificacionBean.setIdEstado(8);
+						ordenPlanificacionService.actualizarEstadoOrden(ordenPlanificacionBean);
+						
+					}
 					
 					
 					

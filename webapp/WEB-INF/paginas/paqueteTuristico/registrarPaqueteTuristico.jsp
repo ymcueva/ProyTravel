@@ -339,6 +339,7 @@
 			var idproveedor = tr.find('input[id="tmp_idproveedor"]').val();
 			//var dias = tr.find('input[id="tmp_dias"]').val();
 			
+			
 			var nomhotel = tr.find('td').eq(1).text();
 			var costo = tr.find('td').eq(2).text();
 			var msj = "";
@@ -384,12 +385,10 @@
 			var totalFilaGasto = parseFloat(0);
 			$("#tblDestinos tbody > tr").each(function () {
 				var row = $(this);
-				
-				
-				
-				
+				var destinoRow = row.find('input[id="tmp_idDestino"]').val();
+								
 				if(destinoRow == destino) {
-					
+	
 					row.find('input[id="tmp_idHotel"]').val(idhotel);
 					row.find('input[id="tmp_idProveedorHotel"]').val(idproveedor);
 					row.find('input[id="tmp_idTipoAlojamiento"]').val(idtipo);
@@ -398,7 +397,6 @@
 					row.find('input[id="tmp_totalHotel"]').val(costo);
 					
 
-					var destinoRow = row.find('input[id="tmp_idDestino"]').val();
 					var dias = row.find('input[id="tmp_dias"]').val();
 					var noches = dias - 1 ;
 					
@@ -1502,6 +1500,11 @@
 					var msj = rpta.mensaje;
 					var estado = rpta.idestado;
 					$("#btnBuscarPropuesta").attr("disabled", true);
+					$("#tblServiciosTuristicos tbody").html("");
+					$("#tblDestinos tbody").html("");
+					$("#txtTotalGasto").val(0);
+					$("#selTipoPrograma").val("");
+					$("#selTipoPrograma").attr("disabled", false);
 					
 					if(rpta.status == 1) {
 						
@@ -1550,9 +1553,11 @@
 						$("#hdIdOrden").val(rpta.idorden);
 						$("#hdnOrdenValida").val("1");
 						$("#hdnTipoPrograma").val(rpta.tipoPrograma);
+						$("#txtDescripcion").val(rpta.motivo);
 						
 						$("#btnBuscarPropuesta").attr("disabled", false);
 						
+						/*
 						var listaOrdenMotivo = [];
 						var texto = "";
 						var cont = 0;
@@ -1568,7 +1573,7 @@
 		               				$("#txtDescripcion").append(texto + " - ");
 		                	}
 		                }
-						
+						*/
 					}
 					else {
 						$("#txtDescripcionOrden").val("");

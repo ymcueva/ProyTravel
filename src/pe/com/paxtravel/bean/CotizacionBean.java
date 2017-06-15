@@ -38,6 +38,7 @@ public class CotizacionBean {
 	private int idTipoCotizacion;
 	private int idOrigenPartida;
 	private int idTipoPrograma;
+	private int idEstado;
 	
 	public int getIdTipoPrograma() {
 		return idTipoPrograma;
@@ -270,6 +271,14 @@ public class CotizacionBean {
 
 	public void setIdCliente(int idCliente) {
 		this.idCliente = idCliente;
+	}
+
+	public int getIdEstado() {
+		return idEstado;
+	}
+
+	public void setIdEstado(int idEstado) {
+		this.idEstado = idEstado;
 	}
 
 
