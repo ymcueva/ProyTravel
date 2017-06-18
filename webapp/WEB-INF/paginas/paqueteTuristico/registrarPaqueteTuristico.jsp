@@ -4,9 +4,14 @@
 <%
 	
 	String idEstado = "0";
+	String modifica = "1";
 
 	if(mapaDatos.get("idEstadoPaquete") != "")
 	   idEstado = mapaDatos.get("idEstadoPaquete").toString();
+	
+	if(mapaDatos.get("modifica") != "")
+		   modifica = mapaDatos.get("modifica").toString();
+		
 	
 	ArrayList listaDetalleHotel = (ArrayList) mapaDatos.get("listaDetalleHotel");
 	
@@ -105,6 +110,8 @@
 			if(idPaquete != ""){
 				
 				var idestado = <%=idEstado%>;
+				var modifica = <%=modifica%>;
+				
 				
 				$("#selTipoPrograma").val(idestado);
 				$("#btnBuscarPropuesta").attr('disabled', false);
@@ -114,7 +121,11 @@
 				
 				$("#hdnOrdenValida").val("1");
 				
-				
+				if(modifica == 0){
+					$("#btnBuscarPropuesta").hide();
+					$("#btnBuscarOrdenPlanificacion").hide();
+					$("#btnRegistrar").hide();
+				}
 				
 				
 				//Buscar los destinos y servicios
@@ -134,12 +145,19 @@
 					var idAerolinea = row.find('input[id="tmp_idAerolinea"]').val();
 					var idTour = row.find('input[id="tmp_idTour"]').val();
 					
+					if(modifica == 0) {
+						row.find('.hrefBusqueda').hide();
+					}
+					//	row.find('td:eq(6)').attr("disabled", true);
+					
 					//Mostrando datos del tour
 					if(idTour != "0"){
 						var preAdulto = row.find('input[id="tmp_preAdultoTour"]').val();
 						var preNino = row.find('input[id="tmp_preNinoTour"]').val();
 						var totalTour = parseFloat(preAdulto) + parseFloat(preNino);
 						row.find('input[id="tmp_totalTour"]').val(totalTour);
+						
+						
 						
 						
 						var verEliminarTour = "<span> <a href='javascript:;' onclick='eliminarTour(this)' title='Eliminar' ><span class='glyphicon glyphicon-trash'></span></a> </span>";
@@ -151,7 +169,11 @@
 						detalleTour += "<br />";
 						detalleTour += "Costo :" + totalTour;
 						detalleTour += "<br />";
-						detalleTour += verEliminarTour;
+						
+						if(modifica == 1)
+							detalleTour += verEliminarTour;
+						
+						
 						row.find("td").eq(5).html(detalleTour);
 					}
 					
@@ -166,7 +188,11 @@
 						detalleAerolinea+= "Precio: " + row.find('input[id="tmp_precioAerolinea"]').val();
 						detalleAerolinea+= "<br />";
 						detalleAerolinea+= "Comision: " + row.find('input[id="tmp_comision"]').val();
-						detalleAerolinea+= verEliminarVuelo;
+						
+						if(modifica == 1)
+							detalleAerolinea+= verEliminarVuelo;
+						
+						
 						row.find("td").eq(4).html(detalleAerolinea);
 					}
 					
@@ -233,7 +259,10 @@
 						detalleHotel += "<br />";
 						detalleHotel +="Categoria Alojamiento :" + nomCategoria; 
 						detalleHotel += "<br />";
-						detalleHotel += verEliminarHotel;
+						
+						
+						if(modifica == 1)
+							detalleHotel += verEliminarHotel;
 						
 						row.find("td").eq(3).html(detalleHotel);      
 					}
@@ -1197,7 +1226,7 @@
 								 for (var i = 0; i < listaOrdenDestino.length; i++) {
 									 //alert(listaOrdenDestino[i].idDetalle);
 									 cont++;
-									 VerBuscar = "<span> <a href='javascript:;' onclick='mostrarBusquedaDestino(\""+listaOrdenDestino[i].idDetalle+"\",this)' title='Buscar' ><span class='glyphicon glyphicon-search'></span></a> </span>";
+									 VerBuscar = "<span> <a class='hrefBusqueda' href='javascript:;' onclick='mostrarBusquedaDestino(\""+listaOrdenDestino[i].idDetalle+"\",this)' title='Buscar' ><span class='glyphicon glyphicon-search'></span></a> </span>";
 									 
 									 nuevaFila+= "<tr>";
 									 nuevaFila+= "<td class='text-center'>" + cont + "</td>";

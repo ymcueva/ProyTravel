@@ -900,6 +900,7 @@ public class PaqueteTuristicoController {
 				String idPaquete = "";
 				String idOrden = "";
 				String nuOrden = "";
+				String modifica = "1";
 				
 				if(request.getParameter("idpaquete") != null)
 					idPaquete = request.getParameter("idpaquete").toString();
@@ -910,9 +911,15 @@ public class PaqueteTuristicoController {
 				if(request.getParameter("nuOrden") != null)	
 					nuOrden = request.getParameter("nuOrden").toString();
 				
+				if(request.getParameter("modifica") != null)	
+					modifica = request.getParameter("modifica").toString();
+				
+				
 				System.out.println("idPaquete :" + idPaquete);
 				System.out.println("idOrden :" + idOrden);
 				System.out.println("nuOrden :" + nuOrden);
+				System.out.println("modifica :" + modifica);
+				
 				
 				String idEstado = "";
 				String descripcion = "";
@@ -1039,6 +1046,7 @@ public class PaqueteTuristicoController {
 			
 				mapaDatos.put("titulo", "REGISTRAR PAQUETE TURISTICO");
 				mapaDatos.put("idEstadoPaquete",idEstadoPaquete);
+				mapaDatos.put("modifica",modifica);
 				mapaDatos.put("listaDetalleHotel", listaDetalleHotel);
 				modelAndView.addObject("modo",modo);
 				//modelAndView.addObject("numeroCotizacion", cotizacionService.generarNumeroCotizacion()+"");

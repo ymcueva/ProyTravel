@@ -188,7 +188,11 @@
 						var VerDetalle = "";
 						
 						if(row.idEstado != 5)
-							VerDetalle = "<span> <a href='javascript:;' onclick='mostrarPaquete(\""+row.idPaquete+"\",\""+row.idOrden+"\",\""+row.nuOrden+"\")' title='Modificar' ><span class='glyphicon glyphicon-pencil'></span></a> </span>";
+							VerDetalle = "<span> <a href='javascript:;' onclick='mostrarPaquete(\""+row.idPaquete+"\",\""+row.idOrden+"\",\""+row.nuOrden+"\",1)' title='Modificar' ><span class='glyphicon glyphicon-pencil'></span></a> </span>";
+							
+							
+					    VerDetalle += "<span> <a href='javascript:;' onclick='mostrarPaquete(\""+row.idPaquete+"\",\""+row.idOrden+"\",\""+row.nuOrden+"\",0)' title='Ver' ><span class='glyphicon glyphicon-search'></span></a> </span>";
+							
 						return VerDetalle;
 					}
 					return '';
@@ -204,10 +208,11 @@
 		});
  	}
 	
- 	function mostrarPaquete(idpaquete,idorden,nuorden){
+ 	function mostrarPaquete(idpaquete,idorden,nuorden,modifica){
  		var params = "?idpaquete=" + idpaquete;
  		params+= "&idorden=" + idorden;
  		params+= "&nuOrden=" + nuorden;
+ 		params+="&modifica=" + modifica;
  		location.href = '${pageContext.request.contextPath}/cargarFormRegistrarPaqueteTuristico' + params;
  			 	
  	}
