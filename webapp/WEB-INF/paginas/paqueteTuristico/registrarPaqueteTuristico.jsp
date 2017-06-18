@@ -1415,15 +1415,18 @@
 							 });		
 							 
 							 
-							 $("#hdnTotalTour").val(totalTours);
-							 $("#hdnTotalTicket").val(totalTicket);
-							 $("#hdnTotalHotel").val(totalHotel);
-							 
-							 var totalPackage = parseFloat(totalTours) + parseFloat(totalTicket) + parseFloat(totalHotel);
-							 $("#txtTotalGasto").val(totalPackage);
+							
 							 var presupuesto = $("#txtPresupuestoMaximo").val();
 							 
 							 if(busInteligente == 1){
+								 
+								 $("#hdnTotalTour").val(totalTours);
+								 $("#hdnTotalTicket").val(totalTicket);
+								 $("#hdnTotalHotel").val(totalHotel);
+								 
+								 var totalPackage = parseFloat(totalTours) + parseFloat(totalTicket) + parseFloat(totalHotel);
+								 $("#txtTotalGasto").val(totalPackage);
+								 
 								 if(totalPackage > presupuesto && cumple == 0){
 									 $("#selTipoPrograma").val(5);
 									 $('#selTipoPrograma').prop('disabled', true);
