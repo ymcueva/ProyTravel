@@ -629,6 +629,8 @@ public class PaqueteTuristicoController {
 							bean.setTotalHotel(subtotal);
 							//Obtener las habitaciones del hotel 
 							listaHabitaciones = paqueteTuristicoService.listarDetalleHotelBusqueda(hotel);
+							System.out.println("Id Hotel :" + idHotel);
+							System.out.println("Total Habitaciones :" + listaHabitaciones.size());
 							
 							filaHabitacion = "";
 							habitaciones = "";
@@ -647,7 +649,7 @@ public class PaqueteTuristicoController {
 								habitaciones += filaHabitacion + "|";
 								
 							}
-							
+							System.out.println("Habitaciones :" + habitaciones);
 							bean.setHabitaciones(habitaciones);
 							
 						}

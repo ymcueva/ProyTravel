@@ -147,7 +147,7 @@
 						
 						detalleTour = "Descripcion : " + row.find('input[id="tmp_desTour"]').val() ;
 						detalleTour += "<br />";
-						detalleTour += "Dias :" + row.find('input[id="tmp_duracionTour"]').val();
+						detalleTour += "Horas :" + row.find('input[id="tmp_duracionTour"]').val();
 						detalleTour += "<br />";
 						detalleTour += "Costo :" + totalTour;
 						detalleTour += "<br />";
@@ -263,7 +263,7 @@
 			
             var msj = "Seleccione la Aerolinea";
 			
-			if(idaerolinea == ""){
+			if(idaerolinea == "" || idaerolinea == "0" || idaerolinea == null){
 				$("#mensajeClienteError").html(msj);
 				
 				$('#divMensajeErrorCliente').modal({
@@ -480,7 +480,7 @@
 			
 			var msj = "Seleccione el Tour";
 			
-			if(idtour == ""){
+			if(idtour == "" || idtour == "0" || idtour == null){
 				$("#mensajeClienteError").html(msj);
 				
 				$('#divMensajeErrorCliente').modal({
@@ -520,7 +520,7 @@
 					//alert("Iguales");
 					detalle = "Descripcion : " + descripcion ;
 					detalle += "<br />";
-					detalle += "Dias :" + dias;
+					detalle += "Horas :" + dias;
 					detalle += "<br />";
 					detalle += "Costo :" + total;
 					detalle += "<br />";
@@ -1284,7 +1284,7 @@
 										
 										detalleTour = "Descripcion : " + row.find('input[id="tmp_desTour"]').val() ;
 										detalleTour += "<br />";
-										detalleTour += "Dias :" + row.find('input[id="tmp_duracionTour"]').val();
+										detalleTour += "Horas :" + row.find('input[id="tmp_duracionTour"]').val();
 										detalleTour += "<br />";
 										detalleTour += "Costo :" + totalTour;
 										detalleTour += "<br />";
@@ -1307,8 +1307,9 @@
 									}
 									
 									habitaciones = row.find('input[id="tmp_Habitaciones"]').val();
+									//console.log("Habitaciones : " + habitaciones);
 									
-									if(habitaciones != "") {
+									if(habitaciones != "" || habitaciones != null) {
 										
 										//Mostrando datos del hotel
 										var conthoteles = 0;
@@ -1318,24 +1319,30 @@
 										var nomHotel = "";
 										var dias = 0;
 										var subtotal = 0;
+										var indice = parseInt(habitaciones.length) - 1;
+										//alert(indice);
+										habitaciones = habitaciones.substring(0,indice);
 										
-										var ultimoCaracter = habitaciones.substr(-1);
 										
-										if(ultimoCaracter == "|")
-											habitaciones = habitaciones.substr(0,habitaciones.length() - 1);
 										
+									
 										var listaHabitaciones = habitaciones.split('|');
 										nomTipo = row.find('input[id="tmp_nomTipoAlojamiento"]').val();
 										nomCategoria = row.find('input[id="tmp_nomCategoriaAlojamiento"]').val();
 										nomHotel = row.find('input[id="tmp_nomHotel"]').val();
 										dias = row.find('input[id="tmp_dias"]').val();
+										console.log("Dias : " + dias);
+										console.log("Lista Habitaciones :" + listaHabitaciones.length);
 										
-										
-										
-										for(var i = 0;i < listaHabitaciones.length();i++){
+										var precio = parseFloat(0);
+										var cantidad = parseInt(0);
+										subtotal = 0;
+										for(var i = 0;i < listaHabitaciones.length;i++){
 											conthoteles++;
 											filaHabitacion = listaHabitaciones[i].split('-');
-											subtotal += (parseFloat(filaHabitacion[2]) * parseInt(filaHabitacion[3])) * parseInt(dias); 
+											precio = parseFloat(filaHabitacion[2]);
+											cantidad = parseInt(filaHabitacion[3]);
+											subtotal += (precio * cantidad) * parseInt(dias); 
 											totalHotel += subtotal;		
 										}
 										
@@ -1373,7 +1380,7 @@
 										
 									}
 									
-									
+								    
 									
 									
 							 });		
@@ -2285,7 +2292,7 @@
 									</div>
 									
 									<div class="form-group">
-										<div class="col-sm-3"  style="text-align:right; font-weight:bold">Total Gasto:</div>
+										<div class="col-sm-3"  style="text-align:right; font-weight:bold">Precio Total:</div>
 										
 										<div class="col-sm-2">
 											<input id="txtTotalGasto" name="totalGasto" type="text" maxlength="30" class="form-control" value="${totalGasto}">

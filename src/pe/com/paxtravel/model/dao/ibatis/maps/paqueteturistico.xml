@@ -123,7 +123,7 @@
 		<result property="idCategoriaAlojamiento"		column="id_categoria_alojamiento" />
 		<result property="idHotelHabitacion"			column="id_hotel_habitacion" />
 		<result property="idTipo"						column="id_tipo_habitacion" />
-		<result property="precio"						column="im_precio" />
+		<result property="precio"						column="precio" />
 		<result property="cantidad"						column="cantidad" />
 		<result property="nomHotel"						column="nomHotel" />
 		<result property="nomTipo"						column="nomtipo" />
@@ -217,10 +217,10 @@
    			inner join orden_destino odes on(ord.id_orden = odes.id_orden)
    			inner join hotel ho on(cot.id_tipo_alojamiento = ho.id_tipo_alojamiento) 
 		               and cot.id_categoria_alojamiento = ho.id_categoria_alojamiento and odes.id_destino = ho.id_destino
-   			inner join cotizacion_deta_habitacion chab on(cot.id_cotiza = chab.id_cotiza)  
+   			inner join cotizacion_deta_habitacion chab on(cot.nu_cotiza = chab.id_cotiza)  
    			inner join hotel_habitacion hohab on(ho.id_hotel = hohab.id_hotel) and chab.id_tipo_habitacion = hohab.id_tipo_habitacion
    			where cot.id_cotiza = #idCotiza#
-   			and	  odes.id_destino = #idDestino#	
+   			and	  ho.id_destino = #idDestino#	
    			group by id_hotel
    			order by 2
    			limit 1
@@ -243,7 +243,7 @@
    			from cotizacion cot
    			inner join hotel ho on(cot.id_tipo_alojamiento = ho.id_tipo_alojamiento) 
 		               and cot.id_categoria_alojamiento = ho.id_categoria_alojamiento
-   			inner join cotizacion_deta_habitacion chab on(cot.id_cotiza = chab.id_cotiza)  
+   			inner join cotizacion_deta_habitacion chab on(cot.nu_cotiza = chab.id_cotiza)  
    			inner join hotel_habitacion hohab on(ho.id_hotel = hohab.id_hotel) and chab.id_tipo_habitacion = hohab.id_tipo_habitacion
    			inner join tipo_alojamiento tipo on ho.id_tipo_alojamiento = tipo.id_tipo_alojamiento
 			inner join tipo_categoria_alojamiento cat on ho.id_categoria_alojamiento = cat.id_tipo
