@@ -680,7 +680,7 @@
 			var cantidad = $("#txtCantidad").val();
 			var msj = "";
 			
-			if(idtipo == ""){
+			if(idtipo == "" || idtipo == null){
 				msj = "Seleccione el tipo de habitacion";
 				$("#mensajeClienteError").html(msj);
 				
@@ -900,6 +900,7 @@
 					$("#tblTipoHabitacion tbody").html("");
 					$("#tipoHabitacion").val("");
 					$("#txtCantidad").val("");
+					$("#tipoHabitacion option").remove();
 	                for(var i = 0;i< listaHotel.length;i++){
 	                	 cont++;
 						 nuevaFila+= "<tr>";
@@ -1513,6 +1514,37 @@
 					$("#selTipoPrograma").attr("disabled", false);
 					
 					if(rpta.status == 1) {
+						
+						var hoy = new Date();
+						var fechPartida = new Date(rpta.fechapartida.substring(0,10));
+						
+						if(fechPartida > hoy) {
+							msj = "No se encuentra en fecha para esta orden";
+							$("#txtDescripcionOrden").val("");
+							$("#txtObservacion").val("");
+							//$("#txtPresupuestoMinimo").val("");
+							$("#txtPresupuestoMaximo").val("");
+							$("#txtCliente").val("");
+							$("#txtFechaOrden").val("");
+							$("#txtDescripcion").val("");
+							$("#txtFechaPartida").val("");
+							$("#txtFechaRetorno").val("");
+							$("#txtcantAdultos").val("");
+							$("#txtcantNinos").val("");
+							$("#hdIdOrden").val("");
+							$("#hdnOrdenValida").val("0");
+							$("#hdnTipoPrograma").val("0");
+							
+							$("#mensajeClienteError").html(msj);
+							
+							$('#divMensajeErrorCliente').modal({
+								backdrop: 'static',
+								keyboard: false
+							}); 
+							
+							return false;
+						}
+						
 						
 						if(estado != 6) {
 							msj = "La orden de planificacion no se encuentra asignada";
