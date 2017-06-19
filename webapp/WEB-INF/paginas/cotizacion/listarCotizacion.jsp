@@ -218,6 +218,7 @@
 		$("#inpIdTipoCotizacion").val("");
 		$("#inpIdCotizacion").val("");
 		$("#inpIdEstado").val("");
+		$("#idParams").val("");
 		
 		$.ajax({
 			url: '${pageContext.request.contextPath}/verDetalleCotizacion?idCotizacion='+idCotizacion,
@@ -242,7 +243,7 @@
 					$("#tituloCotizacion").html(response.dataJson.cotizacion.tipoCotizacion);
 					
 					$("#divFecha").html(response.dataJson.cotizacion.fechaCotizacion);
-					$("#divTipo").html(response.dataJson.cotizacion.tipoPrograma);
+					$("#divTipo").html( response.dataJson.cotizacion.tipoCotizacion + " / " + response.dataJson.cotizacion.tipoPrograma);
 					$("#divEstado").html(response.dataJson.cotizacion.estado);
 					
 					//$("#").val(response.dataJson.cotizacion.tipoAlojamiento);
@@ -253,17 +254,20 @@
 					$("#divMotivos").html(response.dataJson.cotizacion.motivos);
 					$("#divServicios").html(response.dataJson.cotizacion.servicios);
 					
-					/* if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) { //Paquete Turistico					
-					} else {//Ticket Aereo						
-					} */
-					
-					if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) {										
-						if ( response.dataJson.cotizacion.idEstado == 4 ) {	//Estado Pendiente
-							$("#divBotonCotizacionBuscar").css("display", "inline");											
-						} else if ( response.dataJson.cotizacion.idEstado == 6 ) { //Estado Asignado
-							$("#divBotonCotizacionEnviar").css("display", "inline");
-						}					
-					}
+					if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) { //Paquete Turistico 1 / //Ticket Aereo 2
+						if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) {										
+							if ( response.dataJson.cotizacion.idEstado == 4 ) {	//Estado Pendiente
+								$("#divBotonCotizacionBuscar").css("display", "inline");											
+							} else if ( response.dataJson.cotizacion.idEstado == 6 ) { //Estado Asignado
+								$("#divBotonCotizacionEnviar").css("display", "inline");
+							}					
+						}						
+						$("#idParams").val("presupuesto="+response.dataJson.cotizacion.presupuestoMaximo + 
+								"&idTipoAlojamiento="+response.dataJson.cotizacion.idTipoAlojamiento +
+								"&idCategoriaAlojamiento="+response.dataJson.cotizacion.idCategoriaAlojamiento + 
+								"&idTipoPrograma="+response.dataJson.cotizacion.idTipoPrograma +
+						"&numeroCotizacion=" + response.dataJson.cotizacion.numeroCotizacion);
+					}									
 					
 					$("#divVerDetalleInseminacion").modal({
 						backdrop: 'static',
@@ -340,14 +344,20 @@
 	}
 	
 	function buscarDetalleCotizacion() {
-		var tipoCotizacion = $("#inpIdTipoCotizacion").val();
-		var idCotizacion = $("#inpIdCotizacion").val("");
+		var idTipoCotizacion = $("#inpIdTipoCotizacion").val();
+		var idCotizacion = $("#inpIdCotizacion").val();
+		var idparams = $("#idParams").val();
 		
-		if ( tipoCotizacion == 1 ) {
+		if ( idTipoCotizacion == 1 ) {
+			console.log("**************************************");
 			console.log("paquete");
 			
+			console.log("idTipoCotizacion: " + idTipoCotizacion);
+			console.log("idCotizacion: " + idCotizacion);
+			console.log("idparams: " + idparams);			
+			
 			$.ajax({
-				url: '${pageContext.request.contextPath}/buscarPaquete?idCotizacion='+idCotizacion,
+				url: '${pageContext.request.contextPath}/buscarPaquete?idCotizacion='+idCotizacion+"&"+idparams,
 				cache: false,
 				async: true,
 				type: 'GET',
@@ -356,6 +366,10 @@
 				success: function(response) {
 					
 					if (response.estado = "ok") {
+						
+						$("#divMsgResultado").html("");
+						
+						
 						
 					}
 					
@@ -367,27 +381,6 @@
 			
 		} else {
 			console.log("ticket");
-			
-			
-			$.ajax({
-				url: '${pageContext.request.contextPath}/?idCotizacion='+idCotizacion,
-				cache: false,
-				async: true,
-				type: 'GET',
-				contentType : "application/json; charset=utf-8",
-				dataType: 'json',
-				success: function(response) {
-					
-					if (response.estado = "ok") {
-						
-					}
-					
-				},
-				error: function(data, textStatus, errorThrown) {
-					
-				},
-			});
-			
 		}
 	}
 	
@@ -577,6 +570,7 @@
 <input type="hidden" id="inpTipoCotizacion" name="idTipoCotizacion" />
 <input type="hidden" id="inpIdCotizacion" name="idCotizacion" />
 <input type="hidden" id="inpIdEstado" name="idEstado" />
+<input type="hidden" id="inpIdParams" name="idParams" />
 
 </body>
 

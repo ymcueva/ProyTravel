@@ -15,13 +15,12 @@
 	<typeAlias alias="hotelHabitacionBean" type="pe.com.paxtravel.bean.HotelHabitacionBean" />
 	<typeAlias alias="clienteBean" type="pe.com.paxtravel.bean.ClienteBean" />
 	<typeAlias alias="cotizacionServicioBean" type="pe.com.paxtravel.bean.CotizacionServicioBean" />
+	<typeAlias alias="paqueteResumeBean" type="pe.com.paxtravel.bean.PaqueteResumeBean" />
 	
-	<!-- Bean Busqueda de Paquetes - Inicio -->
-	
+	<!-- Bean Busqueda de Paquetes - Inicio -->	
 	<typeAlias alias="paqueteManagerBean" type="pe.com.paxtravel.tree.data.PaqueteManagerBean" />
 	
-	<!-- Bean Busqueda de Paquetes - Fin -->
-	
+	<!-- Bean Busqueda de Paquetes - Fin -->	
 	<typeAlias alias="string" type="java.lang.String" />
 	
 	<resultMap id="resultFareInfo" class="fareInfoBean">
@@ -154,6 +153,28 @@
 		<result property="servicios" column="servicios" />
 		<result property="idTipoCotizacion" column="id_tipo_cotizacion" />
 		<result property="idEstado" column="id_estado" />
+		<result property="presupuestoMaximo" column="im_presupuesto_maximo" />
+		<result property="idTipoAlojamiento" column="id_tipo_alojamiento" />
+		<result property="idCategoriaAlojamiento" column="id_categoria_alojamiento" />
+		<result property="idTipoPrograma" column="id_tipo_programa" />
+	</resultMap>
+	
+	<resultMap id="resultPaqueteResume" class="paqueteResumeBean">
+		<result property="destinos" column="destinos" />
+		<result property="tour" column="tour" />
+		<result property="hotel" column="hotel" />
+		<result property="ticket" column="ticket" />
+		<result property="tipoAlojamiento" column="tipoAlojamiento" />
+		<result property="categoriaAlojamiento" column="categoriaAlojamiento" />
+		<result property="hotelHabitacion" column="hotelHabitacion" />
+		<result property="playa" column="playa" />
+		<result property="relajacion" column="relajacion" />
+		<result property="deportes" column="deportes" />
+		<result property="cultural" column="cultural" />
+		<result property="playaTour" column="playaTour" />
+		<result property="relajacionTour" column="relajacionTour" />
+		<result property="deportesTour" column="deportesTour" />
+		<result property="culturalTour" column="culturalTour" />
 	</resultMap>
 	
 	<select id="listarCotizacion" parameterClass="cotizacionBean" resultMap="resultCotizacion">
@@ -395,9 +416,7 @@
 			#idTipoHabitacion#,
 			#nuHabitacion#
 		)
-	</insert>
-	
-		
+	</insert>	
 	
 	<select id="listarPaqueteDestinos" parameterClass="paqueteManagerBean" resultMap="resultPaqueteDestinos">
 		SELECT ptD.id_destino_ciudad as id_destino_ciudad, cD.descripcion AS nom_ciudad, ptD.nu_dias ,
@@ -411,7 +430,7 @@
     	 ;
 	</select>
 	
-	<select id="listarPaquetes" parameterClass="paqueteManagerBean" resultMap="resultPaquetes">
+	<select id="listarPaquete" parameterClass="paqueteManagerBean" resultMap="resultPaquetes">
 		SELECT id_paquete, nombre, observacion, im_precio, #tiPresupuestoValue# AS ti_presupuesto 
 			FROM paquete_turistico  
 		WHERE id_estado = 1 and id_tipo_paquete = 1 AND <![CDATA[im_precio<=#imPrecioMax# and im_precio>=#imPrecioMin#]]> 		
@@ -455,13 +474,18 @@
 		 FROM proytraveldb.paquete_turistico_ticket AS pTT		
 		INNER JOIN aerolinea AS A ON (pTT.id_aerolinea = A.id_aerolinea)
 		INNER JOIN proveedor AS P ON (pTT.id_proveedor = P.id_proveedor)		
-	</select>	
+	</select>
 		
-	<select id="rowCotizacionResume" parameterClass="cotizacionBean" resultMap="resultCotizacionResume">	
-	SELECT c.nu_cotiza, c.id_cotiza, c.fe_cotiza, concat(cli.nombres, ' ',cli.apellidos) AS cliente, tc.nombre AS cotizacion,
-		tc.id_tipo AS id_tipo_cotizacion, 
-		tp.nombre AS programa,
-		e.no_estado as estado, e.id_estado, ta.descripcion AS alojamiento, tca.nombre AS categoriaAlojamiento, 		
+	<select id="getCotizacionResume" parameterClass="cotizacionBean" resultMap="resultCotizacionResume">	
+	SELECT 
+		c.nu_cotiza, c.id_cotiza, c.fe_cotiza, concat(cli.nombres, ' ',cli.apellidos) AS cliente, tc.nombre AS cotizacion,
+		c.id_tipo_cotiza AS id_tipo_cotizacion, 
+		c.im_presupuesto_maximo,
+		c.id_tipo_alojamiento,
+		c.id_categoria_alojamiento,
+		c.id_tipo_programa,		
+		e.id_estado, 
+		tp.nombre AS programa, e.no_estado as estado, ta.descripcion AS alojamiento, tca.nombre AS categoriaAlojamiento,  		
         GROUP_CONCAT(DISTINCT d.descripcion
 					ORDER BY d.descripcion ASC
 					SEPARATOR '-') AS destinos,
@@ -492,6 +516,76 @@
 	WHERE
 		c.id_cotiza = #idCotizacion#
 	GROUP BY c.nu_cotiza
+	</select>
+	
+	<select id="getPaqueteResume" parameterClass="paqueteResumeBean" resultMap="resultPaqueteResume">
+		SELECT 
+			<!-- destinos / servicios  -->
+				IF((SELECT COUNT(*) FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete# AND ptD.id_destino_ciudad 
+					IN ( select id_destino from `cotizacion_deta` where id_cotiza = #numeroCotizacion# ) ) 
+						= (Select COUNT(*) from `cotizacion_deta` where id_cotiza = #numeroCotizacion#),'Si','No') AS destinos,
+			            
+			    (SELECT IF (100/(Select COUNT(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete#)*SUM(IF((SELECT count(*) FROM paquete_turistico_destino_tour where id_paquete_destino = ptD.id_paquete_destino)>0,1,0))>=(Select value_parametro From parametros Where key_parametro = 'CODES'),'Si', 'No') 
+					FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete# ) AS tour,
+			        
+			    (SELECT IF (100/(Select COUNT(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete#)*SUM(IF((SELECT count(*) FROM paquete_turistico_destino_hotel where id_paquete_destino = ptD.id_paquete_destino)>0,1,0))>=(Select value_parametro From parametros Where key_parametro = 'CODES'),'Si', 'No') 
+					FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete# ) AS hotel, 
+			        
+			    (SELECT IF (100/(Select COUNT(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete#)*SUM(IF((SELECT count(*) FROM paquete_turistico_ticket where id_paquete_destino = ptD.id_paquete_destino)>0,1,0))>=(Select value_parametro From parametros Where key_parametro = 'CODES'),'Si', 'No') 
+					FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete# ) AS ticket,
+			        
+			<!-- caracteristicas hotel -->
+				if (100/(( Select count(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete# ))*(select 
+				count(*)
+				from `paquete_turistico_destino_hotel` 	
+				where (id_paquete_destino IN ( Select id_paquete_destino from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete# )) 
+					AND ( id_tipo_alojamiento = #idTipoAlojamiento# ))>=(Select value_parametro From parametros Where key_parametro = 'COHOT'), 1, 0) AS tipoAlojamiento,
+			        
+				if (100/(( Select count(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete# ))*(select 
+				count(*)
+				from `paquete_turistico_destino_hotel` 	
+				where (id_paquete_destino IN ( Select id_paquete_destino from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete# )) 
+					AND ( id_categoria_alojamiento = #idCategoriaAlojamiento# ))>=(Select value_parametro From parametros Where key_parametro = 'COHOT'), 1, 0) AS categoriaAlojamiento,
+			        
+			    IF (100/(Select count(*) from `cotizacion_deta_habitacion` where id_cotiza = #numeroCotizacion#)*
+					( select count(*) from `paquete_turistico_destino_hotel` where id_paquete = #idPaquete# 
+					AND id_hotel_habitacion IN (Select id_tipo_habitacion from `cotizacion_deta_habitacion` where id_cotiza = #numeroCotizacion# )  
+				)>= (Select value_parametro From parametros Where key_parametro = 'COHOT'),1,0 ) AS hotelHabitacion,
+			    
+			<!-- motivos destinos -->	
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_playa)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),1,0) 
+					from `destino_ciudad` as d inner join paquete_turistico_destino as ptd on (ptd.id_destino_ciudad = d.id_destino_ciudad) 
+				where ptd.id_paquete_turistico = #idPaquete#) AS playa,            
+			        
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_relajacion)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),1,0) 
+					from `destino_ciudad` as d inner join paquete_turistico_destino as ptd on (ptd.id_destino_ciudad = d.id_destino_ciudad) 
+				where ptd.id_paquete_turistico = #idPaquete#) AS relajacion, 
+			        
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_deportes)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),1,0) 
+					from `destino_ciudad` as d inner join paquete_turistico_destino as ptd on (ptd.id_destino_ciudad = d.id_destino_ciudad) 
+				where ptd.id_paquete_turistico = #idPaquete#) AS deportes, 
+			        
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_cultural)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),1,0) 
+					from `destino_ciudad` as d inner join paquete_turistico_destino as ptd on (ptd.id_destino_ciudad = d.id_destino_ciudad) 
+				where ptd.id_paquete_turistico = #idPaquete#) AS cultural,
+			    
+			<!-- motivos tour	-->	
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_playa)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),1,0) 
+				from `tour` as d inner join paquete_turistico_destino_tour as ptd on (ptd.id_tour = d.id_tour)
+				where ptd.id_paquete_turistico = #idPaquete#) AS playaTour, 
+				
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_relajacion)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),1,0) 
+				from `tour` as d inner join paquete_turistico_destino_tour as ptd on (ptd.id_tour = d.id_tour)
+				where ptd.id_paquete_turistico = #idPaquete#) AS relajacionTour, 
+				
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_deportes)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),1,0) 
+				from `tour` as d inner join paquete_turistico_destino_tour as ptd on (ptd.id_tour = d.id_tour)
+				where ptd.id_paquete_turistico = #idPaquete#) AS deportesTour, 
+				
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_cultural)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),1,0) 
+				from `tour` as d inner join paquete_turistico_destino_tour as ptd on (ptd.id_tour = d.id_tour)
+				where ptd.id_paquete_turistico = #idPaquete#) AS culturalTour;
+					
 	</select>
 
 </sqlMap>

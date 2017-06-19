@@ -18,6 +18,7 @@ import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.InseminacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.PaisBean;
+import pe.com.paxtravel.bean.PaqueteResumeBean;
 import pe.com.paxtravel.bean.ProduccionBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
 import pe.com.paxtravel.model.dao.CotizacionDAO;
@@ -136,7 +137,7 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements Cotiz
 	@Override
 	public List<PaqueteManagerBean> listarPaquete(PaqueteManagerBean p){
 		List<PaqueteManagerBean> listaPaquete = null;
-		listaPaquete = getSqlMapClientTemplate().queryForList("cotizacion.listarPaquetes", p);
+		listaPaquete = getSqlMapClientTemplate().queryForList("cotizacion.listarPaquete", p);
 		return listaPaquete;
 	}
 	
@@ -149,8 +150,13 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements Cotiz
 	}
 
 	@Override
-	public CotizacionBean cotizacion(CotizacionBean cotizacionBean) {
-		return (CotizacionBean) getSqlMapClientTemplate().queryForObject("cotizacion.rowCotizacionResume", cotizacionBean);
+	public CotizacionBean obtenerCotizacion(CotizacionBean cotizacionBean) {
+		return (CotizacionBean) getSqlMapClientTemplate().queryForObject("cotizacion.getCotizacionResume", cotizacionBean);
+	}
+	
+	@Override
+	public PaqueteResumeBean obtenerPaquete(PaqueteResumeBean paquete) {
+		return (PaqueteResumeBean) getSqlMapClientTemplate().queryForObject("cotizacion.getPaqueteResume", paquete);
 	}
 	
 }

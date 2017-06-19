@@ -47,6 +47,7 @@ import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.InseminacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.PaisBean;
+import pe.com.paxtravel.bean.PaqueteResumeBean;
 import pe.com.paxtravel.bean.ProduccionBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
 import pe.com.paxtravel.service.AnimalService;
@@ -85,7 +86,7 @@ public class CotizacionController {
 			CotizacionBean o = new CotizacionBean();
 			int idCotizacion = Integer.parseInt( request.getParameter("idCotizacion") );
 			o.setIdCotizacion(idCotizacion);
-			o = cotizacionService.cotizacion(o);
+			o = cotizacionService.obtenerCotizacion(o);
 	        mapa.put("titulo", "Detalle Cotizaci&oacute;n");
 	        mapa.put("cotizacion", o);
 	        dataJSON.setRespuesta("ok", null, mapa);
@@ -208,52 +209,6 @@ public class CotizacionController {
 
 		try {
 			
-			/*
-			///////////////////////
-			
-			//BUSQUEDA DE PAQUETES
-			
-			//1- TIPO DE PROGRAMA
-			int tipoPrograma = 1;
-			
-			//2- PRESUPUESTO: ALTO, MEDIO, BAJO
-			double precioPresupuestoPrograma = 5200.00;			
-			PaqueteManagerBean oPaquete = new PaqueteManagerBean();			
-			oPaquete.setImPrecio(precioPresupuestoPrograma);
-			
-			System.out.println("precio A max" + oPaquete.getImPrecioMaxAlto());
-			System.out.println("precio A min" + oPaquete.getImPrecioMinAlto());
-			System.out.println("precio B max" + oPaquete.getImPrecioMaxMedio());
-			System.out.println("precio B min" + oPaquete.getImPrecioMinMedio());
-			System.out.println("precio C max" + oPaquete.getImPrecioMaxBajo());
-			System.out.println("precio C min" + oPaquete.getImPrecioMinBajo());
-					
-			oPaquete.setIdTipoPaquete(tipoPrograma);
-			
-			//3- MODELO DESTINOS: A, B Y C
-			List<PaqueteManagerBean> listPaqueteSearch = new ArrayList<PaqueteManagerBean>();
-			List<PaqueteManagerBean> listCotizacionManBeanAlto = null;
-			List<PaqueteManagerBean> listCotizacionManBeanMedio = null;
-			List<PaqueteManagerBean> listCotizacionManBeanBajo = null;
-			
-			//3.1- Primera Iteracion: Presupuesto ALTO					
-			oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxAlto());
-			oPaquete.setImPrecioMin(oPaquete.getImPrecioMinAlto());
-			oPaquete.setTiPresupuestoValue("Alto");
-			
-			System.out.println( "precio max: " + oPaquete.getImPrecioMax() );
-			System.out.println( "precio min: " + oPaquete.getImPrecioMin() );
-						 	
-			listCotizacionManBeanAlto = cotizacionService.listarPaquete(oPaquete);
-			
-			System.out.println("size: " + listCotizacionManBeanAlto.size());
-			
-			
-			/////////////////////
-			*/
-			
-			
-			
 			modelAndView = new ModelAndView();
 			List<CiudadBean> listaCiudad = new ArrayList<CiudadBean>();
 			List<PaisBean> listaPais = new ArrayList<PaisBean>();
@@ -264,31 +219,24 @@ public class CotizacionController {
 			listaCiudad = cotizacionService.listarCiudad(ciudadBean);
 			listaPais = cotizacionService.listarPais(paisBean);
 
+			/* listaToro = animalService.listarToro();
 
-
-
-
-//			listaToro = animalService.listarToro();
-//
-//			Map<String, Object> mapaListaToro = new HashMap<String, Object>();
-//			for (AnimalBean animalBean : listaToro) {
-//				mapaListaToro.put("codigo", animalBean.getCodigoAnimal());
-//				mapaListaToro.put("descripcion", animalBean.getNombreAnimal());
-//			}
-
-			mapaDatos.put("titulo", "Registrar Cotizaci&oacute;n");
-//			mapa.put("codigoAnimal",(String) request.getParameter("codigoAnimal"));
-//			mapa.put("nombreAnimal",(String) request.getParameter("nombreAnimal"));
-//			mapa.put("listaToro", SojoUtil.toJson(mapaListaToro) );
-//			mapa.put("fechaActual", sdf.format( new Date() ));
-
-//			dataJSON.setRespuesta("ok", null, mapa);
-
-
-//			Map<String, Object> mapaDatos = new HashMap<String, Object>();
-//			mapaDatos.put("listTipoUsuario", listaTipoUsuario);
-
+			Map<String, Object> mapaListaToro = new HashMap<String, Object>();
+			for (AnimalBean animalBean : listaToro) {
+				mapaListaToro.put("codigo", animalBean.getCodigoAnimal());
+				mapaListaToro.put("descripcion", animalBean.getNombreAnimal());
+			}			
+			mapa.put("codigoAnimal",(String) request.getParameter("codigoAnimal"));
+			mapa.put("nombreAnimal",(String) request.getParameter("nombreAnimal"));
+			mapa.put("listaToro", SojoUtil.toJson(mapaListaToro) );
+			mapa.put("fechaActual", sdf.format( new Date() ));
+			dataJSON.setRespuesta("ok", null, mapa);
+			Map<String, Object> mapaDatos = new HashMap<String, Object>();
+			mapaDatos.put("listTipoUsuario", listaTipoUsuario); */
+			
+			mapaDatos.put("titulo", "Registrar Cotizaci&oacute;n");			
 			Map<String, Object> mapaListaCiudad = new HashMap<String, Object>();
+			
 			for (CiudadBean ciudadBean1 : listaCiudad) {
 				mapaListaCiudad.put("idCiudad", ciudadBean1.getIdCiudad());
 				mapaListaCiudad.put("nomCiudad", ciudadBean1.getNomCiudad());
@@ -872,8 +820,7 @@ public class CotizacionController {
 		}
 		return ControllerUtil.handleJSONResponse(dataJSON, response);			
 	}
-	
-	
+		
 	@SuppressWarnings("unchecked")
 	@RequestMapping( value = "/grabarTransaccionCotizacion" )
 	public ModelAndView grabarTransaccionCotizacion(HttpServletRequest request, HttpServletResponse response){
@@ -1018,7 +965,6 @@ public class CotizacionController {
 				cotizacionBean.setIdCliente(Integer.parseInt(idCliente) );
 				int registro = cotizacionService.registrarCotizacionTicket(cotizacionBean);
 
-
 			}
 
 			dataJSON.setRespuesta("ok", null, mapa);
@@ -1026,8 +972,7 @@ public class CotizacionController {
 			System.out.println(e.getMessage());
 		}
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
-	}
-
+	}	
 	
 	@RequestMapping( value = "/buscarPaquete", method ={RequestMethod.GET, RequestMethod.POST} )
 	public String buscarPaquete(HttpServletRequest request, HttpServletResponse response){
@@ -1036,22 +981,193 @@ public class CotizacionController {
 
 		try {
 			
-			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));
+			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));						
+			
+			/* int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));
+			String numeroCotizacion = String.valueOf(request.getParameter("numeroCotizacion"));
+			int idTipoPrograma = Integer.parseInt(request.getParameter("idTipoPrograma"));
+			double imPresupuesto = Double.parseDouble(request.getParameter("imPresupuesto"));
+			int idCategoriaAlojamiento = Integer.parseInt(request.getParameter("idCategoriaAlojamiento"));
+			int idTipoAlojamiento = Integer.parseInt(request.getParameter("idTipoAlojamiento"));		
+
+			 #idPaquete#
+			#numeroCotizacion#
+			#idCategoriaAlojamiento#
+			#idTipoAlojamiento# */
+			
+			///////////////////////
+			
+			//BUSQUEDA DE PAQUETES
+			
+			//1- TIPO DE PROGRAMA
+			int tipoPrograma = 1;
+			
+			//2- PRESUPUESTO: ALTO, MEDIO, BAJO
+			double precioPresupuestoPrograma = 5200.00;			
+			PaqueteManagerBean oPaquete = new PaqueteManagerBean();			
+			oPaquete.setImPrecio(precioPresupuestoPrograma);
+			
+			System.out.println("precio A max" + oPaquete.getImPrecioMaxAlto());
+			System.out.println("precio A min" + oPaquete.getImPrecioMinAlto());
+			System.out.println("precio B max" + oPaquete.getImPrecioMaxMedio());
+			System.out.println("precio B min" + oPaquete.getImPrecioMinMedio());
+			System.out.println("precio C max" + oPaquete.getImPrecioMaxBajo());
+			System.out.println("precio C min" + oPaquete.getImPrecioMinBajo());
+					
+			oPaquete.setIdTipoPaquete(tipoPrograma);
+			
+			//3- MODELO DESTINOS: A, B Y C
+			List<PaqueteManagerBean> listPaqueteSearch = new ArrayList<PaqueteManagerBean>();
+			List<PaqueteManagerBean> listCotizacionManBeanAlto = null;
+			List<PaqueteManagerBean> listCotizacionManBeanMedio = null;
+			List<PaqueteManagerBean> listCotizacionManBeanBajo = null;
+			
+			//3.1- Primera Iteracion: Presupuesto ALTO					
+			oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxAlto());
+			oPaquete.setImPrecioMin(oPaquete.getImPrecioMinAlto());
+			oPaquete.setTiPresupuestoValue("Alto");
+			
+			System.out.println( "precio max: " + oPaquete.getImPrecioMax() );
+			System.out.println( "precio min: " + oPaquete.getImPrecioMin() );
+						 	
+			listCotizacionManBeanAlto = cotizacionService.listarPaquete(oPaquete);
+			
+			System.out.println("size: " + listCotizacionManBeanAlto.size());
+			
+			PaqueteResumeBean paquete = new PaqueteResumeBean();
+			paquete.setIdPaquete(1);
+			paquete.setNumeroCotizacion("COTI201706100053");
+			paquete.setIdCategoriaAlojamiento(1);
+			paquete.setIdTipoAlojamiento(1);
+			
+			paquete = cotizacionService.obtenerPaquete(paquete);
+			
+			System.out.println("********************************************************");
+			/*
+			    destinos
+				tour
+				hotel
+				ticket
+				tipo_alojamiento
+				categoria_alojamiento
+				hotel_habitacion
+				playa
+				relajacion
+				deportes
+				cultural
+				playaTour
+				relajacionTour
+				deportesTour
+				culturalTour
+			 */
+			
+			System.out.println("destinos:" + paquete.getDestinos());
+			System.out.println("tour:" + paquete.getTour());
+			System.out.println("hotel:" + paquete.getHotel());
+			System.out.println("ticket:" + paquete.getTicket());
+			System.out.println("tipo_alojamiento:" + paquete.getTipoAlojamiento());
+			System.out.println("categoria_alojamiento:" + paquete.getCategoriaAlojamiento());
+			System.out.println("hotel_habitacion:" + paquete.getHotelHabitacion());
+			System.out.println("playa:" + paquete.getPlaya());
+			System.out.println("relajacion:" + paquete.getRelajacion());
+			System.out.println("deportes:" + paquete.getDeportes());
+			System.out.println("cultural:" + paquete.getCultural());
+			System.out.println("playaTour:" + paquete.getPlayaTour());
+			System.out.println("relajacionTour:" + paquete.getRelajacionTour());
+			System.out.println("deportesTour:" + paquete.getDeportesTour());
+			System.out.println("culturalTour:" + paquete.getCulturalTour());
+			
+			/* PaqueteManagerBean oPaquete = new PaqueteManagerBean();		
+			
+			//1- TIPO DE PROGRAMA			
+			oPaquete.setIdTipoPaquete(idTipoPrograma);				
+			
+			//2- PRESUPUESTO: ALTO, MEDIO, BAJO			
+			oPaquete.setImPrecio(imPresupuesto);					
+			
+			//3- MODELO DESTINOS: A, B Y C
+			List<PaqueteManagerBean> listPaqueteSearch = new ArrayList<PaqueteManagerBean>();
+			List<PaqueteManagerBean> listCotizacionManBeanAlto = null;
+			List<PaqueteManagerBean> listCotizacionManBeanMedio = null;
+			List<PaqueteManagerBean> listCotizacionManBeanBajo = null;
+			
+			//Se realizan 3 iteracciones, uno por categoria de presupuesto: Alto, Medio y Bajo
+			for ( int i=0; i<3; i++ ) {								
+				if (i == 0) {
+					//3.1- Primera Iteracion: Presupuesto ALTO					
+					oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxAlto());
+					oPaquete.setImPrecioMin(oPaquete.getImPrecioMinAlto());
+					oPaquete.setTiPresupuestoValue("Alto");
+					listCotizacionManBeanAlto = cotizacionService.listarPaquete(oPaquete);					
+					for (PaqueteManagerBean o:listCotizacionManBeanAlto){
+						if ( !listPaqueteSearch.contains(o) ) {
+							System.out.println("listPaqueteSearch[id_paquete:"+o.getIdPaquete()+", nombre:"+o.getNomPaquete()+", comentario:"+o.getComentario()+", im_precio:"+o.getImPrecio()+", tipoPresupuesto:"+o.getTiPresupuestoValue()+"]");
+							listPaqueteSearch.add(o);
+						}
+					}					
+				} else if (i ==1){
+					//3.2- Segunda Iteracion: Presupuesto MEDIO					
+					oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxMedio());
+					oPaquete.setImPrecioMin(oPaquete.getImPrecioMinMedio());
+					oPaquete.setTiPresupuestoValue("Medio");
+					listCotizacionManBeanMedio = cotizacionService.listarPaquete(oPaquete);					
+					for (PaqueteManagerBean o:listCotizacionManBeanMedio){
+						if ( !listPaqueteSearch.contains(o) ) {
+							System.out.println("listPaqueteSearch[id_paquete:"+o.getIdPaquete()+", nombre:"+o.getNomPaquete()+", comentario:"+o.getComentario()+", im_precio:"+o.getImPrecio()+", tipoPresupuesto:"+o.getTiPresupuestoValue()+"]");
+							listPaqueteSearch.add(o);
+						}
+					}
+				} else if (i == 2){
+					//3.3- Tercera Iteracion: Presupuesto BAJO					
+					oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxBajo());
+					oPaquete.setImPrecioMin(oPaquete.getImPrecioMinBajo());
+					oPaquete.setTiPresupuestoValue("Bajo");
+					listCotizacionManBeanBajo = cotizacionService.listarPaquete(oPaquete);					
+					for (PaqueteManagerBean o:listCotizacionManBeanBajo){
+						if ( !listPaqueteSearch.contains(o) ) {
+							System.out.println("listPaqueteSearch[id_paquete:"+o.getIdPaquete()+", nombre:"+o.getNomPaquete()+", comentario:"+o.getComentario()+", im_precio:"+o.getImPrecio()+", tipoPresupuesto:"+o.getTiPresupuestoValue()+"]");
+							listPaqueteSearch.add(o);
+						}
+					}
+				}
+				
+			}
+			//Se obtienen todos los paquetes disponibles en: listPaqueteSearch();	
+			System.out.println("Total de Paquetes encontrados: " + listPaqueteSearch.size());*/
+			
+			//Se filtran todos los destinos para estos paquetes y se guardan en: destinosList();
+			/* oPaquete.setList(cotizacionDestinos);
+			List<PaqueteManagerBean> destinosList = cotizacionService.listarPaqueteDestino(oPaquete);
+			List<Integer> paqueteIds = new ArrayList<Integer>(); */
+						
+			//4- PAQUETES
+			//5- CARACTERISTICAS
+			
+			System.out.println("Paquetes finales.......................");
+			/* for (PaqueteManagerBean  o:destinosList) {															
+				if ( !paqueteIds.contains(o.getIdPaquete()) ) {
+					paqueteIds.add(o.getIdPaquete());
+					System.out.println("PaqueteID: " + o.getIdPaquete());
+				}
+			} */
 			
 			
 			
 			
+						
 			
-		} catch (Exception e) {
-			// TODO: handle exception
+			/////////////////////
+			
+			
+			
+		} catch (Exception e) { 
 			e.printStackTrace();
 			System.out.println("e: " + e.getMessage() );
 		}
-
+		
 		return "";
 		
-	}
-	
+	}	
 	
 	@RequestMapping( value = "/verDetalleVuelos", method ={RequestMethod.GET, RequestMethod.POST} )
 	public String verDetalleVuelos(HttpServletRequest request, HttpServletResponse response){
@@ -1324,203 +1440,6 @@ public class CotizacionController {
 
 	}
 
-
-//
-//	@RequestMapping( value = "/listarVacasAInseminar", method ={RequestMethod.GET, RequestMethod.POST} )
-//	public ModelAndView listarVacasAInseminar(HttpServletRequest request, HttpServletResponse response){
-//
-//		ModelAndView modelAndView = null;
-//		Map<String, Object> mapa = new HashMap<String, Object>();
-//		List<AnimalBean> listaVacasAInseminar = new ArrayList<AnimalBean>();
-//		AnimalBean animalBean = new AnimalBean();
-//
-//		String botonBuscar = (request.getParameter("btnBuscar"))!=null?request.getParameter("btnBuscar"):"";
-//
-//		boolean flag = false;
-//		DataJsonBean dataJSON = new DataJsonBean();
-//
-//		try {
-//
-//			modelAndView = new ModelAndView();
-//
-//
-//			if("1".equals(botonBuscar)){
-//				Map<String, Object> parametrosRequest = ControllerUtil.parseRequestToMap(request);
-//				Map<String, Object> animlalBeanMap = (Map<String, Object>) parametrosRequest.get("animalBean");
-//				// inserta en el bean todos los valores del mapa (property vs keys)
-//				BeanUtils.populate(animalBean, animlalBeanMap);
-//
-//				listaVacasAInseminar = animalService.listarVacasAInseminar(animalBean);
-//				mapa.put("listaVacasAInseminar",  listaVacasAInseminar);
-//				dataJSON.setRespuesta("ok", null, mapa);
-//				flag = true;
-//			} else {
-//				listaVacasAInseminar = animalService.listarVacasAInseminar(animalBean);
-//				mapa.put("titulo", "LISTA DE VACAS A INSEMINAR");
-//
-//				modelAndView.addObject("listaVacasAInseminar", SojoUtil.toJson(listaVacasAInseminar) );
-//				modelAndView.addObject("mapaDatos", mapa);
-//				modelAndView.setViewName("inseminacion/listarVacasAInseminar");
-//			}
-//
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//		}
-//		if (flag) {
-//			return ControllerUtil.handleJSONResponse(dataJSON, response);
-//		} else {
-//			return modelAndView;
-//		}
-//	}
-//
-
-//
-//	@RequestMapping( value = "/abrirEditarInseminacion", method ={RequestMethod.GET, RequestMethod.POST} )
-//	public ModelAndView abrirEditarInseminacion(HttpServletRequest request, HttpServletResponse response){
-//
-//		ModelAndView modelAndView = null;
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//		Map<String, Object> mapa = new HashMap<String, Object>();
-//		List<AnimalBean> listaToro = new ArrayList<AnimalBean>();
-//		DataJsonBean dataJSON = new DataJsonBean();
-//
-//		List<InseminacionBean> listaInseminacion = new ArrayList<InseminacionBean>();
-//		InseminacionBean inseminacionBean = new InseminacionBean();
-//
-//		try {
-//			modelAndView = new ModelAndView();
-//	        String codigoInseminacion = request.getParameter("codInseminacion");
-//
-//	        inseminacionBean.setCodigoInseminacion(codigoInseminacion);
-//	        listaInseminacion = inseminacionService.listarInseminacion(inseminacionBean);
-//
-//	        mapa.put("titulo", "Editar Inseminaci&oacute;n");
-//	        mapa.put("botonGrabar", "Editar");
-//
-//	        if (listaInseminacion != null){
-//		        for (InseminacionBean inseminacionBean2 : listaInseminacion) {
-//		        	String fechaInseminacion = Utils.stringToStringddMMyyyy(inseminacionBean2.getFechaInseminacion());
-//
-//		        	mapa.put("codigoInseminacion", inseminacionBean2.getCodigoInseminacion() );
-//		        	mapa.put("codigoVaca", inseminacionBean2.getCodigoVaca() );
-//		        	mapa.put("nombreVaca", inseminacionBean2.getNombreVaca());
-//		        	mapa.put("codigoToro", inseminacionBean2.getCodigoToro());
-//		        	mapa.put("tipoInseminacion", inseminacionBean2.getTipoInseminacion());
-//		        	mapa.put("fechaInseminacion", fechaInseminacion );
-//		        	mapa.put("observacion", inseminacionBean2.getObservacion());
-//
-//				}
-//	        }
-//
-//			dataJSON.setRespuesta("ok", null, mapa);
-//
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//		}
-//		return ControllerUtil.handleJSONResponse(dataJSON, response);
-//	}
-//
-
-//
-//
-//	@SuppressWarnings("unchecked")
-//	@RequestMapping( value = "/grabarInseminacion" )
-//	public ModelAndView grabarInseminacion(HttpServletRequest request, HttpServletResponse response){
-//
-//		ModelAndView modelAndView = null;
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//		Map<String, Object> mapa = new HashMap<String, Object>();
-//		List<AnimalBean> listaToro = new ArrayList<AnimalBean>();
-//		DataJsonBean dataJSON = new DataJsonBean();
-//
-//		try {
-//			modelAndView = new ModelAndView();
-//			HttpSession session = request.getSession();
-//			String usuario = (String) session.getAttribute("idUsuario");
-//
-//			Map<String, Object> parametrosRequest = ControllerUtil.parseRequestToMap(request);
-//			Map<String, Object> inseminacionBeanMap = (Map<String, Object>) parametrosRequest.get("inseminacionBean");
-//			InseminacionBean inseminacionBean = new InseminacionBean();
-//			AnimalBean animalBean = new AnimalBean();
-//
-//			// inserta en el bean todos los valores del mapa (property vs keys)
-//			BeanUtils.populate(inseminacionBean, inseminacionBeanMap);
-//	        String codigoInseminacion = inseminacionService.obtenerCodigoInseminacion();
-//			inseminacionBean.setCodigoInseminacion(codigoInseminacion);
-//			inseminacionBean.setFechaInseminacion( Utils.stringToStringyyyyMMdd (inseminacionBean.getFechaInseminacion()) );
-//			inseminacionBean.setUsuario( usuario );
-//
-//			animalBean.setCodigoAnimal(inseminacionBean.getCodigoVaca());
-//			animalBean.setEstadoProcesoEvolutivo("2");
-//
-//			int registro = inseminacionService.registrarInseminacion(inseminacionBean);
-//			int actualizaEstado = animalService.actualizaEstadoProcesoEvolutivo(animalBean);
-//
-//			dataJSON.setRespuesta("ok", null, mapa);
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//		}
-//		return ControllerUtil.handleJSONResponse(dataJSON, response);
-//	}
-//
-//	@SuppressWarnings("unchecked")
-//	@RequestMapping( value = "/editarInseminacion" )
-//	public ModelAndView editarInseminacion(HttpServletRequest request, HttpServletResponse response){
-//
-//		ModelAndView modelAndView = null;
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//		Map<String, Object> mapa = new HashMap<String, Object>();
-//		DataJsonBean dataJSON = new DataJsonBean();
-//
-//		try {
-//			modelAndView = new ModelAndView();
-//			HttpSession session = request.getSession();
-//
-//			Map<String, Object> parametrosRequest = ControllerUtil.parseRequestToMap(request);
-//			Map<String, Object> inseminacionBeanMap = (Map<String, Object>) parametrosRequest.get("inseminacionBean");
-//			InseminacionBean inseminacionBean = new InseminacionBean();
-//
-//			// inserta en el bean todos los valores del mapa (property vs keys)
-//			BeanUtils.populate(inseminacionBean, inseminacionBeanMap);
-//			inseminacionBean.setFechaInseminacion( Utils.stringToStringyyyyMMdd (inseminacionBean.getFechaInseminacion()) );
-//			inseminacionBean.setUsuario( session.getAttribute("idUsuario").toString() );
-//
-//			int registro = inseminacionService.editarInseminacion(inseminacionBean);
-//			dataJSON.setRespuesta("ok", null, mapa);
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//		}
-//		return ControllerUtil.handleJSONResponse(dataJSON, response);
-//	}
-//
-//	@SuppressWarnings("unchecked")
-//	@RequestMapping( value = "/eliminarInseminacion" )
-//	public ModelAndView eliminarInseminacion(HttpServletRequest request, HttpServletResponse response){
-//		ModelAndView modelAndView = null;
-//		InseminacionBean inseminacionBean = new InseminacionBean();		DataJsonBean dataJSON = new DataJsonBean();
-//		Map<String, Object> mapa = new HashMap<String, Object>();
-//
-//		try {
-//			modelAndView = new ModelAndView();
-//			HttpSession session = request.getSession();
-//
-//			String codigoInseminacion = request.getParameter("codInseminacion");
-//			String codigoAnimal = request.getParameter("codAnimal");
-//			inseminacionBean.setCodigoInseminacion(codigoInseminacion);
-//			inseminacionBean.setUsuario( session.getAttribute("idUsuario").toString() );
-//			inseminacionService.eliminarInseminacion(inseminacionBean);
-//
-//			AnimalBean animalBean = new AnimalBean();
-//			animalBean.setCodigoAnimal(codigoAnimal);
-//			animalBean.setEstadoProcesoEvolutivo("1");
-//			animalService.actualizaEstadoProcesoEvolutivo(animalBean);
-//
-//			dataJSON.setRespuesta("ok", null, mapa);
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//		}
-//		return ControllerUtil.handleJSONResponse(dataJSON, response);
-//	}
 
 }
 

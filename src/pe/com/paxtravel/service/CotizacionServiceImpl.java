@@ -31,6 +31,7 @@ import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.PaisBean;
+import pe.com.paxtravel.bean.PaqueteResumeBean;
 import pe.com.paxtravel.bean.ProduccionBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
 import pe.com.paxtravel.model.dao.CotizacionDAO;
@@ -264,10 +265,14 @@ public class CotizacionServiceImpl implements CotizacionService {
 	}
 
 	@Override
-	public CotizacionBean cotizacion(CotizacionBean cotizacionBean) {
-		return cotizacionDAO.cotizacion(cotizacionBean);
+	public CotizacionBean obtenerCotizacion(CotizacionBean cotizacionBean) {
+		return cotizacionDAO.obtenerCotizacion(cotizacionBean);
 	}
 	
+	@Override
+	public PaqueteResumeBean obtenerPaquete(PaqueteResumeBean paqueteResumeBean) {
+		return cotizacionDAO.obtenerPaquete(paqueteResumeBean);
+	}
 	
 //	@Override
 //	public void exportarExcel(List<EmpleadoBean> lista, OutputStream outputStream) throws Exception {

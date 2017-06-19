@@ -14,6 +14,7 @@ import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.PaisBean;
+import pe.com.paxtravel.bean.PaqueteResumeBean;
 import pe.com.paxtravel.bean.ProduccionBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
 import pe.com.paxtravel.tree.data.PaqueteManagerBean;
@@ -56,7 +57,8 @@ public interface CotizacionService {
 	
 	int actualizarCotizacion(CotizacionBean cotizacionBean);
 
-	public CotizacionBean cotizacion(CotizacionBean cotizacionBean);
-
+	public CotizacionBean obtenerCotizacion(CotizacionBean cotizacionBean);
+	
+	public PaqueteResumeBean obtenerPaquete(PaqueteResumeBean paqueteResumenBean);
 	
 }

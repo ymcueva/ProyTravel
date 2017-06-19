@@ -37,13 +37,31 @@ public class CotizacionBean {
 	private int idCliente;	
 	private int idTipoCotizacion;
 	private int idOrigenPartida;
-
-
 	private int idTipoPrograma;	
 	private int tipoBusqueda;
 	private int idEstado;
 	
+	private int idTipoAlojamiento;
+	private int idCategoriaAlojamiento;
 	
+	
+	
+	public int getIdTipoAlojamiento() {
+		return idTipoAlojamiento;
+	}
+
+	public void setIdTipoAlojamiento(int idTipoAlojamiento) {
+		this.idTipoAlojamiento = idTipoAlojamiento;
+	}
+
+	public int getIdCategoriaAlojamiento() {
+		return idCategoriaAlojamiento;
+	}
+
+	public void setIdCategoriaAlojamiento(int idCategoriaAlojamiento) {
+		this.idCategoriaAlojamiento = idCategoriaAlojamiento;
+	}
+
 	public int getTipoBusqueda() {
 		return tipoBusqueda;
 	}
