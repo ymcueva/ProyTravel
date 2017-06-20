@@ -1,6 +1,7 @@
 package pe.com.paxtravel.controller;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
@@ -8,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +56,7 @@ import pe.com.paxtravel.service.AnimalService;
 import pe.com.paxtravel.service.CotizacionService;
 import pe.com.paxtravel.service.EmpleadoService;
 import pe.com.paxtravel.service.InseminacionService;
+import pe.com.paxtravel.tree.data.CSVUtils;
 import pe.com.paxtravel.tree.data.PaqueteManagerBean;
 import pe.com.paxtravel.tree.decision.DataManagerTest2;
 //import pe.com.paxtravel.service.ProduccionService;
@@ -1061,6 +1064,7 @@ public class CotizacionController {
 				culturalTour
 			 */
 			
+			System.out.println("idPaquete:" + paquete.getIdPaquete());
 			System.out.println("destinos:" + paquete.getDestinos());
 			System.out.println("tour:" + paquete.getTour());
 			System.out.println("hotel:" + paquete.getHotel());
@@ -1076,6 +1080,41 @@ public class CotizacionController {
 			System.out.println("relajacionTour:" + paquete.getRelajacionTour());
 			System.out.println("deportesTour:" + paquete.getDeportesTour());
 			System.out.println("culturalTour:" + paquete.getCulturalTour());
+			
+			int x = ((int) Math.random() * 10000); 
+			
+			String csvFile = "/tree/"+paquete.getNumeroCotizacion()+"_"+paquete.getIdPaquete()+"_"+x+".csv";
+	        FileWriter writer = new FileWriter(csvFile);
+	        List<PaqueteResumeBean> pManager = Arrays.asList(paquete);
+	        
+	        //for header
+	        CSVUtils.writeLine(writer, Arrays.asList("idPaquete", "destinos", "tour", "hotel", "ticket", "tipoAlojamiento",
+	        		"categoriaAlojamiento","hotelHabitacion","playa","relajacion","deportes","cultural"));
+
+	        for (PaqueteResumeBean d : pManager) {
+
+	            List<String> list = new ArrayList<String>();
+	            list.add(String.valueOf(d.getIdPaquete()));
+	            list.add(paquete.getDestinos().toString());
+	            list.add(paquete.getTour().toString());
+	            list.add(paquete.getHotel());
+	            list.add(paquete.getTicket());
+	            list.add(paquete.getTipoAlojamiento());	            
+	            list.add(paquete.getCategoriaAlojamiento());
+	            list.add(paquete.getHotelHabitacion());
+	            list.add(paquete.getPlaya());
+	            list.add(paquete.getRelajacion());
+	            list.add(paquete.getDeportes());
+	            list.add(paquete.getCultural());
+	            CSVUtils.writeLine(writer, list);
+
+				//try custom separator and quote.
+				//CSVUtils.writeLine(writer, list, '|', '\"');
+	        }
+
+	        writer.flush();
+	        writer.close();        
+			
 			
 			/* PaqueteManagerBean oPaquete = new PaqueteManagerBean();		
 			
