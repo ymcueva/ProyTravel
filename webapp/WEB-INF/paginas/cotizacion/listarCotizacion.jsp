@@ -343,7 +343,7 @@
 	    return formularioObject;
 	}
 	
-	function buscarDetalleCotizacion() {
+	function buscarPaquete() {
 		var idTipoCotizacion = $("#inpIdTipoCotizacion").val();
 		var idCotizacion = $("#inpIdCotizacion").val();
 		var idparams = $("#idParams").val();
@@ -354,7 +354,9 @@
 			
 			console.log("idTipoCotizacion: " + idTipoCotizacion);
 			console.log("idCotizacion: " + idCotizacion);
-			console.log("idparams: " + idparams);			
+			console.log("idparams: " + idparams);
+			
+			$("#divMsgResultado").html("");
 			
 			$.ajax({
 				url: '${pageContext.request.contextPath}/buscarPaquete?idCotizacion='+idCotizacion+"&"+idparams,
@@ -365,10 +367,13 @@
 				dataType: 'json',
 				success: function(response) {
 					
-					if (response.estado = "ok") {
+					console.log("************************************************************");
+					console.log("response");
+					console.log(response);
+					
+					if ( response.estado = "ok" ) {
 						
 						$("#divMsgResultado").html("");
-						
 						
 						
 					}

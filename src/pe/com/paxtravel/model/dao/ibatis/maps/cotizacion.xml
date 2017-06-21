@@ -157,6 +157,13 @@
 		<result property="idTipoAlojamiento" column="id_tipo_alojamiento" />
 		<result property="idCategoriaAlojamiento" column="id_categoria_alojamiento" />
 		<result property="idTipoPrograma" column="id_tipo_programa" />
+		<result property="ticket" column="ticket" />
+		<result property="tour" column="tour" />
+		<result property="hotel" column="hotel" />
+		<result property="cultural" column="cultural" />
+		<result property="deportes" column="deportes" />
+		<result property="relajacion" column="relajacion" />
+		<result property="playa" column="playa" />
 	</resultMap>
 	
 	<resultMap id="resultPaqueteResume" class="paqueteResumeBean">
@@ -477,45 +484,52 @@
 	</select>
 		
 	<select id="getCotizacionResume" parameterClass="cotizacionBean" resultMap="resultCotizacionResume">	
-	SELECT 
-		c.nu_cotiza, c.id_cotiza, c.fe_cotiza, concat(cli.nombres, ' ',cli.apellidos) AS cliente, tc.nombre AS cotizacion,
-		c.id_tipo_cotiza AS id_tipo_cotizacion, 
-		c.im_presupuesto_maximo,
-		c.id_tipo_alojamiento,
-		c.id_categoria_alojamiento,
-		c.id_tipo_programa,		
-		e.id_estado, 
-		tp.nombre AS programa, e.no_estado as estado, ta.descripcion AS alojamiento, tca.nombre AS categoriaAlojamiento,  		
-        GROUP_CONCAT(DISTINCT d.descripcion
-					ORDER BY d.descripcion ASC
-					SEPARATOR '-') AS destinos,
-		GROUP_CONCAT(DISTINCT th.descripcion
-					ORDER BY th.descripcion ASC
-					SEPARATOR '-') AS habitaciones,
-		GROUP_CONCAT(DISTINCT tm.descripcion
-					ORDER BY tm.descripcion ASC
-					SEPARATOR '-') AS motivos,
-		GROUP_CONCAT(DISTINCT s.nombre
-					ORDER BY s.nombre ASC
-					SEPARATOR '-') AS servicios		
-	FROM `cotizacion` as c 
-		INNER JOIN `cliente` AS cli ON (c.id_cliente = cli.id_cliente)
-	    INNER JOIN `tipo_cotizacion` AS tc ON (c.id_tipo_cotiza=tc.id_tipo)    
-	    INNER JOIN `estado` AS e ON (e.id_estado=c.id_estado)
-	    LEFT JOIN `tipo_alojamiento` AS ta ON (c.id_tipo_alojamiento=ta.id_tipo_alojamiento)
-	    LEFT JOIN `tipo_categoria_alojamiento` AS tca ON (c.id_categoria_alojamiento=tca.id_tipo)    
-	    LEFT JOIN `tipo_programa` AS tp ON (c.id_tipo_programa=tp.id_programa)    
-		LEFT JOIN `cotizacion_deta` AS cd ON (c.nu_cotiza=cd.id_cotiza)
-	    LEFT JOIN `cotizacion_deta_habitacion` AS cdh ON (c.nu_cotiza=cdh.id_cotiza)
-	    LEFT JOIN `cotizacion_motivo` AS cm ON (c.nu_cotiza=cm.id_cotiza)
-	    LEFT JOIN `cotizacion_servicio` AS cs ON (c.nu_cotiza=cs.id_cotiza)
-	    LEFT JOIN `tipo_habitacion` AS th ON (cdh.id_tipo_habitacion=th.id_tipo_habitacion)
-	    LEFT JOIN `servicios` AS s ON (cs.id_servicio=s.id_servicio)
-	    LEFT JOIN `destino_ciudad` AS d ON (cd.id_destino=d.id_destino_ciudad)
-	    LEFT JOIN `motivo_viaje` AS tm ON (cm.id_motivo=tm.id_motivo) 
-	WHERE
-		c.id_cotiza = #idCotizacion#
-	GROUP BY c.nu_cotiza
+		SELECT 
+			c.nu_cotiza, c.id_cotiza, c.fe_cotiza, concat(cli.nombres, ' ',cli.apellidos) AS cliente, tc.nombre AS cotizacion,
+			c.id_tipo_cotiza AS id_tipo_cotizacion, 
+			c.im_presupuesto_maximo,
+			c.id_tipo_alojamiento,
+			c.id_categoria_alojamiento,
+			c.id_tipo_programa,			
+			e.id_estado, 
+			tp.nombre AS programa, e.no_estado as estado, ta.descripcion AS alojamiento, tca.nombre AS categoriaAlojamiento,  		
+	        GROUP_CONCAT(DISTINCT d.descripcion
+						ORDER BY d.descripcion ASC
+						SEPARATOR '-') AS destinos,
+			GROUP_CONCAT(DISTINCT th.descripcion
+						ORDER BY th.descripcion ASC
+						SEPARATOR '-') AS habitaciones,
+			GROUP_CONCAT(DISTINCT tm.descripcion
+						ORDER BY tm.descripcion ASC
+						SEPARATOR '-') AS motivos,
+			GROUP_CONCAT(DISTINCT s.nombre
+						ORDER BY s.nombre ASC
+						SEPARATOR '-') AS servicios,
+			IfNull((SELECT 1 FROM cotizacion_servicio where id_servicio = 2 AND id_cotiza = c.nu_cotiza),0) AS ticket, 
+			IfNull(( SELECT 1 FROM cotizacion_servicio where id_servicio = 3 AND id_cotiza = c.nu_cotiza),0) AS tour,
+			IfNull(( SELECT 1 FROM cotizacion_servicio where id_servicio = 6 AND id_cotiza = c.nu_cotiza),0) AS hotel,
+			IfNull(( SELECT 1 FROM cotizacion_motivo where id_motivo = 1 AND id_cotiza = c.nu_cotiza),0) AS cultural,
+			IfNull(( SELECT 1 FROM cotizacion_motivo where id_motivo = 2 AND id_cotiza = c.nu_cotiza),0) AS deportes,
+			IfNull(( SELECT 1 FROM cotizacion_motivo where id_motivo = 3 AND id_cotiza = c.nu_cotiza),0) AS relajacion,
+			IfNull(( SELECT 1 FROM cotizacion_motivo where id_motivo = 4 AND id_cotiza = c.nu_cotiza),0) AS playa
+		FROM `cotizacion` as c 
+			INNER JOIN `cliente` AS cli ON (c.id_cliente = cli.id_cliente)
+		    INNER JOIN `tipo_cotizacion` AS tc ON (c.id_tipo_cotiza=tc.id_tipo)    
+		    INNER JOIN `estado` AS e ON (e.id_estado=c.id_estado)
+		    LEFT JOIN `tipo_alojamiento` AS ta ON (c.id_tipo_alojamiento=ta.id_tipo_alojamiento)
+		    LEFT JOIN `tipo_categoria_alojamiento` AS tca ON (c.id_categoria_alojamiento=tca.id_tipo)    
+		    LEFT JOIN `tipo_programa` AS tp ON (c.id_tipo_programa=tp.id_programa)    
+			LEFT JOIN `cotizacion_deta` AS cd ON (c.nu_cotiza=cd.id_cotiza)
+		    LEFT JOIN `cotizacion_deta_habitacion` AS cdh ON (c.nu_cotiza=cdh.id_cotiza)
+		    LEFT JOIN `cotizacion_motivo` AS cm ON (c.nu_cotiza=cm.id_cotiza)
+		    LEFT JOIN `cotizacion_servicio` AS cs ON (c.nu_cotiza=cs.id_cotiza)
+		    LEFT JOIN `tipo_habitacion` AS th ON (cdh.id_tipo_habitacion=th.id_tipo_habitacion)
+		    LEFT JOIN `servicios` AS s ON (cs.id_servicio=s.id_servicio)
+		    LEFT JOIN `destino_ciudad` AS d ON (cd.id_destino=d.id_destino_ciudad)
+		    LEFT JOIN `motivo_viaje` AS tm ON (cm.id_motivo=tm.id_motivo) 
+		WHERE
+			c.id_cotiza = #idCotizacion#
+		GROUP BY c.nu_cotiza
 	</select>
 	
 	<select id="getPaqueteResume" parameterClass="paqueteResumeBean" resultMap="resultPaqueteResume">
@@ -539,53 +553,55 @@
 				count(*)
 				from `paquete_turistico_destino_hotel` 	
 				where (id_paquete_destino IN ( Select id_paquete_destino from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete# )) 
-					AND ( id_tipo_alojamiento = #idTipoAlojamiento# ))>=(Select value_parametro From parametros Where key_parametro = 'COHOT'), 1, 0) AS tipoAlojamiento,
+					AND ( id_tipo_alojamiento = #idTipoAlojamiento# ))>=(Select value_parametro From parametros Where key_parametro = 'COHOT'), 'Si', 'No') AS tipoAlojamiento,
 			        
 				if (100/(( Select count(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete# ))*(select 
 				count(*)
 				from `paquete_turistico_destino_hotel` 	
 				where (id_paquete_destino IN ( Select id_paquete_destino from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete# )) 
-					AND ( id_categoria_alojamiento = #idCategoriaAlojamiento# ))>=(Select value_parametro From parametros Where key_parametro = 'COHOT'), 1, 0) AS categoriaAlojamiento,
+					AND ( id_categoria_alojamiento = #idCategoriaAlojamiento# ))>=(Select value_parametro From parametros Where key_parametro = 'COHOT'), 'Si', 'No') AS categoriaAlojamiento,
 			        
 			    IF (100/(Select count(*) from `cotizacion_deta_habitacion` where id_cotiza = #numeroCotizacion#)*
 					( select count(*) from `paquete_turistico_destino_hotel` where id_paquete = #idPaquete# 
 					AND id_hotel_habitacion IN (Select id_tipo_habitacion from `cotizacion_deta_habitacion` where id_cotiza = #numeroCotizacion# )  
-				)>= (Select value_parametro From parametros Where key_parametro = 'COHOT'),1,0 ) AS hotelHabitacion,
+				)>= (Select value_parametro From parametros Where key_parametro = 'COHOT'), 'Si', 'No' ) AS hotelHabitacion,
 			    
 			<!-- motivos destinos -->	
-				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_playa)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),1,0) 
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_playa)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),'Si', 'No') 
 					from `destino_ciudad` as d inner join paquete_turistico_destino as ptd on (ptd.id_destino_ciudad = d.id_destino_ciudad) 
 				where ptd.id_paquete_turistico = #idPaquete#) AS playa,            
 			        
-				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_relajacion)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),1,0) 
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_relajacion)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),'Si', 'No') 
 					from `destino_ciudad` as d inner join paquete_turistico_destino as ptd on (ptd.id_destino_ciudad = d.id_destino_ciudad) 
 				where ptd.id_paquete_turistico = #idPaquete#) AS relajacion, 
 			        
-				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_deportes)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),1,0) 
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_deportes)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),'Si', 'No') 
 					from `destino_ciudad` as d inner join paquete_turistico_destino as ptd on (ptd.id_destino_ciudad = d.id_destino_ciudad) 
 				where ptd.id_paquete_turistico = #idPaquete#) AS deportes, 
 			        
-				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_cultural)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),1,0) 
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_cultural)>=(Select value_parametro From parametros Where key_parametro = 'COMOD'),'Si', 'No') 
 					from `destino_ciudad` as d inner join paquete_turistico_destino as ptd on (ptd.id_destino_ciudad = d.id_destino_ciudad) 
 				where ptd.id_paquete_turistico = #idPaquete#) AS cultural,
 			    
 			<!-- motivos tour	-->	
-				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_playa)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),1,0) 
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_playa)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),'Si', 'No') 
 				from `tour` as d inner join paquete_turistico_destino_tour as ptd on (ptd.id_tour = d.id_tour)
 				where ptd.id_paquete_turistico = #idPaquete#) AS playaTour, 
 				
-				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_relajacion)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),1,0) 
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_relajacion)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),'Si', 'No') 
 				from `tour` as d inner join paquete_turistico_destino_tour as ptd on (ptd.id_tour = d.id_tour)
 				where ptd.id_paquete_turistico = #idPaquete#) AS relajacionTour, 
 				
-				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_deportes)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),1,0) 
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_deportes)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),'Si', 'No') 
 				from `tour` as d inner join paquete_turistico_destino_tour as ptd on (ptd.id_tour = d.id_tour)
 				where ptd.id_paquete_turistico = #idPaquete#) AS deportesTour, 
 				
-				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_cultural)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),1,0) 
+				(Select if (100/count(ptd.id_paquete_turistico)*count(d.flag_cultural)>=(Select value_parametro From parametros Where key_parametro = 'COMOT'),'Si', 'No') 
 				from `tour` as d inner join paquete_turistico_destino_tour as ptd on (ptd.id_tour = d.id_tour)
 				where ptd.id_paquete_turistico = #idPaquete#) AS culturalTour;
 					
 	</select>
+	
+	
 
 </sqlMap>

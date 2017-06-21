@@ -39,13 +39,74 @@ public class CotizacionBean {
 	private int idOrigenPartida;
 	private int idTipoPrograma;	
 	private int tipoBusqueda;
-	private int idEstado;
-	
+	private int idEstado;	
 	private int idTipoAlojamiento;
 	private int idCategoriaAlojamiento;
 	
+	private int ticket;
+	private int tour;
+	private int hotel;
+	private int cultural;
+	private int deportes;
+	private int relajacion;
+	private int playa;	
 	
-	
+	public int getTicket() {
+		return ticket;
+	}
+
+	public void setTicket(int ticket) {
+		this.ticket = ticket;
+	}
+
+	public int getTour() {
+		return tour;
+	}
+
+	public void setTour(int tour) {
+		this.tour = tour;
+	}
+
+	public int getHotel() {
+		return hotel;
+	}
+
+	public void setHotel(int hotel) {
+		this.hotel = hotel;
+	}
+
+	public int getCultural() {
+		return cultural;
+	}
+
+	public void setCultural(int cultural) {
+		this.cultural = cultural;
+	}
+
+	public int getDeportes() {
+		return deportes;
+	}
+
+	public void setDeportes(int deportes) {
+		this.deportes = deportes;
+	}
+
+	public int getRelajacion() {
+		return relajacion;
+	}
+
+	public void setRelajacion(int relajacion) {
+		this.relajacion = relajacion;
+	}
+
+	public int getPlaya() {
+		return playa;
+	}
+
+	public void setPlaya(int playa) {
+		this.playa = playa;
+	}
+
 	public int getIdTipoAlojamiento() {
 		return idTipoAlojamiento;
 	}

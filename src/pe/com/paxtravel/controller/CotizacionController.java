@@ -1,6 +1,7 @@
 package pe.com.paxtravel.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -58,7 +59,9 @@ import pe.com.paxtravel.service.EmpleadoService;
 import pe.com.paxtravel.service.InseminacionService;
 import pe.com.paxtravel.tree.data.CSVUtils;
 import pe.com.paxtravel.tree.data.PaqueteManagerBean;
+import pe.com.paxtravel.tree.decision.DataManager;
 import pe.com.paxtravel.tree.decision.DataManagerTest2;
+import pe.com.paxtravel.tree.decision.TableManager;
 //import pe.com.paxtravel.service.ProduccionService;
 import pe.com.paxtravel.util.ControllerUtil;
 import pe.com.paxtravel.util.DataJsonBean;
@@ -649,6 +652,7 @@ public class CotizacionController {
 			//5- CARACTERISTICAS
 			*/
 			
+			mapa.put("nroCotizacion", cotizacionBean.getNumeroCotizacion());			
 			
 			status = "ok";
 		} catch (Exception e) {
@@ -814,8 +818,10 @@ public class CotizacionController {
 
 			}
 			*/
-
+			
+			mapa.put("nroCotizacion", cotizacionBean.getNumeroCotizacion());
 			dataJSON.setRespuesta("ok", null, mapa);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("ERROR.............................................");
@@ -978,37 +984,39 @@ public class CotizacionController {
 	}	
 	
 	@RequestMapping( value = "/buscarPaquete", method ={RequestMethod.GET, RequestMethod.POST} )
-	public String buscarPaquete(HttpServletRequest request, HttpServletResponse response){
+	public ModelAndView buscarPaquete(HttpServletRequest request, HttpServletResponse response){
 		
-		System.out.println("buscar paquete ...");
+		System.out.println("buscar paquete ...........................................");
+		
+		Map<String, Object> mapa = new HashMap<String, Object>();
+		DataJsonBean dataJSON = new DataJsonBean();
+		PaqueteManagerBean oPaquete = new PaqueteManagerBean();
 
 		try {
 			
-			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));						
-			
-			/* int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));
-			String numeroCotizacion = String.valueOf(request.getParameter("numeroCotizacion"));
-			int idTipoPrograma = Integer.parseInt(request.getParameter("idTipoPrograma"));
-			double imPresupuesto = Double.parseDouble(request.getParameter("imPresupuesto"));
-			int idCategoriaAlojamiento = Integer.parseInt(request.getParameter("idCategoriaAlojamiento"));
-			int idTipoAlojamiento = Integer.parseInt(request.getParameter("idTipoAlojamiento"));		
+			//////////////////////////////////////////////////////////////////////////////////////			
+			//BUSQUEDA DE PAQUETES
 
-			 #idPaquete#
+			/* #idPaquete#
 			#numeroCotizacion#
 			#idCategoriaAlojamiento#
 			#idTipoAlojamiento# */
 			
-			///////////////////////
+			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));	
 			
-			//BUSQUEDA DE PAQUETES
+			CotizacionBean cotizacionBean = new CotizacionBean();
+			cotizacionBean.setIdCotizacion(idCotizacion);
+			cotizacionBean = cotizacionService.obtenerCotizacion(cotizacionBean);
+			
+			String numeroCotizacion = String.valueOf(cotizacionBean.getNumeroCotizacion());			
 			
 			//1- TIPO DE PROGRAMA
-			int tipoPrograma = 1;
+			int idTipoPrograma = cotizacionBean.getIdTipoPrograma();
+			oPaquete.setIdTipoPaquete(idTipoPrograma);
 			
 			//2- PRESUPUESTO: ALTO, MEDIO, BAJO
-			double precioPresupuestoPrograma = 5200.00;			
-			PaqueteManagerBean oPaquete = new PaqueteManagerBean();			
-			oPaquete.setImPrecio(precioPresupuestoPrograma);
+			double imPresupuesto = cotizacionBean.getPresupuestoMaximo();				
+			oPaquete.setImPrecio(imPresupuesto);
 			
 			System.out.println("precio A max" + oPaquete.getImPrecioMaxAlto());
 			System.out.println("precio A min" + oPaquete.getImPrecioMinAlto());
@@ -1016,113 +1024,9 @@ public class CotizacionController {
 			System.out.println("precio B min" + oPaquete.getImPrecioMinMedio());
 			System.out.println("precio C max" + oPaquete.getImPrecioMaxBajo());
 			System.out.println("precio C min" + oPaquete.getImPrecioMinBajo());
-					
-			oPaquete.setIdTipoPaquete(tipoPrograma);
 			
-			//3- MODELO DESTINOS: A, B Y C
-			List<PaqueteManagerBean> listPaqueteSearch = new ArrayList<PaqueteManagerBean>();
-			List<PaqueteManagerBean> listCotizacionManBeanAlto = null;
-			List<PaqueteManagerBean> listCotizacionManBeanMedio = null;
-			List<PaqueteManagerBean> listCotizacionManBeanBajo = null;
-			
-			//3.1- Primera Iteracion: Presupuesto ALTO					
-			oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxAlto());
-			oPaquete.setImPrecioMin(oPaquete.getImPrecioMinAlto());
-			oPaquete.setTiPresupuestoValue("Alto");
-			
-			System.out.println( "precio max: " + oPaquete.getImPrecioMax() );
-			System.out.println( "precio min: " + oPaquete.getImPrecioMin() );
-						 	
-			listCotizacionManBeanAlto = cotizacionService.listarPaquete(oPaquete);
-			
-			System.out.println("size: " + listCotizacionManBeanAlto.size());
-			
-			PaqueteResumeBean paquete = new PaqueteResumeBean();
-			paquete.setIdPaquete(1);
-			paquete.setNumeroCotizacion("COTI201706100053");
-			paquete.setIdCategoriaAlojamiento(1);
-			paquete.setIdTipoAlojamiento(1);
-			
-			paquete = cotizacionService.obtenerPaquete(paquete);
-			
-			System.out.println("********************************************************");
-			/*
-			    destinos
-				tour
-				hotel
-				ticket
-				tipo_alojamiento
-				categoria_alojamiento
-				hotel_habitacion
-				playa
-				relajacion
-				deportes
-				cultural
-				playaTour
-				relajacionTour
-				deportesTour
-				culturalTour
-			 */
-			
-			System.out.println("idPaquete:" + paquete.getIdPaquete());
-			System.out.println("destinos:" + paquete.getDestinos());
-			System.out.println("tour:" + paquete.getTour());
-			System.out.println("hotel:" + paquete.getHotel());
-			System.out.println("ticket:" + paquete.getTicket());
-			System.out.println("tipo_alojamiento:" + paquete.getTipoAlojamiento());
-			System.out.println("categoria_alojamiento:" + paquete.getCategoriaAlojamiento());
-			System.out.println("hotel_habitacion:" + paquete.getHotelHabitacion());
-			System.out.println("playa:" + paquete.getPlaya());
-			System.out.println("relajacion:" + paquete.getRelajacion());
-			System.out.println("deportes:" + paquete.getDeportes());
-			System.out.println("cultural:" + paquete.getCultural());
-			System.out.println("playaTour:" + paquete.getPlayaTour());
-			System.out.println("relajacionTour:" + paquete.getRelajacionTour());
-			System.out.println("deportesTour:" + paquete.getDeportesTour());
-			System.out.println("culturalTour:" + paquete.getCulturalTour());
-			
-			int x = ((int) Math.random() * 10000); 
-			
-			String csvFile = "/tree/"+paquete.getNumeroCotizacion()+"_"+paquete.getIdPaquete()+"_"+x+".csv";
-	        FileWriter writer = new FileWriter(csvFile);
-	        List<PaqueteResumeBean> pManager = Arrays.asList(paquete);
-	        
-	        //for header
-	        CSVUtils.writeLine(writer, Arrays.asList("idPaquete", "destinos", "tour", "hotel", "ticket", "tipoAlojamiento",
-	        		"categoriaAlojamiento","hotelHabitacion","playa","relajacion","deportes","cultural"));
-
-	        for (PaqueteResumeBean d : pManager) {
-
-	            List<String> list = new ArrayList<String>();
-	            list.add(String.valueOf(d.getIdPaquete()));
-	            list.add(paquete.getDestinos().toString());
-	            list.add(paquete.getTour().toString());
-	            list.add(paquete.getHotel());
-	            list.add(paquete.getTicket());
-	            list.add(paquete.getTipoAlojamiento());	            
-	            list.add(paquete.getCategoriaAlojamiento());
-	            list.add(paquete.getHotelHabitacion());
-	            list.add(paquete.getPlaya());
-	            list.add(paquete.getRelajacion());
-	            list.add(paquete.getDeportes());
-	            list.add(paquete.getCultural());
-	            CSVUtils.writeLine(writer, list);
-
-				//try custom separator and quote.
-				//CSVUtils.writeLine(writer, list, '|', '\"');
-	        }
-
-	        writer.flush();
-	        writer.close();        
-			
-			
-			/* PaqueteManagerBean oPaquete = new PaqueteManagerBean();		
-			
-			//1- TIPO DE PROGRAMA			
-			oPaquete.setIdTipoPaquete(idTipoPrograma);				
-			
-			//2- PRESUPUESTO: ALTO, MEDIO, BAJO			
-			oPaquete.setImPrecio(imPresupuesto);					
+			int idCategoriaAlojamiento = cotizacionBean.getIdCategoriaAlojamiento();
+			int idTipoAlojamiento = cotizacionBean.getIdTipoAlojamiento();
 			
 			//3- MODELO DESTINOS: A, B Y C
 			List<PaqueteManagerBean> listPaqueteSearch = new ArrayList<PaqueteManagerBean>();
@@ -1171,41 +1075,188 @@ public class CotizacionController {
 				}
 				
 			}
+			
 			//Se obtienen todos los paquetes disponibles en: listPaqueteSearch();	
-			System.out.println("Total de Paquetes encontrados: " + listPaqueteSearch.size());*/
+			System.out.println("Total de Paquetes encontrados: " + listPaqueteSearch.size());
 			
-			//Se filtran todos los destinos para estos paquetes y se guardan en: destinosList();
-			/* oPaquete.setList(cotizacionDestinos);
-			List<PaqueteManagerBean> destinosList = cotizacionService.listarPaqueteDestino(oPaquete);
-			List<Integer> paqueteIds = new ArrayList<Integer>(); */
+			//Numero aleatorio
+			int x = (int)(Math.random() * ((19999999 - 1) + 1)) + 1;
+			
+			//Ruta absoluta del dominio de la aplicacion
+			String AbsolutePath = new File(".").getAbsolutePath();
+			System.out.println("AbsolutePath: " + AbsolutePath);			
+			
+			//Nombre del archivo a crear
+			String csvFile = AbsolutePath + numeroCotizacion +"_"+x+".csv";
+	        FileWriter writer = new FileWriter(csvFile);	        
+	        
+	        //for header CSV
+	        CSVUtils.writeLine(writer, Arrays.asList("idPaquete", "presupuesto", "destinos", "tour", "hotel", "ticket", "tipoAlojamiento",
+	        		"categoriaAlojamiento","hotelHabitacion","playa","relajacion","deportes","cultural"));
+			
+			PaqueteResumeBean paquete = null;
+			
+			//for detail CSV
+			for (PaqueteManagerBean  o:listPaqueteSearch) {
+				//Inicializamos el bean
+				paquete = new PaqueteResumeBean();				
+				paquete.setIdPaquete(o.getIdPaquete());				
+				paquete.setNumeroCotizacion(numeroCotizacion);
+				paquete.setIdCategoriaAlojamiento(idCategoriaAlojamiento);
+				paquete.setIdTipoAlojamiento(idTipoAlojamiento);				
+				paquete = cotizacionService.obtenerPaquete(paquete);
+				
+				//Log
+				System.out.println("Datos ...........................................");								
+				System.out.println("presupuesto:" + o.getTiPresupuestoValue());				
+				System.out.println("destinos:" + paquete.getDestinos());
+				System.out.println("tour:" + paquete.getTour());
+				System.out.println("hotel:" + paquete.getHotel());
+				System.out.println("ticket:" + paquete.getTicket());
+				System.out.println("tipo_alojamiento:" + paquete.getTipoAlojamiento());
+				System.out.println("categoria_alojamiento:" + paquete.getCategoriaAlojamiento());
+				System.out.println("hotel_habitacion:" + paquete.getHotelHabitacion());
+				System.out.println("playa:" + paquete.getPlaya());
+				System.out.println("relajacion:" + paquete.getRelajacion());
+				System.out.println("deportes:" + paquete.getDeportes());
+				System.out.println("cultural:" + paquete.getCultural());
+				System.out.println("playaTour:" + paquete.getPlayaTour());
+				System.out.println("relajacionTour:" + paquete.getRelajacionTour());
+				System.out.println("deportesTour:" + paquete.getDeportesTour());
+				System.out.println("culturalTour:" + paquete.getCulturalTour());
+				System.out.println("idPaquete:" + o.getIdPaquete());
+				
+				//Nueva Fila
+		        List<String> list = new ArrayList<String>();	            
+	            list.add(o.getTiPresupuestoValue().toString());
+	            list.add(paquete.getDestinos().toString());
+	            list.add(paquete.getTour().toString());
+	            list.add(paquete.getHotel());
+	            list.add(paquete.getTicket());
+	            list.add(paquete.getTipoAlojamiento());	            
+	            list.add(paquete.getCategoriaAlojamiento());
+	            list.add(paquete.getHotelHabitacion());
+	            list.add(paquete.getPlaya());
+	            list.add(paquete.getRelajacion());
+	            list.add(paquete.getDeportes());
+	            list.add(paquete.getCultural());
+	            list.add(String.valueOf(o.getIdPaquete()));
+	            CSVUtils.writeLine(writer, list);
+			}
+			
+			writer.flush();
+	        writer.close();
+	        
+	        System.out.println("csvFile");
+	        System.out.println(csvFile);
+	        
+	        //Busqueda Algoritmo ID3
+	        TableManager tm = new DataManager("test.csv");
+	        
+	        
+	        
+	        System.out.println("************************");
+	        
+	        System.out.println("************************");
+	        System.out.println("Initialiting file *.csv.\n");
+			System.out.println("size: " + tm);
 						
-			//4- PAQUETES
-			//5- CARACTERISTICAS
+			//cumple los destinos: reducimos la tabla
+			System.out.println("Reducing table with the attribute and value.\n");
+			TableManager tm2 = tm.getSubTable("destinos", "Si");								
+			System.out.println("************************");
+			System.out.println(tm2);
+			System.out.println("size: " + tm2.getRows().size());
 			
-			System.out.println("Paquetes finales.......................");
-			/* for (PaqueteManagerBean  o:destinosList) {															
-				if ( !paqueteIds.contains(o.getIdPaquete()) ) {
-					paqueteIds.add(o.getIdPaquete());
-					System.out.println("PaqueteID: " + o.getIdPaquete());
+			double percent = 30;
+			int qtypercent = 0;
+			
+			if ( cotizacionBean.getTicket()==1 ){
+				tm2 = tm2.getSubTable("ticket", "Si");
+				percent += 10; //score
+				qtypercent += 1; //quantity
+			}
+
+			if ( cotizacionBean.getTour()==1 ){
+				tm2 = tm2.getSubTable("tour", "Si");
+				percent += 10; //score
+				qtypercent += 1; //quantity
+			}
+			
+			if ( cotizacionBean.getHotel()==1 ){
+				tm2 = tm2.getSubTable("hotel", "Si");
+				percent += 10; //score
+				qtypercent += 1; //quantity
+			}
+			
+			//int listalen = tm2.getRows().size();
+			
+			String valueBestObjectiveTour = tm2.getBestObjectiveValueFromAttribute("tour", "Si");
+			String valueBestObjectiveTicket = tm2.getBestObjectiveValueFromAttribute("ticket", "Si");
+			String valueBestObjectiveHotel = tm2.getBestObjectiveValueFromAttribute("hotel", "Si");						
+			
+			if ( valueBestObjectiveTour.equals("Alto") || valueBestObjectiveTicket.equals("Alto") ||
+				valueBestObjectiveTour.equals("Medio") || valueBestObjectiveHotel.equals("Medio") ||
+				valueBestObjectiveHotel.equals("Alto") || valueBestObjectiveTicket.equals("Medio") ){
+				if ( cotizacionBean.getHotel()==1 ){
+					if ( cotizacionBean.getIdCategoriaAlojamiento()>0 ){
+						percent += 5; //score
+						qtypercent += 1; //quantity
+					}
+					
+					if ( cotizacionBean.getIdTipoAlojamiento()>0 ){
+						percent += 5; //score
+						qtypercent += 1; //quantity
+					}
 				}
-			} */
+				if ( cotizacionBean.getPlaya() > 0 ){
+					percent += 5; //score
+					qtypercent += 1; //quantity
+				}
+				
+				if ( cotizacionBean.getRelajacion() > 0 ){
+					percent += 5; //score
+					qtypercent += 1; //quantity
+				}
+				
+				if ( cotizacionBean.getDeportes() > 0 ){
+					percent += 5; //score
+					qtypercent += 1; //quantity
+				}
+				
+				if ( cotizacionBean.getCultural() > 0 ){
+					percent += 5; //score
+					qtypercent += 1; //quantity
+				}
+			}
 			
+			percent = percent/qtypercent*9.0;
 			
+			System.out.println("Number of equalities of parameters: " + qtypercent);
+			System.out.println("Getting a table for trainning with the " + percent + "% of the datas");
 			
+			tm2 = tm2.getTrainAndProbeSet(percent);
+			System.out.println("************************");
+			System.out.println(tm2);
 			
-						
+			//List<String> list = new ArrayList<String>();
 			
-			/////////////////////
+			for (int i=0; i<tm2.getRows().size(); i++) {
+				System.out.println("tm2 rows");
+				System.out.println(tm2.getRow(i).get(0));
+			}
+	        
+			mapa.put("titulo", "Paquetes");
+	        mapa.put("listaPaquetes", tm2);
 			
-			
+	        //Return bean Paquete escogido
+			dataJSON.setRespuesta("ok", null, mapa);
 			
 		} catch (Exception e) { 
 			e.printStackTrace();
 			System.out.println("e: " + e.getMessage() );
-		}
-		
-		return "";
-		
+		}		
+		return ControllerUtil.handleJSONResponse(dataJSON, response);		
 	}	
 	
 	@RequestMapping( value = "/verDetalleVuelos", method ={RequestMethod.GET, RequestMethod.POST} )

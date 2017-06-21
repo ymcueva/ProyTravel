@@ -1118,6 +1118,8 @@
 		
 		console.log( "GET params: " + params );
 		
+		$("#txtNroCotizacion").html("");
+		
 		$.ajax({
             //url: '${pageContext.request.contextPath}/grabarTransaccionCotizacion?motivoViaje='+chkValMotivoViaje+"&servAdicional"+chkValServicioAdicional,
 			url: '${pageContext.request.contextPath}/grabarCotiPaquete'+params,
@@ -1129,7 +1131,10 @@
             dataType: 'json',
             success: function(response) {
                 
-            	console.log("response " + response);
+            	console.log("response******************************");
+            	console.log(response);
+            	
+            	$("#txtNroCotizacion").html(response.dataJson.nroCotizacion);            	
             	
 				//alert("response: "+ response);
 				
@@ -1261,6 +1266,7 @@
 
 		var idCliente = $("#txtIdCliente").val();
 		var params = "?datosVuelos="+datosVuelos+"&idCliente="+idCliente;
+		$("#txtNroCotizacion").html("");
 		
 		$.ajax({
 			url: '${pageContext.request.contextPath}/grabarCotiTicket'+params,
@@ -1271,6 +1277,11 @@
             contentType : "application/json; charset=utf-8",
             dataType: 'json',
             success: function(response) {
+            	
+            	console.log("response******************************");
+            	console.log(response);
+            	
+            	$("#txtNroCotizacion").html(response.dataJson.nroCotizacion);
                 
 				$("#divRegistroOK").modal({
 					backdrop: 'static',
@@ -2248,7 +2259,7 @@ function guardarDetalleFareInfo(){
 		<div class="panel panel-info">
 			<div class="panel-heading"> <strong>Registro Satisfactorio</strong></div>
 			<div class="panel-body">
-				<div class="modal-body"> <p class="text-center" id="mensajeTransaccion">Se registro satisfactoriamente la Cotizaci&oacute;n</p>
+				<div class="modal-body"> <p class="text-center" id="mensajeTransaccion">Se registro la Cotizaci&oacute;n Nro <span id="txtNroCotizacion"></span></p>
 				<p id="mensajeDetalleTransaccion"></p>
 				</div>
 				<div class="modal-footer">

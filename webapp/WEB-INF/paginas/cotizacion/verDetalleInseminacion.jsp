@@ -65,8 +65,8 @@
 				<div class="form-group">
 					<div class="col-sm-12" style="text-align: center">
 						<button id="btnBuscar" type="button"
-							class="btn btn-primary centro" onclick="buscarDetalleCotizacion()"
-							title="Buscar">Buscar</button>
+							class="btn btn-primary centro" onclick="buscarPaquete()"
+							title="Buscar">Buscar Paquetes</button>
 					</div>					
 				</div>
 			</div>
