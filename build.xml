@@ -7,8 +7,9 @@
 	<path id="classpath">
 		<fileset dir="${lib.dir}" includes="servlet-api.jar" />
 	</path>
+	
 
-	<!--limpiando la carpeta build -->
+	<!--limpiando la carpeta build / travel -->
 	<target name="clean">
 		<echo>Cleaning the ${build.dir}</echo>
 		<delete dir="${build.dir}" />
@@ -94,7 +95,9 @@
 		<jar jarfile="${project.lib}/model.jar">
 			<fileset dir="${classes.dir}">
 				<include name="pe/com/paxtravel/bean/*.class" />
-				<include name="pe/com/paxtravel/tree/data/*.class" />				
+				<include name="pe/com/paxtravel/tree/data/*.class" />
+				<include name="pe/com/paxtravel/tree/cost/*.class" />
+				<include name="pe/com/paxtravel/tree/decision/*.class" />
 				<include name="pe/com/paxtravel/model/dao/*.class" />
 				<include name="pe/com/paxtravel/model/dao/ibatis/*.class" />
 				<include name="pe/com/paxtravel/model/dao/ibatis/maps/*.xml" />
