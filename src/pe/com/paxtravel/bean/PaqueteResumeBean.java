@@ -28,8 +28,16 @@ public class PaqueteResumeBean {
 	private int idTipoAlojamiento;
 	private int idCategoriaAlojamiento;
 	
+	private String aerolinea;
 	
 	
+	
+	public String getAerolinea() {
+		return aerolinea;
+	}
+	public void setAerolinea(String aerolinea) {
+		this.aerolinea = aerolinea;
+	}
 	public int getIdTipoAlojamiento() {
 		return idTipoAlojamiento;
 	}

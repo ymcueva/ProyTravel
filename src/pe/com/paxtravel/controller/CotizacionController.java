@@ -1002,7 +1002,7 @@ public class CotizacionController {
 			#idCategoriaAlojamiento#
 			#idTipoAlojamiento# */
 			
-			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));	
+			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));
 			
 			CotizacionBean cotizacionBean = new CotizacionBean();
 			cotizacionBean.setIdCotizacion(idCotizacion);
@@ -1125,6 +1125,7 @@ public class CotizacionController {
 				System.out.println("deportesTour:" + paquete.getDeportesTour());
 				System.out.println("culturalTour:" + paquete.getCulturalTour());
 				System.out.println("idPaquete:" + o.getIdPaquete());
+				System.out.println("nomPaquete:" + o.getNomPaquete());
 				
 				//Nueva Fila
 		        List<String> list = new ArrayList<String>();	            
@@ -1141,6 +1142,7 @@ public class CotizacionController {
 	            list.add(paquete.getDeportes());
 	            list.add(paquete.getCultural());
 	            list.add(String.valueOf(o.getIdPaquete()));
+	            list.add(o.getNomPaquete());
 	            CSVUtils.writeLine(writer, list);
 			}
 			
@@ -1247,7 +1249,8 @@ public class CotizacionController {
 			}
 	        
 			mapa.put("titulo", "Paquetes");
-	        mapa.put("listaPaquetes", tm2);
+			mapa.put("listaPaquetes", tm2);
+			mapa.put("cantidadPaquetes", tm2.getRows().size());
 			
 	        //Return bean Paquete escogido
 			dataJSON.setRespuesta("ok", null, mapa);

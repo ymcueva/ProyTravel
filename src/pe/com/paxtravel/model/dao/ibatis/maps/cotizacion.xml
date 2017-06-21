@@ -184,6 +184,16 @@
 		<result property="culturalTour" column="culturalTour" />
 	</resultMap>
 	
+	<resultMap id="resultPaqueteDetail" class="paqueteResumeBean">
+		<result property="idPaquete" column="id_paquete_turistico" />
+		<result property="destinos" column="ciudad" />
+		<result property="hotel" column="hotel" />
+		<result property="tour" column="tour" />
+		<result property="aerolinea" column="aerolinea" />
+	</resultMap>
+	
+	
+	
 	<select id="listarCotizacion" parameterClass="cotizacionBean" resultMap="resultCotizacion">
 		SELECT  @rownum:=@rownum+1 AS ca_nume_fila, coti.id_cotiza, coti.nu_cotiza,
                 DATE_FORMAT(coti.fe_cotiza,'%d-%m-%Y') fe_cotiza,
@@ -600,6 +610,29 @@
 				from `tour` as d inner join paquete_turistico_destino_tour as ptd on (ptd.id_tour = d.id_tour)
 				where ptd.id_paquete_turistico = #idPaquete#) AS culturalTour;
 					
+	</select>
+	
+	
+	<select id="getPaqueteDetail" parameterClass="paqueteResumeBean" resultMap="resultPaqueteDetail">
+		SELECT 
+			distinct
+		    pd.id_paquete_turistico,
+		    dc.descripcion AS ciudad,
+			h.descripcion AS hotel,
+			t.descripcion AS tour,
+			a.nombre AS aerolinea
+		FROM paquete_turistico_destino AS pd 
+			INNER JOIN destino_ciudad AS dc ON (pd.id_destino_ciudad=dc.id_destino_ciudad)
+		    LEFT JOIN paquete_turistico_destino_hotel AS ph ON (pd.id_paquete_turistico = ph.id_paquete)
+		    LEFT JOIN paquete_turistico_destino_tour AS pto ON (pd.id_paquete_turistico = pto.id_paquete)
+		    LEFT JOIN paquete_turistico_ticket AS pti ON (pd.id_paquete_turistico = pti.id_paquete_turistico)
+		    LEFT JOIN proveedor AS p ON (pti.id_proveedor=p.id_proveedor)
+		    LEFT JOIN proveedor_aerolinea_destino AS pa ON (p.id_proveedor=pa.id_proveedor)
+		    LEFT JOIN tour AS t ON (pto.id_tour = t.id_tour)
+		    LEFT JOIN aerolinea AS a ON (pti.id_aerolinea=a.id_aerolinea)
+		    LEFT JOIN hotel AS h ON (ph.id_hotel=h.id_hotel)
+		WHERE 
+				pd.id_paquete_turistico = #idPaquete#
 	</select>
 	
 	

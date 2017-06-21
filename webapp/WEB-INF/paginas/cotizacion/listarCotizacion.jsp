@@ -358,6 +358,7 @@
 			
 			$("#divMsgResultado").html("");
 			
+			
 			$.ajax({
 				url: '${pageContext.request.contextPath}/buscarPaquete?idCotizacion='+idCotizacion+"&"+idparams,
 				cache: false,
@@ -370,6 +371,8 @@
 					console.log("************************************************************");
 					console.log("response");
 					console.log(response);
+					console.log(response.dataJson.listaPaquetes);
+					console.log(response.dataJson.cantidadPaquetes);
 					
 					if ( response.estado = "ok" ) {
 						
