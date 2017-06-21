@@ -66,26 +66,26 @@
 </style>
 
 <script>
-	$(document).ready(function() {
 
-		$.ajaxSetup({
-			scriptCharset : "utf-8",
-			contentType : "application/json; charset=utf-8"
-		});
-		jQuery.support.cors = true;
-		inicia();
-		listaPaqueteTuristico = $
-		{
-			listaPaqueteTuristico
-		}
-		;
-		console.log("Ingresooooooooooo");
-		construirTablaListaCotizacion(listaPaqueteTuristico);
-		$("#btnbuscarOrdenPlan").on('click', function(e) {
-			e.preventDefault();
-			buscarOrdenPlan();
-		})
+	$(document).ready(function(){
+	$.ajaxSetup({
+		scriptCharset: "utf-8",
+		contentType: "application/json; charset=utf-8"
 	});
+	jQuery.support.cors = true;
+	
+		inicia();
+	listaOrdenPlanificacion = ${listaOrdenPlanificacion};
+		console.log("listar orden jquery");
+		construirTablaListaOrden(listaOrdenPlanificacion);
+	
+	$("#btnbuscarOrdenPlan").on('click', function(e){
+		e.preventDefault();
+			buscarOrdPlan();
+	})
+	
+	});
+
 
 	function inicia() {
 		$('#divFechaBusq').datetimepicker({
@@ -99,7 +99,7 @@
 
 		$("#eliminarFecha").on("click", function(e) {
 			e.preventDefault();
-			$("#txtFechaCotizacionBusq").val("");
+			$("#txtFechaOrd").val("");
 		})
 	}
 
@@ -108,98 +108,148 @@
 		return ((key == 32) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90));
 	}
 
-	function buscarOrdenPlan() {
+	function validarNumeroLetra(e){
+		var key = window.Event ? e.which : e.keyCode;
+		return ( (key==32 ) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90) );
+ 	}
+ 	
+	function buscarOrdPlan(){
+		
 		var grabarFormParams = {
-			'cotizacionBean' : formToObject('#formConsuCotiza')
+			'ordenPlanificacionBean' : formToObject( '#formConsuOrden' )
 		};
 		//alert("params: " + JSON.stringify(grabarFormParams));
-		$
-			.ajax({
-				url : '${pageContext.request.contextPath}/listarCotizacion?btnBuscar=1',
-				data : JSON.stringify(grabarFormParams),
-				cache : false,
-				async : true,
-				type : 'POST',
-				contentType : "application/json; charset=utf-8",
-				dataType : 'json',
-				success : function(response) {
-					var rpta = response.dataJson;
-					// actualizando lista
-					var listaCotizacion = [];
-					if (rpta.listaCotizacion != null) {
-						listaCotizacion = rpta.listaCotizacion;
-					}
-					construirTablaListaCotizacion(listaCotizacion);
-				},
-				error : function(data, textStatus, errorThrown) {}
-			});
+		
+		$.ajax({
+			url: '${pageContext.request.contextPath}/listarOrdenPlanificacion?btnBuscar=1',
+			data: JSON.stringify(grabarFormParams),
+			cache: false,
+			async: true,
+			type: 'POST',
+			contentType: "application/json; charset=utf-8",
+			dataType: 'json',
+			success: function(response) {
+				
+				var rpta = response.dataJson;
+                // actualizando lista
+                var listaOrdenPlanificacion = [];
+                if (rpta.listaOrdenPlanificacion != null) {
+                    listaOrdenPlanificacion = rpta.listaOrdenPlanificacion;
+                }
+				construirTablaListaOrden(listaOrdenPlanificacion);
+			},
+			error: function(data, textStatus, errorThrown) {
+			}
+		});
 	}
-
-	function construirTablaListaCotizacion(dataGrilla) {
+	
+ 	function construirTablaListaOrden( dataGrilla ){
 		//alert(dataGrilla);
-		var table = $('#tblListaOrdPL')
-			.dataTable(
-				{
-					data : dataGrilla,
-					bDestroy : true,
-					ordering : false,
-					searching : false,
-					paging : true,
-					bScrollAutoCss : true,
-					bStateSave : false,
-					bAutoWidth : false,
-					bScrollCollapse : false,
-					pagingType : "full_numbers",
-					iDisplayLength : 10,
-					responsive : true,
-					bLengthChange : false,
-					info : false,
-					fnDrawCallback : function(oSettings) {
-						if (oSettings.fnRecordsTotal() == 0) {
-							$('#tblListaOrdPL_paginate').addClass(
-								'hiddenDiv');
-						} else {
-							$('#tblListaOrdPL_paginate').removeClass(
-								'hiddenDiv');
-						}
-					},
-					fnRowCallback : function(nRow, aData, iDisplayIndex) {
-						$(nRow).attr('id', aData[5]);
-						$(nRow).attr('align', 'center');
-						$(nRow).attr('rowClasses', 'tableOddRow');
-						return nRow;
-					},
-					language : {
-						url : "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
-					},
-					columnDefs : [ {
-						targets : 5,
-						render : function(data, type, row) {
-							if (row != null
-								&& typeof row != 'undefined') {
-								var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleCotizacion(\""
-									+ row.idCotizacion
-									+ "\")' title='Ver Cotizaci&oacute;n' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";
-								return VerDetalle;
-							}
-							return '';
-						}
-					} ],
-					columns : [ {
-						data : "numeroFila"
-					}, {
-						data : "idOrden"
-					}, {
-						data : "feInicio"
-					}, {
-						data : "feFin"
-					}, {
-						data : "observacion"
-					} ]
-				});
+		var table = $('#tblListaOrden').dataTable({
+			data: dataGrilla,
+			bDestroy: true,
+			ordering: false,
+			searching: false,
+			paging: true,
+			bScrollAutoCss: true,
+			bStateSave: false,
+			bAutoWidth: false,
+			bScrollCollapse: false,
+			pagingType: "full_numbers",
+			iDisplayLength: 10,
+			responsive: true,
+			bLengthChange: false,
+			info: false,
+			
+			fnDrawCallback: function(oSettings) {
+				if (oSettings.fnRecordsTotal() == 0) {
+					$('#tblListaOrden_paginate').addClass('hiddenDiv');
+				} else {
+					$('#tblListaOrden_paginate').removeClass('hiddenDiv');
+				}
+			},
+			
+			fnRowCallback: function (nRow, aData, iDisplayIndex) {
+				$(nRow).attr('id', aData[5]);
+				$(nRow).attr('align', 'center');
+				$(nRow).attr('rowClasses','tableOddRow');
+				return nRow;
+			},
+			language: {
+				url: "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
+			},
+			
+			/* columnDefs: [{
+				targets: 5,
+				render: function(data, type, row){
+					if (row !=null && typeof row != 'undefined') {
+						var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleCotizacion(\""+row.idCotizacion+"\")' title='Ver Cotizaci&oacute;n' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";
+						return VerDetalle;
+					}
+					return '';
+				}
+			}], */
+			columns: [
+				{data: "numeroFila"},
+				{data: "nuOrden"},
+				{data: "feOrder"},
+				{data: "nombreCliente"},
+				{data: "nomStat"}
+			]
+		});
+ 	}
+	
+	function salir(){
+		location.href= '${pageContext.request.contextPath}/principal';
+	}
+	
+	function verDetalleCotizacion(numeroCotizacion){
+		$.ajax({
+			url: '${pageContext.request.contextPath}/verDetalleCotizacion?numCotizacion='+numeroCotizacion,
+			cache: false,
+			async: true,
+			type: 'GET',
+			contentType : "application/json; charset=utf-8",
+			dataType: 'json',
+			success: function(response) {
+				
+				if (response.estado = "ok") {
+					var tipoInseminacion = (response.dataJson.inseminacionBean.tipoInseminacion=1?"Inseminaci&oacute;n":"Natural");
+					
+					$("#tituloInseminacion").html(response.dataJson.titulo);
+					$("#divCodigoInseminacion").html(response.dataJson.inseminacionBean.codigoVaca);
+					$("#divFechaCotizacionDeta").html(response.dataJson.inseminacionBean.fechaInseminacion);
+					$("#divTipoInseminacion").html(tipoInseminacion);
+					$("#divCodigoVaca").html(response.dataJson.inseminacionBean.codigoVaca);
+					$("#divNombreVaca").html(response.dataJson.inseminacionBean.nombreVaca);
+					$("#divCodigoToro").html(response.dataJson.inseminacionBean.codigoToro);
+					$("#divDiasInseminado").html(response.dataJson.inseminacionBean.diasInseminado);
+					$("#divObservacion").html(response.dataJson.inseminacionBean.observacion);
+					$("#divUsuario").html("ocalderon");
+					
+					$("#divVerDetalleInseminacion").modal({
+						backdrop: 'static',
+						keyboard: false
+					});
+				}
+			},
+			error: function(data, textStatus, errorThrown) {
+			}
+		});
+	}
+	
+
+	
+	function formToObject(formID) {
+	    var formularioObject = {};
+	    var formularioArray = $( formID ).serializeArray();
+	    $.each(formularioArray, function(i, v) {
+	        formularioObject[v.name] = v.value;
+	    });
+	    return formularioObject;
 	}
 	function limpiarForm() {
-		document.getElementById("formConsuCotiza").reset();
+		document.getElementById("formConsuOrden").reset();
 	}
 
 	function salir() {
@@ -228,20 +278,20 @@
 								<div class="panel-body">
 									<div class="row">
 										<div class="col-sm-12">
-											<form id="formConsuCotiza" class="form-horizontal"
+											<form id="formConsuOrden" class="form-horizontal"
 												method="POST">
 												<div class="form-group">
 													<label class="col-sm-2 control-label alignIzquierda">Nro.
 														Orden:</label>
 													<div class="col-sm-2">
-														<input id="txtNumero"
+														<input id="txtnuOrden"
 															onkeypress="return validarNumeroLetra(event)"
-															name="nuOrden" type="text" maxlength="30"
+															name="txtnuOrden" type="text" maxlength="30"
 															class="form-control">
 													</div>
 													<label class="col-sm-1 control-label">Cliente:</label>
 													<div class="col-sm-2">
-														<select name="tipoBusqueda" id="selTipoBusqueda"
+														<select name="selTipoBusqueda" id="selTipoBusqueda"
 															class="form-control">
 															<option value="">--- Seleccione ---</option>
 															<option value="1">DNI</option>
@@ -250,9 +300,9 @@
 													</div>
 
 													<div class="col-sm-2">
-														<input id="txtNombreCliente"
+														<input id="txtNomCli"
 															onkeypress="return validarNumeroLetra(event)"
-															name="nombreCliente" type="text" maxlength="30"
+															name="txtNomCli" type="text" maxlength="30"
 															class="form-control">
 													</div>
 
@@ -261,8 +311,8 @@
 													<label class="col-sm-2 control-label alignDerecha">Estado
 														Orden:</label>
 													<div class="col-sm-2">
-														<select name="codigoEstadoCotizacion"
-															id="selcodigoEstadoCotizacion" class="form-control">
+														<select name="codigselcodigoEstadoOrden"
+															id="codigselcodigoEstadoOrden" class="form-control">
 															<option value="">--- Seleccione ---</option>
 															<option value="1">Pendiente</option>
 															<option value="2">Finalizado</option>
@@ -273,12 +323,12 @@
 													<label class="col-sm-2 control-label">Fecha Orden:</label>
 													<div class="col-sm-3">
 														<div class="input-group date" id="divFechaBusq">
-															<input id="txtFechaCotizacionBusq" name="fechaIni"
+															<input id="txtFechaOrd" name="txtFechaOrd"
 																type="text" maxlength="30" readonly
-																class="form-control txtFecha" /> <span
-																class="input-group-addon datepickerbutton"> <span
-																class="glyphicon glyphicon-calendar"></span>
-															</span> <span class="input-group-addon" id="eliminarFecha">
+																class="form-control txtFecha" />
+															<span class="input-group-addon datepickerbutton">
+															 <span class="glyphicon glyphicon-calendar"></span></span>
+															 <span class="input-group-addon" id="eliminarFecha">
 																<span class="glyphicon glyphicon-remove"></span>
 															</span>
 														</div>
@@ -295,7 +345,7 @@
 								<div class="form-group">
 									<div class="col-sm-2" align="center">
 										<input type="button" class="btn btn-primary" value="Buscar"
-											id="btnBuscarOrden" onclick="buscarOrdenPlan()"></input>
+											id="btnbuscarOrdenPlan" onclick="buscarOrdenPlan()"></input>
 									</div>
 									<div class="col-sm-2" align="center">
 										<input type="button" class="btn btn-primary" value="Limpiar"
@@ -308,12 +358,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-12" id="divSecDatosCotizacion">
+						<div class="col-sm-12" id="divSecDatosOrden">
 							<div class="panel panel-primary">
 								<div class="panel-body">
-									<div id="dvSubSecCotizacion">
-										<div class="col-sm-12" id="divTblListaCotizacion">
-											<table id="tblListaCotizacion"
+									<div id="divSecDatosOrden">
+										<div class="col-sm-12" id="divTblListaOrden">
+											<table id="tblListaOrden"
 												class="table table-bordered responsive" style="width: 100%">
 												<thead>
 													<tr>
@@ -323,6 +373,12 @@
 														<th width="10%" class="text-center">Opcion</th>
 													</tr>
 												</thead>
+												<%-- <tr>
+														<td>${fecOrden}</td>
+														<td>${clientes}</td>
+														<td>${estados}</td>
+														<td>${opciones}</td>
+												</tr> --%>
 											</table>
 										</div>
 									</div>

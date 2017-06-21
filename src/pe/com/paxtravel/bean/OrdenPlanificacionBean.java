@@ -20,7 +20,7 @@ public class OrdenPlanificacionBean {
 	private String feInicio;
 	private String feFin;
 
-	private String nomCliente;
+	private String nombreCliente;
 	private int idMotivo;
 	private String nomMotivo;
 	private int idDetalle;
@@ -49,15 +49,13 @@ public class OrdenPlanificacionBean {
 	private String habitaciones;
 	private int idProveedorHotel;
 	
-	private int idTour;;
+	private int idTour;
+	private String nomStat;
 	private String nomTour;
 	private double preAdultoTour;
 	private double preNinoTour;
 	private int diasTour;
 	private double subtotalTour;
-	
-	private double imPresupuestoPaximo;
-	
 	private int idAerolinea;
 	private int idProveedorAerolinea;
 	private double precioAerolinea;
@@ -71,13 +69,6 @@ public class OrdenPlanificacionBean {
 	private int nuPersonastour;
 	private String nuCotizacion;
 	
-	
-	public double getImPresupuestoPaximo() {
-		return imPresupuestoPaximo;
-	}
-	public void setImPresupuestoPaximo(double imPresupuestoPaximo) {
-		this.imPresupuestoPaximo = imPresupuestoPaximo;
-	}
 	public int getNuAdultos() {
 		return nuAdultos;
 	}
@@ -181,8 +172,8 @@ public class OrdenPlanificacionBean {
 		this.feFin = feFin;
 	}
 	
-	public String getNomCliente(){
-		return nomCliente;
+	public String getNombreCliente(){
+		return nombreCliente;
 	}
 	
 	public int getIdMotivo() {
@@ -193,8 +184,8 @@ public class OrdenPlanificacionBean {
 		return nomMotivo;
 	}
 	
-	public void setNomCliente(String nomCliente) {
-		this.nomCliente = nomCliente;
+	public void setNombreCliente(String nombreCliente) {
+		this.nombreCliente = nombreCliente;
 	}
 	
 	public void setIdMotivo(int idMotivo) {
@@ -444,6 +435,12 @@ public class OrdenPlanificacionBean {
 	}
 	public void setIdProveedorHotel(int idProveedorHotel) {
 		this.idProveedorHotel = idProveedorHotel;
+	}
+	public String getNomStat() {
+		return nomStat;
+	}
+	public void setNomStat(String nomStat) {
+		this.nomStat = nomStat;
 	}
 
 }

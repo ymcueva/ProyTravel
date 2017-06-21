@@ -403,7 +403,7 @@ public class PaqueteTuristicoController {
 				mapa.put("observacion",listaOrdenPlanificacion.get(0).getObservacion());
 				mapa.put("presupuestomin", listaOrdenPlanificacion.get(0).getImPresupuestoMinimo());
 				mapa.put("presupuestomax", listaOrdenPlanificacion.get(0).getImPresupuestoMaximo());
-				mapa.put("cliente",listaOrdenPlanificacion.get(0).getNomCliente());
+				mapa.put("cliente",listaOrdenPlanificacion.get(0).getNombreCliente());
 				mapa.put("fechaorden", listaOrdenPlanificacion.get(0).getFeOrder());
 				mapa.put("fechapartida", listaOrdenPlanificacion.get(0).getFePartida());
 				mapa.put("fecharetorno",listaOrdenPlanificacion.get(0).getFeRetorno());
@@ -967,7 +967,7 @@ public class PaqueteTuristicoController {
 						comentario = listaOrden.get(0).getObservacion();
 						presupuestomin = listaOrden.get(0).getImPresupuestoMinimo().toString();
 						presupuestomax = listaOrden.get(0).getImPresupuestoMaximo().toString();
-						cliente = listaOrden.get(0).getNomCliente();
+						cliente = listaOrden.get(0).getNombreCliente();
 						fechaorden = listaOrden.get(0).getFeOrder();
 						fechapartida = listaOrden.get(0).getFePartida();
 						fecharetorno = listaOrden.get(0).getFeRetorno();

@@ -60,11 +60,18 @@ public class OrdenPlanificacionController {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		boolean flag = false;
 
+		System.out.println("test orden plan");
+		
 		DataJsonBean dataJSON = new DataJsonBean();
+		
+		System.out.println("test orden planx2");
 		try {
+			System.out.println("entro al try");
 			modelAndView = new ModelAndView();
+			System.out.println("modelandview");
 			String botonBuscar = (request.getParameter("btnBuscar")) != null ? request
 					.getParameter("btnBuscar") : "";
+					System.out.println(botonBuscar + "es el boton");
 			mapa.put("titulo", "Orden de Planificacion");
 			if ("1".equals(botonBuscar)) {
 
@@ -89,7 +96,7 @@ public class OrdenPlanificacionController {
 				lopb = ordenPlanificacionService
 						.listarOrdenPlanificacion(ordenPlanificacionBean);
 				System.out.println("size:... " + lopb.size());
-				modelAndView.addObject("listarOrdenPlanificacion",
+				modelAndView.addObject("listaOrdenPlanificacion",
 						SojoUtil.toJson(lopb));
 				// mapa.put("fechaInseminacion", sdf.format( new Date() ));
 				// modelAndView.addObject("mapaDatos", mapa);
@@ -105,32 +112,7 @@ public class OrdenPlanificacionController {
 			return modelAndView;
 		}
 	}
-/*
-	@RequestMapping( value = "/listarCiudad", method ={RequestMethod.GET, RequestMethod.POST} )
-	public ModelAndView listarCiudad(HttpServletRequest request, HttpServletResponse response){
 
-		Map<String, Object> mapa = new HashMap<String, Object>();
-		DataJsonBean dataJSON = new DataJsonBean();
-		try {
-
-			List<CiudadBean> listaCiudad = new ArrayList<CiudadBean>();
-
-			CiudadBean ciudadBean = new CiudadBean();
-			int codigoPais = Integer.parseInt( request.getParameter("idPais") );
-			ciudadBean.setIdPais( codigoPais );
-			listaCiudad = cotizacionService.listarCiudad(ciudadBean);
-
-	        mapa.put("titulo", "Detalle Inseminaci&oacute;n");
-	        mapa.put("listaCiudad", listaCiudad);
-
-	        dataJSON.setRespuesta("ok", null, mapa);
-
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return ControllerUtil.handleJSONResponse(dataJSON, response);
-	}*/
-	
 	@RequestMapping(value = "/formRegistrarOrdenPlanificacion", method = {RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView formRegistrarOrdenPlanificacion(
 			HttpServletRequest request, HttpServletResponse response) {
@@ -161,8 +143,7 @@ public class OrdenPlanificacionController {
 
 			modelAndView.addObject("titulo", "Orden de Planificacion - Registrar Orden");
 			modelAndView.addObject("mapaDatos", mapaDatos);
-			modelAndView.addObject("fechaOrden",
-					Utils.dateUtilToStringDDMMYYYY(new Date()));
+			modelAndView.addObject("fechaOrden",Utils.dateUtilToStringDDMMYYYY(new Date()));
 			modelAndView
 					.setViewName("ordenPlanificacion/registrarOrdenPlanificacion");
 		} catch (Exception e) {
@@ -211,6 +192,12 @@ public class OrdenPlanificacionController {
 				ordenPlanificacionBean.setFeFin(Utils.stringToStringyyyyMMdd(fecret));
 				ordenPlanificacionBean.setNuNinos(Integer.parseInt(nuninos));
 				ordenPlanificacionBean.setNuAdultos(Integer.parseInt(nuadultos));
+				ordenPlanificacionBean.setImPresupuestoMaximo(Double.parseDouble("1"));
+				ordenPlanificacionBean.setImPresupuestoMinimo(Double.parseDouble("2"));
+				ordenPlanificacionBean.setObservacion("");
+				ordenPlanificacionBean.setAutorizacion(1);
+				ordenPlanificacionBean.setFePartida("");
+				ordenPlanificacionBean.setFeRetorno("");
 				
 
 				int registro = ordenPlanificacionService.GrabarOrdenPlanificacion(ordenPlanificacionBean);
@@ -224,7 +211,7 @@ public class OrdenPlanificacionController {
 
 				String destino[] = datosDestino.split(",");
 				OrdenDestinoBean ordenDestinoBean = new OrdenDestinoBean();
-				ordenDestinoBean.setIdorden(ordenPlanificacionBean.getIdOrden());
+				ordenDestinoBean.setIdOrden(ordenPlanificacionBean.getIdOrden());
 
 				String g[];
 				if (destino.length > 0){
@@ -372,7 +359,7 @@ public class OrdenPlanificacionController {
 				System.out.println("Cantidad de Destinos: " + destino.length);
 
 				OrdenDestinoBean ordenDestinoBean = new OrdenDestinoBean();
-				ordenDestinoBean.setIdorden(ordenPlanificacionBean.getIdOrden());
+				ordenDestinoBean.setIdOrden(ordenPlanificacionBean.getIdOrden());
 
 				String g[];
 
