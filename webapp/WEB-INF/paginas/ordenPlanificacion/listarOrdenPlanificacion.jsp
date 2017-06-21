@@ -66,26 +66,26 @@
 </style>
 
 <script>
+	$(document).ready(function() {
 
-	$(document).ready(function(){
-	$.ajaxSetup({
-		scriptCharset: "utf-8",
-		contentType: "application/json; charset=utf-8"
-	});
-	jQuery.support.cors = true;
-	
+		$.ajaxSetup({
+			scriptCharset : "utf-8",
+			contentType : "application/json; charset=utf-8"
+		});
+		jQuery.support.cors = true;
 		inicia();
-	listaOrdenPlanificacion = ${listaOrdenPlanificacion};
-		console.log("listar orden jquery");
-		construirTablaListaOrden(listaOrdenPlanificacion);
-	
-	$("#btnbuscarOrdenPlan").on('click', function(e){
-		e.preventDefault();
-			buscarOrdPlan();
-	})
-	
+		listaPaqueteTuristico = $
+		{
+			listaPaqueteTuristico
+		}
+		;
+		console.log("Ingresooooooooooo");
+		construirTablaListaCotizacion(listaPaqueteTuristico);
+		$("#btnbuscarOrdenPlan").on('click', function(e) {
+			e.preventDefault();
+			buscarOrdenPlan();
+		})
 	});
-
 
 	function inicia() {
 		$('#divFechaBusq').datetimepicker({
@@ -99,7 +99,7 @@
 
 		$("#eliminarFecha").on("click", function(e) {
 			e.preventDefault();
-			$("#txtFechaOrd").val("");
+			$("#txtFechaCotizacionBusq").val("");
 		})
 	}
 
@@ -108,148 +108,98 @@
 		return ((key == 32) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90));
 	}
 
-	function validarNumeroLetra(e){
-		var key = window.Event ? e.which : e.keyCode;
-		return ( (key==32 ) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90) );
- 	}
- 	
-	function buscarOrdPlan(){
-		
+	function buscarOrdenPlan() {
 		var grabarFormParams = {
-			'ordenPlanificacionBean' : formToObject( '#formConsuOrden' )
+			'cotizacionBean' : formToObject('#formConsuCotiza')
 		};
 		//alert("params: " + JSON.stringify(grabarFormParams));
-		
-		$.ajax({
-			url: '${pageContext.request.contextPath}/listarOrdenPlanificacion?btnBuscar=1',
-			data: JSON.stringify(grabarFormParams),
-			cache: false,
-			async: true,
-			type: 'POST',
-			contentType: "application/json; charset=utf-8",
-			dataType: 'json',
-			success: function(response) {
-				
-				var rpta = response.dataJson;
-                // actualizando lista
-                var listaOrdenPlanificacion = [];
-                if (rpta.listaOrdenPlanificacion != null) {
-                    listaOrdenPlanificacion = rpta.listaOrdenPlanificacion;
-                }
-				construirTablaListaOrden(listaOrdenPlanificacion);
-			},
-			error: function(data, textStatus, errorThrown) {
-			}
-		});
-	}
-	
- 	function construirTablaListaOrden( dataGrilla ){
-		//alert(dataGrilla);
-		var table = $('#tblListaOrden').dataTable({
-			data: dataGrilla,
-			bDestroy: true,
-			ordering: false,
-			searching: false,
-			paging: true,
-			bScrollAutoCss: true,
-			bStateSave: false,
-			bAutoWidth: false,
-			bScrollCollapse: false,
-			pagingType: "full_numbers",
-			iDisplayLength: 10,
-			responsive: true,
-			bLengthChange: false,
-			info: false,
-			
-			fnDrawCallback: function(oSettings) {
-				if (oSettings.fnRecordsTotal() == 0) {
-					$('#tblListaOrden_paginate').addClass('hiddenDiv');
-				} else {
-					$('#tblListaOrden_paginate').removeClass('hiddenDiv');
-				}
-			},
-			
-			fnRowCallback: function (nRow, aData, iDisplayIndex) {
-				$(nRow).attr('id', aData[5]);
-				$(nRow).attr('align', 'center');
-				$(nRow).attr('rowClasses','tableOddRow');
-				return nRow;
-			},
-			language: {
-				url: "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
-			},
-			
-			/* columnDefs: [{
-				targets: 5,
-				render: function(data, type, row){
-					if (row !=null && typeof row != 'undefined') {
-						var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleCotizacion(\""+row.idCotizacion+"\")' title='Ver Cotizaci&oacute;n' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";
-						return VerDetalle;
+		$
+			.ajax({
+				url : '${pageContext.request.contextPath}/listarCotizacion?btnBuscar=1',
+				data : JSON.stringify(grabarFormParams),
+				cache : false,
+				async : true,
+				type : 'POST',
+				contentType : "application/json; charset=utf-8",
+				dataType : 'json',
+				success : function(response) {
+					var rpta = response.dataJson;
+					// actualizando lista
+					var listaCotizacion = [];
+					if (rpta.listaCotizacion != null) {
+						listaCotizacion = rpta.listaCotizacion;
 					}
-					return '';
-				}
-			}], */
-			columns: [
-				{data: "numeroFila"},
-				{data: "nuOrden"},
-				{data: "feOrder"},
-				{data: "nombreCliente"},
-				{data: "nomStat"}
-			]
-		});
- 	}
-	
-	function salir(){
-		location.href= '${pageContext.request.contextPath}/principal';
+					construirTablaListaCotizacion(listaCotizacion);
+				},
+				error : function(data, textStatus, errorThrown) {}
+			});
 	}
-	
-	function verDetalleCotizacion(numeroCotizacion){
-		$.ajax({
-			url: '${pageContext.request.contextPath}/verDetalleCotizacion?numCotizacion='+numeroCotizacion,
-			cache: false,
-			async: true,
-			type: 'GET',
-			contentType : "application/json; charset=utf-8",
-			dataType: 'json',
-			success: function(response) {
-				
-				if (response.estado = "ok") {
-					var tipoInseminacion = (response.dataJson.inseminacionBean.tipoInseminacion=1?"Inseminaci&oacute;n":"Natural");
-					
-					$("#tituloInseminacion").html(response.dataJson.titulo);
-					$("#divCodigoInseminacion").html(response.dataJson.inseminacionBean.codigoVaca);
-					$("#divFechaCotizacionDeta").html(response.dataJson.inseminacionBean.fechaInseminacion);
-					$("#divTipoInseminacion").html(tipoInseminacion);
-					$("#divCodigoVaca").html(response.dataJson.inseminacionBean.codigoVaca);
-					$("#divNombreVaca").html(response.dataJson.inseminacionBean.nombreVaca);
-					$("#divCodigoToro").html(response.dataJson.inseminacionBean.codigoToro);
-					$("#divDiasInseminado").html(response.dataJson.inseminacionBean.diasInseminado);
-					$("#divObservacion").html(response.dataJson.inseminacionBean.observacion);
-					$("#divUsuario").html("ocalderon");
-					
-					$("#divVerDetalleInseminacion").modal({
-						backdrop: 'static',
-						keyboard: false
-					});
-				}
-			},
-			error: function(data, textStatus, errorThrown) {
-			}
-		});
-	}
-	
 
-	
-	function formToObject(formID) {
-	    var formularioObject = {};
-	    var formularioArray = $( formID ).serializeArray();
-	    $.each(formularioArray, function(i, v) {
-	        formularioObject[v.name] = v.value;
-	    });
-	    return formularioObject;
+	function construirTablaListaCotizacion(dataGrilla) {
+		//alert(dataGrilla);
+		var table = $('#tblListaOrdPL')
+			.dataTable(
+				{
+					data : dataGrilla,
+					bDestroy : true,
+					ordering : false,
+					searching : false,
+					paging : true,
+					bScrollAutoCss : true,
+					bStateSave : false,
+					bAutoWidth : false,
+					bScrollCollapse : false,
+					pagingType : "full_numbers",
+					iDisplayLength : 10,
+					responsive : true,
+					bLengthChange : false,
+					info : false,
+					fnDrawCallback : function(oSettings) {
+						if (oSettings.fnRecordsTotal() == 0) {
+							$('#tblListaOrdPL_paginate').addClass(
+								'hiddenDiv');
+						} else {
+							$('#tblListaOrdPL_paginate').removeClass(
+								'hiddenDiv');
+						}
+					},
+					fnRowCallback : function(nRow, aData, iDisplayIndex) {
+						$(nRow).attr('id', aData[5]);
+						$(nRow).attr('align', 'center');
+						$(nRow).attr('rowClasses', 'tableOddRow');
+						return nRow;
+					},
+					language : {
+						url : "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
+					},
+					columnDefs : [ {
+						targets : 5,
+						render : function(data, type, row) {
+							if (row != null
+								&& typeof row != 'undefined') {
+								var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleCotizacion(\""
+									+ row.idCotizacion
+									+ "\")' title='Ver Cotizaci&oacute;n' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";
+								return VerDetalle;
+							}
+							return '';
+						}
+					} ],
+					columns : [ {
+						data : "numeroFila"
+					}, {
+						data : "idOrden"
+					}, {
+						data : "feInicio"
+					}, {
+						data : "feFin"
+					}, {
+						data : "observacion"
+					} ]
+				});
 	}
 	function limpiarForm() {
-		document.getElementById("formConsuOrden").reset();
+		document.getElementById("formConsuCotiza").reset();
 	}
 
 	function salir() {
@@ -278,20 +228,20 @@
 								<div class="panel-body">
 									<div class="row">
 										<div class="col-sm-12">
-											<form id="formConsuOrden" class="form-horizontal"
+											<form id="formConsuCotiza" class="form-horizontal"
 												method="POST">
 												<div class="form-group">
 													<label class="col-sm-2 control-label alignIzquierda">Nro.
 														Orden:</label>
 													<div class="col-sm-2">
-														<input id="txtnuOrden"
+														<input id="txtNumero"
 															onkeypress="return validarNumeroLetra(event)"
-															name="txtnuOrden" type="text" maxlength="30"
+															name="nuOrden" type="text" maxlength="30"
 															class="form-control">
 													</div>
 													<label class="col-sm-1 control-label">Cliente:</label>
 													<div class="col-sm-2">
-														<select name="selTipoBusqueda" id="selTipoBusqueda"
+														<select name="tipoBusqueda" id="selTipoBusqueda"
 															class="form-control">
 															<option value="">--- Seleccione ---</option>
 															<option value="1">DNI</option>
@@ -300,9 +250,9 @@
 													</div>
 
 													<div class="col-sm-2">
-														<input id="txtNomCli"
+														<input id="txtNombreCliente"
 															onkeypress="return validarNumeroLetra(event)"
-															name="txtNomCli" type="text" maxlength="30"
+															name="nombreCliente" type="text" maxlength="30"
 															class="form-control">
 													</div>
 
@@ -311,8 +261,8 @@
 													<label class="col-sm-2 control-label alignDerecha">Estado
 														Orden:</label>
 													<div class="col-sm-2">
-														<select name="codigselcodigoEstadoOrden"
-															id="codigselcodigoEstadoOrden" class="form-control">
+														<select name="codigoEstadoCotizacion"
+															id="selcodigoEstadoCotizacion" class="form-control">
 															<option value="">--- Seleccione ---</option>
 															<option value="1">Pendiente</option>
 															<option value="2">Finalizado</option>
@@ -323,12 +273,12 @@
 													<label class="col-sm-2 control-label">Fecha Orden:</label>
 													<div class="col-sm-3">
 														<div class="input-group date" id="divFechaBusq">
-															<input id="txtFechaOrd" name="txtFechaOrd"
+															<input id="txtFechaCotizacionBusq" name="fechaIni"
 																type="text" maxlength="30" readonly
-																class="form-control txtFecha" />
-															<span class="input-group-addon datepickerbutton">
-															 <span class="glyphicon glyphicon-calendar"></span></span>
-															 <span class="input-group-addon" id="eliminarFecha">
+																class="form-control txtFecha" /> <span
+																class="input-group-addon datepickerbutton"> <span
+																class="glyphicon glyphicon-calendar"></span>
+															</span> <span class="input-group-addon" id="eliminarFecha">
 																<span class="glyphicon glyphicon-remove"></span>
 															</span>
 														</div>
@@ -345,7 +295,7 @@
 								<div class="form-group">
 									<div class="col-sm-2" align="center">
 										<input type="button" class="btn btn-primary" value="Buscar"
-											id="btnbuscarOrdenPlan" onclick="buscarOrdenPlan()"></input>
+											id="btnBuscarOrden" onclick="buscarOrdenPlan()"></input>
 									</div>
 									<div class="col-sm-2" align="center">
 										<input type="button" class="btn btn-primary" value="Limpiar"
@@ -358,12 +308,12 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-12" id="divSecDatosOrden">
+						<div class="col-sm-12" id="divSecDatosCotizacion">
 							<div class="panel panel-primary">
 								<div class="panel-body">
-									<div id="divSecDatosOrden">
-										<div class="col-sm-12" id="divTblListaOrden">
-											<table id="tblListaOrden"
+									<div id="dvSubSecCotizacion">
+										<div class="col-sm-12" id="divTblListaCotizacion">
+											<table id="tblListaCotizacion"
 												class="table table-bordered responsive" style="width: 100%">
 												<thead>
 													<tr>
@@ -373,12 +323,6 @@
 														<th width="10%" class="text-center">Opcion</th>
 													</tr>
 												</thead>
-												<%-- <tr>
-														<td>${fecOrden}</td>
-														<td>${clientes}</td>
-														<td>${estados}</td>
-														<td>${opciones}</td>
-												</tr> --%>
 											</table>
 										</div>
 									</div>

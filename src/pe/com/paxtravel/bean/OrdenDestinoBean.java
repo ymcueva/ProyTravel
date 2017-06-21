@@ -3,7 +3,7 @@ package pe.com.paxtravel.bean;
 public class OrdenDestinoBean {
 	
 	private int idDetalle;
-	private int idOrden;
+	private int idorden;
 	private int destino;	
 	private int cantidadNino;
 	private int cantidadAdulto;
@@ -18,11 +18,11 @@ public class OrdenDestinoBean {
 	public void setIdDetalle(int idDetalle) {
 		this.idDetalle = idDetalle;
 	}
-	public int getIdOrden() {
-		return idOrden;
+	public int getIdorden() {
+		return idorden;
 	}
-	public void setIdOrden(int idOrden) {
-		this.idOrden = idOrden;
+	public void setIdorden(int idorden) {
+		this.idorden = idorden;
 	}
 	public int getDestino() {
 		return destino;
