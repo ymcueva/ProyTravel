@@ -160,7 +160,8 @@
 			inner join destino_ciudad des on od.id_destino = des.id_destino_ciudad
 			inner join destino_ciudad ori on ord.id_origen =  ori.id_destino_ciudad
   			inner join destino_pais pais on des.id_destino_pais = pais.id_destino 	
-  			where ord.nu_orden = #nuOrden# and pais.tipo_programa = #idTipoPrograma#   
+  			where ord.nu_orden = #nuOrden# and pais.tipo_programa = #idTipoPrograma# 
+  			order by od.id_destino  
 		</select>
 		
 		<select id="obtenerOrdenDestino" parameterClass="objBean" resultMap="resultOrdenDestino">	
@@ -200,6 +201,7 @@
 			and ptick.id_proveedor = pad.id_proveedor
 			left outer join tour t on(pt.id_tour = t.id_tour)
 			where ord.nu_orden = #nuOrden#
+			order by od.id_destino
 		</select>  
 		
 		<select id="obtenerOrdenServicio" parameterClass="objBean" resultMap="resultOrdenServicio">	
