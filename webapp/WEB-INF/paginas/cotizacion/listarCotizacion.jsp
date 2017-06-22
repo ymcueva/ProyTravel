@@ -398,7 +398,8 @@
 							}
 							
 							console.log("destinos");
-							console.log(response.dataJson.destinos[0].destinos);
+							console.log(response.dataJson.destinos[0].destinos);							
+							mensajeHTML += "Paquete: "+ nomPaquete +" (USD. "+ precio +")<br /><br />";
 							
 							$.each(response.dataJson.destinos, function(i, row) {							
 								console.log("destinos each");
@@ -407,7 +408,7 @@
 								console.log(row.tour);
 								console.log(row.aerolinea);
 								
-								mensajeHTML += "<strong>"+ row.destinos +"</strong>";
+								mensajeHTML += i + " " + row.destinos +": <i>";
 								if ( row.hotel ) {
 									mensajeHTML += row.hotel;
 								}
@@ -417,15 +418,14 @@
 								if ( row.aerolinea ) {
 									mensajeHTML += row.aerolinea;
 								}
-								mensajeHTML += "<br />";
-								
-								
+								mensajeHTML += "</i><br />";
 								
 							});						
 						} else {
 							mensajeHTML = "<strong>No se encontraron Paquetes disponibles.</strong>";
 						}
 						
+						$("#divMsgResultado").css("display", "block");
 						$("#divMsgResultado").html(mensajeHTML);
 						
 					};

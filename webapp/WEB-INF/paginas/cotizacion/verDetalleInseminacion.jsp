@@ -85,6 +85,7 @@
 						</div>
 					</div>					
 				</div>
+				<div class="row">&nbsp;</div>
 			</div>			
 			
 			<div id="divBotonCotizacionEnviar" style="display: none;">	
@@ -95,6 +96,7 @@
 						class="btn btn-primary centro" onclick="enviarCotizacion()"
 						title="Enviar">Enviar</button>
 				</div>
+				<div class="row">&nbsp;</div>
 			</div>
 			
 			<div class="row">&nbsp;</div>
