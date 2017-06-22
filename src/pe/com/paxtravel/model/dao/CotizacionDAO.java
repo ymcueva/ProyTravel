@@ -9,6 +9,7 @@ import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.CotizacionServicioBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
+import pe.com.paxtravel.bean.ExpedienteLogBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
@@ -57,5 +58,9 @@ public interface CotizacionDAO {
 	CotizacionBean obtenerCotizacion(CotizacionBean cotizacionBean);
 	
 	PaqueteResumeBean obtenerPaquete(PaqueteResumeBean p);
+	
+	List<PaqueteResumeBean> listarPaqueteDetail(PaqueteResumeBean p);
+	
+	int registrarExpedienteLog(ExpedienteLogBean expedienteLogBean);
 	
 }

@@ -10,6 +10,7 @@ import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.CotizacionServicioBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
+import pe.com.paxtravel.bean.ExpedienteLogBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
@@ -60,5 +61,9 @@ public interface CotizacionService {
 	public CotizacionBean obtenerCotizacion(CotizacionBean cotizacionBean);
 	
 	public PaqueteResumeBean obtenerPaquete(PaqueteResumeBean paqueteResumenBean);
+	
+	public List<PaqueteResumeBean> listarPaqueteDetail(PaqueteResumeBean p);
+	
+	public int registrarExpedienteLog(ExpedienteLogBean expedienteLogBean);
 	
 }

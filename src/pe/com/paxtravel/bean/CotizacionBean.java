@@ -51,6 +51,36 @@ public class CotizacionBean {
 	private int relajacion;
 	private int playa;	
 	
+	private int idPaquete;
+	private String linkCotiza;
+	private String feLink;
+	
+	
+	
+	public int getIdPaquete() {
+		return idPaquete;
+	}
+
+	public void setIdPaquete(int idPaquete) {
+		this.idPaquete = idPaquete;
+	}
+
+	public String getLinkCotiza() {
+		return linkCotiza;
+	}
+
+	public void setLinkCotiza(String linkCotiza) {
+		this.linkCotiza = linkCotiza;
+	}
+
+	public String getFeLink() {
+		return feLink;
+	}
+
+	public void setFeLink(String feLink) {
+		this.feLink = feLink;
+	}
+
 	public int getTicket() {
 		return ticket;
 	}

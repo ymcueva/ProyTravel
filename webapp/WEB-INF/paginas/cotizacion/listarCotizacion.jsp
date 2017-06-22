@@ -235,7 +235,7 @@
 					console.log(response);
 					
 					$("#inpIdTipoCotizacion").val(response.dataJson.cotizacion.idTipoCotizacion);
-					$("#inpIdCotizacion").val(response.dataJson.cotizacion.IdCotizacion);
+					$("#inpIdCotizacion").val(response.dataJson.cotizacion.idCotizacion);
 					$("#inpIdEstado").val(response.dataJson.cotizacion.idEstado);									
 					
 					$("#divCodigo").html(response.dataJson.cotizacion.numeroCotizacion);
@@ -349,6 +349,7 @@
 		var idparams = $("#idParams").val();
 		
 		if ( idTipoCotizacion == 1 ) {
+			
 			console.log("**************************************");
 			console.log("paquete");
 			
@@ -356,8 +357,7 @@
 			console.log("idCotizacion: " + idCotizacion);
 			console.log("idparams: " + idparams);
 			
-			$("#divMsgResultado").html("");
-			
+			$("#divMsgResultado").html("");			
 			
 			$.ajax({
 				url: '${pageContext.request.contextPath}/buscarPaquete?idCotizacion='+idCotizacion+"&"+idparams,
@@ -368,18 +368,67 @@
 				dataType: 'json',
 				success: function(response) {
 					
+					var mensajeHTML = "";
+					
 					console.log("************************************************************");
 					console.log("response");
 					console.log(response);
 					console.log(response.dataJson.listaPaquetes);
 					console.log(response.dataJson.cantidadPaquetes);
+					console.log(response.dataJson.destinos);
 					
 					if ( response.estado = "ok" ) {
 						
-						$("#divMsgResultado").html("");
+						console.log("cantidad paquetes");
+						console.log(parseInt(response.dataJson.cantidadPaquetes));
 						
+						if ( parseInt(response.dataJson.cantidadPaquetes) > 0 ) {
+							var nomPaquete = "";
+							var idPaquete = 0;
+							var precio = 0;
+							
+							if ( response.dataJson.destinos[0] ) {
+								nomPaquete = response.dataJson.destinos[0].nomPaquete;
+								idPaquete = response.dataJson.destinos[0].idPaquete;
+								precio = response.dataJson.destinos[0].imPrecio;
+								console.log("Paquete");
+								console.log(nomPaquete);
+								console.log(idPaquete);							
+								console.log(precio);
+							}
+							
+							console.log("destinos");
+							console.log(response.dataJson.destinos[0].destinos);
+							
+							$.each(response.dataJson.destinos, function(i, row) {							
+								console.log("destinos each");
+								console.log(row.destinos);
+								console.log(row.hotel);
+								console.log(row.tour);
+								console.log(row.aerolinea);
+								
+								mensajeHTML += "<strong>"+ row.destinos +"</strong>";
+								if ( row.hotel ) {
+									mensajeHTML += row.hotel;
+								}
+								if ( row.tour ) {
+									mensajeHTML += row.tour;
+								}
+								if ( row.aerolinea ) {
+									mensajeHTML += row.aerolinea;
+								}
+								mensajeHTML += "<br />";
+								
+								
+								
+							});						
+						} else {
+							mensajeHTML = "<strong>No se encontraron Paquetes disponibles.</strong>";
+						}
 						
-					}
+						$("#divMsgResultado").html(mensajeHTML);
+						
+					};
 					
 				},
 				error: function(data, textStatus, errorThrown) {
@@ -392,9 +441,59 @@
 		}
 	}
 	
-	function enviarCotizacion() {
-		var tipoCotizacion = $("#inpIdTipoCotizacion").val();
-		console.log("enviando.......");
+	function guardarPaquete() {
+		var idPaquete = $("#inpIdPaquete").val();
+		var idCotizacion = $("#inpIdCotizacion").val();
+		$("#divMsgResultadoRegistro").html("");
+		$("#divBotonCotizacionEnviar").css("display", "none");		
+		if ( idPaquete != '' ) {
+			$.ajax({
+				url: '${pageContext.request.contextPath}/grabarPaquete?idCotizacion='+idCotizacion+"&idPaquete="+idPaquete,
+				cache: false,
+				async: true,
+				type: 'GET',
+				contentType : "application/json; charset=utf-8",
+				dataType: 'json',
+				success: function(response) {					
+					var mensajeHTML = "";
+					console.log("************************************************************");					
+					
+					if ( response.estado = "ok" ) {
+						$("#btnGuardarPaquete").css("display", "none"); 
+						$("#divBotonCotizacionEnviar").css("display", "block");
+						$("#divMsgResultadoRegistro").html("<strong>Su cotizacion fue actualizada</strong>");
+					}
+				},
+				error: function(data, textStatus, errorThrown) {
+					
+				},
+			});
+		};
+	}
+	
+	function enviarCotizacion() {		
+		var idCotizacion = $("#inpIdCotizacion").val();
+		if ( idPaquete != '' ) {
+			$.ajax({
+				url: '${pageContext.request.contextPath}/enviarPaquete?idCotizacion='+idCotizacion,
+				cache: false,
+				async: true,
+				type: 'GET',
+				contentType : "application/json; charset=utf-8",
+				dataType: 'json',
+				success: function(response) {					
+					var mensajeHTML = "";
+					console.log("************************************************************");
+					if ( response.estado = "ok" ) {
+						$("#btnEnviarCotizacion").css("display", "none"); 
+						$("#divMsgResultadoEnviar").html("<strong>Su cotizacion fue enviada</strong>");
+					}
+				},
+				error: function(data, textStatus, errorThrown) {
+					
+				},
+			});
+		};
 	}
 	
 </script>
@@ -575,10 +674,11 @@
 	</div>
 </div>
 
-<input type="hidden" id="inpTipoCotizacion" name="idTipoCotizacion" />
+<input type="hidden" id="inpIdTipoCotizacion" name="idTipoCotizacion" />
 <input type="hidden" id="inpIdCotizacion" name="idCotizacion" />
 <input type="hidden" id="inpIdEstado" name="idEstado" />
 <input type="hidden" id="inpIdParams" name="idParams" />
+<input type="hidden" id="inpIdPaquete" name="idPaquete" />
 
 </body>
 

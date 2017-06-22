@@ -45,6 +45,7 @@ import pe.com.paxtravel.bean.CotizacionBean;
 import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
+import pe.com.paxtravel.bean.ExpedienteLogBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.InseminacionBean;
@@ -981,7 +982,89 @@ public class CotizacionController {
 			System.out.println(e.getMessage());
 		}
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
-	}	
+	}
+	
+	
+	@RequestMapping( value = "/enviarPaquete", method ={RequestMethod.GET, RequestMethod.POST} )
+	public ModelAndView enviarPaquete(HttpServletRequest request, HttpServletResponse response){
+		
+		System.out.println("enviar paquete ...........................................");
+		
+		Map<String, Object> mapa = new HashMap<String, Object>();
+		DataJsonBean dataJSON = new DataJsonBean();		
+		
+		try {
+			
+			mapa.put("titulo", "Enviar Paquete");			
+			
+			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));			
+			
+			CotizacionBean cotizacionBean = new CotizacionBean();
+			cotizacionBean.setIdEstado(9);
+			cotizacionBean.setIdCotizacion(idCotizacion);
+			cotizacionService.actualizarCotizacion(cotizacionBean);
+			
+			ExpedienteLogBean expedienteLogBean = new ExpedienteLogBean();
+			expedienteLogBean.setTiLog("COTIZA");
+			expedienteLogBean.setIdTx(idCotizacion);
+			expedienteLogBean.setIdUser(0);
+			expedienteLogBean.setIdEstado(9);
+			expedienteLogBean.setDesLog("Cotizacion Enviada");
+			
+			cotizacionService.registrarExpedienteLog(expedienteLogBean);
+			
+			dataJSON.setRespuesta("ok", null, mapa);
+			
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return ControllerUtil.handleJSONResponse(dataJSON, response);
+		
+	}
+	
+	
+	
+	@RequestMapping( value = "/grabarPaquete", method ={RequestMethod.GET, RequestMethod.POST} )
+	public ModelAndView grabarPaquete(HttpServletRequest request, HttpServletResponse response){
+		
+		System.out.println("grabar paquete ...........................................");
+		
+		Map<String, Object> mapa = new HashMap<String, Object>();
+		DataJsonBean dataJSON = new DataJsonBean();		
+		
+		try {
+			
+			mapa.put("titulo", "Grabar Paquete");			
+			
+			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));
+			int idPaquete = Integer.parseInt(request.getParameter("idPaquete"));
+			
+			CotizacionBean cotizacionBean = new CotizacionBean();
+			cotizacionBean.setIdEstado(5);
+			cotizacionBean.setIdCotizacion(idCotizacion);
+			cotizacionBean.setIdPaquete(idPaquete);
+			cotizacionService.actualizarCotizacion(cotizacionBean);
+			
+			ExpedienteLogBean expedienteLogBean = new ExpedienteLogBean();
+			expedienteLogBean.setTiLog("COTIZA");
+			expedienteLogBean.setIdTx(idCotizacion);
+			expedienteLogBean.setIdUser(0);
+			expedienteLogBean.setIdEstado(5);
+			expedienteLogBean.setDesLog("Cotizacion Finalizada");
+			
+			cotizacionService.registrarExpedienteLog(expedienteLogBean);
+			
+			dataJSON.setRespuesta("ok", null, mapa);
+			
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return ControllerUtil.handleJSONResponse(dataJSON, response);
+		
+	}
+	
 	
 	@RequestMapping( value = "/buscarPaquete", method ={RequestMethod.GET, RequestMethod.POST} )
 	public ModelAndView buscarPaquete(HttpServletRequest request, HttpServletResponse response){
@@ -1091,7 +1174,7 @@ public class CotizacionController {
 	        FileWriter writer = new FileWriter(csvFile);	        
 	        
 	        //for header CSV
-	        CSVUtils.writeLine(writer, Arrays.asList("idPaquete", "presupuesto", "destinos", "tour", "hotel", "ticket", "tipoAlojamiento",
+	        CSVUtils.writeLine(writer, Arrays.asList("presupuesto", "idPaquete", "nomPaquete", "destinos", "tour", "hotel", "ticket", "tipoAlojamiento",
 	        		"categoriaAlojamiento","hotelHabitacion","playa","relajacion","deportes","cultural"));
 			
 			PaqueteResumeBean paquete = null;
@@ -1108,7 +1191,9 @@ public class CotizacionController {
 				
 				//Log
 				System.out.println("Datos ...........................................");								
-				System.out.println("presupuesto:" + o.getTiPresupuestoValue());				
+				System.out.println("presupuesto:" + o.getTiPresupuestoValue());	
+				System.out.println("idPaquete:" + o.getIdPaquete());
+				System.out.println("nomPaquete:" + o.getNomPaquete()); 
 				System.out.println("destinos:" + paquete.getDestinos());
 				System.out.println("tour:" + paquete.getTour());
 				System.out.println("hotel:" + paquete.getHotel());
@@ -1123,13 +1208,13 @@ public class CotizacionController {
 				System.out.println("playaTour:" + paquete.getPlayaTour());
 				System.out.println("relajacionTour:" + paquete.getRelajacionTour());
 				System.out.println("deportesTour:" + paquete.getDeportesTour());
-				System.out.println("culturalTour:" + paquete.getCulturalTour());
-				System.out.println("idPaquete:" + o.getIdPaquete());
-				System.out.println("nomPaquete:" + o.getNomPaquete());
+				System.out.println("culturalTour:" + paquete.getCulturalTour());				
 				
 				//Nueva Fila
 		        List<String> list = new ArrayList<String>();	            
 	            list.add(o.getTiPresupuestoValue().toString());
+	            list.add(String.valueOf(o.getIdPaquete()));
+	            list.add(o.getNomPaquete());
 	            list.add(paquete.getDestinos().toString());
 	            list.add(paquete.getTour().toString());
 	            list.add(paquete.getHotel());
@@ -1140,9 +1225,7 @@ public class CotizacionController {
 	            list.add(paquete.getPlaya());
 	            list.add(paquete.getRelajacion());
 	            list.add(paquete.getDeportes());
-	            list.add(paquete.getCultural());
-	            list.add(String.valueOf(o.getIdPaquete()));
-	            list.add(o.getNomPaquete());
+	            list.add(paquete.getCultural());	            
 	            CSVUtils.writeLine(writer, list);
 			}
 			
@@ -1153,104 +1236,129 @@ public class CotizacionController {
 	        System.out.println(csvFile);
 	        
 	        //Busqueda Algoritmo ID3
-	        TableManager tm = new DataManager("test.csv");
+	        TableManager tm = new DataManager(csvFile);	       	       
 	        
-	        
-	        
-	        System.out.println("************************");
-	        
-	        System.out.println("************************");
-	        System.out.println("Initialiting file *.csv.\n");
-			System.out.println("size: " + tm);
+	        System.out.println("************************************************************************");	     
+	        System.out.println(tm);
+	        System.out.println("size(file *.csv): " + tm.getRows().size());
 						
 			//cumple los destinos: reducimos la tabla
-			System.out.println("Reducing table with the attribute and value.\n");
-			TableManager tm2 = tm.getSubTable("destinos", "Si");								
-			System.out.println("************************");
+	        System.out.println("************************************************************************");
+	        System.out.println("Reducing table with the attribute DESTINOS and value SI.");
+			TableManager tm2 = tm.getSubTable("destinos", "Si");											
 			System.out.println(tm2);
-			System.out.println("size: " + tm2.getRows().size());
+			System.out.println("size(destinos): " + tm2.getRows().size());
 			
-			double percent = 30;
+			double percent = 0;
 			int qtypercent = 0;
 			
+			//cumple con los servicios:
+			System.out.println("************************************************************************");
+			System.out.println("Reducing table with the attribute SERVICIOS and value SI.");
+			
 			if ( cotizacionBean.getTicket()==1 ){
+				System.out.println("ticket:" + tm2.getBestObjectiveValueFromAttribute("ticket", "Si"));
 				tm2 = tm2.getSubTable("ticket", "Si");
 				percent += 10; //score
 				qtypercent += 1; //quantity
+			} else {
+				System.out.println("Ticket not found");
 			}
 
 			if ( cotizacionBean.getTour()==1 ){
+				System.out.println("tour:" + tm2.getBestObjectiveValueFromAttribute("tour", "Si"));
 				tm2 = tm2.getSubTable("tour", "Si");
 				percent += 10; //score
 				qtypercent += 1; //quantity
+			} else {
+				System.out.println("Tour not found");
 			}
 			
 			if ( cotizacionBean.getHotel()==1 ){
+				System.out.println("hotel:" + tm2.getBestObjectiveValueFromAttribute("hotel", "Si"));
 				tm2 = tm2.getSubTable("hotel", "Si");
 				percent += 10; //score
 				qtypercent += 1; //quantity
+			} else {
+				System.out.println("Hotel not found");
 			}
 			
-			//int listalen = tm2.getRows().size();
+			System.out.println(tm2);
+			System.out.println("size(servicios): " + tm2.getRows().size());
+			List<PaqueteResumeBean> resumeDestinos = null;
 			
-			String valueBestObjectiveTour = tm2.getBestObjectiveValueFromAttribute("tour", "Si");
-			String valueBestObjectiveTicket = tm2.getBestObjectiveValueFromAttribute("ticket", "Si");
-			String valueBestObjectiveHotel = tm2.getBestObjectiveValueFromAttribute("hotel", "Si");						
+			if ( tm2.getRows().size() > 0 ) {
 			
-			if ( valueBestObjectiveTour.equals("Alto") || valueBestObjectiveTicket.equals("Alto") ||
-				valueBestObjectiveTour.equals("Medio") || valueBestObjectiveHotel.equals("Medio") ||
-				valueBestObjectiveHotel.equals("Alto") || valueBestObjectiveTicket.equals("Medio") ){
-				if ( cotizacionBean.getHotel()==1 ){
-					if ( cotizacionBean.getIdCategoriaAlojamiento()>0 ){
+				/* String valueBestObjectiveTour = tm2.getBestObjectiveValueFromAttribute("tour", "Si");
+				String valueBestObjectiveTicket = tm2.getBestObjectiveValueFromAttribute("ticket", "Si");
+				String valueBestObjectiveHotel = tm2.getBestObjectiveValueFromAttribute("hotel", "Si");						
+				
+				if ( valueBestObjectiveTour.equals("Alto") || valueBestObjectiveTicket.equals("Alto") ||
+					valueBestObjectiveTour.equals("Medio") || valueBestObjectiveHotel.equals("Medio") ||
+					valueBestObjectiveHotel.equals("Alto") || valueBestObjectiveTicket.equals("Medio") ){ */
+					if ( cotizacionBean.getHotel()==1 ){
+						if ( cotizacionBean.getIdCategoriaAlojamiento()>0 ){
+							percent += 5; //score
+							qtypercent += 1; //quantity
+						}
+						
+						if ( cotizacionBean.getIdTipoAlojamiento()>0 ){
+							percent += 5; //score
+							qtypercent += 1; //quantity
+						}
+					}
+					if ( cotizacionBean.getPlaya() > 0 ){
 						percent += 5; //score
 						qtypercent += 1; //quantity
 					}
 					
-					if ( cotizacionBean.getIdTipoAlojamiento()>0 ){
+					if ( cotizacionBean.getRelajacion() > 0 ){
 						percent += 5; //score
 						qtypercent += 1; //quantity
 					}
-				}
-				if ( cotizacionBean.getPlaya() > 0 ){
-					percent += 5; //score
-					qtypercent += 1; //quantity
+					
+					if ( cotizacionBean.getDeportes() > 0 ){
+						percent += 5; //score
+						qtypercent += 1; //quantity
+					}
+					
+					if ( cotizacionBean.getCultural() > 0 ){
+						percent += 5; //score
+						qtypercent += 1; //quantity
+					}
+				//}
+				
+				//percent = percent/qtypercent*9.0;
+					System.out.println("************************************************************************");				
+				System.out.println("Number of equalities of parameters: " + qtypercent);
+				System.out.println("Getting a table for trainning with the " + percent + "% of the datas");
+				
+				if ( percent < 75 || percent > 100 ) {
+					percent = 75;
 				}
 				
-				if ( cotizacionBean.getRelajacion() > 0 ){
-					percent += 5; //score
-					qtypercent += 1; //quantity
-				}
+				System.out.println("" + percent + "% change!");
 				
-				if ( cotizacionBean.getDeportes() > 0 ){
-					percent += 5; //score
-					qtypercent += 1; //quantity
-				}
+				tm2 = tm2.getTrainAndProbeSet(percent);				
+				System.out.println(tm2);
 				
-				if ( cotizacionBean.getCultural() > 0 ){
-					percent += 5; //score
-					qtypercent += 1; //quantity
+				for (int i=0; i<tm2.getRows().size(); i++) {					
+					System.out.println("************************************************************************");
+					System.out.println("Paquete ID");
+					System.out.println(tm2.getRow(i).get(1));					
+					if ( i==0 ) {						
+						paquete = new PaqueteResumeBean();
+						paquete.setIdPaquete(Integer.parseInt(tm2.getRow(i).get(1)));
+						resumeDestinos = cotizacionService.listarPaqueteDetail(paquete);
+						break;
+					}
 				}
-			}
-			
-			percent = percent/qtypercent*9.0;
-			
-			System.out.println("Number of equalities of parameters: " + qtypercent);
-			System.out.println("Getting a table for trainning with the " + percent + "% of the datas");
-			
-			tm2 = tm2.getTrainAndProbeSet(percent);
-			System.out.println("************************");
-			System.out.println(tm2);
-			
-			//List<String> list = new ArrayList<String>();
-			
-			for (int i=0; i<tm2.getRows().size(); i++) {
-				System.out.println("tm2 rows");
-				System.out.println(tm2.getRow(i).get(0));
 			}
 	        
 			mapa.put("titulo", "Paquetes");
 			mapa.put("listaPaquetes", tm2);
 			mapa.put("cantidadPaquetes", tm2.getRows().size());
+			mapa.put("destinos", resumeDestinos);
 			
 	        //Return bean Paquete escogido
 			dataJSON.setRespuesta("ok", null, mapa);

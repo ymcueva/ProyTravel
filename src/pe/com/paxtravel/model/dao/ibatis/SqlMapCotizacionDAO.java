@@ -13,6 +13,7 @@ import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.CotizacionServicioBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
+import pe.com.paxtravel.bean.ExpedienteLogBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.InseminacionBean;
@@ -157,6 +158,20 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements Cotiz
 	@Override
 	public PaqueteResumeBean obtenerPaquete(PaqueteResumeBean paquete) {
 		return (PaqueteResumeBean) getSqlMapClientTemplate().queryForObject("cotizacion.getPaqueteResume", paquete);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PaqueteResumeBean> listarPaqueteDetail(PaqueteResumeBean p){
+		List<PaqueteResumeBean> lista = null;
+		lista = getSqlMapClientTemplate().queryForList("cotizacion.listarPaqueteDetail", p);
+		return lista;
+	}
+	
+	@Override
+	public int registrarExpedienteLog(ExpedienteLogBean expedienteLogBean){
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).update("cotizacion.insertarExpedienteLog", expedienteLogBean);
+		return 1;
 	}
 	
 }

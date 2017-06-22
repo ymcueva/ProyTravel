@@ -27,6 +27,7 @@ import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.CotizacionServicioBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
+import pe.com.paxtravel.bean.ExpedienteLogBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
@@ -272,6 +273,18 @@ public class CotizacionServiceImpl implements CotizacionService {
 	@Override
 	public PaqueteResumeBean obtenerPaquete(PaqueteResumeBean paqueteResumeBean) {
 		return cotizacionDAO.obtenerPaquete(paqueteResumeBean);
+	}
+	
+	@Override
+	public List<PaqueteResumeBean> listarPaqueteDetail(PaqueteResumeBean p) {
+		List<PaqueteResumeBean> listaPaquete = new ArrayList<PaqueteResumeBean>();
+		listaPaquete = cotizacionDAO.listarPaqueteDetail(p);
+		return listaPaquete;
+	}
+	
+	@Override
+	public int registrarExpedienteLog(ExpedienteLogBean expedienteLogBean) {
+		return cotizacionDAO.registrarExpedienteLog(expedienteLogBean);
 	}
 	
 //	@Override

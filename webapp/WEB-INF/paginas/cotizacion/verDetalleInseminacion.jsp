@@ -69,6 +69,7 @@
 							title="Buscar">Buscar Paquetes</button>
 					</div>					
 				</div>
+				<div class="row">&nbsp;</div>	
 			</div>
 			
 			<div id="divInfoDetalleCotizacion" style="display: none;">	
@@ -76,14 +77,11 @@
 				<div class="form-group">
 					<div class="col-sm-12" style="text-align: center" id="infoDetalleCotizacion">
 						<div style="border: 1px solid blue; padding: 1% ">	
-							<div class="col-sm-12" style="text-align:center; font-weight:bold" id="divMsgResultado"></div>							
-							<div class="col-sm-4" style="text-align:center;"><strong>:</strong> <span id="txt"></span></div>
-							<div class="col-sm-4" style="text-align:center;"><strong>:</strong> <span id="txt"></span></div>
-							<div class="col-sm-4" style="text-align:center;"><strong>:</strong> <span id="txt"></span></div>
-							<div class="col-sm-4" style="text-align:center;"><strong>:</strong> <span id="txt"></span></div>
-							<div class="col-sm-4" style="text-align:center;"><strong>:</strong> <span id="txt"></span></div>
-							<div class="col-sm-4" style="text-align:center;"><strong>:</strong> <span id="txt"></span></div>
-															
+							<div class="col-sm-12" style="text-align:center; font-weight:bold" id="divMsgResultado"></div>
+							<div class="col-sm-12" style="text-align:center; font-weight:bold" id="divMsgResultadoRegistro"></div>							
+							<button id="btnGuardarPaquete" type="button"
+								class="btn btn-primary centro" onclick="guardarPaquete()"
+								title="Guardar Paquete">Guardar Paquete</button>															
 						</div>
 					</div>					
 				</div>
@@ -92,7 +90,8 @@
 			<div id="divBotonCotizacionEnviar" style="display: none;">	
 				<div class="row">&nbsp;</div>
 				<div class="col-sm-12" style="text-align: center">
-					<button id="btnEnviar" type="button"
+					<div class="col-sm-12" style="text-align:center; font-weight:bold" id="divMsgResultadoEnviar"></div>
+					<button id="btnEnviarCotizacion" type="button"
 						class="btn btn-primary centro" onclick="enviarCotizacion()"
 						title="Enviar">Enviar</button>
 				</div>

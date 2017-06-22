@@ -1445,6 +1445,7 @@ public class PaqueteTuristicoController {
 						CotizacionBean cotizacionBean = new CotizacionBean();
 						cotizacionBean.setIdCotizacion(idCotizacion);
 						cotizacionBean.setIdEstado(5);
+						cotizacionBean.setIdPaquete(registro);
 						
 						cotizacionService.actualizarCotizacion(cotizacionBean);
 						

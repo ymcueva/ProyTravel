@@ -17,6 +17,10 @@
 	<typeAlias alias="cotizacionServicioBean" type="pe.com.paxtravel.bean.CotizacionServicioBean" />
 	<typeAlias alias="paqueteResumeBean" type="pe.com.paxtravel.bean.PaqueteResumeBean" />
 	
+	<typeAlias alias="expedienteLogBean" type="pe.com.paxtravel.bean.ExpedienteLogBean" />
+	
+	
+	
 	<!-- Bean Busqueda de Paquetes - Inicio -->	
 	<typeAlias alias="paqueteManagerBean" type="pe.com.paxtravel.tree.data.PaqueteManagerBean" />
 	
@@ -186,10 +190,14 @@
 	
 	<resultMap id="resultPaqueteDetail" class="paqueteResumeBean">
 		<result property="idPaquete" column="id_paquete_turistico" />
+		<result property="nomPaquete" column="paquete" />
+		<result property="imGasto" column="im_gasto" />
+		<result property="imPrecio" column="precio" />
 		<result property="destinos" column="ciudad" />
-		<result property="hotel" column="hotel" />
-		<result property="tour" column="tour" />
-		<result property="aerolinea" column="aerolinea" />
+		<result property="hotel" column="nomHotel" />
+		<result property="tour" column="nomTour" />
+		<result property="aerolinea" column="nomAerolinea" />
+		<!--  nomAerolinea nomHotel nomTour ciudad gasto precio  id_paquete_turistico  -->
 	</resultMap>
 	
 	
@@ -350,10 +358,18 @@
 	</insert>
 	
 	<update id="actualizarEstadoCotizacion" parameterClass="cotizacionBean" >
-		update cotizacion set id_estado = #idEstado#
-		where id_cotiza = #idCotizacion#
-	
+		update cotizacion 
+			set id_estado = #idEstado#
+			<isNotEmpty prepend="," property="idPaquete">  
+				id_paquete = #idPaquete#, link_cotiza = CONCAT('http://localhost/?', #idCotizacion#), fe_link = NOW()  			
+			</isNotEmpty>
+		where id_cotiza = #idCotizacion# 
 	</update>
+
+	<insert id="insertarExpedienteLog" parameterClass="expedienteLogBean">
+		INSERT INTO expediente_log (ti_log, id_tx, id_user, id_estado, des_log, fe_log, fe_logtime) 
+			VALUES (#tiLog#, #idTx#, #idUser#, #idEstado#, #desLog#, NOW(), NOW())
+	</insert>
 	
 	<insert id="insertarCotizacionDetalleTicket" parameterClass="cotizacionDetalleBean">
 		INSERT INTO cotizacion_deta(
@@ -611,30 +627,32 @@
 				where ptd.id_paquete_turistico = #idPaquete#) AS culturalTour;
 					
 	</select>
-	
-	
-	<select id="getPaqueteDetail" parameterClass="paqueteResumeBean" resultMap="resultPaqueteDetail">
+		
+	<select id="listarPaqueteDetail" parameterClass="paqueteResumeBean" resultMap="resultPaqueteDetail">
 		SELECT 
-			distinct
-		    pd.id_paquete_turistico,
-		    dc.descripcion AS ciudad,
-			h.descripcion AS hotel,
-			t.descripcion AS tour,
-			a.nombre AS aerolinea
+			Distinct            
+			pd.id_paquete_turistico,  
+		    pturis.nombre AS paquete,
+		    pturis.im_precio AS precio,		    
+		    IfNull(pturis.total_gasto,0) AS im_gasto,
+			dc.descripcion AS ciudad,            
+			(select t.descripcion From paquete_turistico_destino_tour AS ptt 					 
+				INNER JOIN tour AS t ON (ptt.id_tour = t.id_tour)
+				WHERE (pd.id_paquete_turistico = ptt.id_paquete AND pd.id_destino_ciudad = ptt.id_destino)
+				LIMIT 1) AS nomTour,                
+			(select h.descripcion from paquete_turistico_destino_hotel AS ph 
+				INNER JOIN hotel AS h ON (ph.id_hotel=h.id_hotel)
+				WHERE (pd.id_paquete_turistico = ph.id_paquete AND ph.id_destino=pd.id_destino_ciudad)
+				LIMIT 1) AS nomHotel,
+			(Select a.nombre from paquete_turistico_ticket AS pticket 
+				INNER JOIN aerolinea AS a ON (pticket.id_aerolinea=a.id_aerolinea)
+				WHERE (pticket.id_paquete_turistico=pd.id_paquete_turistico AND pticket.id_destino_destino=pd.id_destino_ciudad)
+				LIMIT 1) AS nomAerolinea 
 		FROM paquete_turistico_destino AS pd 
-			INNER JOIN destino_ciudad AS dc ON (pd.id_destino_ciudad=dc.id_destino_ciudad)
-		    LEFT JOIN paquete_turistico_destino_hotel AS ph ON (pd.id_paquete_turistico = ph.id_paquete)
-		    LEFT JOIN paquete_turistico_destino_tour AS pto ON (pd.id_paquete_turistico = pto.id_paquete)
-		    LEFT JOIN paquete_turistico_ticket AS pti ON (pd.id_paquete_turistico = pti.id_paquete_turistico)
-		    LEFT JOIN proveedor AS p ON (pti.id_proveedor=p.id_proveedor)
-		    LEFT JOIN proveedor_aerolinea_destino AS pa ON (p.id_proveedor=pa.id_proveedor)
-		    LEFT JOIN tour AS t ON (pto.id_tour = t.id_tour)
-		    LEFT JOIN aerolinea AS a ON (pti.id_aerolinea=a.id_aerolinea)
-		    LEFT JOIN hotel AS h ON (ph.id_hotel=h.id_hotel)
+			INNER JOIN paquete_turistico AS pturis ON (pturis.id_paquete=pd.id_paquete_turistico)
+			INNER JOIN destino_ciudad AS dc ON (pd.id_destino_ciudad=dc.id_destino_ciudad)	            
 		WHERE 
-				pd.id_paquete_turistico = #idPaquete#
+			pd.id_paquete_turistico = #idPaquete#
 	</select>
-	
-	
 
 </sqlMap>

@@ -5,6 +5,7 @@ public class PaqueteResumeBean {
 	private int idCotizacion;
 	private String numeroCotizacion;
 	private int idPaquete;
+	private String nomPaquete;
 	
 	private String destinos;
 	private String tour;
@@ -30,8 +31,27 @@ public class PaqueteResumeBean {
 	
 	private String aerolinea;
 	
+	private double imGasto;
+	private double imPrecio;		
 	
-	
+	public double getImGasto() {
+		return imGasto;
+	}
+	public void setImGasto(double imGasto) {
+		this.imGasto = imGasto;
+	}
+	public double getImPrecio() {
+		return imPrecio;
+	}
+	public void setImPrecio(double imPrecio) {
+		this.imPrecio = imPrecio;
+	}
+	public String getNomPaquete() {
+		return nomPaquete;
+	}
+	public void setNomPaquete(String nomPaquete) {
+		this.nomPaquete = nomPaquete;
+	}
 	public String getAerolinea() {
 		return aerolinea;
 	}
