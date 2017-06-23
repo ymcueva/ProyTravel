@@ -1292,6 +1292,9 @@
 							 var totalHotel = parseFloat(0);
 							 var totalTours = parseFloat(0);
 							 var totalTicket = parseFloat(0);
+							 var cantAdulto = $("#txtcantAdultos").val();
+							 var cantNino = $("#txtcantNinos").val();
+							 
 							 
 							 $("#tblDestinos tbody > tr").each(function () {
 									var row = $(this);
@@ -1304,7 +1307,10 @@
 									if(idTour != "0"){
 										var preAdulto = row.find('input[id="tmp_preAdultoTour"]').val();
 										var preNino = row.find('input[id="tmp_preNinoTour"]').val();
-										var totalTour = parseFloat(preAdulto) + parseFloat(preNino);
+										
+										
+										
+										var totalTour = parseFloat(preAdulto)* parseInt(cantAdulto) + parseFloat(preNino) * parseInt(cantNino);
 										row.find('input[id="tmp_totalTour"]').val(totalTour);
 										totalTours = totalTours + totalTour ;
 										
@@ -1559,9 +1565,13 @@
 					if(rpta.status == 1) {
 						
 						var hoy = new Date();
-						var fechPartida = new Date(rpta.fechapartida.substring(0,10));
+						var fecha_partida = rpta.fechapartida.substring(0,10);
+						var from = fecha_partida.split("-");
 						
-						if(fechPartida > hoy) {
+						
+						var fechPartida = new Date(from[2], from[1] - 1, from[0]);
+						
+						if(fechPartida < hoy) {
 							msj = "No se encuentra en fecha para esta orden";
 							$("#txtDescripcionOrden").val("");
 							$("#txtObservacion").val("");
@@ -2331,7 +2341,7 @@
 										<div class="col-sm-3"  style="text-align:right; font-weight:bold">Precio Total:</div>
 										
 										<div class="col-sm-2">
-											<input id="txtTotalGasto" name="totalGasto" type="text" maxlength="30" class="form-control" value="${totalGasto}">
+											<input id="txtTotalGasto" name="totalGasto" type="text" maxlength="30" class="form-control" disabled="disabled" value="${totalGasto}">
 										</div>
 									</div>
 									
