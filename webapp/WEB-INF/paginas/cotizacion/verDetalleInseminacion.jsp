@@ -67,36 +67,36 @@
 						<button id="btnBuscar" type="button"
 							class="btn btn-primary centro" onclick="buscarPaquete()"
 							title="Buscar">Buscar Paquetes</button>
-					</div>					
+					</div>										
 				</div>
-				<div class="row">&nbsp;</div>	
+				<div class="row">&nbsp;</div>
 			</div>
 			
 			<div id="divInfoDetalleCotizacion" style="display: none;">	
 				<div class="row">&nbsp;</div>		
 				<div class="form-group">
 					<div class="col-sm-12" style="text-align: center" id="infoDetalleCotizacion">
-						<div style="border: 1px solid blue; padding: 1% ">	
-							<div class="col-sm-12" style="text-align:center; font-weight:bold" id="divMsgResultado"></div>
-							<div class="col-sm-12" style="text-align:center; font-weight:bold" id="divMsgResultadoRegistro"></div>							
-							<button id="btnGuardarPaquete" type="button"
-								class="btn btn-primary centro" onclick="guardarPaquete()"
-								title="Guardar Paquete">Guardar Paquete</button>															
+						<div style="border: 1px solid blue; margin: 0 7%; padding:1% ">	
+							<div class="col-sm-12" style="text-align:left;" id="divMsgResultado"></div>
+							<div class="col-sm-12" style="text-align:center;" id="divMsgResultadoRegistro"></div>
+							<div class="col-sm-12" style="text-align:center;">
+								<div class="row">&nbsp;</div>
+								<div class="row">&nbsp;</div>							
+								<button id="btnGuardarPaquete" type="button"
+									class="btn btn-primary centro" onclick="guardarPaquete()"
+									title="Guardar Paquete">Guardar Paquete</button>																					
+							</div>													
+							<div id="divBotonCotizacionEnviar" style="display: none;" class="col-sm-12" style="text-align: center">
+								<div class="col-sm-12" style="text-align:center; font-weight:bold" id="divMsgResultadoEnviar"></div>																												
+								<button id="btnEnviarCotizacion" type="button"
+									class="btn btn-primary centro" onclick="enviarCotizacion()"
+									title="Enviar">Enviar</button>
+							</div>
+							<div class="row">&nbsp;</div>	
 						</div>
 					</div>					
-				</div>
-				<div class="row">&nbsp;</div>
-			</div>			
-			
-			<div id="divBotonCotizacionEnviar" style="display: none;">	
-				<div class="row">&nbsp;</div>
-				<div class="col-sm-12" style="text-align: center">
-					<div class="col-sm-12" style="text-align:center; font-weight:bold" id="divMsgResultadoEnviar"></div>
-					<button id="btnEnviarCotizacion" type="button"
-						class="btn btn-primary centro" onclick="enviarCotizacion()"
-						title="Enviar">Enviar</button>
-				</div>
-				<div class="row">&nbsp;</div>
+				</div>	
+				<div class="row">&nbsp;</div>			
 			</div>
 			
 			<div class="row">&nbsp;</div>

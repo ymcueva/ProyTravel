@@ -1119,6 +1119,7 @@
 		console.log( "GET params: " + params );
 		
 		$("#txtNroCotizacion").html("");
+		$("#inpNuCotizacion").val(0);
 		
 		$.ajax({
             //url: '${pageContext.request.contextPath}/grabarTransaccionCotizacion?motivoViaje='+chkValMotivoViaje+"&servAdicional"+chkValServicioAdicional,
@@ -1134,7 +1135,11 @@
             	console.log("response******************************");
             	console.log(response);
             	
-            	$("#txtNroCotizacion").html(response.dataJson.nroCotizacion);            	
+            	console.log("Numero Cotizacion");
+            	console.log(response.dataJson.nroCotizacion);
+            	
+            	$("#txtNroCotizacion").html(response.dataJson.nroCotizacion);  
+            	$("#inpNuCotizacion").val(response.dataJson.nroCotizacion);
             	
 				//alert("response: "+ response);
 				
@@ -1267,6 +1272,11 @@
 		var idCliente = $("#txtIdCliente").val();
 		var params = "?datosVuelos="+datosVuelos+"&idCliente="+idCliente;
 		$("#txtNroCotizacion").html("");
+		$("#inpNuCotizacion").val(0);
+		$("#inpIdCotizacion").val(0);
+				
+		$("#mensajeDetalleTransaccion").html("");		
+		$("#contenedorDetalleTransaccion").css("display", "none");
 		
 		$.ajax({
 			url: '${pageContext.request.contextPath}/grabarCotiTicket'+params,
@@ -1281,7 +1291,20 @@
             	console.log("response******************************");
             	console.log(response);
             	
+            	console.log("Numero Cotizacion");
+            	console.log(response.dataJson.nroCotizacion);            	
+            	
             	$("#txtNroCotizacion").html(response.dataJson.nroCotizacion);
+            	$("#inpIdCotizacion").val(response.dataJson.idCotizacion);
+            	$("#inpNuCotizacion").val(response.dataJson.nroCotizacion);
+            	
+            	$("#contenedorDetalleTransaccion").css("display", "inline");
+            	
+            	console.log(response.dataJson.listDestinosDetalle);
+            	console.log(response.dataJson.detalle);
+            	
+            	//Los detinos y sus caracteristicas solicitadas
+            	$("#mensajeDetalleTransaccion").html(response.dataJson.detalle);
                 
 				$("#divRegistroOK").modal({
 					backdrop: 'static',
@@ -1290,6 +1313,131 @@
 				
 				return false;
                 
+            },
+            error: function(data, textStatus, errorThrown) {
+            	//alert(data);
+            	//alert(textStatus);
+            	//alert(errorThrown);
+            },
+        });
+	}
+	
+	var vuelosListParams = {};
+	
+	function buscarVuelos() {
+		console.log("***********************************************************************");
+		console.log("buscar vuelos");
+		
+		$("#infoDetalleVuelos").html("");
+		$("#infoDetalleVuelos").html("display", "none");
+		$("#botonGrabarVuelos").css("display", "none");
+		$("#botonEnviarCotizacion").css("display", "none");
+		
+		var nroCotizacion = $("#inpNuCotizacion").val();
+		
+		console.log("Numero Cotizacion");
+		console.log(nroCotizacion);		
+		
+		$.ajax({
+			url: '${pageContext.request.contextPath}/buscarVuelos?nroCotizacion='+nroCotizacion,
+			cache: false,
+			async: true,
+			type: 'GET',
+			contentType : "application/json; charset=utf-8",
+			dataType: 'json',
+            success: function(response) {
+            	
+            	console.log("respuesta buscar vuelos");
+            	console.log(response);
+            	console.log(response.dataJson.detalleVuelos);
+            	console.log(response.dataJson.listaVuelos);
+            	
+            	var mensajeDetalleVuelos = "";
+            	
+            	if ( response.dataJson.cantidadVuelos > 0 ){
+            	
+            	vuelosListParams = response.dataJson.listaVuelos;
+            	
+            	console.log("transform");
+            	console.log(vuelosListParams);
+            	
+            	mensajeDetalleVuelos = response.dataJson.detalleVuelos;
+            	$("#botonGrabarVuelos").css("display", "inline");
+            	//$("#botonBuscarVuelos").css("", "");
+            	
+            	} else {
+            		mensajeDetalleVuelos = "No se encontraron vuelos disponibles";
+            	}
+            	
+            	$("#infoDetalleVuelos").html(mensajeDetalleVuelos);
+            	$("#infoDetalleVuelos").html("display", "inline");
+            	
+            },
+            error: function(data, textStatus, errorThrown) {
+            	//alert(data);
+            	//alert(textStatus);
+            	//alert(errorThrown);
+            },
+        });
+	}
+	
+	function grabarVuelos(){		
+		console.log("grabar vuelos");
+		
+		console.log(vuelosListParams);
+		
+		var nroCotizacion = $("#txtNroCotizacion").text();
+		$("#botonEnviarCotizacion").css("display", "none");
+		$("#mensajeEnvioCotizacion").css("display", "none");
+		$("#mensajeEnvioCotizacion").html("");
+		$("#mensajeGrabarCotizacion").html("");
+		
+		$.ajax({
+			url: '${pageContext.request.contextPath}/grabarVuelos?nroCotizacion='+nroCotizacion,
+			cache: false,
+			async: true,
+			type: 'GET',
+			contentType : "application/json; charset=utf-8",
+			dataType: 'json',
+            success: function(response) {
+            	console.log("respuesta grabar vuelos");
+            	console.log(response);
+            	console.log(response.dataJson);
+            	$("#botonGrabarVuelos").css("display", "none");
+            	$("#botonBuscarVuelos").css("display", "none");
+            	$("#botonEnviarCotizacion").css("display", "inline");
+            	
+            	$("#mensajeGrabarCotizacion").css("display", "inline");
+            	$("#mensajeGrabarCotizacion").html("Vuelo registrado en la cotizacion");
+            },
+            error: function(data, textStatus, errorThrown) {
+            	//alert(data);
+            	//alert(textStatus);
+            	//alert(errorThrown);
+            },
+        });
+	}
+	
+	function enviarVuelos(){
+		console.log("enviar vuelos");
+		var idCotizacion = $("#inpIdCotizacion").val();
+		$.ajax({
+			url: '${pageContext.request.contextPath}/enviarPaquete?idCotizacion='+idCotizacion,
+			cache: false,
+			async: true,
+			type: 'GET',
+			contentType : "application/json; charset=utf-8",
+			dataType: 'json',
+            success: function(response) {
+            	
+            	console.log("respuesta enviar vuelos");
+            	console.log(response);
+            	console.log(response.dataJson);
+            	
+            	$("#botonEnviarCotizacion").css("display", "none");            	
+            	$("#mensajeEnvioCotizacion").css("display", "inline");
+        		$("#mensajeEnvioCotizacion").html("Cotizacion enviada");
+            	
             },
             error: function(data, textStatus, errorThrown) {
             	//alert(data);
@@ -1354,12 +1502,9 @@
         });
 	}
 	
-	
-	
 	function aceptar(){
 		location.href = '${pageContext.request.contextPath}/cargarFormRegistrarCotizacion';
-	}
-	
+	}	
 	
 	function formToObject(formID) {
 	    var formularioObject = {};
@@ -1369,191 +1514,181 @@
 	    });
 	    return formularioObject;
 	}
-
 	
 	function verDetalleVuelos() {
-		
 		console.log("cadenaVuelo? " + cadenaVuelo);
-		
-		
-		
-	}
-	
+	}	
 	
 	var cadenaStringVuelo = "";
-	
-function verDetalleControlAnimal(cadenaVuelo){
 		
-	console.log("cadenaVuelo? " + cadenaVuelo);
-		
-		cadenaStringVuelo = cadenaVuelo;
-		
-		$.ajax({
-			url: '${pageContext.request.contextPath}/verDetalleVuelos?cadenaVuelo='+cadenaVuelo,
-			cache: false,
-			async: true,
-			type: 'GET',
-			contentType : "application/json; charset=utf-8",
-			dataType: 'json',
-			success: function(response) {
-				
-				
-				var rpta = response.dataJson;
-				
-                // actualizando lista
-                var listaCotizacion = [];
-                
-                if (rpta.vuelosBean != null) {
-                    listaCotizacion = rpta.vuelosBean;
-                }
-                
-                construirTablaDetalleVuelo(listaCotizacion);	
-                
-                $("#divVerDetalleControlAnimal").modal({
-					backdrop: 'static',
-					keyboard: false
-				});
-				
-			},
-			error: function(data, textStatus, errorThrown) {
-			}
-		});
-	}
-
-	
-	
-function construirTablaDetalleVuelo(dataGrilla){
-	
-	var ix = 1;
-	
-	//Detalle de Vuelos 		 		
-		
-		var table = $('#tblDetalleVuelos').dataTable({
-        data: dataGrilla,
-		bDestroy: true,
-        ordering: false,
-        searching: false,
-        paging: true,
-        bScrollAutoCss: true,
-        bStateSave: false,
-        bAutoWidth: false,
-        info: false,
-        bScrollCollapse: false,
-        pagingType: "full_numbers",
-        pageLength: 5,
-        responsive: true,
-        bLengthChange: false,
-		
-        fnDrawCallback: function(oSettings) {
-            if (oSettings.fnRecordsTotal() == 0) {
-                $('#tblDetalleVuelos_paginate').addClass('hiddenDiv');
-            } else {
-                $('#tblDetalleVuelos_paginate').removeClass('hiddenDiv');
-            }
-        },
-        
-        fnRowCallback: function (nRow, aData, iDisplayIndex) {
-			//alert(aData[0]);
-			//$(nRow).attr('id', aData[0]);
-			$(nRow).attr('align', 'center');
-			$(nRow).attr('rowClasses','tableOddRow');
-            return nRow;
-        },
-		language: {
-            url: "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
-		},
-		columnDefs: [{
-			targets: 4,
-			render: function(data, type, row){
-				if (row !=null && typeof row != 'undefined') {
+	function verDetalleControlAnimal(cadenaVuelo){
+			
+		console.log("cadenaVuelo? " + cadenaVuelo);
+			
+			cadenaStringVuelo = cadenaVuelo;
+			
+			$.ajax({
+				url: '${pageContext.request.contextPath}/verDetalleVuelos?cadenaVuelo='+cadenaVuelo,
+				cache: false,
+				async: true,
+				type: 'GET',
+				contentType : "application/json; charset=utf-8",
+				dataType: 'json',
+				success: function(response) {
 					
-					var cadenaProvee = ix + "-" +row.idProveedor + "-" + row.idAerolinea ;					
-					var VerDetalle = "<span> <input type='radio' name='selectConsolidador' id='' value='"+ cadenaProvee +"' /> </span>";
-					ix += 1;
 					
-					return VerDetalle;
+					var rpta = response.dataJson;
+					
+	                // actualizando lista
+	                var listaCotizacion = [];
+	                
+	                if (rpta.vuelosBean != null) {
+	                    listaCotizacion = rpta.vuelosBean;
+	                }
+	                
+	                construirTablaDetalleVuelo(listaCotizacion);	
+	                
+	                $("#divVerDetalleControlAnimal").modal({
+						backdrop: 'static',
+						keyboard: false
+					});
+					
+				},
+				error: function(data, textStatus, errorThrown) {
 				}
-				return '';
-			}
-		}],
-		columns: [			
-			{"data": "airlineCode"},
-			{"data": "fare"},
-			{"data": "nombreProveedor"},
-			{"data": "comision"}			
-		]
-    });
+			});
+	}
 	
-}
+		
+		
+	function construirTablaDetalleVuelo(dataGrilla){
+		
+		var ix = 1;
+		
+		//Detalle de Vuelos 		 		
+			
+			var table = $('#tblDetalleVuelos').dataTable({
+	        data: dataGrilla,
+			bDestroy: true,
+	        ordering: false,
+	        searching: false,
+	        paging: true,
+	        bScrollAutoCss: true,
+	        bStateSave: false,
+	        bAutoWidth: false,
+	        info: false,
+	        bScrollCollapse: false,
+	        pagingType: "full_numbers",
+	        pageLength: 5,
+	        responsive: true,
+	        bLengthChange: false,
+			
+	        fnDrawCallback: function(oSettings) {
+	            if (oSettings.fnRecordsTotal() == 0) {
+	                $('#tblDetalleVuelos_paginate').addClass('hiddenDiv');
+	            } else {
+	                $('#tblDetalleVuelos_paginate').removeClass('hiddenDiv');
+	            }
+	        },
+	        
+	        fnRowCallback: function (nRow, aData, iDisplayIndex) {
+				//alert(aData[0]);
+				//$(nRow).attr('id', aData[0]);
+				$(nRow).attr('align', 'center');
+				$(nRow).attr('rowClasses','tableOddRow');
+	            return nRow;
+	        },
+			language: {
+	            url: "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
+			},
+			columnDefs: [{
+				targets: 4,
+				render: function(data, type, row){
+					if (row !=null && typeof row != 'undefined') {
+						
+						var cadenaProvee = ix + "-" +row.idProveedor + "-" + row.idAerolinea ;					
+						var VerDetalle = "<span> <input type='radio' name='selectConsolidador' id='' value='"+ cadenaProvee +"' /> </span>";
+						ix += 1;
+						
+						return VerDetalle;
+					}
+					return '';
+				}
+			}],
+			columns: [			
+				{"data": "airlineCode"},
+				{"data": "fare"},
+				{"data": "nombreProveedor"},
+				{"data": "comision"}			
+			]
+	    });
+		
+	}
+		
+		
+	function cerraVerDetalle(){
+		$('#divVerDetalleControlAnimal').modal("hide");
+	}	
+		
+		
+	function guardarDetalleFareInfo(){		
+			
+			var cadenaOption = $('input:radio[name=selectConsolidador]:checked').val(); //fila, idproveedor, idaerolinea
+			
+			console.log("check? " + cadenaOption);
+			
+			var dataOption = cadenaOption.split("-");
+			
+			var rowOption = dataOption[0];
+			
+			var idProveedor = dataOption[1];
+			
+			var idAerolinea = dataOption[2];
+			
+			var dataJson = $("#tblDetalleVuelos").DataTable().rows().data();
+			
+			var comision = dataJson[rowOption-1].comision;
+			
+			var fare = dataJson[rowOption-1].fare;
+		
+			var grabarFormParams = {
+				'cotizacionBean' : formToObject( '#frmCotizacion' )
+			};
 	
-	
-function cerraVerDetalle(){
-	$('#divVerDetalleControlAnimal').modal("hide");
-}	
-	
-	
-function guardarDetalleFareInfo(){		
+			//var params = "?datosVuelos="+datosVuelos+"&tipoCotizacion=2&flagIdaVuelta="+flagIdaVuelta+"&flagIda="+flagIda+"&flagRuta="+flagRuta;
+			var params = "?idProveedor="+idProveedor+"&idAerolinea="+idAerolinea+"&fare="+fare;
+			
+			console.log ("params?guardarDetalleFareInfo? " + params );
+			
+			$.ajax({
+				url: '${pageContext.request.contextPath}/grabarDetalleVuelos'+params,
+	           	data: JSON.stringify(grabarFormParams),
+	            cache: false,
+	            async: true,
+	            type: 'POST',
+	            contentType : "application/json; charset=utf-8",
+	            dataType: 'json',
+	            success: function(response) {
+	                
+					/* $("#divRegistroOK").modal({
+						backdrop: 'static',
+						keyboard: false
+					});
+					
+					return false; */
+					
+	            	cerraVerDetalle();
+			
+	                
+	            },
+	            error: function(data, textStatus, errorThrown) {
+	            	//alert(data);
+	            	//alert(textStatus);
+	            	//alert(errorThrown);
+	            }
+	        });
 		
-		var cadenaOption = $('input:radio[name=selectConsolidador]:checked').val(); //fila, idproveedor, idaerolinea
-		
-		console.log("check? " + cadenaOption);
-		
-		var dataOption = cadenaOption.split("-");
-		
-		var rowOption = dataOption[0];
-		
-		var idProveedor = dataOption[1];
-		
-		var idAerolinea = dataOption[2];
-		
-		var dataJson = $("#tblDetalleVuelos").DataTable().rows().data();
-		
-		var comision = dataJson[rowOption-1].comision;
-		
-		var fare = dataJson[rowOption-1].fare;
-	
-		var grabarFormParams = {
-			'cotizacionBean' : formToObject( '#frmCotizacion' )
-		};
-
-		//var params = "?datosVuelos="+datosVuelos+"&tipoCotizacion=2&flagIdaVuelta="+flagIdaVuelta+"&flagIda="+flagIda+"&flagRuta="+flagRuta;
-		var params = "?idProveedor="+idProveedor+"&idAerolinea="+idAerolinea+"&fare="+fare;
-		
-		console.log ("params?guardarDetalleFareInfo? " + params );
-		
-		$.ajax({
-			url: '${pageContext.request.contextPath}/grabarDetalleVuelos'+params,
-           	data: JSON.stringify(grabarFormParams),
-            cache: false,
-            async: true,
-            type: 'POST',
-            contentType : "application/json; charset=utf-8",
-            dataType: 'json',
-            success: function(response) {
-                
-				/* $("#divRegistroOK").modal({
-					backdrop: 'static',
-					keyboard: false
-				});
-				
-				return false; */
-				
-            	cerraVerDetalle();
-		
-                
-            },
-            error: function(data, textStatus, errorThrown) {
-            	//alert(data);
-            	//alert(textStatus);
-            	//alert(errorThrown);
-            }
-        });
-		
-		
-	
-	
-	
-}
+	}
 	
 </script>
 
@@ -2259,8 +2394,31 @@ function guardarDetalleFareInfo(){
 		<div class="panel panel-info">
 			<div class="panel-heading"> <strong>Registro Satisfactorio</strong></div>
 			<div class="panel-body">
-				<div class="modal-body"> <p class="text-center" id="mensajeTransaccion">Se registro la Cotizaci&oacute;n Nro <span id="txtNroCotizacion"></span></p>
-				<p id="mensajeDetalleTransaccion"></p>
+				<div class="modal-body">									
+					<div class="col-sm-12" align="center">
+						<p class="text-center" id="mensajeTransaccion">Se registro la Cotizaci&oacute;n Nro <span id="txtNroCotizacion"></span></p>		
+					</div>
+					
+					<!-- contenedor Ticket Inicio -->
+					<div id="contenedorDetalleTransaccion" style="display: none;">
+						<div id="mensajeDetalleTransaccion" class="col-sm-12" align="center"></div>
+						<div id="botonBuscarVuelos" class="col-sm-12" align="center">
+							<input type="button" id="btnBuscarVuelos" class="btn btn-primary" onclick="buscarVuelos()" value="Buscar Vuelos" />
+						</div>
+						<div class="row">&nbsp;</div>
+						<div id="infoDetalleVuelos" style="display: none; border: 1px solid blue; padding: 2%; margin: 2%;"></div>						
+						<div id="botonGrabarVuelos" style="display: none; " class="col-sm-12" align="center">
+							<input type="button" id="btnGrabarVuelos" class="btn btn-primary" onclick="grabarVuelos()" value="Grabar Vuelos" />
+						</div>						
+						<div id="mensajeGrabarCotizacion" style="display: none; padding: 2%; margin: 2%;"></div>
+						<div id="botonEnviarCotizacion" style="display: none; " class="col-sm-12" align="center">
+							<input type="button" id="btnEnviarVuelos" class="btn btn-primary" onclick="enviarVuelos()" value="Enviar Cotizacion" />
+						</div>
+						<div class="row">&nbsp;</div>
+						<div id="mensajeEnvioCotizacion" style="display: none; padding: 2%; margin: 2%;"></div>
+					</div>
+					<!-- contenedor Ticket Fin -->
+					
 				</div>
 				<div class="modal-footer">
 					<div class="col-sm-12" align="center">
@@ -2316,6 +2474,9 @@ function guardarDetalleFareInfo(){
 		</div>
 	</div>
 </div>
+
+<input type="hidden" id="inpIdCotizacion" name="txIdCotizacion" />
+<input type="hidden" id="inpNuCotizacion" name="txNuCotizacion" />
 
 
 </body>

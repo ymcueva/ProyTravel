@@ -174,4 +174,10 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements Cotiz
 		return 1;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CotizacionDetalleBean> listarDestinosDetail(CotizacionDetalleBean cotizacionDetalleBean){		
+		return getSqlMapClientTemplate().queryForList("cotizacion.listarDestinosDetail", cotizacionDetalleBean); 
+	}
+	
 }

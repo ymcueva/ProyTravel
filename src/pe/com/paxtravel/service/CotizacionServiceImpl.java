@@ -31,6 +31,7 @@ import pe.com.paxtravel.bean.ExpedienteLogBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
+import pe.com.paxtravel.bean.OrdenPlanificacionBean;
 import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.PaqueteResumeBean;
 import pe.com.paxtravel.bean.ProduccionBean;
@@ -160,9 +161,11 @@ public class CotizacionServiceImpl implements CotizacionService {
 	@Override
 	public List<FareInfoBean> listarTickets(String cadenaVuelo){
 		
+		System.out.println("*****************************************************************************");
+		System.out.println("listarTickets");
+		
 		List<FareInfoBean> fareInfoList = null;
 		List<FareInfoBean> fareInfoDetaList = null;
-		
 		
 		try {
 		
@@ -172,11 +175,10 @@ public class CotizacionServiceImpl implements CotizacionService {
         String fechaPartida = vuelo[2];
         int idDestino = Integer.parseInt(vuelo[3]);
         
-        System.out.println("origen? " + origen);
+        /* System.out.println("origen? " + origen);
         System.out.println("destino? " + destino);
         System.out.println("fechaPartida? " + fechaPartida);
-        System.out.println("idDestino? " + idDestino);
-        
+        System.out.println("idDestino? " + idDestino); */
         
         URL url = new URL("http://api.decom.pe/public/reserveAir/search");
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -198,36 +200,53 @@ public class CotizacionServiceImpl implements CotizacionService {
 				(conn.getInputStream())));
 		
 		String output;
-		System.out.println("Output from Server .... \n");
+		//System.out.println("Output from Server .... \n");
 		
 		boolean encontro = false;
+		
 		while ((output = br.readLine()) != null) {
+			
 			final Gson gson = new Gson();
 			final Type listaFareInfo = new TypeToken<List<FareInfoBean>>(){}.getType();
 			fareInfoList = gson.fromJson(output, listaFareInfo);
 			fareInfoDetaList = new ArrayList<FareInfoBean>();
 			
 			for ( FareInfoBean item: fareInfoList ) {
-				System.out.println("airlineCode? " + item.getAirlineCode());
+				
+				/* System.out.println("airlineCode? " + item.getAirlineCode());
 				System.out.println("fare? " + item.getFare());
 				System.out.println("href? " + item.getHref());
-				System.out.println("item? " + item.toString());
+				System.out.println("item? " + item.toString()); */
+				
 				item.setDestino(destino);
 				item.setIdDestino(idDestino);
+				
 				//consulta los consolidadores y la mayor comision:
+				
+				System.out.println("codigo Aerolinea");
+				System.out.println(item.getAirlineCode());
+				System.out.println("id Destino");
+				System.out.println(item.getIdDestino());
 				
 				FareInfoBean o = getConsolidador(item);
 				
-				if(o != null){
+				if( o != null ) {
+					
 					item.setComision(o.getComision());
 					item.setNombreProveedor(o.getNombreProveedor());
 					item.setNombreAerolinea(o.getNombreAerolinea());
 					item.setIdProveedor(o.getIdProveedor());
 					item.setIdAerolinea(o.getIdAerolinea());
 					item.setPrecio(Double.parseDouble(item.getFare()));
+					
 					encontro = true;
-				}
-				else {
+					
+					System.out.println("item comision? " + item.getComision());
+					System.out.println("item proveedor? " + item.getNombreProveedor());
+					System.out.println("item aerolinea? " + item.getNombreAerolinea());
+					System.out.println("fareinfobean toString? " + item.toString());
+					
+				} else {
 					item.setComision("");
 					item.setNombreProveedor("");
 					item.setNombreAerolinea("");
@@ -235,20 +254,12 @@ public class CotizacionServiceImpl implements CotizacionService {
 					item.setIdAerolinea(0);
 					item.setPrecio(0);
 					encontro = false;
-				}
+				}												
 				
-				
-				System.out.println("item comision? " + item.getComision());
-				System.out.println("item proveedor? " + item.getNombreProveedor());
-				System.out.println("item aerolinea? " + item.getNombreAerolinea());
-				
-				
-				System.out.println("fareinfobean toString? " + item.toString());
-				
-				if(encontro == true)
+				if( encontro ) {
 					fareInfoDetaList.add(item);
-				
-				System.out.println("Lista Agregada");
+					System.out.println("Encontro el consolidador: lista Agregada");
+				}								
 				
 			}
 			
@@ -265,6 +276,47 @@ public class CotizacionServiceImpl implements CotizacionService {
 		
 	}
 
+	@Override
+	public OrdenPlanificacionBean minorCostTicket(List<FareInfoBean> listaTickets) {
+		
+		System.out.println("*****************************************************************************");
+		System.out.println("minorCostTicket");
+		
+		double precioMenor = 0d;		
+		OrdenPlanificacionBean ordenPlanificacionBean = null;
+		
+		if(listaTickets.size() > 0) {
+			//Obtener el que tiene menor precio
+			
+			precioMenor = Double.parseDouble(listaTickets.get(0).getFare());
+			
+			ordenPlanificacionBean = new OrdenPlanificacionBean();
+			ordenPlanificacionBean.setIdAerolinea(listaTickets.get(0).getIdAerolinea());
+			ordenPlanificacionBean.setIdProveedorAerolinea(listaTickets.get(0).getIdProveedor());
+			ordenPlanificacionBean.setPrecioAerolinea(precioMenor);
+			ordenPlanificacionBean.setNombreAerolinea(listaTickets.get(0).getNombreAerolinea());
+			ordenPlanificacionBean.setComision(Integer.parseInt(listaTickets.get(0).getComision()));
+			ordenPlanificacionBean.setUrlShop(listaTickets.get(0).getUrl());
+			
+			for(FareInfoBean info : listaTickets) {
+				
+				if(Double.parseDouble(info.getFare()) < precioMenor) {
+					precioMenor = Double.parseDouble(info.getFare());
+					ordenPlanificacionBean.setIdAerolinea(info.getIdAerolinea());
+					ordenPlanificacionBean.setIdProveedorAerolinea(info.getIdProveedor());
+					ordenPlanificacionBean.setPrecioAerolinea(precioMenor);
+					ordenPlanificacionBean.setNombreAerolinea(info.getNombreAerolinea());
+					ordenPlanificacionBean.setComision(Integer.parseInt(info.getComision()));
+					ordenPlanificacionBean.setUrlShop(info.getUrl());
+				}
+				
+			}
+		}
+		
+		return ordenPlanificacionBean;
+	}
+	
+	
 	@Override
 	public CotizacionBean obtenerCotizacion(CotizacionBean cotizacionBean) {
 		return cotizacionDAO.obtenerCotizacion(cotizacionBean);
@@ -285,6 +337,11 @@ public class CotizacionServiceImpl implements CotizacionService {
 	@Override
 	public int registrarExpedienteLog(ExpedienteLogBean expedienteLogBean) {
 		return cotizacionDAO.registrarExpedienteLog(expedienteLogBean);
+	}
+	
+	@Override
+	public List<CotizacionDetalleBean> listarDestinosDetail(CotizacionDetalleBean cotizacionDetalleBean) {
+		return cotizacionDAO.listarDestinosDetail(cotizacionDetalleBean);
 	}
 	
 //	@Override

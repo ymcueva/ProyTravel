@@ -15,26 +15,33 @@
 	<typeAlias alias="hotelHabitacionBean" type="pe.com.paxtravel.bean.HotelHabitacionBean" />
 	<typeAlias alias="clienteBean" type="pe.com.paxtravel.bean.ClienteBean" />
 	<typeAlias alias="cotizacionServicioBean" type="pe.com.paxtravel.bean.CotizacionServicioBean" />
-	<typeAlias alias="paqueteResumeBean" type="pe.com.paxtravel.bean.PaqueteResumeBean" />
-	
-	<typeAlias alias="expedienteLogBean" type="pe.com.paxtravel.bean.ExpedienteLogBean" />
-	
-	
-	
+	<typeAlias alias="paqueteResumeBean" type="pe.com.paxtravel.bean.PaqueteResumeBean" />	
+	<typeAlias alias="expedienteLogBean" type="pe.com.paxtravel.bean.ExpedienteLogBean" />	
 	<!-- Bean Busqueda de Paquetes - Inicio -->	
-	<typeAlias alias="paqueteManagerBean" type="pe.com.paxtravel.tree.data.PaqueteManagerBean" />
-	
+	<typeAlias alias="paqueteManagerBean" type="pe.com.paxtravel.tree.data.PaqueteManagerBean" />	
 	<!-- Bean Busqueda de Paquetes - Fin -->	
 	<typeAlias alias="string" type="java.lang.String" />
 	
-	<resultMap id="resultFareInfo" class="fareInfoBean">
-						
+	<resultMap id="resultFareInfo" class="fareInfoBean">						
 		<result property="comision"		    column="comision" />
 		<result property="nombreProveedor" 		    column="proveedor" />
 		<result property="nombreAerolinea" 		    column="aerolinea" />	
 		<result property="idProveedor" 		    column="id_proveedor" />
-		<result property="idAerolinea" 		    column="id_aerolinea" />		
-		
+		<result property="idAerolinea" 		    column="id_aerolinea" />
+	</resultMap>
+	
+	<resultMap id="resultDestinosDetail" class="cotizacionDetalleBean">	
+		<result property="idCotizaDeta"			    column="id_cotiza_deta" />
+		<result property="desCiudadOrigen"			    column="ciudad_origen" />
+		<result property="desCiudadDestino"			    column="ciudad_destino" />
+		<result property="isoCiudadOrigen"			    column="iso_origen" />
+		<result property="isoCiudadDestino"			    column="iso_destino" />
+		<result property="destino"			    column="id_destino" />
+		<result property="origen"			    column="id_origen" />	
+		<result property="tiIda"			    column="ti_ida" />
+		<result property="desTiVuelo"			    column="vuelo" />
+		<result property="fechaPartida"			    column="fe_partida" />
+		<result property="fechaRetorno"			    column="fe_retorno" />
 	</resultMap>
 
 	<resultMap id="resultCotizacion" class="cotizacionBean">
@@ -279,6 +286,7 @@
 			im_presupuesto_maximo,
 			observacion,
 			id_cliente,
+			id_estado,
 			fe_ins
 		) VALUES (
 			#numeroCotizacion#,
@@ -296,6 +304,7 @@
 			#presupuestoMaximo#,
 			#observacion#,
 			#idCliente#,
+			#idEstado#,
 			sysdate()
 		)
 		<selectKey keyProperty="idCotizacion" resultClass="int">
@@ -402,14 +411,26 @@
 				id_aerolinea,
 				im_precio,
 				id_proveedor,
-				url_shop
+				url_shop,
+				im_comision,
+				nu_comision,
+				id_destino,
+				id_origen,
+				fe_partida,
+				fe_retorno
 		) VALUES (
 				#idCotizaDeta#,
 				#idCotiza#,
 				#idAerolinea#,
 				#imPrecio#,
 				#idProveedor#,
-				#urlShop#
+				#urlShop#,
+				#imComision#,
+				#nuComision#,
+				#idDestino#,
+				#idOrigen#,
+				#fePartida#,
+				#feRetorno#
 		)
 	</insert>
 	
@@ -561,9 +582,8 @@
 	<select id="getPaqueteResume" parameterClass="paqueteResumeBean" resultMap="resultPaqueteResume">
 		SELECT 
 			<!-- destinos / servicios  -->
-				IF((SELECT COUNT(*) FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete# AND ptD.id_destino_ciudad 
-					IN ( select id_destino from `cotizacion_deta` where id_cotiza = #numeroCotizacion# ) ) 
-						= (Select COUNT(*) from `cotizacion_deta` where id_cotiza = #numeroCotizacion#),'Si','No') AS destinos,
+				IF((SELECT COUNT(*) FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete# AND ptD.id_destino_ciudad IN ( select id_destino from cotizacion_deta where id_cotiza = #numeroCotizacion# ) )=(Select COUNT(*) from cotizacion_deta where id_cotiza = #numeroCotizacion#),
+					If((SELECT COUNT(*) FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete#)= (Select COUNT(*) from cotizacion_deta where id_cotiza = #numeroCotizacion#),'Si','No'),'No') AS destinos,
 			            
 			    (SELECT IF (100/(Select COUNT(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete#)*SUM(IF((SELECT count(*) FROM paquete_turistico_destino_tour where id_paquete_destino = ptD.id_paquete_destino)>0,1,0))>=(Select value_parametro From parametros Where key_parametro = 'CODES'),'Si', 'No') 
 					FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete# ) AS tour,
@@ -653,6 +673,26 @@
 			INNER JOIN destino_ciudad AS dc ON (pd.id_destino_ciudad=dc.id_destino_ciudad)	            
 		WHERE 
 			pd.id_paquete_turistico = #idPaquete#
+	</select>
+	
+	<select id="listarDestinosDetail" parameterClass="cotizacionDetalleBean" resultMap="resultDestinosDetail">
+		SELECT 
+			c.id_cotiza_deta,
+			dcorigen.descripcion AS ciudad_origen, 
+		    dc.descripcion AS ciudad_destino, 
+		    dcorigen.codigo_iso AS iso_origen, 
+    		dc.codigo_iso AS iso_destino,
+    		dcorigen.id_destino_ciudad AS id_origen,
+    		dc.id_destino_ciudad AS id_destino,
+		    c.ti_ida, 
+		    if (c.ti_ida=1,'Solo Ida','Ida y Vuelta') AS vuelo, 
+		    c.fe_partida,
+		    c.fe_retorno
+		FROM `cotizacion_deta` AS c  	
+			LEFT JOIN destino_ciudad AS dcorigen ON (c.id_destino_origen=dcorigen.id_destino_ciudad)
+    		LEFT JOIN destino_ciudad AS dc ON (c.id_destino=dc.id_destino_ciudad)
+		WHERE 
+			c.id_cotiza = #numeroCotizacion#
 	</select>
 
 </sqlMap>

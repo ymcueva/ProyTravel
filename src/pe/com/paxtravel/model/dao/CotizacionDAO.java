@@ -63,4 +63,6 @@ public interface CotizacionDAO {
 	
 	int registrarExpedienteLog(ExpedienteLogBean expedienteLogBean);
 	
+	List<CotizacionDetalleBean> listarDestinosDetail(CotizacionDetalleBean cotizacionDetalleBean);
+	
 }

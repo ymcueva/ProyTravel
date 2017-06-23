@@ -70,8 +70,16 @@ public class OrdenPlanificacionBean {
 	private int tiIda;
 	private int nuPersonastour;
 	private String nuCotizacion;
+	private String urlShop;
 	
+		
 	
+	public String getUrlShop() {
+		return urlShop;
+	}
+	public void setUrlShop(String urlShop) {
+		this.urlShop = urlShop;
+	}
 	public double getImPresupuestoPaximo() {
 		return imPresupuestoPaximo;
 	}

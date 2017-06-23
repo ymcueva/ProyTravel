@@ -50,6 +50,7 @@ import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.InseminacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
+import pe.com.paxtravel.bean.OrdenPlanificacionBean;
 import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.PaqueteResumeBean;
 import pe.com.paxtravel.bean.ProduccionBean;
@@ -406,6 +407,7 @@ public class CotizacionController {
 
 			cotizacionBean.setFechaSalida( Utils.stringToStringyyyyMMdd (cotizacionBean.getFechaSalida() ) );
 			cotizacionBean.setFechaRetorno( Utils.stringToStringyyyyMMdd (cotizacionBean.getFechaRetorno() ) );
+			cotizacionBean.setIdEstado(4);
 
 			System.out.println("FechaCotizacion: " + cotizacionBean.getFechaCotizacion());
 			System.out.println("fechaSalida: " + cotizacionBean.getFechaSalida());
@@ -704,6 +706,7 @@ public class CotizacionController {
 			cotizacionBean.setFechaCotizacion( Utils.stringToStringyyyyMMdd (cotizacionBean.getFechaCotizacion() ) );
 			cotizacionBean.setIdCliente(Integer.parseInt(idCliente) );
 			cotizacionBean.setNumeroCotizacion(cotizacionService.generarNumeroCotizacion());
+			cotizacionBean.setIdEstado(10);
 			
 			try {
 				
@@ -780,8 +783,6 @@ public class CotizacionController {
 				
 			}
 			
-			
-			
 			/*			
 			
 			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
@@ -818,9 +819,37 @@ public class CotizacionController {
 				}
 
 			}
-			*/
+			*/			
+			
+			//Mensaje de respuesta con el detalle de los destinos para el ticket
+			CotizacionDetalleBean cotizacionDetalleBean=new CotizacionDetalleBean();  
+			cotizacionDetalleBean.setNumeroCotizacion(cotizacionBean.getNumeroCotizacion());
+			List<CotizacionDetalleBean> listDestinosDetalle = cotizacionService.listarDestinosDetail(cotizacionDetalleBean);
+			String mensajeHtml="";
+			
+			for (CotizacionDetalleBean item:listDestinosDetalle ){
+				mensajeHtml += "<strong>" + item.getDesTiVuelo() + "</strong>: ";
+				
+				String vuelo = item.getDesCiudadOrigen() + " (" + item.getIsoCiudadOrigen() + ")" + " - " +  
+						item.getDesCiudadDestino() + " (" + item.getIsoCiudadDestino() + ")";
+				
+				mensajeHtml += vuelo;
+				
+				if ( item.getTiIda() == 0 ) {					
+					//Ida yVuelta
+					vuelo = "<br />" + item.getDesCiudadDestino() + " (" + item.getIsoCiudadDestino() + ")" + " - " +
+							item.getDesCiudadOrigen() + " (" + item.getIsoCiudadOrigen() + ")";
+					mensajeHtml += vuelo;
+				}
+				
+				mensajeHtml += "<br /><br />";
+			}
 			
 			mapa.put("nroCotizacion", cotizacionBean.getNumeroCotizacion());
+			mapa.put("idCotizacion", cotizacionBean.getIdCotizacion());
+			mapa.put("listDestinosDetalle", listDestinosDetalle);
+			mapa.put("detalle", mensajeHtml);
+			
 			dataJSON.setRespuesta("ok", null, mapa);
 			
 		} catch (Exception e) {
@@ -983,8 +1012,7 @@ public class CotizacionController {
 		}
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
 	}
-	
-	
+		
 	@RequestMapping( value = "/enviarPaquete", method ={RequestMethod.GET, RequestMethod.POST} )
 	public ModelAndView enviarPaquete(HttpServletRequest request, HttpServletResponse response){
 		
@@ -1022,8 +1050,6 @@ public class CotizacionController {
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
 		
 	}
-	
-	
 	
 	@RequestMapping( value = "/grabarPaquete", method ={RequestMethod.GET, RequestMethod.POST} )
 	public ModelAndView grabarPaquete(HttpServletRequest request, HttpServletResponse response){
@@ -1064,8 +1090,7 @@ public class CotizacionController {
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
 		
 	}
-	
-	
+		
 	@RequestMapping( value = "/buscarPaquete", method ={RequestMethod.GET, RequestMethod.POST} )
 	public ModelAndView buscarPaquete(HttpServletRequest request, HttpServletResponse response){
 		
@@ -1079,11 +1104,6 @@ public class CotizacionController {
 			
 			//////////////////////////////////////////////////////////////////////////////////////			
 			//BUSQUEDA DE PAQUETES
-
-			/* #idPaquete#
-			#numeroCotizacion#
-			#idCategoriaAlojamiento#
-			#idTipoAlojamiento# */
 			
 			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));
 			
@@ -1329,7 +1349,7 @@ public class CotizacionController {
 				//}
 				
 				//percent = percent/qtypercent*9.0;
-					System.out.println("************************************************************************");				
+				System.out.println("************************************************************************");				
 				System.out.println("Number of equalities of parameters: " + qtypercent);
 				System.out.println("Getting a table for trainning with the " + percent + "% of the datas");
 				
@@ -1339,8 +1359,14 @@ public class CotizacionController {
 				
 				System.out.println("" + percent + "% change!");
 				
-				tm2 = tm2.getTrainAndProbeSet(percent);				
-				System.out.println(tm2);
+				System.out.println("************************************************************************");				
+				System.out.println("before");
+				System.out.println(tm2);				
+				
+				/* tm2 = tm2.getTrainAndProbeSet(percent);
+				System.out.println("************************************************************************");
+				System.out.println("after");
+				System.out.println(tm2); */
 				
 				for (int i=0; i<tm2.getRows().size(); i++) {					
 					System.out.println("************************************************************************");
@@ -1370,277 +1396,154 @@ public class CotizacionController {
 		return ControllerUtil.handleJSONResponse(dataJSON, response);		
 	}	
 	
-	@RequestMapping( value = "/verDetalleVuelos", method ={RequestMethod.GET, RequestMethod.POST} )
-	public String verDetalleVuelos(HttpServletRequest request, HttpServletResponse response){
-
-		try {
-
-			System.out.println("start....................");
-
-			URL url = new URL("http://api.decom.pe/public/reserveAir/search");
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setDoOutput(true);
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/json");
-
-			String input = "";
-
-			OutputStream os = conn.getOutputStream();
-			os.write(input.getBytes());
-			os.flush();
-
-			System.out.println("send....................");
-
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-				throw new RuntimeException("Failed : HTTP error code : "
-					+ conn.getResponseCode());
-			}
-
-			System.out.println("response....................");
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					(conn.getInputStream())));
-
-			String output;
-			System.out.println("Output from Server .... \n");
-
-			while ((output = br.readLine()) != null) {
-
-				System.out.println(output);
-
-			}
-
-			conn.disconnect();
-
-		} catch (Exception e) {
-			// TODO: handle exception
-
-			e.printStackTrace();
-
-			System.out.println("e: " + e.getMessage() );
-		}
-
-
-		return "";
-	}
-
-	@RequestMapping( value = "/verDetalleVuelo2s", method ={RequestMethod.GET, RequestMethod.POST} )
-	public ModelAndView verDetalleVuelos2s(HttpServletRequest request, HttpServletResponse response){
-
+	
+	
+	
+	
+	
+	
+	
+		
+	@RequestMapping( value = "/buscarVuelos", method ={RequestMethod.GET, RequestMethod.POST} )
+	public ModelAndView buscarVuelos(HttpServletRequest request, HttpServletResponse response){
 		ModelAndView modelAndView = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Map<String, Object> mapa = new HashMap<String, Object>();
-
-		//List<AnimalBean> listaToro = new ArrayList<AnimalBean>();
-		//InseminacionBean inseminacionBean = new InseminacionBean();
-
+		Map<String, Object> mapa = new HashMap<String, Object>();		
 		DataJsonBean dataJSON = new DataJsonBean();
-
-		try {
+		
+		try {			
 			modelAndView = new ModelAndView();
-	        String cadenaVuelo = request.getParameter("cadenaVuelo");
-
-	        System.out.println("cadenaVuelo? " + cadenaVuelo);
-
-	        //inseminacionBean.setCodigoInseminacion(codigoInseminacion);
-	        //inseminacionBean = inseminacionService.verDetalleInseminacion(inseminacionBean);
-
-
-	        String[] vuelo = cadenaVuelo.split("-");
-
-	        String origen = vuelo[0];
-	        String destino = vuelo[1];
-	        String fechaPartida = vuelo[2];
-
-	        String idOrigen = vuelo[3];
-	        String idDestino = vuelo[4];
-	        String nuCotizacion = vuelo[6];
-
-	        System.out.println("origen? " + origen);
-	        System.out.println("destino? " + destino);
-	        System.out.println("fechaPartida? " + fechaPartida);
-
-
-	        //Grabamos detalle de ticket
-
-        	CotizacionDetalleBean cotizacionDetalleBean = new CotizacionDetalleBean();
-
-			cotizacionDetalleBean.setNumeroCotizacion( nuCotizacion );
-			cotizacionDetalleBean.setFechaPartida(fechaPartida);
-			cotizacionDetalleBean.setFechaRetorno(fechaPartida);
-			cotizacionDetalleBean.setOrigen(Integer.parseInt( idOrigen ));
-			cotizacionDetalleBean.setDestino(Integer.parseInt( idDestino ));
-			cotizacionDetalleBean.setCantidadAdulto(0);
-			cotizacionDetalleBean.setCantidadNino(0);
-			cotizacionDetalleBean.setIdaVuelta( 0 );
-			cotizacionDetalleBean.setIda( 1 );
-			cotizacionDetalleBean.setRuta( 0 );
-
-			cotizacionService.registrarCotizacionDetalleTicket(cotizacionDetalleBean);
-
-	        //API SABRE - searchAir
-
-	        URL url = new URL("http://api.decom.pe/public/reserveAir/search");
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setDoOutput(true);
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Content-Type", "application/json");
-
-			//String input = "{\"qty\":100,\"name\":\"iPad 4\"}";
-			String input = "{\"origin\":\"" + origen + "\",\"destination\":\"" + destino + "\",\"date\":\"" + fechaPartida + "\"}";
-			//,"\destination\":\"" + destino + "\", "date": "2016-10-30"
-
-			OutputStream os = conn.getOutputStream();
-			os.write(input.getBytes());
-			os.flush();
-
-			if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-				throw new RuntimeException("Failed : HTTP error code : "
-					+ conn.getResponseCode());
-			}
-
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					(conn.getInputStream())));
-
-			String output;
-			System.out.println("Output from Server .... \n");
-
-			List<FareInfoBean> fareInfoList = null;
-			List<FareInfoBean> fareInfoDetaList = null;
-
-			while ((output = br.readLine()) != null) {
-
-				System.out.println(output);
-
-				final Gson gson = new Gson();
-
-				final Type listaFareInfo = new TypeToken<List<FareInfoBean>>(){}.getType();
-
-				//List<FareInfoBean> listaFareInfo = new ArrayList<FareInfoBean>();
-				fareInfoList = gson.fromJson(output, listaFareInfo);
-				fareInfoDetaList = new ArrayList<FareInfoBean>();
-
-				for ( FareInfoBean item: fareInfoList ) {
-
-					//fareInfoBean = new FareInfoBean();
-					//fareInfoBean = item;
-
-					System.out.println("airlineCode? " + item.getAirlineCode());
-					System.out.println("fare? " + item.getFare());
-					System.out.println("href? " + item.getHref());
-
-					System.out.println("item? " + item.toString());
-
-					item.setDestino(destino);// origen y destino(?)
-
-					//consulta los consolidadores y la mayor comision:
-
-					FareInfoBean o = cotizacionService.getConsolidador(item);
-
-					item.setComision(o.getComision());
-					item.setNombreProveedor(o.getNombreProveedor());
-					item.setNombreAerolinea(o.getNombreAerolinea());
-					item.setIdProveedor(o.getIdProveedor());
-					item.setIdAerolinea(o.getIdAerolinea());
-
-					System.out.println("item comision? " + item.getComision());
-					System.out.println("item proveedor? " + item.getNombreProveedor());
-					System.out.println("item aerolinea? " + item.getNombreAerolinea());
-
-
-					System.out.println("fareinfobean toString? " + item.toString());
-
-					fareInfoDetaList.add(item);
-
-					/* System.out.println("airlineCode? " + item.getAirlineCode());
-					System.out.println("fare? " + item.getFare());
-					System.out.println("href? " + item.getHref()); */
-
+			
+			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");			
+			
+			String numeroCotizacion = request.getParameter("nroCotizacion");
+			
+			System.out.println("Numero Cotizacion");
+			System.out.println(numeroCotizacion);
+						
+			CotizacionDetalleBean cotizacionDetalleBean=new CotizacionDetalleBean();  
+			cotizacionDetalleBean.setNumeroCotizacion(numeroCotizacion);
+			List<CotizacionDetalleBean> listDestinosDetalle = cotizacionService.listarDestinosDetail(cotizacionDetalleBean);
+			
+			System.out.println("Destinos");
+			System.out.println(listDestinosDetalle.size());
+			
+			OrdenPlanificacionBean ordenPlanBean = null;
+			List<FareInfoBean> listaTickets = null;			
+			String detalleVuelos = "";			
+			List<OrdenPlanificacionBean> listaOrdenPlan = new ArrayList<OrdenPlanificacionBean>();			
+			
+			for (CotizacionDetalleBean item:listDestinosDetalle ) {				
+				String vuelo = item.getIsoCiudadOrigen() + "," +  
+						item.getIsoCiudadDestino() + "," + 
+						item.getFechaPartida() + "," +
+						item.getDestino();
+				System.out.println("Vuelo A");
+				System.out.println(vuelo);
+				System.out.println("Solo Ida?");
+				System.out.println(item.getTiIda());				
+				
+				listaTickets = cotizacionService.listarTickets(vuelo);
+				ordenPlanBean = cotizacionService.minorCostTicket(listaTickets);				
+				//Mensaje Vuelo
+				detalleVuelos += "<strong>"+ item.getDesCiudadDestino() +" ("+ item.getFechaPartida() +")</strong>: " + 
+						ordenPlanBean.getNombreAerolinea() + "USD" + ordenPlanBean.getPrecioAerolinea() + 						
+						" (Comision " + ordenPlanBean.getComision() + ")";				
+				//Agregamos a la lista
+				listaOrdenPlan.add(ordenPlanBean);
+				if ( item.getTiIda() == 0 ) {
+					//Ida y Vuelta					
+					vuelo = item.getIsoCiudadDestino() + "," +  
+							item.getIsoCiudadOrigen() + "," + 
+							item.getFechaRetorno() + "," +
+							item.getOrigen();				
+					System.out.println("Vuelo B");
+					System.out.println(vuelo);
+					
+					listaTickets = cotizacionService.listarTickets(vuelo);
+					ordenPlanBean = cotizacionService.minorCostTicket(listaTickets);					
+					//Mensaje Vuelo
+					detalleVuelos += "<strong>"+ item.getDesCiudadOrigen() +" ("+ item.getFechaRetorno() +")</strong>: " + 
+							ordenPlanBean.getNombreAerolinea() + " USD" + ordenPlanBean.getPrecioAerolinea() + 						
+						" (Comision: " + ordenPlanBean.getComision() + ")";
+					//Agregamos a la lista
+					listaOrdenPlan.add(ordenPlanBean);
 				}
-
+				detalleVuelos += "<br /><br />";				
 			}
-
-			conn.disconnect();
-
-
-	        mapa.put("titulo", "Detalle Vuelos");
-	        mapa.put("vuelosBean", fareInfoDetaList);
-
-	        //mapa.put("inseminacionBean", inseminacionBean);
-
-	        dataJSON.setRespuesta("ok", null, mapa);
-
-
+			
+			System.out.println("Mensaje");
+			System.out.println(detalleVuelos);
+			
+			mapa.put("detalleVuelos", detalleVuelos);
+			mapa.put("listaVuelos", listaOrdenPlan);
+			mapa.put("cantidadVuelos", listaOrdenPlan.size());			
+			dataJSON.setRespuesta("ok", null, mapa);
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-
+		
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
-
-	}
-
-	@RequestMapping( value = "/grabarDetalleVuelos", method ={RequestMethod.GET, RequestMethod.POST} )
-	public ModelAndView grabarDetalleVuelos(HttpServletRequest request, HttpServletResponse response){
-
+	}	
+	
+	@RequestMapping( value = "/grabarVuelos", method ={RequestMethod.GET, RequestMethod.POST} )
+	public ModelAndView grabarVuelos(HttpServletRequest request, HttpServletResponse response){
+		
 		ModelAndView modelAndView = null;
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Map<String, Object> mapa = new HashMap<String, Object>();
-
-		//List<AnimalBean> listaToro = new ArrayList<AnimalBean>();
-		//InseminacionBean inseminacionBean = new InseminacionBean();
-
+		Map<String, Object> mapa = new HashMap<String, Object>();		
 		DataJsonBean dataJSON = new DataJsonBean();
-
-		System.out.println("start grabarDetalleVuelos?");
-
-		try {
-			modelAndView = new ModelAndView();
-
-		    //mapa.put("titulo", "Detalle Vuelos");
-	        //mapa.put("vuelosBean", fareInfoDetaList);
-	        //mapa.put("inseminacionBean", inseminacionBean);
-
-			int idCotizaDeta = 0;
-			int idProveedor= Integer.parseInt(request.getParameter("idProveedor"));
-			int idAerolinea= Integer.parseInt(request.getParameter("idAerolinea"));
-			String fare = request.getParameter("fare");
-
-			CotizacionBean cotizacionBean = new CotizacionBean();
-
-			Map<String, Object> parametrosRequest = ControllerUtil.parseRequestToMap(request);
-			Map<String, Object> cotizacionBeanMap = (Map<String, Object>) parametrosRequest.get("cotizacionBean");
-			// inserta en el bean todos los valores del mapa (property vs keys)
-			BeanUtils.populate(cotizacionBean, cotizacionBeanMap);
-
-
-			CotizacionDetalleTicketVueloBean oBean = new CotizacionDetalleTicketVueloBean();
-
-			oBean.setIdCotizaDeta(0);
-		    oBean.setIdProveedor(idProveedor);
-		    oBean.setIdAerolinea(idAerolinea);
-		    oBean.setImPrecio(fare);
-		    oBean.setIdCotiza(cotizacionBean.getNumeroCotizacion());
-		    oBean.setUrlShop("");
-
-		    System.out.println("idProveedor? " + oBean.getIdProveedor() );
-		    System.out.println("idAerolinea? " + oBean.getIdAerolinea() );
-		    System.out.println("imPrecio? " + oBean.getImPrecio() );
-		    System.out.println("idCotizacion? " + oBean.getIdCotiza() );
-
-		    cotizacionService.registrarConsolidador(oBean);
-
-	        dataJSON.setRespuesta("ok", null, mapa);
-
-
+		
+		try {			
+			modelAndView = new ModelAndView();						
+			String numeroCotizacion = request.getParameter("nroCotizacion");
+			
+			CotizacionDetalleBean cotizacionDetalleBean=new CotizacionDetalleBean();  
+			cotizacionDetalleBean.setNumeroCotizacion(numeroCotizacion);
+			List<CotizacionDetalleBean> listDestinosDetalle = cotizacionService.listarDestinosDetail(cotizacionDetalleBean);
+			
+			OrdenPlanificacionBean ordenPlanBean = null;
+			CotizacionDetalleTicketVueloBean cotizacionTicket = null;
+			List<FareInfoBean> listaTickets = null;	
+			int idCotizacion = 0;
+			
+			for (CotizacionDetalleBean item:listDestinosDetalle ) {				
+				String vuelo = item.getIsoCiudadOrigen() + "," +  
+						item.getIsoCiudadDestino() + "," + 
+						item.getFechaPartida() + "," +
+						item.getDestino();
+				listaTickets = cotizacionService.listarTickets(vuelo);
+				ordenPlanBean = cotizacionService.minorCostTicket(listaTickets);
+				cotizacionTicket = new CotizacionDetalleTicketVueloBean(
+						item.getIdCotizaDeta(),numeroCotizacion,ordenPlanBean.getIdAerolinea(),ordenPlanBean.getPrecioAerolinea(),
+						ordenPlanBean.getIdProveedorAerolinea(), ordenPlanBean.getUrlShop(),0,ordenPlanBean.getComision(),
+						item.getDestino(), item.getOrigen(), item.getFechaPartida(), item.getFechaRetorno());
+				cotizacionService.registrarConsolidador(cotizacionTicket);				
+				if ( item.getTiIda() == 0 ) {
+					//Ida y Vuelta					
+					vuelo = item.getIsoCiudadDestino() + "," +  
+							item.getIsoCiudadOrigen() + "," + 
+							item.getFechaRetorno() + "," +
+							item.getOrigen();					
+					listaTickets = cotizacionService.listarTickets(vuelo);
+					ordenPlanBean = cotizacionService.minorCostTicket(listaTickets);
+					cotizacionTicket = new CotizacionDetalleTicketVueloBean(
+							item.getIdCotizaDeta(),numeroCotizacion,ordenPlanBean.getIdAerolinea(),ordenPlanBean.getPrecioAerolinea(),
+							ordenPlanBean.getIdProveedorAerolinea(), ordenPlanBean.getUrlShop(),0,ordenPlanBean.getComision(),
+							item.getOrigen(), item.getDestino(), item.getFechaRetorno(), item.getFechaRetorno());
+					cotizacionService.registrarConsolidador(cotizacionTicket);
+				}
+			}
+			
+			mapa.put("idCotizacion", idCotizacion);
+		
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-
+		
+		dataJSON.setRespuesta("ok", null, mapa);
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
-
-
-	}
-
+	}	
 
 }
 

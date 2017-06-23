@@ -6,27 +6,76 @@ public class CotizacionDetalleBean {
 	private int idCotizacion;
 	private String numeroCotizacion;
 	
-	private int origen;
-	
+	private int origen;	
 	private int destino;
-
-	private int cantidadNino;
-	
-	private int cantidadAdulto;
-	
-	private int idaVuelta;
-	
+	private int cantidadNino;	
+	private int cantidadAdulto;	
+	private int idaVuelta;	
 	private int ida;
 	
-	private String fechaPartida;
-	
+	private String fechaPartida;	
 	private String fechaRetorno;
 	
-	private int ruta;
-	
+	private int ruta;	
 	private int tiIda;
 	
+	private String desCiudadOrigen;
+	private String desCiudadDestino;	
+	private String isoCiudadOrigen;
+	private String isoCiudadDestino;	
+	private String desTiVuelo;
 	
+	private int idCotizaDeta;
+	
+	
+
+	public int getIdCotizaDeta() {
+		return idCotizaDeta;
+	}
+
+	public void setIdCotizaDeta(int idCotizaDeta) {
+		this.idCotizaDeta = idCotizaDeta;
+	}
+
+	public String getDesCiudadOrigen() {
+		return desCiudadOrigen;
+	}
+
+	public void setDesCiudadOrigen(String desCiudadOrigen) {
+		this.desCiudadOrigen = desCiudadOrigen;
+	}
+
+	public String getDesCiudadDestino() {
+		return desCiudadDestino;
+	}
+
+	public void setDesCiudadDestino(String desCiudadDestino) {
+		this.desCiudadDestino = desCiudadDestino;
+	}
+
+	public String getIsoCiudadOrigen() {
+		return isoCiudadOrigen;
+	}
+
+	public void setIsoCiudadOrigen(String isoCiudadOrigen) {
+		this.isoCiudadOrigen = isoCiudadOrigen;
+	}
+
+	public String getIsoCiudadDestino() {
+		return isoCiudadDestino;
+	}
+
+	public void setIsoCiudadDestino(String isoCiudadDestino) {
+		this.isoCiudadDestino = isoCiudadDestino;
+	}
+
+	public String getDesTiVuelo() {
+		return desTiVuelo;
+	}
+
+	public void setDesTiVuelo(String desTiVuelo) {
+		this.desTiVuelo = desTiVuelo;
+	}
 
 	public int getIdCotizacion() {
 		return idCotizacion;
