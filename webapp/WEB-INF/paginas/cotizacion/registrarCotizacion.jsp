@@ -1328,10 +1328,10 @@
 		console.log("***********************************************************************");
 		console.log("buscar vuelos");
 		
-		$("#infoDetalleVuelos").html("");
-		$("#infoDetalleVuelos").html("display", "none");
+		$("#infoDetalleVuelos").html("");		
 		$("#botonGrabarVuelos").css("display", "none");
 		$("#botonEnviarCotizacion").css("display", "none");
+		$("#contenedorDetalleVuelos").css("display", "none");
 		
 		var nroCotizacion = $("#inpNuCotizacion").val();
 		
@@ -1351,26 +1351,28 @@
             	console.log(response);
             	console.log(response.dataJson.detalleVuelos);
             	console.log(response.dataJson.listaVuelos);
+            	console.log(response.dataJson.cantidadVuelos);
             	
             	var mensajeDetalleVuelos = "";
             	
             	if ( response.dataJson.cantidadVuelos > 0 ){
             	
-            	vuelosListParams = response.dataJson.listaVuelos;
-            	
-            	console.log("transform");
-            	console.log(vuelosListParams);
-            	
-            	mensajeDetalleVuelos = response.dataJson.detalleVuelos;
-            	$("#botonGrabarVuelos").css("display", "inline");
-            	//$("#botonBuscarVuelos").css("", "");
+	            	vuelosListParams = response.dataJson.listaVuelos;
+	            	
+	            	console.log("transform");
+	            	console.log(vuelosListParams);
+	            	
+	            	mensajeDetalleVuelos = response.dataJson.detalleVuelos;
+	            	
+	            	$("#botonGrabarVuelos").css("display", "inline");
+	            	//$("#botonBuscarVuelos").css("", "");
             	
             	} else {
             		mensajeDetalleVuelos = "No se encontraron vuelos disponibles";
             	}
             	
-            	$("#infoDetalleVuelos").html(mensajeDetalleVuelos);
-            	$("#infoDetalleVuelos").html("display", "inline");
+            	$("#contenedorDetalleVuelos").css("display", "inline");
+            	$("#infoDetalleVuelos").html(mensajeDetalleVuelos);            	
             	
             },
             error: function(data, textStatus, errorThrown) {
@@ -2394,32 +2396,38 @@
 		<div class="panel panel-info">
 			<div class="panel-heading"> <strong>Registro Satisfactorio</strong></div>
 			<div class="panel-body">
-				<div class="modal-body">									
+				<div class="modal-body">
+													
 					<div class="col-sm-12" align="center">
-						<p class="text-center" id="mensajeTransaccion">Se registro la Cotizaci&oacute;n Nro <span id="txtNroCotizacion"></span></p>		
+						<p class="text-center" id="mensajeTransaccion">Se registro la Cotizaci&oacute;n Nro <strong><span id="txtNroCotizacion"></span></strong></p>		
 					</div>
 					
 					<!-- contenedor Ticket Inicio -->
 					<div id="contenedorDetalleTransaccion" style="display: none;">
+						<div class="col-sm-12" align="center"><strong>Ticket Aéreo</strong></div>
+						<div class="row">&nbsp;</div>						
 						<div id="mensajeDetalleTransaccion" class="col-sm-12" align="center"></div>
 						<div id="botonBuscarVuelos" class="col-sm-12" align="center">
 							<input type="button" id="btnBuscarVuelos" class="btn btn-primary" onclick="buscarVuelos()" value="Buscar Vuelos" />
-						</div>
-						<div class="row">&nbsp;</div>
-						<div id="infoDetalleVuelos" style="display: none; border: 1px solid blue; padding: 2%; margin: 2%;"></div>						
-						<div id="botonGrabarVuelos" style="display: none; " class="col-sm-12" align="center">
-							<input type="button" id="btnGrabarVuelos" class="btn btn-primary" onclick="grabarVuelos()" value="Grabar Vuelos" />
 						</div>						
-						<div id="mensajeGrabarCotizacion" style="display: none; padding: 2%; margin: 2%;"></div>
-						<div id="botonEnviarCotizacion" style="display: none; " class="col-sm-12" align="center">
-							<input type="button" id="btnEnviarVuelos" class="btn btn-primary" onclick="enviarVuelos()" value="Enviar Cotizacion" />
-						</div>
-						<div class="row">&nbsp;</div>
-						<div id="mensajeEnvioCotizacion" style="display: none; padding: 2%; margin: 2%;"></div>
+						<div class="row">&nbsp;</div>						
+						<div class="col-sm-10" align="center"  id="contenedorDetalleVuelos" style="display: none; border: 1px solid blue; margin: 0 7%; padding:1%">
+								<div id="infoDetalleVuelos" class="col-sm-12"></div>				
+								<div id="botonGrabarVuelos" class="col-sm-12" style="display: none;" align="center">										
+									<input type="button" id="btnGrabarVuelos" class="btn btn-primary" onclick="grabarVuelos()" value="Grabar Vuelos" />
+								</div>
+								<div id="mensajeGrabarCotizacion" class="col-sm-12" style="display: none;"></div>
+								<div id="botonEnviarCotizacion" class="col-sm-12" style="display: none;"  align="center">
+									<input type="button" id="btnEnviarVuelos" class="btn btn-primary" onclick="enviarVuelos()" value="Enviar Cotizacion" />
+								</div>
+								<div id="mensajeEnvioCotizacion" class="col-sm-12"></div>							
+						</div>						
+						<div class="row">&nbsp;</div>					
 					</div>
 					<!-- contenedor Ticket Fin -->
 					
 				</div>
+				<div class="row">&nbsp;</div>	
 				<div class="modal-footer">
 					<div class="col-sm-12" align="center">
 						<input type="button" id="btnRegistro" class="btn btn-primary" onclick="aceptar()" value="Aceptar"/>

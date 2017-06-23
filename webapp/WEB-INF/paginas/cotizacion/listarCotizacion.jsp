@@ -220,6 +220,9 @@
 		$("#inpIdEstado").val("");
 		$("#idParams").val("");
 		
+		$("#divContenedorServicios").css("display", "none");
+		$("#divContenedorMotivos").css("display", "none");
+		
 		$.ajax({
 			url: '${pageContext.request.contextPath}/verDetalleCotizacion?idCotizacion='+idCotizacion,
 			cache: false,
@@ -243,7 +246,15 @@
 					$("#tituloCotizacion").html(response.dataJson.cotizacion.tipoCotizacion);
 					
 					$("#divFecha").html(response.dataJson.cotizacion.fechaCotizacion);
-					$("#divTipo").html( response.dataJson.cotizacion.tipoCotizacion + " / " + response.dataJson.cotizacion.tipoPrograma);
+					
+					var tipoCotizacion = "";
+					if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) {
+						tipoCotizacion =  " / " + response.dataJson.cotizacion.tipoPrograma;
+						$("#divContenedorServicios").css("display", "inline");
+						$("#divContenedorMotivos").css("display", "inline");
+					}
+					
+					$("#divTipo").html( "<strong>" + response.dataJson.cotizacion.tipoCotizacion + tipoCotizacion + "</strong>");
 					$("#divEstado").html(response.dataJson.cotizacion.estado);
 					
 					//$("#").val(response.dataJson.cotizacion.tipoAlojamiento);

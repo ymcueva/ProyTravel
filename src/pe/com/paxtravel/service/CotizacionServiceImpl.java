@@ -228,15 +228,38 @@ public class CotizacionServiceImpl implements CotizacionService {
 				System.out.println("id Destino");
 				System.out.println(item.getIdDestino());
 				
-				FareInfoBean o = getConsolidador(item);
+				FareInfoBean fareInfoBean = getConsolidador(item);
 				
-				if( o != null ) {
+				fareInfoBean.getComision();
+				fareInfoBean.getNombreProveedor();
+				fareInfoBean.getNombreAerolinea();
+				fareInfoBean.getIdProveedor();
+				fareInfoBean.getIdAerolinea();
+				
+				System.out.println("fareInfoBean ? getComision " + fareInfoBean.getComision());
+				System.out.println("fareInfoBean ? getNombreProveedor " + fareInfoBean.getNombreProveedor());
+				System.out.println("fareInfoBean ? getNombreAerolinea " + fareInfoBean.getNombreAerolinea());
+				System.out.println("fareInfoBean ? getIdProveedor " + fareInfoBean.getIdProveedor());
+				System.out.println("fareInfoBean ? getIdAerolinea " + fareInfoBean.getIdAerolinea());
+				
+				/* pad.comision,
+			    p.nombre as proveedor,
+			    a.nombre as aerolinea,
+			    p.id_proveedor,
+			    a.id_aerolinea  					
+				<result property="comision"		    column="comision" />
+				<result property="nombreProveedor" 		    column="proveedor" />
+				<result property="nombreAerolinea" 		    column="aerolinea" />	
+				<result property="idProveedor" 		    column="id_proveedor" />
+				<result property="idAerolinea" 		    column="id_aerolinea" /> */
+				
+				if( fareInfoBean != null ) {
 					
-					item.setComision(o.getComision());
-					item.setNombreProveedor(o.getNombreProveedor());
-					item.setNombreAerolinea(o.getNombreAerolinea());
-					item.setIdProveedor(o.getIdProveedor());
-					item.setIdAerolinea(o.getIdAerolinea());
+					item.setComision(fareInfoBean.getComision());
+					item.setNombreProveedor(fareInfoBean.getNombreProveedor());
+					item.setNombreAerolinea(fareInfoBean.getNombreAerolinea());
+					item.setIdProveedor(fareInfoBean.getIdProveedor());
+					item.setIdAerolinea(fareInfoBean.getIdAerolinea());
 					item.setPrecio(Double.parseDouble(item.getFare()));
 					
 					encontro = true;
@@ -285,7 +308,10 @@ public class CotizacionServiceImpl implements CotizacionService {
 		double precioMenor = 0d;		
 		OrdenPlanificacionBean ordenPlanificacionBean = null;
 		
-		if(listaTickets.size() > 0) {
+		System.out.println("cantidad de Vuelos:");
+		System.out.println(listaTickets.size());
+		
+		if( listaTickets.size() > 0 ) {
 			//Obtener el que tiene menor precio
 			
 			precioMenor = Double.parseDouble(listaTickets.get(0).getFare());
@@ -312,6 +338,15 @@ public class CotizacionServiceImpl implements CotizacionService {
 				
 			}
 		}
+		
+		System.out.println("return ordenPlanificacionBean");
+		System.out.println("setIdAerolinea?" + ordenPlanificacionBean);
+		System.out.println("setIdProveedorAerolinea?" + ordenPlanificacionBean);
+		System.out.println("setPrecioAerolinea?" + ordenPlanificacionBean);
+		System.out.println("setNombreAerolinea?" + ordenPlanificacionBean);
+		System.out.println("setComision?" + ordenPlanificacionBean);
+		System.out.println("setUrlShop?" + ordenPlanificacionBean);
+		System.out.println("?" + ordenPlanificacionBean);
 		
 		return ordenPlanificacionBean;
 	}

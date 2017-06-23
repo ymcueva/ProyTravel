@@ -434,30 +434,23 @@
 		)
 	</insert>
 	
-	<select id="getConsolidador" parameterClass="fareInfoBean" resultMap="resultFareInfo">	
-	
+	<select id="getConsolidador" parameterClass="fareInfoBean" resultMap="resultFareInfo">
 		SELECT  				
 				pad.comision,
 			    p.nombre as proveedor,
 			    a.nombre as aerolinea,
 			    p.id_proveedor,
-			    a.id_aerolinea
-                
+			    a.id_aerolinea                
        FROM 
 	       		aerolinea a
 				inner join proveedor_aerolinea_destino pad on (a.id_aerolinea = pad.id_aerolinea )
 				inner join destino_ciudad d on (d.id_destino_ciudad = pad.id_destino_ciudad)
-				inner join proveedor p on (p.id_proveedor = pad.id_proveedor) 
-         
+				inner join proveedor p on (p.id_proveedor = pad.id_proveedor)         
 	   WHERE 
-
 				a.code_aerolinea  = #airlineCode# AND 
-	   			pad.id_destino_ciudad = #idDestino#
-	      
-	  ORDER BY pad.comision DESC   
-	    	      
-	  LIMIT 1
-	      
+	   			pad.id_destino_ciudad = #idDestino#	      
+	  ORDER BY pad.comision DESC   	    	      
+	  LIMIT 1	      
 	</select>
 	
 	<insert id="insertarHabitacionHotel" parameterClass="hotelHabitacionBean">

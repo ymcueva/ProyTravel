@@ -48,14 +48,14 @@
 			
 			<div class="row">&nbsp;</div>
 			
-			<div class="form-group">
+			<div class="form-group" id="divContenedorMotivos">
 				<div class="col-sm-5" style="text-align:right; font-weight:bold">Motivos:</div>
 				<div class="col-sm-7" id="divMotivos"></div>
 			</div>
 			
 			<div class="row">&nbsp;</div>
 			
-			<div class="form-group">
+			<div class="form-group" id="divContenedorServicios">
 				<div class="col-sm-5" style="text-align:right; font-weight:bold">Servicios:</div>
 				<div class="col-sm-7" id="divServicios"></div>
 			</div>

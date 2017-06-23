@@ -1411,6 +1411,11 @@ public class CotizacionController {
 		Map<String, Object> mapa = new HashMap<String, Object>();		
 		DataJsonBean dataJSON = new DataJsonBean();
 		
+		OrdenPlanificacionBean ordenPlanBean = null;
+		List<FareInfoBean> listaTickets = null;			
+		String detalleVuelos = "";
+		List<OrdenPlanificacionBean> listaOrdenPlan = null;	
+		
 		try {			
 			modelAndView = new ModelAndView();
 			
@@ -1427,11 +1432,8 @@ public class CotizacionController {
 			
 			System.out.println("Destinos");
 			System.out.println(listDestinosDetalle.size());
-			
-			OrdenPlanificacionBean ordenPlanBean = null;
-			List<FareInfoBean> listaTickets = null;			
-			String detalleVuelos = "";			
-			List<OrdenPlanificacionBean> listaOrdenPlan = new ArrayList<OrdenPlanificacionBean>();			
+						
+			listaOrdenPlan = new ArrayList<OrdenPlanificacionBean>();			
 			
 			for (CotizacionDetalleBean item:listDestinosDetalle ) {				
 				String vuelo = item.getIsoCiudadOrigen() + "," +  
@@ -1444,13 +1446,16 @@ public class CotizacionController {
 				System.out.println(item.getTiIda());				
 				
 				listaTickets = cotizacionService.listarTickets(vuelo);
-				ordenPlanBean = cotizacionService.minorCostTicket(listaTickets);				
-				//Mensaje Vuelo
-				detalleVuelos += "<strong>"+ item.getDesCiudadDestino() +" ("+ item.getFechaPartida() +")</strong>: " + 
-						ordenPlanBean.getNombreAerolinea() + "USD" + ordenPlanBean.getPrecioAerolinea() + 						
-						" (Comision " + ordenPlanBean.getComision() + ")";				
-				//Agregamos a la lista
-				listaOrdenPlan.add(ordenPlanBean);
+				ordenPlanBean = cotizacionService.minorCostTicket(listaTickets);	
+				if ( ordenPlanBean != null ) {
+					//Mensaje Vuelo
+					detalleVuelos += "<strong>"+ item.getDesCiudadDestino() +" ("+ item.getFechaPartida() +")</strong>: " + 
+							ordenPlanBean.getNombreAerolinea() + " / USD " + ordenPlanBean.getPrecioAerolinea() + 						
+							" (Comision " + ordenPlanBean.getComision() + ")";				
+					//Agregamos a la lista
+					listaOrdenPlan.add(ordenPlanBean);
+				}
+				
 				if ( item.getTiIda() == 0 ) {
 					//Ida y Vuelta					
 					vuelo = item.getIsoCiudadDestino() + "," +  
@@ -1461,28 +1466,44 @@ public class CotizacionController {
 					System.out.println(vuelo);
 					
 					listaTickets = cotizacionService.listarTickets(vuelo);
-					ordenPlanBean = cotizacionService.minorCostTicket(listaTickets);					
-					//Mensaje Vuelo
-					detalleVuelos += "<strong>"+ item.getDesCiudadOrigen() +" ("+ item.getFechaRetorno() +")</strong>: " + 
-							ordenPlanBean.getNombreAerolinea() + " USD" + ordenPlanBean.getPrecioAerolinea() + 						
-						" (Comision: " + ordenPlanBean.getComision() + ")";
-					//Agregamos a la lista
-					listaOrdenPlan.add(ordenPlanBean);
+					ordenPlanBean = cotizacionService.minorCostTicket(listaTickets);	
+					
+					if ( ordenPlanBean != null ) {
+						//Mensaje Vuelo
+						detalleVuelos += "<br /><strong>"+ item.getDesCiudadOrigen() +" ("+ item.getFechaRetorno() +")</strong>: " + 
+								ordenPlanBean.getNombreAerolinea() + " / USD " + ordenPlanBean.getPrecioAerolinea() + 						
+							" (Comision: " + ordenPlanBean.getComision() + ")";
+						//Agregamos a la lista
+						listaOrdenPlan.add(ordenPlanBean);
+					}
 				}
 				detalleVuelos += "<br /><br />";				
 			}
 			
 			System.out.println("Mensaje");
-			System.out.println(detalleVuelos);
+			System.out.println(detalleVuelos);						
 			
-			mapa.put("detalleVuelos", detalleVuelos);
-			mapa.put("listaVuelos", listaOrdenPlan);
-			mapa.put("cantidadVuelos", listaOrdenPlan.size());			
 			dataJSON.setRespuesta("ok", null, mapa);
 			
 		} catch (Exception e) {
+			if ( detalleVuelos.length()<0 ){
+				detalleVuelos = "No se encontraron vuelos";
+			}
+			System.out.println("**********************************************************************");
+			System.out.println("error:");
+			e.printStackTrace();
 			System.out.println(e.getMessage());
 		}
+		
+		System.out.println("**********************************************************************");
+		System.out.println("mensaje final");
+		System.out.println(detalleVuelos);
+		
+		mapa.put("detalleVuelos", detalleVuelos);
+		mapa.put("listaVuelos", listaOrdenPlan);
+		mapa.put("cantidadVuelos", listaOrdenPlan.size());
+		
+		dataJSON.setRespuesta("ok", null, mapa);
 		
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
 	}	
