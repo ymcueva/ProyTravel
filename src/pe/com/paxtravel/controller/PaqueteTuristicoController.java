@@ -488,13 +488,13 @@ public class PaqueteTuristicoController {
 			if(request.getParameter("busInteligente") != null)
 				busqueda = request.getParameter("busInteligente").toString();
 			
-			if(request.getParameter("tipoPrograma") != null)
-				tipoPrograma = request.getParameter("tipoPrograma").toString();
+			//if(request.getParameter("tipoPrograma") != null)
+			//tipoPrograma = request.getParameter("tipoPrograma").toString();
 			
 			
 			System.out.println("IdPaquete :" + idPaquete);
 			System.out.println("Busqueda :" + busqueda);
-			System.out.println("TipoPrograma :" + tipoPrograma);
+			//System.out.println("TipoPrograma :" + tipoPrograma);
 			System.out.println("nuOrden :" + nuOrden);
 			
 			orden.setNuOrden(nuOrden);
@@ -506,11 +506,14 @@ public class PaqueteTuristicoController {
 				idCotizacion = listaOrden.get(0).getIdCotiza();	
 				fechaPartida = listaOrden.get(0).getFePartida();
 				nuCotizacion = listaOrden.get(0).getNuCotizacion();
+				tipoPrograma = String.valueOf(listaOrden.get(0).getIdTipoPrograma());
 			}
 			
 			System.out.println("Id Cotizacion:" + idCotizacion);
 			System.out.println("Fecha Partida:" + fechaPartida);
 			System.out.println("Numero Cotizacion:" + nuCotizacion);
+			System.out.println("Tipo Programa:" + nuCotizacion);
+			
 			
 			if(!idPaquete.equals(""))
 				orden.setIdPaquete(Integer.parseInt(idPaquete));

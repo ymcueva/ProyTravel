@@ -1382,8 +1382,10 @@
 											precio = parseFloat(filaHabitacion[2]);
 											cantidad = parseInt(filaHabitacion[3]);
 											subtotal += (precio * cantidad) * parseInt(dias); 
-											totalHotel += subtotal;		
+											//totalHotel += subtotal;		
 										}
+										
+										totalHotel += subtotal;
 										
 										if(conthoteles > 0){
 											var noches = dias - 1;
@@ -1782,7 +1784,7 @@
 				return false;
 			}
 			
-			
+			$('#txtTotalGasto').removeAttr('disabled');
 			
 			var grabarFormParams = {
 					'paqueteTuristicoBean' : formToObject('#frmRegPaqueteTuristico')
