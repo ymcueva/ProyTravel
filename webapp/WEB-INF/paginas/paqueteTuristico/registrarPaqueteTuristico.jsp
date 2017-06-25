@@ -138,6 +138,9 @@
 				var detalleHotel = "";
 				var filaHabitacion = "";
 				var detallehabitacion = "";
+				var cantAdulto = $("#txtcantAdultos").val();
+			    var cantNino = $("#txtcantNinos").val();
+
 				
 				$("#tblDestinos tbody > tr").each(function () {
 					var row = $(this);
@@ -154,7 +157,8 @@
 					if(idTour != "0"){
 						var preAdulto = row.find('input[id="tmp_preAdultoTour"]').val();
 						var preNino = row.find('input[id="tmp_preNinoTour"]').val();
-						var totalTour = parseFloat(preAdulto) + parseFloat(preNino);
+						var totalTour = parseFloat(preAdulto)* parseInt(cantAdulto) + parseFloat(preNino) * parseInt(cantNino);
+						
 						row.find('input[id="tmp_totalTour"]').val(totalTour);
 						
 						
