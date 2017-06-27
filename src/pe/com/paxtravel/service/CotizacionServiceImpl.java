@@ -230,59 +230,59 @@ public class CotizacionServiceImpl implements CotizacionService {
 				
 				FareInfoBean fareInfoBean = getConsolidador(item);
 				
-				fareInfoBean.getComision();
-				fareInfoBean.getNombreProveedor();
-				fareInfoBean.getNombreAerolinea();
-				fareInfoBean.getIdProveedor();
-				fareInfoBean.getIdAerolinea();
+				if ( fareInfoBean != null ) {
 				
-				System.out.println("fareInfoBean ? getComision " + fareInfoBean.getComision());
-				System.out.println("fareInfoBean ? getNombreProveedor " + fareInfoBean.getNombreProveedor());
-				System.out.println("fareInfoBean ? getNombreAerolinea " + fareInfoBean.getNombreAerolinea());
-				System.out.println("fareInfoBean ? getIdProveedor " + fareInfoBean.getIdProveedor());
-				System.out.println("fareInfoBean ? getIdAerolinea " + fareInfoBean.getIdAerolinea());
-				
-				/* pad.comision,
-			    p.nombre as proveedor,
-			    a.nombre as aerolinea,
-			    p.id_proveedor,
-			    a.id_aerolinea  					
-				<result property="comision"		    column="comision" />
-				<result property="nombreProveedor" 		    column="proveedor" />
-				<result property="nombreAerolinea" 		    column="aerolinea" />	
-				<result property="idProveedor" 		    column="id_proveedor" />
-				<result property="idAerolinea" 		    column="id_aerolinea" /> */
-				
-				if( fareInfoBean != null ) {
+					fareInfoBean.getComision();
+					fareInfoBean.getNombreProveedor();
+					fareInfoBean.getNombreAerolinea();
+					fareInfoBean.getIdProveedor();
+					fareInfoBean.getIdAerolinea();
 					
-					item.setComision(fareInfoBean.getComision());
-					item.setNombreProveedor(fareInfoBean.getNombreProveedor());
-					item.setNombreAerolinea(fareInfoBean.getNombreAerolinea());
-					item.setIdProveedor(fareInfoBean.getIdProveedor());
-					item.setIdAerolinea(fareInfoBean.getIdAerolinea());
-					item.setPrecio(Double.parseDouble(item.getFare()));
+					System.out.println("fareInfoBean ? getComision " + fareInfoBean.getComision());
+					System.out.println("fareInfoBean ? getNombreProveedor " + fareInfoBean.getNombreProveedor());
+					System.out.println("fareInfoBean ? getNombreAerolinea " + fareInfoBean.getNombreAerolinea());
+					System.out.println("fareInfoBean ? getIdProveedor " + fareInfoBean.getIdProveedor());
+					System.out.println("fareInfoBean ? getIdAerolinea " + fareInfoBean.getIdAerolinea());
 					
-					encontro = true;
+					/* pad.comision,
+				    p.nombre as proveedor,
+				    a.nombre as aerolinea,
+				    p.id_proveedor,
+				    a.id_aerolinea  					
+					<result property="comision"		    column="comision" />
+					<result property="nombreProveedor" 		    column="proveedor" />
+					<result property="nombreAerolinea" 		    column="aerolinea" />	
+					<result property="idProveedor" 		    column="id_proveedor" />
+					<result property="idAerolinea" 		    column="id_aerolinea" /> */
 					
-					System.out.println("item comision? " + item.getComision());
-					System.out.println("item proveedor? " + item.getNombreProveedor());
-					System.out.println("item aerolinea? " + item.getNombreAerolinea());
-					System.out.println("fareinfobean toString? " + item.toString());
+					if( fareInfoBean != null ) {						
+						item.setComision(fareInfoBean.getComision());
+						item.setNombreProveedor(fareInfoBean.getNombreProveedor());
+						item.setNombreAerolinea(fareInfoBean.getNombreAerolinea());
+						item.setIdProveedor(fareInfoBean.getIdProveedor());
+						item.setIdAerolinea(fareInfoBean.getIdAerolinea());
+						item.setPrecio(Double.parseDouble(item.getFare()));						
+						encontro = true;						
+						System.out.println("item comision? " + item.getComision());
+						System.out.println("item proveedor? " + item.getNombreProveedor());
+						System.out.println("item aerolinea? " + item.getNombreAerolinea());
+						System.out.println("fareinfobean toString? " + item.toString());						
+					} else {
+						item.setComision("");
+						item.setNombreProveedor("");
+						item.setNombreAerolinea("");
+						item.setIdProveedor(0);
+						item.setIdAerolinea(0);
+						item.setPrecio(0);
+						encontro = false;
+					}
 					
-				} else {
-					item.setComision("");
-					item.setNombreProveedor("");
-					item.setNombreAerolinea("");
-					item.setIdProveedor(0);
-					item.setIdAerolinea(0);
-					item.setPrecio(0);
-					encontro = false;
-				}												
-				
-				if( encontro ) {
-					fareInfoDetaList.add(item);
-					System.out.println("Encontro el consolidador: lista Agregada");
-				}								
+					if( encontro ) {
+						fareInfoDetaList.add(item);
+						System.out.println("Encontro el consolidador: lista Agregada");
+					}
+					
+				}
 				
 			}
 			
@@ -292,7 +292,10 @@ public class CotizacionServiceImpl implements CotizacionService {
 		
 		}
 		catch(Exception e) {
+			System.out.println("*****************************************************************************");
+			System.out.println("error listarTickets");
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return fareInfoDetaList;
