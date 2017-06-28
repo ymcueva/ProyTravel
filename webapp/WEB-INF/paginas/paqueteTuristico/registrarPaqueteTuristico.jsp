@@ -1829,6 +1829,7 @@
 				var precioAerolinea = row.find('input[id="tmp_precioAerolinea"]').val();
 				var urlAerolinea = row.find('input[id="tmp_urlAerolinea"]').val();
 				var tipo = row.find('input[id="tmp_tipo"]').val();
+				var fechaPartida = row.find('input[id="tmp_fechaPartida"]').val();
 				
 				var idhotel = row.find('input[id="tmp_idHotel"]').val();
 				var idprovhotel = row.find('input[id="tmp_idProveedorHotel"]').val();
@@ -1855,7 +1856,7 @@
 				
 				//registrando tickets	
 				if(idAerolinea != "0"){
-					filaTicket = idProvAerolinea + "," + idAerolinea + "," + precioAerolinea + "," + destinoRow + "," + adultos + "," + ninos + "," + tipo;
+					filaTicket = idProvAerolinea + "," + idAerolinea + "," + precioAerolinea + "," + destinoRow + "," + adultos + "," + ninos + "," + tipo + "," + fechaPartida + "," + urlAerolinea ;
 					tickets += filaTicket + ";";
 				}
 				
@@ -2090,7 +2091,7 @@
 									<input type="hidden" name="totalTicket" id="hdnTotalTicket" value="${totalTicket}"/>
 									<input type="hidden" name="totalHotel" id="hdnTotalHotel" value="${totalHotel}"/>
 									<input type="hidden" value="0" id="hdnOrdenValida" />
-									<input type="hidden" value="0" id="hdnTipoPrograma" />
+									<input type="hidden" value="0" name="idTipoPaquete" id="hdnTipoPrograma" value="${idTipoPaquete}" />
 									
 									<div class="form-group">										
 										<input type="hidden" name="flagEdicion" id="txtflagEdicion" value="${modo}" />								

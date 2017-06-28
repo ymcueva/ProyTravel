@@ -237,7 +237,7 @@ public class CotizacionServiceImpl implements CotizacionService {
 					fareInfoBean.getNombreAerolinea();
 					fareInfoBean.getIdProveedor();
 					fareInfoBean.getIdAerolinea();
-					
+				
 					System.out.println("fareInfoBean ? getComision " + fareInfoBean.getComision());
 					System.out.println("fareInfoBean ? getNombreProveedor " + fareInfoBean.getNombreProveedor());
 					System.out.println("fareInfoBean ? getNombreAerolinea " + fareInfoBean.getNombreAerolinea());
@@ -261,7 +261,8 @@ public class CotizacionServiceImpl implements CotizacionService {
 						item.setNombreAerolinea(fareInfoBean.getNombreAerolinea());
 						item.setIdProveedor(fareInfoBean.getIdProveedor());
 						item.setIdAerolinea(fareInfoBean.getIdAerolinea());
-						item.setPrecio(Double.parseDouble(item.getFare()));						
+						item.setPrecio(Double.parseDouble(item.getFare()));	
+						item.setHref(item.getHref());
 						encontro = true;						
 						System.out.println("item comision? " + item.getComision());
 						System.out.println("item proveedor? " + item.getNombreProveedor());
@@ -274,6 +275,7 @@ public class CotizacionServiceImpl implements CotizacionService {
 						item.setIdProveedor(0);
 						item.setIdAerolinea(0);
 						item.setPrecio(0);
+						item.setHref("");
 						encontro = false;
 					}
 					

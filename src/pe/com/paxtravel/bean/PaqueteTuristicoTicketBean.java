@@ -12,6 +12,7 @@ public class PaqueteTuristicoTicketBean {
 	private int nuAdultos;
 	private int nuNinos;
 	private String tipoTicket;
+	private String fePartida;
 	
 	public int getIdPaqueteTicket() {
 		return idPaqueteTicket;
@@ -72,6 +73,12 @@ public class PaqueteTuristicoTicketBean {
 	}
 	public void setTipoTicket(String tipoTicket) {
 		this.tipoTicket = tipoTicket;
+	}
+	public String getFePartida() {
+		return fePartida;
+	}
+	public void setFePartida(String fePartida) {
+		this.fePartida = fePartida;
 	}
 	
 

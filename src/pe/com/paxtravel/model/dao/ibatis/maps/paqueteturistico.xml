@@ -371,7 +371,8 @@
 			total_gasto,
 			total_tour,
 			total_ticket,
-			total_hotel
+			total_hotel,
+			id_tipo_paquete
 		) 
 		VALUES 
 		(
@@ -388,7 +389,8 @@
 			#totalGasto#,
 			#totalTour#,
 			#totalTicket#,
-			#totalHotel#			
+			#totalHotel#,
+			#idTipoPaquete#			
 		)		
 		<selectKey keyProperty="idPaquete" resultClass="integer">
             select LAST_INSERT_ID();
@@ -449,7 +451,9 @@
 			id_destino_destino,
 			nu_adultos,
 			nu_ninos,
-			tipo_ticket
+			tipo_ticket,
+			fecha_partida,
+			url_ticket
 		)
 		VALUES
 		(
@@ -460,7 +464,9 @@
 			#idDestino#,
 			#nuAdultos#,
 			#nuNinos#,
-			#tipoTicket#
+			#tipoTicket#,
+			#fePartida#,
+			#urlTicket#
 			
 		)
 		

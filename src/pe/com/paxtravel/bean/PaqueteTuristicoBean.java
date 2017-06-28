@@ -31,6 +31,7 @@ public class PaqueteTuristicoBean {
 	private double totalTicket;
 	private double totalHotel;
 	private String comentario;
+	private int idTipoPaquete;
 	
 	public int getNumeroFila() {
 		return numeroFila;
@@ -227,6 +228,12 @@ public class PaqueteTuristicoBean {
 	}
 	public void setComentario(String comentario) {
 		this.comentario = comentario;
+	}
+	public int getIdTipoPaquete() {
+		return idTipoPaquete;
+	}
+	public void setIdTipoPaquete(int idTipoPaquete) {
+		this.idTipoPaquete = idTipoPaquete;
 	}
 	
 }

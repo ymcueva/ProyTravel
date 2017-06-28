@@ -700,6 +700,7 @@ public class PaqueteTuristicoController {
 							bean.setPrecioAerolinea(precioMenor);
 							bean.setNombreAerolinea(listaTickets.get(0).getNombreAerolinea());
 							bean.setComision(Integer.parseInt(listaTickets.get(0).getComision()));
+							bean.setUrlAerolinea(listaTickets.get(0).getHref());
 							
 							for(FareInfoBean info : listaTickets) {
 								
@@ -710,6 +711,8 @@ public class PaqueteTuristicoController {
 									bean.setPrecioAerolinea(precioMenor);
 									bean.setNombreAerolinea(info.getNombreAerolinea());
 									bean.setComision(Integer.parseInt(info.getComision()));
+									bean.setUrlAerolinea(info.getHref());
+									
 								}
 								
 							}
@@ -1130,7 +1133,7 @@ public class PaqueteTuristicoController {
 					System.out.println(" bean: " + objbean.toString());
 					
 					System.out.println("Id Paquete :" + objbean.getIdPaquete());
-					
+					System.out.println("Nu Orden :" + objbean.getNuOrden());
 				
 					//System.out.println(estado);
 					
@@ -1138,12 +1141,25 @@ public class PaqueteTuristicoController {
 					//objbean.setIdEstado(1);				
 					objbean.setObservacion(objbean.getObservacion());					
 					objbean.setIdOrden(objbean.getIdOrden());
+					objbean.setIdTipoPaquete(objbean.getIdTipoPaquete());
 					
 					ordenPlanificacionBean.setIdOrden(objbean.getIdOrden());
+					ordenPlanificacionBean.setNuOrden(objbean.getNuOrden());
 					
 					if(objbean.getObservacion().equals(""))
 						objbean.setObservacion(objbean.getComentario());
 					
+					/*
+					
+					List<OrdenPlanificacionBean> listaOrdenPaquete = new ArrayList<OrdenPlanificacionBean>();
+					
+					int idTipoPaquete = 0;
+					listaOrdenPaquete = ordenPlanificacionService.obtenerOrdenPlanificacion(ordenPlanificacionBean);
+					if(listaOrdenPaquete.size() > 0) {
+						idTipoPaquete = listaOrdenPaquete.get(0).getIdTipoPrograma();
+						objbean.setIdTipoPaquete(idTipoPaquete);
+					}
+					*/
 					
 					System.out.println(" fechas ini... ");
 					
@@ -1323,7 +1339,8 @@ public class PaqueteTuristicoController {
 								paqueteTuristicoTicketBean.setNuAdultos(Integer.parseInt(ticket[4].toString()));
 								paqueteTuristicoTicketBean.setNuNinos(Integer.parseInt(ticket[5].toString()));
 								paqueteTuristicoTicketBean.setTipoTicket(ticket[6].toString());
-								
+								paqueteTuristicoTicketBean.setFePartida(ticket[7].toString());
+								paqueteTuristicoTicketBean.setUrlTicket(ticket[8].toString());
 								//System.out.println("Registrando Ticket Destino :" + ticket[3].toString());
 								
 								idPaqueteDestinoTicket = paqueteTuristicoService.RegistrarPaqueteTuristicoTicket(paqueteTuristicoTicketBean);
