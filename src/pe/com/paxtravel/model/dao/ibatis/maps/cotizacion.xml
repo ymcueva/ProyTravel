@@ -478,14 +478,15 @@
 	</select>
 	
 	<select id="listarPaquete" parameterClass="paqueteManagerBean" resultMap="resultPaquetes">
-		SELECT id_paquete, nombre, observacion, im_precio, #tiPresupuestoValue# AS ti_presupuesto 
+		SELECT id_paquete, nombre, observacion, #tiPresupuestoValue# AS ti_presupuesto, total_gasto AS im_precio 
 			FROM paquete_turistico  
-		WHERE id_estado = 1 and id_tipo_paquete = 1 AND <![CDATA[im_precio<=#imPrecioMax# and im_precio>=#imPrecioMin#]]> 		
+		WHERE id_estado = 5 and id_tipo_paquete = #idTipoPaquete# 
+			AND <![CDATA[total_gasto<=#imPrecioMax# and total_gasto>=#imPrecioMin#]]> 		
 	</select>
 	
 	<select id="listarPaqueteDestinoTours" parameterClass="paqueteManagerBean" resultMap="resultPaqueteDestinoTour">
 		SELECT id_paquete_destino_tour, id_paquete_destino, id_tour, descripcion, im_precio_adulto, im_precio_nino 
-		FROM proytraveldb.paquete_turistico_destino_tour
+		FROM paquete_turistico_destino_tour
 	</select>
 	
 	<select id="listarPaqueteDestinoHoteles" parameterClass="paqueteManagerBean" resultMap="resultPaqueteDestinoHotel">
@@ -503,7 +504,7 @@
 		    tCA.nombre AS categoria_alojamiento,    	
 		    pTDH.descripcion_alojamiento, 
 		    pTDH.im_precio     
-		FROM proytraveldb.paquete_turistico_destino_hotel AS pTDH 
+		FROM paquete_turistico_destino_hotel AS pTDH 
 			INNER JOIN proveedor AS P ON (pTDH.id_proveedor = P.id_proveedor)
 		    INNER JOIN hotel as H ON (pTDH.id_hotel = H.id_hotel)
 		    INNER JOIN tipo_alojamiento as tA ON (tA.id_tipo_alojamiento=pTDH.id_tipo_alojamiento)
@@ -518,7 +519,7 @@
 			A.nombre AS nom_aerolinea, 
 			A.code_aerolinea,
 		    pTT.im_precio
-		 FROM proytraveldb.paquete_turistico_ticket AS pTT		
+		 FROM paquete_turistico_ticket AS pTT		
 		INNER JOIN aerolinea AS A ON (pTT.id_aerolinea = A.id_aerolinea)
 		INNER JOIN proveedor AS P ON (pTT.id_proveedor = P.id_proveedor)		
 	</select>
@@ -578,13 +579,13 @@
 				IF((SELECT COUNT(*) FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete# AND ptD.id_destino_ciudad IN ( select id_destino from cotizacion_deta where id_cotiza = #numeroCotizacion# ) )=(Select COUNT(*) from cotizacion_deta where id_cotiza = #numeroCotizacion#),
 					If((SELECT COUNT(*) FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete#)= (Select COUNT(*) from cotizacion_deta where id_cotiza = #numeroCotizacion#),'Si','No'),'No') AS destinos,
 			            
-			    (SELECT IF (100/(Select COUNT(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete#)*SUM(IF((SELECT count(*) FROM paquete_turistico_destino_tour where id_paquete_destino = ptD.id_paquete_destino)>0,1,0))>=(Select value_parametro From parametros Where key_parametro = 'CODES'),'Si', 'No') 
+			    (SELECT IF (100/(Select COUNT(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete#)*SUM(IF((SELECT count(*) FROM paquete_turistico_destino_tour where id_destino = ptD.id_destino_ciudad)>0,1,0))>=(Select value_parametro From parametros Where key_parametro = 'CODES'),'Si', 'No') 
 					FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete# ) AS tour,
 			        
-			    (SELECT IF (100/(Select COUNT(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete#)*SUM(IF((SELECT count(*) FROM paquete_turistico_destino_hotel where id_paquete_destino = ptD.id_paquete_destino)>0,1,0))>=(Select value_parametro From parametros Where key_parametro = 'CODES'),'Si', 'No') 
+			    (SELECT IF (100/(Select COUNT(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete#)*SUM(IF((SELECT count(*) FROM paquete_turistico_destino_hotel where id_destino = ptD.id_destino_ciudad)>0,1,0))>=(Select value_parametro From parametros Where key_parametro = 'CODES'),'Si', 'No') 
 					FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete# ) AS hotel, 
 			        
-			    (SELECT IF (100/(Select COUNT(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete#)*SUM(IF((SELECT count(*) FROM paquete_turistico_ticket where id_paquete_destino = ptD.id_paquete_destino)>0,1,0))>=(Select value_parametro From parametros Where key_parametro = 'CODES'),'Si', 'No') 
+			    (SELECT IF (100/(Select COUNT(*) from `paquete_turistico_destino` where id_paquete_turistico = #idPaquete#)*SUM(IF((SELECT count(*) FROM paquete_turistico_ticket where id_destino_destino = ptD.id_destino_ciudad)>0,1,0))>=(Select value_parametro From parametros Where key_parametro = 'CODES'),'Si', 'No') 
 					FROM paquete_turistico_destino AS ptD WHERE ptD.id_paquete_turistico = #idPaquete# ) AS ticket,
 			        
 			<!-- caracteristicas hotel -->
@@ -646,7 +647,7 @@
 			Distinct            
 			pd.id_paquete_turistico,  
 		    pturis.nombre AS paquete,
-		    pturis.im_precio AS precio,		    
+		    pturis.total_gasto AS precio,		    
 		    IfNull(pturis.total_gasto,0) AS im_gasto,
 			dc.descripcion AS ciudad,            
 			(select t.descripcion From paquete_turistico_destino_tour AS ptt 					 
