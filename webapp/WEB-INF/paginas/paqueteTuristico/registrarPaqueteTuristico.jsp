@@ -1197,6 +1197,22 @@
 				var params = "";
 				var numOrden = $("#txtcodOrden").val();
 				
+				var cotizacion = $("#hdnIdCotizacion").val();
+				
+				if(cotizacion == "0" && busInteligente == 1) {
+					$("#mensajeClienteError").html("Debe tener una cotización asociada para realizar la busqueda historica");
+					
+					$('#divMensajeErrorCliente').modal({
+						backdrop: 'static',
+						keyboard: false
+					}); 
+					
+					return false;
+					
+				}
+				
+				
+				
 				
 				params = "?nuorden="+numOrden;
 				params += "&idpaquete=" + idPaquete;
@@ -1593,7 +1609,7 @@
 							$("#hdIdOrden").val("");
 							$("#hdnOrdenValida").val("0");
 							$("#hdnTipoPrograma").val("0");
-							
+							$("#hdnIdCotizacion").val("0");
 							$("#mensajeClienteError").html(msj);
 							
 							$('#divMensajeErrorCliente').modal({
@@ -1622,6 +1638,7 @@
 							$("#hdIdOrden").val("");
 							$("#hdnOrdenValida").val("0");
 							$("#hdnTipoPrograma").val("0");
+							$("#hdnIdCotizacion").val("0");
 							
 							$("#mensajeClienteError").html(msj);
 							
@@ -1651,6 +1668,7 @@
 						$("#hdnOrdenValida").val("1");
 						$("#hdnTipoPrograma").val(rpta.tipoPrograma);
 						$("#txtDescripcion").val(rpta.motivo);
+						$("#hdnIdCotizacion").val(rpta.idCotizacion);
 						
 						$("#btnBuscarPropuesta").attr("disabled", false);
 						
@@ -2090,6 +2108,8 @@
 									<input type="hidden" name="totalTour" id="hdnTotalTour" value="${totalTour}"/>
 									<input type="hidden" name="totalTicket" id="hdnTotalTicket" value="${totalTicket}"/>
 									<input type="hidden" name="totalHotel" id="hdnTotalHotel" value="${totalHotel}"/>
+									<input type="hidden" id="hdnIdCotizacion" />
+									
 									<input type="hidden" value="0" id="hdnOrdenValida" />
 									<input type="hidden" value="0" name="idTipoPaquete" id="hdnTipoPrograma" value="${idTipoPaquete}" />
 									

@@ -108,7 +108,9 @@
 	
 		<select id="obtenerOrdenPlanificacion" parameterClass="objBean" resultMap="resultOrdenPlanificacion">
 			
-			SELECT ord.id_orden, ord.id_cotiza, ord.nu_orden, ord.observacion, ord.id_usuario_ins, 
+			SELECT ord.id_orden, 
+			       ifnull(ord.id_cotiza,0) id_cotiza, 
+			       ord.nu_orden, ord.observacion, ord.id_usuario_ins, 
 			       ord.descripcion, 
 			       DATE_FORMAT(ord.fe_order,'%d-%m-%Y') fe_order, 
 			       ord.autorizacion,
@@ -120,10 +122,10 @@
     			   ord.nu_adultos,
     			   ord.nu_ninos,
     			   ord.id_tipo_programa,
-    			   cot.nu_cotiza
+    			   ifnull(cot.nu_cotiza,'')nu_cotiza
 			FROM orden ord 
 			inner join cliente cli on ord.id_cliente = cli.id_cliente
-			inner join cotizacion cot on ord.id_cotiza = cot.id_cotiza
+			left outer join cotizacion cot on ord.id_cotiza = cot.id_cotiza
 			where nu_orden= #nuOrden# 
 			
 		</select>  

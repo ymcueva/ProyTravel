@@ -410,6 +410,7 @@ public class PaqueteTuristicoController {
 				mapa.put("nuaultos", listaOrdenPlanificacion.get(0).getNuAdultos());
 				mapa.put("nuninos", listaOrdenPlanificacion.get(0).getNuNinos());
 				mapa.put("tipoPrograma", listaOrdenPlanificacion.get(0).getIdTipoPrograma());
+				mapa.put("idCotizacion",listaOrdenPlanificacion.get(0).getIdCotiza());
 				mapa.put("mensaje","");
 				mapa.put("status", "1");
 				
@@ -447,6 +448,7 @@ public class PaqueteTuristicoController {
 				mapa.put("idorden", "");
 				mapa.put("tipoPrograma", "0");
 				mapa.put("listaOrdenMotivo", null);
+				mapa.put("idCotizacion","");
 				mapa.put("motivo",motivo);
 			}
 			
