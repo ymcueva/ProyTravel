@@ -32,6 +32,8 @@ public class PaqueteTuristicoBean {
 	private double totalHotel;
 	private String comentario;
 	private int idTipoPaquete;
+	private int idOrigen;
+	
 	
 	public int getNumeroFila() {
 		return numeroFila;
@@ -234,6 +236,12 @@ public class PaqueteTuristicoBean {
 	}
 	public void setIdTipoPaquete(int idTipoPaquete) {
 		this.idTipoPaquete = idTipoPaquete;
+	}
+	public int getIdOrigen() {
+		return idOrigen;
+	}
+	public void setIdOrigen(int idOrigen) {
+		this.idOrigen = idOrigen;
 	}
 	
 }

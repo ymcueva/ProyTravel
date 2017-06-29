@@ -453,7 +453,8 @@
 			nu_ninos,
 			tipo_ticket,
 			fecha_partida,
-			url_ticket
+			url_ticket,
+			id_destino_origen
 		)
 		VALUES
 		(
@@ -466,7 +467,8 @@
 			#nuNinos#,
 			#tipoTicket#,
 			#fePartida#,
-			#urlTicket#
+			#urlTicket#,
+			#idOrigen#
 			
 		)
 		

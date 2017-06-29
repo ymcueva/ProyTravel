@@ -1610,6 +1610,7 @@
 							$("#hdnOrdenValida").val("0");
 							$("#hdnTipoPrograma").val("0");
 							$("#hdnIdCotizacion").val("0");
+							$("#hdnIdOrigen").val("0");
 							$("#mensajeClienteError").html(msj);
 							
 							$('#divMensajeErrorCliente').modal({
@@ -1639,6 +1640,7 @@
 							$("#hdnOrdenValida").val("0");
 							$("#hdnTipoPrograma").val("0");
 							$("#hdnIdCotizacion").val("0");
+							$("#hdnIdOrigen").val("0");
 							
 							$("#mensajeClienteError").html(msj);
 							
@@ -1669,6 +1671,7 @@
 						$("#hdnTipoPrograma").val(rpta.tipoPrograma);
 						$("#txtDescripcion").val(rpta.motivo);
 						$("#hdnIdCotizacion").val(rpta.idCotizacion);
+						$("#hdnIdOrigen").val(rpta.idOrigen);
 						
 						$("#btnBuscarPropuesta").attr("disabled", false);
 						
@@ -1705,6 +1708,8 @@
 						$("#hdIdOrden").val("");
 						$("#hdnOrdenValida").val("0");
 						$("#hdnTipoPrograma").val("0");
+						$("#hdnIdCotizacion").val("0");
+						$("#hdnIdOrigen").val("0");
 						
 						if(msj != "") {
 							$("#mensajeClienteError").html(msj);
@@ -1874,7 +1879,7 @@
 				
 				//registrando tickets	
 				if(idAerolinea != "0"){
-					filaTicket = idProvAerolinea + "," + idAerolinea + "," + precioAerolinea + "," + destinoRow + "," + adultos + "," + ninos + "," + tipo + "," + fechaPartida + "," + urlAerolinea ;
+					filaTicket = idProvAerolinea + "," + idAerolinea + "," + precioAerolinea + "," + destinoRow + "," + tipo + "," + fechaPartida + "," + urlAerolinea.substring(0, 60) ;
 					tickets += filaTicket + ";";
 				}
 				
@@ -2108,7 +2113,9 @@
 									<input type="hidden" name="totalTour" id="hdnTotalTour" value="${totalTour}"/>
 									<input type="hidden" name="totalTicket" id="hdnTotalTicket" value="${totalTicket}"/>
 									<input type="hidden" name="totalHotel" id="hdnTotalHotel" value="${totalHotel}"/>
-									<input type="hidden" id="hdnIdCotizacion" />
+									<input type="hidden" id="hdnIdCotizacion" value="${idCotizacion}"/>
+									<input type="hidden" name="idOrigen" id="hdnIdOrigen" value="${idOrigen}"/>
+									
 									
 									<input type="hidden" value="0" id="hdnOrdenValida" />
 									<input type="hidden" value="0" name="idTipoPaquete" id="hdnTipoPrograma" value="${idTipoPaquete}" />

@@ -39,6 +39,7 @@
 			<result property="nuNinos"					    column="nu_ninos"/>
 			<result property="idTipoPrograma"				column="id_tipo_programa"/>
 			<result property="nuCotizacion"				    column="nu_cotiza"/>
+			<result property="idOrigen"				        column="id_origen"/>
 			
 			
 			
@@ -112,17 +113,18 @@
 			       ifnull(ord.id_cotiza,0) id_cotiza, 
 			       ord.nu_orden, ord.observacion, ord.id_usuario_ins, 
 			       ord.descripcion, 
-			       DATE_FORMAT(ord.fe_order,'%d-%m-%Y') fe_order, 
+			       DATE_FORMAT(ord.fe_order,'%d/%m/%Y') fe_order, 
 			       ord.autorizacion,
     			   ord.im_presupuesto_minimo, ord.im_presupuesto_maximo, ord.id_cliente, ord.id_estado, 
     			   ord.id_moneda, ord.fe_inicio, ord.fe_fin,
     			   CONCAT(cli.nombres,' ',cli.apellidos)nomcliente,
-    			   DATE_FORMAT(ord.fe_partida,'%d-%m-%Y %H:%i:%s')fe_partida,
-    			   DATE_FORMAT(ord.fe_retorno,'%d-%m-%Y %H:%i:%s')fe_retorno,
+    			   DATE_FORMAT(ord.fe_partida,'%d/%m/%Y %H:%i:%s')fe_partida,
+    			   DATE_FORMAT(ord.fe_retorno,'%d/%m/%Y %H:%i:%s')fe_retorno,
     			   ord.nu_adultos,
     			   ord.nu_ninos,
     			   ord.id_tipo_programa,
-    			   ifnull(cot.nu_cotiza,'')nu_cotiza
+    			   ifnull(cot.nu_cotiza,'')nu_cotiza,
+    			   ord.id_origen
 			FROM orden ord 
 			inner join cliente cli on ord.id_cliente = cli.id_cliente
 			left outer join cotizacion cot on ord.id_cotiza = cot.id_cotiza

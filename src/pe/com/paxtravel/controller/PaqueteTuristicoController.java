@@ -411,6 +411,8 @@ public class PaqueteTuristicoController {
 				mapa.put("nuninos", listaOrdenPlanificacion.get(0).getNuNinos());
 				mapa.put("tipoPrograma", listaOrdenPlanificacion.get(0).getIdTipoPrograma());
 				mapa.put("idCotizacion",listaOrdenPlanificacion.get(0).getIdCotiza());
+				mapa.put("idOrigen",listaOrdenPlanificacion.get(0).getIdOrigen());
+				
 				mapa.put("mensaje","");
 				mapa.put("status", "1");
 				
@@ -449,6 +451,7 @@ public class PaqueteTuristicoController {
 				mapa.put("tipoPrograma", "0");
 				mapa.put("listaOrdenMotivo", null);
 				mapa.put("idCotizacion","");
+				mapa.put("idOrigen","");
 				mapa.put("motivo",motivo);
 			}
 			
@@ -516,6 +519,7 @@ public class PaqueteTuristicoController {
 			System.out.println("Numero Cotizacion:" + nuCotizacion);
 			System.out.println("Tipo Programa:" + nuCotizacion);
 			
+			fechaPartida = fechaPartida.replace("/", "-");
 			
 			if(!idPaquete.equals(""))
 				orden.setIdPaquete(Integer.parseInt(idPaquete));
@@ -949,6 +953,8 @@ public class PaqueteTuristicoController {
 				double totalTour = 0d;
 				double totalTicket = 0d;
 				double totalHotel = 0d;
+				int idCotizacion = 0;
+				int idOrigen = 0;
 				String tipoPrograma = "0";
 				
 				//Cargando los datos del paquete cuando se va modificar
@@ -982,6 +988,8 @@ public class PaqueteTuristicoController {
 						nuaultos = String.valueOf(listaOrden.get(0).getNuAdultos());
 						nuninos = String.valueOf(listaOrden.get(0).getNuNinos());
 						tipoPrograma = String.valueOf(listaOrden.get(0).getIdTipoPrograma());
+						idCotizacion = listaOrden.get(0).getIdCotiza();
+						idOrigen = listaOrden.get(0).getIdOrigen();
 						mapaDatos.put("mensaje","");
 						mapaDatos.put("status", "1");
 						
@@ -1013,6 +1021,8 @@ public class PaqueteTuristicoController {
 						nuninos = "";
 						motivo = "";
 						tipoPrograma = "0";
+						idCotizacion = 0;
+						idOrigen = 0;
 						mapaDatos.put("mensaje","");
 						mapaDatos.put("status", "0");
 						
@@ -1083,6 +1093,8 @@ public class PaqueteTuristicoController {
 				modelAndView.addObject("totalTicket",totalTicket);
 				modelAndView.addObject("totalHotel",totalHotel);
 				modelAndView.addObject("totalGasto",totalGasto);
+				modelAndView.addObject("idCotizacion",idCotizacion);
+				modelAndView.addObject("idOrigen",idOrigen);
 				
 				
 				
@@ -1303,6 +1315,12 @@ public class PaqueteTuristicoController {
 					System.out.println("Fin registrar tours");
 					
 					System.out.println("Inicio registrar tickets");
+					
+					int idOrigen = 0;
+					int contTicket = 0;
+					
+					System.out.println("Tickets :" + tickets);
+					
 					//Registrando tickets
 					if(!tickets.equals("")){
 						String ultimoCaracterTicket = tickets.substring(tickets.length()-1);
@@ -1330,20 +1348,28 @@ public class PaqueteTuristicoController {
 							//System.out.println("Adultos : " + ticket[4].toString());
 						//	System.out.println("Ninos : " + ticket[5].toString());
 						//	System.out.println("Tipo : " + ticket[6].toString());
-							
 							if(Integer.parseInt(ticket[0].toString()) > 0){
+							
+								if(i == 0)
+									paqueteTuristicoTicketBean.setIdOrigen(objbean.getIdOrigen());
+								else
+									paqueteTuristicoTicketBean.setIdOrigen(idOrigen);
+								
+								
 								paqueteTuristicoTicketBean.setIdPaqueteTuristico(registro);							
 								paqueteTuristicoTicketBean.setIdProveedor(Integer.parseInt(ticket[0].toString()));
 								paqueteTuristicoTicketBean.setIdAerolinea(Integer.parseInt(ticket[1].toString()));
 								paqueteTuristicoTicketBean.setImPrecio(Double.parseDouble(ticket[2].toString()));
 								//paqueteTuristicoTicketBean.setUrlTicket(ticket[3].toString());
 								paqueteTuristicoTicketBean.setIdDestino(Integer.parseInt(ticket[3].toString()));
-								paqueteTuristicoTicketBean.setNuAdultos(Integer.parseInt(ticket[4].toString()));
-								paqueteTuristicoTicketBean.setNuNinos(Integer.parseInt(ticket[5].toString()));
-								paqueteTuristicoTicketBean.setTipoTicket(ticket[6].toString());
-								paqueteTuristicoTicketBean.setFePartida(ticket[7].toString());
-								paqueteTuristicoTicketBean.setUrlTicket(ticket[8].toString());
+								paqueteTuristicoTicketBean.setNuAdultos(objbean.getNuAdultos());
+								paqueteTuristicoTicketBean.setNuNinos(objbean.getNuNinos());
+								paqueteTuristicoTicketBean.setTipoTicket(ticket[4].toString());
+								paqueteTuristicoTicketBean.setFePartida(ticket[5].toString());
+								paqueteTuristicoTicketBean.setUrlTicket(ticket[6].toString());
 								//System.out.println("Registrando Ticket Destino :" + ticket[3].toString());
+								
+								idOrigen = paqueteTuristicoTicketBean.getIdDestino();
 								
 								idPaqueteDestinoTicket = paqueteTuristicoService.RegistrarPaqueteTuristicoTicket(paqueteTuristicoTicketBean);
 								
