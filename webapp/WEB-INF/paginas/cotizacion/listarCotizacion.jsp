@@ -134,13 +134,13 @@
 			bDestroy: true,
 			ordering: false,
 			searching: false,
-			paging: true,
+			paging: false,
 			bScrollAutoCss: true,
 			bStateSave: false,
 			bAutoWidth: false,
 			bScrollCollapse: false,
 			pagingType: "full_numbers",
-			iDisplayLength: 10,
+			iDisplayLength: 20,
 			responsive: true,
 			bLengthChange: false,
 			info: false,
@@ -174,7 +174,7 @@
 				}
 			}],
 			columns: [
-				{data: "numeroFila"},
+				{data: "numeroFila", "class": "hidden"},
 				{data: "numeroCotizacion"},
 				{data: "fechaCotizacion"},
 				{data: "nombreCliente"},
@@ -234,6 +234,8 @@
 				
 				if (response.estado = "ok") {
 					
+					console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+					
 					console.log(response.dataJson);
 					console.log(response);
 					
@@ -261,24 +263,41 @@
 					//$("#").val(response.dataJson.cotizacion.categoriaAlojamiento);
 					//$("#").val(response.dataJson.cotizacion.habitaciones);
 					
-					$("#divDestinos").html(response.dataJson.cotizacion.destinos);					
-					$("#divMotivos").html(response.dataJson.cotizacion.motivos);
+					$("#divDestinos").html(response.dataJson.cotizacion.destinos);
+					
+					console.log("motivos");
+					var motivos = response.dataJson.cotizacion.motivos;
+					console.log(motivos);
+					console.log(motivos.length);
+					
+					if ( motivos.length > 0 ) {
+						$("#divContenedorMotivos").css("display", "none");
+					} else {
+						$("#divMotivos").html(response.dataJson.cotizacion.motivos);
+					}
+					
 					$("#divServicios").html(response.dataJson.cotizacion.servicios);
 					
-					if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) { //Paquete Turistico 1 / //Ticket Aereo 2
-						if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) {										
+					console.log("Estado");
+					console.log(response.dataJson.cotizacion.idEstado);
+					
+					if ( response.dataJson.cotizacion.idEstado == 5 ) { //Estado Finalizado
+						$("#divBotonCotizacionEnviar").css("display", "inline");
+						console.log("Estado Finalizado");
+					} else {					
+						if ( response.dataJson.cotizacion.idTipoCotizacion == 1 ) { //Paquete Turistico 1 / //Ticket Aereo 2
 							if ( response.dataJson.cotizacion.idEstado == 4 ) {	//Estado Pendiente
 								$("#divBotonCotizacionBuscar").css("display", "inline");											
 							} else if ( response.dataJson.cotizacion.idEstado == 6 ) { //Estado Asignado
 								$("#divBotonCotizacionEnviar").css("display", "inline");
 							}					
-						}						
-						$("#idParams").val("presupuesto="+response.dataJson.cotizacion.presupuestoMaximo + 
-								"&idTipoAlojamiento="+response.dataJson.cotizacion.idTipoAlojamiento +
-								"&idCategoriaAlojamiento="+response.dataJson.cotizacion.idCategoriaAlojamiento + 
-								"&idTipoPrograma="+response.dataJson.cotizacion.idTipoPrograma +
-						"&numeroCotizacion=" + response.dataJson.cotizacion.numeroCotizacion);
-					}									
+							$("#idParams").val("presupuesto="+response.dataJson.cotizacion.presupuestoMaximo + 
+									"&idTipoAlojamiento="+response.dataJson.cotizacion.idTipoAlojamiento +
+									"&idCategoriaAlojamiento="+response.dataJson.cotizacion.idCategoriaAlojamiento + 
+									"&idTipoPrograma="+response.dataJson.cotizacion.idTipoPrograma +
+							"&numeroCotizacion=" + response.dataJson.cotizacion.numeroCotizacion);
+						};
+					}
 					
 					$("#divVerDetalleInseminacion").modal({
 						backdrop: 'static',
@@ -292,42 +311,6 @@
 				
 			},
 		});
-		
-		
-		
-		/*
-		$.ajax({
-			url: '${pageContext.request.contextPath}/verDetalleCotizacion?numCotizacion='+numeroCotizacion,
-			cache: false,
-			async: true,
-			type: 'GET',
-			contentType : "application/json; charset=utf-8",
-			dataType: 'json',
-			success: function(response) {
-				
-				if (response.estado = "ok") {
-					var tipoInseminacion = (response.dataJson.inseminacionBean.tipoInseminacion=1?"Inseminaci&oacute;n":"Natural");
-					
-					$("#tituloInseminacion").html(response.dataJson.titulo);
-					$("#divCodigoInseminacion").html(response.dataJson.inseminacionBean.codigoVaca);
-					$("#divFechaCotizacionDeta").html(response.dataJson.inseminacionBean.fechaInseminacion);
-					$("#divTipoInseminacion").html(tipoInseminacion);
-					$("#divCodigoVaca").html(response.dataJson.inseminacionBean.codigoVaca);
-					$("#divNombreVaca").html(response.dataJson.inseminacionBean.nombreVaca);
-					$("#divCodigoToro").html(response.dataJson.inseminacionBean.codigoToro);
-					$("#divDiasInseminado").html(response.dataJson.inseminacionBean.diasInseminado);
-					$("#divObservacion").html(response.dataJson.inseminacionBean.observacion);
-					$("#divUsuario").html("ocalderon");
-					
-					$("#divVerDetalleInseminacion").modal({
-						backdrop: 'static',
-						keyboard: false
-					});
-				}
-			},
-			error: function(data, textStatus, errorThrown) {
-			}
-		}); */
 	}
 	
 	function limpiarFormularioInseminacion(){
@@ -342,7 +325,8 @@
 	}
 	
 	function cerraVerDetalle(){
-		$('#divVerDetalleInseminacion').modal("hide");
+		//$('#divVerDetalleInseminacion').modal("hide");
+		location.reload(true);
 	}
 	
 	function formToObject(formID) {
@@ -503,7 +487,7 @@
 	}
 	
 	function enviarCotizacion() {		
-		var idCotizacion = $("#inpIdCotizacion").val();
+		var idCotizacion = $("#inpIdCotizacion").val();		
 		if ( idCotizacion != '' ) {
 			$.ajax({
 				url: '${pageContext.request.contextPath}/enviarPaquete?idCotizacion='+idCotizacion,
@@ -512,18 +496,65 @@
 				type: 'GET',
 				contentType : "application/json; charset=utf-8",
 				dataType: 'json',
-				success: function(response) {					
-					var mensajeHTML = "";
+				success: function(response) {
 					console.log("************************************************************");
 					if ( response.estado = "ok" ) {
 						$("#btnEnviarCotizacion").css("display", "none"); 
-						$("#divMsgResultadoEnviar").html("<strong>Su cotizacion fue enviada</strong>");
+						$("#divMsgResultadoEnviar").html("<strong>Su cotizacion fue enviada</strong>");						
+						$("#divBotonCotizacionAprobar").css("display", "none");
 					}
 				},
 				error: function(data, textStatus, errorThrown) {
 					
 				},
 			});
+		};
+	}	
+
+	function aprobarCotizacion() {		
+		var idCotizacion = $("#inpIdCotizacion").val();
+		
+		//btnAprobarCotizacion 		aprobarCotizacion txtComentarioAprobacion
+		//btnEnviarCotizacion enviarCotizacion 
+		//divMsgResultadoEnviar
+		//divBotonCotizacionAprobar
+		
+		if ( idCotizacion != '' ) {			
+			var comentarioAprobacion = $("#txtComentarioAprobacion").val();	
+			
+			console.log("************************************************************");
+			console.log("idCotizacion");
+			console.log(idCotizacion);
+			console.log("Comentario de Aprobacion");
+			console.log(comentarioAprobacion);
+			
+			$("#divMsgResultadoEnviar").html("");
+			
+			if ( comentarioAprobacion != "" ) { 
+				$.ajax({
+					url: '${pageContext.request.contextPath}/aprobarPaquete?idCotizacion='+idCotizacion+'&comentario='+comentarioAprobacion,
+					cache: false,
+					async: true,
+					type: 'GET',
+					contentType : "application/json; charset=utf-8",
+					dataType: 'json',
+					success: function(response) {
+						console.log("************************************************************");
+						if ( response.estado = "ok" ) {
+							$("#btnEnviarCotizacion").css("display", "none"); 
+							$("#divMsgResultadoEnviar").html("<strong>Su cotizacion fue aprobada</strong>");						
+							$("#divBotonCotizacionAprobar").css("display", "none");
+						};
+					},
+					error: function(data, textStatus, errorThrown) {
+						
+					},
+				});
+			} else {
+				$("#divMsgResultadoEnviar").html("<span style='color:red'>Para aprobar la cotización debe ingresar un comentario</span>");
+				$("#txtComentarioAprobacion").focus();
+			};
+			
 		};
 	}
 	
@@ -700,7 +731,7 @@
 <div id="divVerDetalleInseminacion" class="modal fade" role="dialog" style="text-center:center">
 	<div class="modal-dialog">
 		<div class="panel panel-primary">
-			<%@ include file="verDetalleInseminacion.jsp" %>
+			<%@ include file="verDetalleCotizacion.jsp" %>
 		</div>
 	</div>
 </div>

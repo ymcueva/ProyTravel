@@ -32,6 +32,7 @@
 	
 	<resultMap id="resultDestinosDetail" class="cotizacionDetalleBean">	
 		<result property="idCotizaDeta"			    column="id_cotiza_deta" />
+		<result property="idCotizacion"			    column="id_cotiza" />		
 		<result property="desCiudadOrigen"			    column="ciudad_origen" />
 		<result property="desCiudadDestino"			    column="ciudad_destino" />
 		<result property="isoCiudadOrigen"			    column="iso_origen" />
@@ -232,12 +233,14 @@
           FROM (SELECT @rownum:=0) r, cotizacion coti 
        INNER JOIN cliente clie ON coti.id_cliente=clie.id_cliente   
        INNER JOIN estado as e ON (coti.id_estado=e.id_estado)    
-		  WHERE 1 = 1
+		  WHERE 1 = 1 
 	      <isNotEmpty prepend="AND" property="fechaCotizacion"> DATE_FORMAT(coti.fe_cotiza,'%Y-%m-%d')  = #fechaCotizacion# </isNotEmpty>
 	      <isNotEmpty prepend="AND" property="numeroCotizacion"> coti.nu_cotiza = #numeroCotizacion# </isNotEmpty> 
 	      <isNotEmpty prepend="AND" property="codigoEstadoCotizacion"> coti.id_estado = #codigoEstadoCotizacion# </isNotEmpty> 
 	      <isNotEmpty prepend="AND" property="nombreCliente"> CONCAT(clie.nombres,' ',clie.apellidos) LIKE #nombreCliente# </isNotEmpty>
 	      <isNotEmpty prepend="AND" property="documentoCliente"> clie.nu_documento = #documentoCliente# </isNotEmpty>
+	   ORDER BY coti.id_cotiza DESC
+	   LIMIT 20
 	</select>
 	
 	<select id="obtenerNumeroCotizacion" resultClass="string">
@@ -287,7 +290,8 @@
 			observacion,
 			id_cliente,
 			id_estado,
-			fe_ins
+			fe_ins,
+			fe_expiracion_cotiza
 		) VALUES (
 			#numeroCotizacion#,
 			#fechaCotizacion#,						
@@ -305,7 +309,8 @@
 			#observacion#,
 			#idCliente#,
 			#idEstado#,
-			sysdate()
+			sysdate(),
+			(SELECT DATE (DATE_ADD(NOW(), INTERVAL (Select value_parametro from `parametros` where id_parametro = 5) DAY) ))
 		)
 		<selectKey keyProperty="idCotizacion" resultClass="int">
             select LAST_INSERT_ID();
@@ -368,10 +373,20 @@
 	
 	<update id="actualizarEstadoCotizacion" parameterClass="cotizacionBean" >
 		update cotizacion 
-			set id_estado = #idEstado#
-			<isNotEmpty prepend="," property="idPaquete">  
-				id_paquete = #idPaquete#, link_cotiza = CONCAT('http://localhost/?', #idCotizacion#), fe_link = NOW()  			
-			</isNotEmpty>
+			set id_estado = #idEstado# 			
+			<isGreaterThan prepend="," 
+			             property="idPaquete" 
+			             compareValue="0">
+				id_paquete = #idPaquete#, link_cotiza = CONCAT('http://localhost/ProyTravel/?idCotizacion=', #idCotizacion#), fe_link = NOW(),
+				im_precio = (SELECT total_gasto as im_precio FROM paquete_turistico where id_paquete = #idPaquete#)
+			</isGreaterThan>			
+			<isEqual prepend="," property="ticket" compareValue="1">
+				im_precio = (SELECT SUM(im_precio) as im_precio FROM cotizacion_deta_ticket where id_cotiza = #numeroCotizacion#),
+				link_cotiza = CONCAT('http://localhost/ProyTravel/?idCotizacion', #idCotizacion#), fe_link = NOW()				
+			</isEqual>
+			<isEqual prepend="," property="isAprobado" compareValue="1">
+				comentario = #comentario#, fe_upd = NOW()
+			</isEqual>
 		where id_cotiza = #idCotizacion# 
 	</update>
 
@@ -672,6 +687,7 @@
 	<select id="listarDestinosDetail" parameterClass="cotizacionDetalleBean" resultMap="resultDestinosDetail">
 		SELECT 
 			c.id_cotiza_deta,
+			co.id_cotiza,
 			dcorigen.descripcion AS ciudad_origen, 
 		    dc.descripcion AS ciudad_destino, 
 		    dcorigen.codigo_iso AS iso_origen, 
@@ -681,8 +697,9 @@
 		    c.ti_ida, 
 		    if (c.ti_ida=1,'Solo Ida','Ida y Vuelta') AS vuelo, 
 		    c.fe_partida,
-		    c.fe_retorno
+		    ifNull(c.fe_retorno, '0000-00-00') AS fe_retorno
 		FROM `cotizacion_deta` AS c  	
+			INNER JOIN `cotizacion` AS co ON (co.nu_cotiza = c.id_cotiza)
 			LEFT JOIN destino_ciudad AS dcorigen ON (c.id_destino_origen=dcorigen.id_destino_ciudad)
     		LEFT JOIN destino_ciudad AS dc ON (c.id_destino=dc.id_destino_ciudad)
 		WHERE 

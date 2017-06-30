@@ -51,14 +51,15 @@
 			<div class="form-group" id="divContenedorMotivos">
 				<div class="col-sm-5" style="text-align:right; font-weight:bold">Motivos:</div>
 				<div class="col-sm-7" id="divMotivos"></div>
-			</div>
-			
-			<div class="row">&nbsp;</div>
+				<div class="col-sm-12">&nbsp;</div>
+			</div>						
 			
 			<div class="form-group" id="divContenedorServicios">
 				<div class="col-sm-5" style="text-align:right; font-weight:bold">Servicios:</div>
 				<div class="col-sm-7" id="divServicios"></div>
 			</div>
+			
+			<div class="row">&nbsp;</div>
 			
 			<div id="divBotonCotizacionBuscar" style="display: none;">	
 				<div class="row">&nbsp;</div>		
@@ -85,18 +86,42 @@
 								<button id="btnGuardarPaquete" type="button"
 									class="btn btn-primary centro" onclick="guardarPaquete()"
 									title="Guardar Paquete">Guardar Paquete</button>																					
-							</div>													
-							<div id="divBotonCotizacionEnviar" style="display: none;" class="col-sm-12" style="text-align: center">
-								<div class="col-sm-12" style="text-align:center; font-weight:bold" id="divMsgResultadoEnviar"></div>																												
-								<button id="btnEnviarCotizacion" type="button"
-									class="btn btn-primary centro" onclick="enviarCotizacion()"
-									title="Enviar">Enviar</button>
 							</div>
 							<div class="row">&nbsp;</div>	
 						</div>
 					</div>					
 				</div>	
 				<div class="row">&nbsp;</div>			
+			</div>
+			
+			<div class="row">&nbsp;</div>
+			
+			<div id="divBotonCotizacionEnviar" style="display: none;" class="col-sm-12" style="text-align: center">
+			<div class="row">&nbsp;</div>
+				<div class="col-sm-12" style="text-align:center; font-weight:bold" id="divMsgResultadoEnviar"></div>
+				<div class="row">&nbsp;</div>
+				<div class="col-sm-12" style="text-align:center;">
+					<button id="btnEnviarCotizacion" type="button"
+					class="btn btn-primary centro" onclick="enviarCotizacion()"
+					title="Enviar">Enviar</button>																											
+				</div>
+				<div class="col-sm-12" style="text-align:center;" id="divBotonCotizacionAprobar">
+					<div class="col-sm-12" style="text-align:center;">Comentarios:</div>
+					<div class="col-sm-12" style="text-align:center;">
+						<div class="col-sm-3" style="text-align:center;">&nbsp;</div>
+						<div class="col-sm-6" style="text-align:center;">
+							<textarea class="form-control" name="comentarioAprobacion" id="txtComentarioAprobacion" rows="4" cols="36" /></textarea>
+						</div>
+						<div class="col-sm-3" style="text-align:center;">&nbsp;</div>
+					</div>
+					<div class="col-sm-12" style="text-align:center;">&nbsp;</div>
+					<div class="col-sm-12" style="text-align:center;">
+						<button id="btnAprobarCotizacion" type="button"
+							class="btn btn-primary centro" onclick="aprobarCotizacion()"
+							title="Aprobar">Aprobar</button>
+					</div>
+				</div>	
+				<div class="row">&nbsp;</div>							
 			</div>
 			
 			<div class="row">&nbsp;</div>

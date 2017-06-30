@@ -415,9 +415,14 @@ public class CotizacionController {
 			System.out.println("idTipoCotizacion: " + cotizacionBean.getIdTipoCotizacion());
 			System.out.println("idOrigenPartida: " + cotizacionBean.getIdOrigenPartida());
 
-			int registro = cotizacionService.registrarCotizacion(cotizacionBean);
-
+			int registro = cotizacionService.registrarCotizacion(cotizacionBean);			
+			
+			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 			System.out.println("grabarCotiPaquete: [Status:"+ registro +",Id:"+cotizacionBean.getIdCotizacion()+",Nro:"+cotizacionBean.getNumeroCotizacion()+"]");
+			
+			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+			System.out.println("expedienteLog grabarCotiPaquete: ");
+			cotizacionService.registrarExpedienteLog(new ExpedienteLogBean("COTIZA", cotizacionBean.getIdCotizacion(), 0, "Cotizacion Paquete Pendiente", 4));
 			
 			//Mensaje de respusta a la vista:
 			String htmlMensaje = "La cotización Nro. <strong>" + cotizacionBean.getNumeroCotizacion() + "</strong> ha sido registrada <br /><br />";			
@@ -571,89 +576,9 @@ public class CotizacionController {
 				}
 			}
 			
-			System.out.println("msghtml: " + htmlMensaje);
-			
-			////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////
-			////////////////////////////////////////////////////////////////////////////////////////
-			//BUSQUEDA DE PAQUETES
-			/*
-			//1- TIPO DE PROGRAMA
-			int tipoPrograma = cotizacionBean.getIdTipoPrograma();
-			
-			//2- PRESUPUESTO: ALTO, MEDIO, BAJO
-			double precioPresupuestoPrograma = cotizacionBean.getPresupuestoMaximo();			
-			PaqueteManagerBean oPaquete = new PaqueteManagerBean();			
-			oPaquete.setImPrecio(precioPresupuestoPrograma);
-			oPaquete.setIdTipoPaquete(tipoPrograma);			
-			
-			//3- MODELO DESTINOS: A, B Y C
-			List<PaqueteManagerBean> listPaqueteSearch = new ArrayList<PaqueteManagerBean>();
-			List<PaqueteManagerBean> listCotizacionManBeanAlto = null;
-			List<PaqueteManagerBean> listCotizacionManBeanMedio = null;
-			List<PaqueteManagerBean> listCotizacionManBeanBajo = null;
-			
-			//Se realizan 3 iteracciones, uno por categoria de presupuesto: Alto, Medio y Bajo
-			for ( int i=0; i<3; i++ ) {
-								
-				if (i == 0) {
-					//3.1- Primera Iteracion: Presupuesto ALTO					
-					oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxAlto());
-					oPaquete.setImPrecioMin(oPaquete.getImPrecioMinAlto());
-					oPaquete.setTiPresupuestoValue("Alto");
-					listCotizacionManBeanAlto = cotizacionService.listarPaquete(oPaquete);					
-					for (PaqueteManagerBean o:listCotizacionManBeanAlto){
-						if ( !listPaqueteSearch.contains(o) ) {
-							System.out.println("listPaqueteSearch[id_paquete:"+o.getIdPaquete()+", nombre:"+o.getNomPaquete()+", comentario:"+o.getComentario()+", im_precio:"+o.getImPrecio()+", tipoPresupuesto:"+o.getTiPresupuestoValue()+"]");
-							listPaqueteSearch.add(o);
-						}
-					}					
-				} else if (i ==1){
-					//3.2- Segunda Iteracion: Presupuesto MEDIO					
-					oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxMedio());
-					oPaquete.setImPrecioMin(oPaquete.getImPrecioMinMedio());
-					oPaquete.setTiPresupuestoValue("Medio");
-					listCotizacionManBeanMedio = cotizacionService.listarPaquete(oPaquete);					
-					for (PaqueteManagerBean o:listCotizacionManBeanMedio){
-						if ( !listPaqueteSearch.contains(o) ) {
-							System.out.println("listPaqueteSearch[id_paquete:"+o.getIdPaquete()+", nombre:"+o.getNomPaquete()+", comentario:"+o.getComentario()+", im_precio:"+o.getImPrecio()+", tipoPresupuesto:"+o.getTiPresupuestoValue()+"]");
-							listPaqueteSearch.add(o);
-						}
-					}
-				} else if (i == 2){
-					//3.3- Tercera Iteracion: Presupuesto BAJO					
-					oPaquete.setImPrecioMax(oPaquete.getImPrecioMaxBajo());
-					oPaquete.setImPrecioMin(oPaquete.getImPrecioMinBajo());
-					oPaquete.setTiPresupuestoValue("Bajo");
-					listCotizacionManBeanBajo = cotizacionService.listarPaquete(oPaquete);					
-					for (PaqueteManagerBean o:listCotizacionManBeanBajo){
-						if ( !listPaqueteSearch.contains(o) ) {
-							System.out.println("listPaqueteSearch[id_paquete:"+o.getIdPaquete()+", nombre:"+o.getNomPaquete()+", comentario:"+o.getComentario()+", im_precio:"+o.getImPrecio()+", tipoPresupuesto:"+o.getTiPresupuestoValue()+"]");
-							listPaqueteSearch.add(o);
-						}
-					}
-				}
-				
-			}
-			//Se obtienen todos los paquetes disponibles en: listPaqueteSearch();	
-			
-			//Se filtran todos los destinos para estos paquetes y se guardan en: destinosList();
-			oPaquete.setList(cotizacionDestinos);
-			List<PaqueteManagerBean> destinosList = cotizacionService.listarPaqueteDestino(oPaquete);
-			List<Integer> paqueteIds = new ArrayList<Integer>();
-						
-			//4- PAQUETES
-			System.out.println("Paquetes finales.......................");
-			for (PaqueteManagerBean  o:destinosList) {															
-				if ( !paqueteIds.contains(o.getIdPaquete()) ) {
-					paqueteIds.add(o.getIdPaquete());
-					System.out.println("PaqueteID: " + o.getIdPaquete());
-				}
-			}
-			
-			//5- CARACTERISTICAS
-			*/
+			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+			System.out.println("mensaje grabarCotiPaquete: ");			
+			System.out.println("msghtml: " + htmlMensaje);						
 			
 			mapa.put("nroCotizacion", cotizacionBean.getNumeroCotizacion());			
 			
@@ -696,6 +621,7 @@ public class CotizacionController {
 			System.out.println("fechaRetorno: " + cotizacionBeanMap.get("fechaRetorno"));
 			System.out.println("idTipoCotizacion: " + cotizacionBeanMap.get("idTipoCotizacion"));
 			System.out.println("idOrigenPartida: " + cotizacionBeanMap.get("idOrigenPartida"));
+			System.out.println("Comentarios: " + cotizacionBeanMap.get("observacionTicket"));
 			
 			CotizacionBean cotizacionBean = new CotizacionBean();
 
@@ -708,32 +634,34 @@ public class CotizacionController {
 			cotizacionBean.setNumeroCotizacion(cotizacionService.generarNumeroCotizacion());
 			cotizacionBean.setIdEstado(10);
 			
-			try {
-				
+			try {				
 				cotizacionBean.setFechaSalida( "0000-00-00" );
 				cotizacionBean.setFechaRetorno( "0000-00-00" );
 				cotizacionBean.setTipoAlojamiento("0");
 				cotizacionBean.setCategoriaAlojamiento("0");
-				
+				cotizacionBean.setObservacion(cotizacionBean.getObservacionTicket());
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 				System.out.println("ERROR EN FECHAS " + e.getMessage());
-			}
-			
+			}			
 			
 			System.out.println("FechaCotizacion: " + cotizacionBean.getFechaCotizacion());
 			System.out.println("fechaSalida: " + cotizacionBean.getFechaSalida());
 			System.out.println("fechaRetorno: " + cotizacionBean.getFechaRetorno());
 			System.out.println("idTipoCotizacion: " + cotizacionBean.getIdTipoCotizacion());
 			System.out.println("idOrigenPartida: " + cotizacionBean.getIdOrigenPartida());
+						
+			int registro = cotizacionService.registrarCotizacion(cotizacionBean);
 			
-			System.out.println("llego grabarCotiTicket");
-			int registro = cotizacionService.registrarCotizacion(cotizacionBean);	
-			System.out.println("salio grabarCotiTicket");
-			
+			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 			System.out.println("grabarCotiTicket: [Status:"+ registro +",Id:"+cotizacionBean.getIdCotizacion()+",Nro:"+cotizacionBean.getNumeroCotizacion()+"]");
 			
+			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+			System.out.println("expedienteLog grabarCotiTicket: ");
+			cotizacionService.registrarExpedienteLog(new ExpedienteLogBean("COTIZA", cotizacionBean.getIdCotizacion(), 0, "Cotizacion Ticket Pendiente", 10));
+			
+			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 			String datosVuelos = request.getParameter("datosVuelos");
 			System.out.println("longitud del string de vuelos: " + datosVuelos.length());
 			
@@ -783,44 +711,6 @@ public class CotizacionController {
 				
 			}
 			
-			/*			
-			
-			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-			System.out.println("Iniciando grabar Vuelos");
-
-			String datosDestino = request.getParameter("datosVuelos");
-
-			if ( datosDestino.length() > 0 ) {
-
-				datosDestino = datosDestino.substring(0, datosDestino.length()-1 );
-				System.out.println("Destinos: " + datosDestino);
-
-				String destino[] = datosDestino.split(",");
-				System.out.println("Cantidad de Destinos: " + destino.length);
-
-				CotizacionDetalleBean cotizacionDetalleBean = new CotizacionDetalleBean();
-				cotizacionDetalleBean.setNumeroCotizacion(cotizacionBean.getNumeroCotizacion());
-
-				String g[];
-
-				if (destino.length > 0){
-					for (int i = 0; i < destino.length; i++) {
-
-						g = destino[i].split("_");
-
-						cotizacionDetalleBean.setOrigen( Integer.parseInt( g[0] ));
-						cotizacionDetalleBean.setDestino( Integer.parseInt( g[1] ));
-
-						int res = cotizacionService.registrarCotizacionDetalleTicket(cotizacionDetalleBean);
-
-						System.out.println("registrarMotivo("+g[0] + "/" + g[1] +") " + res);
-
-					}
-				}
-
-			}
-			*/			
-			
 			//Mensaje de respuesta con el detalle de los destinos para el ticket
 			CotizacionDetalleBean cotizacionDetalleBean=new CotizacionDetalleBean();  
 			cotizacionDetalleBean.setNumeroCotizacion(cotizacionBean.getNumeroCotizacion());
@@ -859,160 +749,7 @@ public class CotizacionController {
 		}
 		return ControllerUtil.handleJSONResponse(dataJSON, response);			
 	}
-		
-	@SuppressWarnings("unchecked")
-	@RequestMapping( value = "/grabarTransaccionCotizacion" )
-	public ModelAndView grabarTransaccionCotizacion(HttpServletRequest request, HttpServletResponse response){
-
-		ModelAndView modelAndView = null;
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Map<String, Object> mapa = new HashMap<String, Object>();
-		List<AnimalBean> listaToro = new ArrayList<AnimalBean>();
-		DataJsonBean dataJSON = new DataJsonBean();
-
-		try {
-			modelAndView = new ModelAndView();
-			HttpSession session = request.getSession();
-			String usuario = (String) session.getAttribute("idUsuario");
-
-			String tipoCotizacion = (request.getParameter("tipoCotizacion")==null?"":request.getParameter("tipoCotizacion"));
-
-			String idCliente = (request.getParameter("idCliente")==null?"":request.getParameter("idCliente"));
-
-			if (tipoCotizacion.equals("")){
-
-				Map<String, Object> parametrosRequest = ControllerUtil.parseRequestToMap(request);
-				Map<String, Object> cotizacionBeanMap = (Map<String, Object>) parametrosRequest.get("cotizacionBean");
-				CotizacionBean cotizacionBean = new CotizacionBean();
-
-				// inserta en el bean todos los valores del mapa (property vs keys)
-				cotizacionBeanMap.remove("motivoViajeCotiza[]");
-				cotizacionBeanMap.remove("servicioAdicional[]");
-
-				BeanUtils.populate(cotizacionBean, cotizacionBeanMap);
-
-				cotizacionBean.setFechaCotizacion( Utils.stringToStringyyyyMMdd (cotizacionBean.getFechaCotizacion() ) );
-				cotizacionBean.setIdCliente(Integer.parseInt(idCliente) );
-				cotizacionBean.setNumeroCotizacion(cotizacionService.generarNumeroCotizacion());
-
-				int registro = cotizacionService.registrarCotizacion(cotizacionBean);
-
-				// DATOS DE DESTINO
-				String datosDestino = request.getParameter("datosDestino");
-				System.out.println("datosDestino?1 " + datosDestino);
-
-				datosDestino = datosDestino.substring(0, datosDestino.length()-1 );
-				System.out.println("datosDestino?2 " + datosDestino);
-
-				String destino[] = datosDestino.split(",");
-				CotizacionDetalleBean cotizacionDetalleBean = new CotizacionDetalleBean();
-				cotizacionDetalleBean.setNumeroCotizacion(cotizacionBean.getNumeroCotizacion());
-
-				String g[];
-				if (destino.length > 0){
-					for (int i = 0; i < destino.length; i++) {
-						g = destino[i].split("_");
-
-						cotizacionDetalleBean.setOrigen( Integer.parseInt( g[0] ));
-						cotizacionDetalleBean.setDestino( Integer.parseInt( g[1] ));
-
-						cotizacionService.registrarCotizacionDetalleTicket(cotizacionDetalleBean);
-
-					}
-				}
-
-				String motivoViaje = request.getParameter("motivoViaje");
-				String servicioAdicional = request.getParameter("servAdicional");
-				// MOTIVO DE VIAJE
-				motivoViaje = motivoViaje.substring(0, motivoViaje.length()-1 );
-				String motivo[] = motivoViaje.split(",");
-				MotivoViajeBean motivoViajeBean = new MotivoViajeBean();
-				motivoViajeBean.setNumeroCotizacion(cotizacionBean.getNumeroCotizacion());
-				int m = 0;
-				if (motivo.length > 0){
-					for (int i = 0; i < motivo.length; i++) {
-						m = Integer.parseInt( motivo[i] );
-						motivoViajeBean.setCodigoMotivo(m);
-						cotizacionService.registrarMotivo(motivoViajeBean);
-					}
-				}
-
-				// SERVICIOS ADICIONALES
-				servicioAdicional = servicioAdicional.substring(0, servicioAdicional.length()-1 );
-				String servicio[] = servicioAdicional.split(",");
-				ServicioAdicionalBean servicioAdicionalBean = new ServicioAdicionalBean();
-				servicioAdicionalBean.setNumeroCotizacion(cotizacionBean.getNumeroCotizacion());
-
-				m = 0;
-				if (servicio.length > 0) {
-					for (int i = 0; i < servicio.length; i++) {
-						m = Integer.parseInt( servicio[i] );
-						servicioAdicionalBean.setCodigoServicio(m);
-						cotizacionService.registrarServicio(servicioAdicionalBean);
-					}
-				}
-			} else if (tipoCotizacion.equals("2")){
-
-				Map<String, Object> parametrosRequest = ControllerUtil.parseRequestToMap(request);
-				Map<String, Object> cotizacionBeanMap = (Map<String, Object>) parametrosRequest.get("cotizacionBean");
-				CotizacionBean cotizacionBean = new CotizacionBean();
-
-				// inserta en el bean todos los valores del mapa (property vs keys)
-				cotizacionBeanMap.remove("motivoViajeCotiza[]");
-				cotizacionBeanMap.remove("servicioAdicional[]");
-
-
-				/* String datosVuelos = request.getParameter("datosVuelos");
-
-
-				String flagIdaVuelta = request.getParameter("flagIdaVuelta");
-				String flagIda = request.getParameter("flagIda");
-				String flagRuta = request.getParameter("flagRuta");
-
-				String[] datos = datosVuelos.split(";");
-
-				int cantidadAdulto = 0;
-				int cantidadNino= 0;
-				String[] fila = null;
-				CotizacionDetalleBean cotizacionDetalleBean = new CotizacionDetalleBean();
-				cotizacionDetalleBean.setNumeroCotizacion((String)cotizacionBeanMap.get("numeroCotizacion"));
-				for (int i = 0; i < datos.length; i++) {
-					fila = datos[i].split(",");
-					cotizacionDetalleBean.setFechaPartida(fila[0]);
-					cotizacionDetalleBean.setFechaRetorno(fila[1]);
-					cotizacionDetalleBean.setOrigen(Integer.parseInt( fila[2] ));
-					cotizacionDetalleBean.setDestino(Integer.parseInt( fila[3] ));
-					cotizacionDetalleBean.setCantidadAdulto(Integer.parseInt( fila[4] ));
-					cotizacionDetalleBean.setCantidadNino( Integer.parseInt( fila[5] ));
-					cotizacionDetalleBean.setIdaVuelta( Integer.parseInt( flagIdaVuelta) );
-					cotizacionDetalleBean.setIda( Integer.parseInt( flagIda) );
-					cotizacionDetalleBean.setRuta( Integer.parseInt(flagRuta) );
-
-					cotizacionService.registrarCotizacionDetalleTicket(cotizacionDetalleBean);
-				} */
-
-				//BeanUtils.populate(cotizacionBean, cotizacionBeanMap);
-
-
-				cotizacionBean.setNumeroCotizacion((String)cotizacionBeanMap.get("numeroCotizacion"));
-				cotizacionBean.setFechaCotizacion( Utils.stringToStringyyyyMMdd ( (String)cotizacionBeanMap.get("fechaCotizacion")) );
-				cotizacionBean.setDescripcion((String)cotizacionBeanMap.get("descripcion"));
-
-				cotizacionBean.setCantidadNinos(0);
-				cotizacionBean.setCantidadAdultos(0);
-
-				cotizacionBean.setIdCliente(Integer.parseInt(idCliente) );
-				int registro = cotizacionService.registrarCotizacionTicket(cotizacionBean);
-
-			}
-
-			dataJSON.setRespuesta("ok", null, mapa);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return ControllerUtil.handleJSONResponse(dataJSON, response);
-	}
-		
+	
 	@RequestMapping( value = "/enviarPaquete", method ={RequestMethod.GET, RequestMethod.POST} )
 	public ModelAndView enviarPaquete(HttpServletRequest request, HttpServletResponse response){
 		
@@ -1032,13 +769,7 @@ public class CotizacionController {
 			cotizacionBean.setIdCotizacion(idCotizacion);
 			cotizacionService.actualizarCotizacion(cotizacionBean);
 			
-			ExpedienteLogBean expedienteLogBean = new ExpedienteLogBean();
-			expedienteLogBean.setTiLog("COTIZA");
-			expedienteLogBean.setIdTx(idCotizacion);
-			expedienteLogBean.setIdUser(0);
-			expedienteLogBean.setIdEstado(9);
-			expedienteLogBean.setDesLog("Cotizacion Enviada");
-			
+			ExpedienteLogBean expedienteLogBean = new ExpedienteLogBean("COTIZA", idCotizacion, 0, "Cotizacion Enviada", 9);
 			cotizacionService.registrarExpedienteLog(expedienteLogBean);
 			
 			dataJSON.setRespuesta("ok", null, mapa);
@@ -1066,20 +797,18 @@ public class CotizacionController {
 			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));
 			int idPaquete = Integer.parseInt(request.getParameter("idPaquete"));
 			
+			System.out.println("idPaquete");
+			System.out.println(idCotizacion);
+			System.out.println("idCotizacion");
+			System.out.println(idPaquete);
+			
 			CotizacionBean cotizacionBean = new CotizacionBean();
 			cotizacionBean.setIdEstado(5);
 			cotizacionBean.setIdCotizacion(idCotizacion);
-			cotizacionBean.setIdPaquete(idPaquete);
+			cotizacionBean.setIdPaquete(idPaquete);			
 			cotizacionService.actualizarCotizacion(cotizacionBean);
 			
-			ExpedienteLogBean expedienteLogBean = new ExpedienteLogBean();
-			expedienteLogBean.setTiLog("COTIZA");
-			expedienteLogBean.setIdTx(idCotizacion);
-			expedienteLogBean.setIdUser(0);
-			expedienteLogBean.setIdEstado(5);
-			expedienteLogBean.setDesLog("Cotizacion Finalizada");
-			
-			cotizacionService.registrarExpedienteLog(expedienteLogBean);
+			cotizacionService.registrarExpedienteLog(new ExpedienteLogBean("COTIZA", idCotizacion, 0, "Cotizacion Grabar Paquete Finalizada", 5));
 			
 			dataJSON.setRespuesta("ok", null, mapa);
 			
@@ -1396,14 +1125,6 @@ public class CotizacionController {
 		return ControllerUtil.handleJSONResponse(dataJSON, response);		
 	}	
 	
-	
-	
-	
-	
-	
-	
-	
-		
 	@RequestMapping( value = "/buscarVuelos", method ={RequestMethod.GET, RequestMethod.POST} )
 	public ModelAndView buscarVuelos(HttpServletRequest request, HttpServletResponse response){
 		ModelAndView modelAndView = null;
@@ -1554,8 +1275,22 @@ public class CotizacionController {
 							item.getOrigen(), item.getDestino(), item.getFechaRetorno(), item.getFechaRetorno());
 					cotizacionService.registrarConsolidador(cotizacionTicket);
 				}
+				idCotizacion = item.getIdCotizacion();
 			}
 			
+			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+			System.out.println("actualizar Cotizacion: ");	
+			CotizacionBean cotizacionBean = new CotizacionBean();
+			cotizacionBean.setIdEstado(5);
+			cotizacionBean.setIdCotizacion(idCotizacion);
+			cotizacionBean.setTicket(1);
+			cotizacionBean.setNumeroCotizacion(numeroCotizacion);
+			cotizacionService.actualizarCotizacion(cotizacionBean);			
+			
+			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+			System.out.println("expedienteLog grabarVuelos: ");
+			cotizacionService.registrarExpedienteLog(new ExpedienteLogBean("COTIZA", idCotizacion, 0, "Cotizacion Grabar Vuelos", 5));
+						
 			mapa.put("idCotizacion", idCotizacion);
 		
 		} catch (Exception e) {
@@ -1566,13 +1301,39 @@ public class CotizacionController {
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
 	}	
 
+	@RequestMapping( value = "/aprobarPaquete", method ={RequestMethod.GET, RequestMethod.POST} )
+	public ModelAndView aprobarPaquete(HttpServletRequest request, HttpServletResponse response){
+		
+		System.out.println("aprobar paquete ...........................................");
+		
+		Map<String, Object> mapa = new HashMap<String, Object>();
+		DataJsonBean dataJSON = new DataJsonBean();		
+		
+		try {
+			
+			mapa.put("titulo", "Aprobar Paquete");			
+			
+			int idCotizacion = Integer.parseInt(request.getParameter("idCotizacion"));	
+			String comentario = (request.getParameter("comentario"));	
+			
+			CotizacionBean cotizacionBean = new CotizacionBean();
+			cotizacionBean.setIdEstado(15);
+			cotizacionBean.setIdCotizacion(idCotizacion);
+			cotizacionBean.setComentario(comentario);
+			cotizacionBean.setIsAprobado(1);
+			cotizacionService.actualizarCotizacion(cotizacionBean);
+			
+			ExpedienteLogBean expedienteLogBean = new ExpedienteLogBean("COTIZA", idCotizacion, 0, "Cotizacion Aprobada Manualmente", 15);
+			cotizacionService.registrarExpedienteLog(expedienteLogBean);
+			
+			dataJSON.setRespuesta("ok", null, mapa);
+			
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return ControllerUtil.handleJSONResponse(dataJSON, response);
+		
+	}
+	
 }
-
-
-
-
-
-
-
-
-

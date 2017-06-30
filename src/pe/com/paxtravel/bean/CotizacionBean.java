@@ -53,10 +53,49 @@ public class CotizacionBean {
 	
 	private int idPaquete;
 	private String linkCotiza;
-	private String feLink;
+	private String feLink;		
+	
+	private double imPrecio;
+	private String observacionTicket;
+	
+	private String comentario;
+	
+	private int isAprobado;
 	
 	
 	
+	public int getIsAprobado() {
+		return isAprobado;
+	}
+
+	public void setIsAprobado(int isAprobado) {
+		this.isAprobado = isAprobado;
+	}
+
+	public String getComentario() {
+		return comentario;
+	}
+
+	public void setComentario(String comentario) {
+		this.comentario = comentario;
+	}
+
+	public String getObservacionTicket() {
+		return observacionTicket;
+	}
+
+	public void setObservacionTicket(String observacionTicket) {
+		this.observacionTicket = observacionTicket;
+	}
+
+	public double getImPrecio() {
+		return imPrecio;
+	}
+
+	public void setImPrecio(double imPrecio) {
+		this.imPrecio = imPrecio;
+	}
+
 	public int getIdPaquete() {
 		return idPaquete;
 	}

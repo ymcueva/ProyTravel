@@ -58,6 +58,20 @@ public class ExpedienteLogBean {
 	}
 	public void setDesLog(String desLog) {
 		this.desLog = desLog;
+	}
+	
+	public ExpedienteLogBean(String tiLog, int idTx, int idUser, String desLog,
+			int idEstado) {
+		super();
+		this.tiLog = tiLog;
+		this.idTx = idTx;
+		this.idUser = idUser;
+		this.desLog = desLog;
+		this.idEstado = idEstado;
 	}		
+	
+	public ExpedienteLogBean() {
+		
+	}
 
 }
