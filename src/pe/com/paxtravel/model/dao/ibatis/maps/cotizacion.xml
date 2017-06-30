@@ -71,8 +71,6 @@
 		<result property="presupuestoMinimo" 				column="im_presupuesto_minimo" />
 		<result property="presupuestoMaximo" 				column="im_presupuesto_maximo" />
 		
-		<result property="observacion" 				column="observacion" />
-		
 	</resultMap>
 	
 	<resultMap id="resultPais" class="paisBean">
@@ -207,6 +205,25 @@
 		<!--  nomAerolinea nomHotel nomTour ciudad gasto precio  id_paquete_turistico  -->
 	</resultMap>
 	
+	<resultMap id="resultCotizacionById" class="cotizacionBean">
+		<result property="idCotizacion"			    column="id_cotiza" />
+		<result property="numeroCotizacion"		    column="nu_cotiza" />
+		<result property="fechaCotizacion" 		    column="fe_cotiza" />
+		<result property="fechaSalida" 	        	column="fe_partida" />
+		<result property="observacion" 				column="observacion" />
+		<result property="idTipoPrograma" column="id_tipo_programa" />
+		<result property="idTipoCotizacion" column="id_tipo_cotiza" />
+	</resultMap>
+	
+	<resultMap id="resultCotPatTurDestinos" class="cotizacionBean">
+		<result property="idCotizacion"			    column="id_cotiza" />
+		<result property="numeroCotizacion"		    column="nu_cotiza" />
+		<result property="fechaCotizacion" 		    column="fe_cotiza" />
+		<result property="fechaSalida" 	        	column="fe_partida" />
+		<result property="observacion" 				column="observacion" />
+		<result property="idTipoPrograma" column="id_tipo_programa" />
+		<result property="idTipoCotizacion" column="id_tipo_cotiza" />
+	</resultMap>
 	
 	
 	<select id="listarCotizacion" parameterClass="cotizacionBean" resultMap="resultCotizacion">
@@ -687,5 +704,40 @@
 		WHERE 
 			c.id_cotiza = #numeroCotizacion#
 	</select>
+	
+	<select id="getCotizacionById" parameterClass="Integer" resultMap="resultCotizacionById">
+		SELECT 
+			c.id_cotiza, 
+			nu_cotiza, 
+			case when fe_cotiza != '0000-00-00' then fe_cotiza else '' end as fe_cotiza, 
+			case when fe_partida != '0000-00-00' then fe_partida else '' end as fe_partida, 
+			case when fe_partida != '0000-00-00' then fe_retorno else '' end as fe_retorno, 
+			observacion, 
+			id_tipo_programa, 
+			id_tipo_cotiza
+		FROM 
+			cotizacion c
+		WHERE 
+			c.id_cotiza = #cotizacionId#
+	</select>
+	
+	<select id="getCotPatTurDestinos" parameterClass="Integer" resultMap="resultCotPatTurDestinos">
+		SELECT 
+			c.id_cotiza, 
+			nu_cotiza, 
+			case when fe_cotiza != '0000-00-00' then fe_cotiza else '' end as fe_cotiza, 
+			case when fe_partida != '0000-00-00' then fe_partida else '' end as fe_partida, 
+			case when fe_partida != '0000-00-00' then fe_retorno else '' end as fe_retorno, 
+			observacion, 
+			id_tipo_programa, 
+			id_tipo_cotiza
+		FROM 
+			cotizacion c
+		WHERE 
+			c.id_cotiza = #cotizacionId#
+	</select>
+	
+	
+	
 
 </sqlMap>

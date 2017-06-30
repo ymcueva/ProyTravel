@@ -71,4 +71,6 @@ public interface CotizacionService {
 	
 	public OrdenPlanificacionBean minorCostTicket(List<FareInfoBean> listaTickets);
 	
+	public CotizacionBean obtenerCotizacionPorId(int cotizacionId);
+	
 }

@@ -378,6 +378,11 @@ public class CotizacionServiceImpl implements CotizacionService {
 	public List<CotizacionDetalleBean> listarDestinosDetail(CotizacionDetalleBean cotizacionDetalleBean) {
 		return cotizacionDAO.listarDestinosDetail(cotizacionDetalleBean);
 	}
+
+	@Override
+	public CotizacionBean obtenerCotizacionPorId(int cotizacionId) {
+		return cotizacionDAO.obtenerCotizacionPorId(cotizacionId);
+	}
 	
 //	@Override
 //	public void exportarExcel(List<EmpleadoBean> lista, OutputStream outputStream) throws Exception {

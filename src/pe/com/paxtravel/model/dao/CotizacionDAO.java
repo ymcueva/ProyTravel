@@ -65,4 +65,6 @@ public interface CotizacionDAO {
 	
 	List<CotizacionDetalleBean> listarDestinosDetail(CotizacionDetalleBean cotizacionDetalleBean);
 	
+	CotizacionBean obtenerCotizacionPorId(int cotizacionId);
+	
 }
