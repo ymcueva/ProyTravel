@@ -2,8 +2,7 @@ package pe.com.paxtravel.bean;
 
 
 public class OrdenPlanificacionBean {
-	
-	
+
 	private int idOrden;
 	private int idCotiza;	
 	private String nuOrden;	
@@ -19,8 +18,12 @@ public class OrdenPlanificacionBean {
 	private int idMoneda;
 	private String feInicio;
 	private String feFin;
-
-	private String nomCliente;
+	private String estado;
+	private String destinos;
+	private String habitaciones;
+	private String motivos;
+	private String servicios;
+	private String nombreCliente;
 	private int idMotivo;
 	private String nomMotivo;
 	private int idDetalle;
@@ -46,45 +49,82 @@ public class OrdenPlanificacionBean {
 	private String nomHotel;
 	private String nomTipoAlojamiento;
 	private String nomCatAlojamiento;
-	private String habitaciones;
 	private int idProveedorHotel;
-	
-	private int idTour;;
+	private String tipoAlojamiento;
+	private String categoriaAlojamiento;
+	private int idTour;
+	private int cultural;
+	private int deportes;
+	private int relajacion;
+	private int playa;
+	private int tipoBusqueda;
+	private String documentoCliente;
+	private String nomStat;
 	private String nomTour;
 	private double preAdultoTour;
 	private double preNinoTour;
 	private int diasTour;
 	private double subtotalTour;
-	
-	private double imPresupuestoPaximo;
-	
 	private int idAerolinea;
 	private int idProveedorAerolinea;
 	private double precioAerolinea;
 	private String nombreAerolinea;
 	private int comision;
-	private String urlAerolinea;
-	
+	private String urlAerolinea;	
 	private String isoOrigen;
 	private String isoDestino;
 	private int tiIda;
 	private int nuPersonastour;
 	private String nuCotizacion;
-	private String urlShop;
-	
-		
-	
+    private String urlShop;
+
+	public String getDestinos() {
+		return destinos;
+	}
+	public void setDestinos(String destinos) {
+		this.destinos = destinos;
+	}
+	public String getMotivos() {
+		return motivos;
+	}
+	public void setMotivos(String motivos) {
+		this.motivos = motivos;
+	}
+	public String getServicios() {
+		return servicios;
+	}
+	public void setServicios(String servicios) {
+		this.servicios = servicios;
+	}
+	public int getCultural() {
+		return cultural;
+	}
+	public void setCultural(int cultural) {
+		this.cultural = cultural;
+	}
+	public int getDeportes() {
+		return deportes;
+	}
+	public void setDeportes(int deportes) {
+		this.deportes = deportes;
+	}
+	public int getRelajacion() {
+		return relajacion;
+	}
+	public void setRelajacion(int relajacion) {
+		this.relajacion = relajacion;
+	}
+	public int getPlaya() {
+		return playa;
+	}
+	public void setPlaya(int playa) {
+		this.playa = playa;
+	}
 	public String getUrlShop() {
 		return urlShop;
 	}
 	public void setUrlShop(String urlShop) {
 		this.urlShop = urlShop;
-	}
-	public double getImPresupuestoPaximo() {
-		return imPresupuestoPaximo;
-	}
-	public void setImPresupuestoPaximo(double imPresupuestoPaximo) {
-		this.imPresupuestoPaximo = imPresupuestoPaximo;
 	}
 	public int getNuAdultos() {
 		return nuAdultos;
@@ -188,27 +228,21 @@ public class OrdenPlanificacionBean {
 	public void setFeFin(String feFin) {
 		this.feFin = feFin;
 	}
-	
-	public String getNomCliente(){
-		return nomCliente;
+	public String getNombreCliente(){
+		return nombreCliente;
 	}
-	
 	public int getIdMotivo() {
 		return idMotivo;
 	}
-	
 	public String getNomMotivo() {
 		return nomMotivo;
 	}
-	
-	public void setNomCliente(String nomCliente) {
-		this.nomCliente = nomCliente;
+	public void setNombreCliente(String nombreCliente) {
+		this.nombreCliente = nombreCliente;
 	}
-	
 	public void setIdMotivo(int idMotivo) {
 		this.idMotivo = idMotivo;
 	}
-	
 	public void setNomMotivo(String nomMotivo) {
 		this.nomMotivo = nomMotivo;
 	}
@@ -254,7 +288,6 @@ public class OrdenPlanificacionBean {
 	public void setFeRetorno(String feRetorno) {
 		this.feRetorno = feRetorno;
 	}
-
 	public String getNomOrigen() {
 		return nomOrigen;
 	}
@@ -452,6 +485,42 @@ public class OrdenPlanificacionBean {
 	}
 	public void setIdProveedorHotel(int idProveedorHotel) {
 		this.idProveedorHotel = idProveedorHotel;
+	}
+	public String getNomStat() {
+		return nomStat;
+	}
+	public void setNomStat(String nomStat) {
+		this.nomStat = nomStat;
+	}
+	public String getEstado() {
+		return estado;
+	}
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	public String getTipoAlojamiento() {
+		return tipoAlojamiento;
+	}
+	public void setTipoAlojamiento(String tipoAlojamiento) {
+		this.tipoAlojamiento = tipoAlojamiento;
+	}
+	public String getCategoriaAlojamiento() {
+		return categoriaAlojamiento;
+	}
+	public void setCategoriaAlojamiento(String categoriaAlojamiento) {
+		this.categoriaAlojamiento = categoriaAlojamiento;
+	}
+	public String getDocumentoCliente() {
+		return documentoCliente;
+	}
+	public void setDocumentoCliente(String documentoCliente) {
+		this.documentoCliente = documentoCliente;
+	}
+	public int getTipoBusqueda() {
+		return tipoBusqueda;
+	}
+	public void setTipoBusqueda(int tipoBusqueda) {
+		this.tipoBusqueda = tipoBusqueda;
 	}
 
 }

@@ -3,6 +3,7 @@ package pe.com.paxtravel.bean;
 public class HotelHabitacionBean {
 	
 	private String idCotiza;
+	private String idOrden; 
 	private int idTipoHabitacion;
 	private int idHotelHabitacion;
 	private int idHotel;
@@ -123,5 +124,10 @@ public class HotelHabitacionBean {
 	public void setNomCategoria(String nomCategoria) {
 		this.nomCategoria = nomCategoria;
 	}
-
+	public String getIdOrden() {
+		return idOrden;
+	}
+	public void setIdOrden(String idOrden) {
+		this.idOrden = idOrden;
+	}
 }

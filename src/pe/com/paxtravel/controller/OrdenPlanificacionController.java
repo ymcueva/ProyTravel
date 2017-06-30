@@ -45,56 +45,91 @@ public class OrdenPlanificacionController {
 	public void setJsonView(String jsonView) {
 		this.jsonView = jsonView;
 	}
+	@RequestMapping( value = "/verDetalleOrden", method ={RequestMethod.GET, RequestMethod.POST} )
+	public ModelAndView verDetalleOrden(HttpServletRequest request, HttpServletResponse response){
+		Map<String, Object> mapa = new HashMap<String, Object>();
+		DataJsonBean dataJSON = new DataJsonBean();
+		try {
+			OrdenPlanificacionBean o = new OrdenPlanificacionBean();
+			int idOrden = Integer.parseInt( request.getParameter("idOrden") );
+			o.setIdOrden(idOrden);
+			o = ordenPlanificacionService.obtenerOrden(o);
+	        mapa.put("titulo", "Detalle Orden Planificacion");
+	        mapa.put("ordenPlanificacion", o);
+	        dataJSON.setRespuesta("ok", null, mapa);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return ControllerUtil.handleJSONResponse(dataJSON, response);
+	}
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/listarOrdenPlanificacion", method = { RequestMethod.GET, RequestMethod.POST })
-	public ModelAndView listarOrdenPlanificacion(HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView listarOrdenPlanificacion(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView modelAndView = null;
 
 		HashMap<String, Object> mapa = new HashMap<String, Object>();
 
-		List<OrdenPlanificacionBean> lopb = new ArrayList<OrdenPlanificacionBean>();
+		List<OrdenPlanificacionBean> listarOrdenPlan = new ArrayList<OrdenPlanificacionBean>();
 		OrdenPlanificacionBean ordenPlanificacionBean = new OrdenPlanificacionBean();
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		boolean flag = false;
 
+		System.out.println("test orden plan");
+		
 		DataJsonBean dataJSON = new DataJsonBean();
 		try {
 			modelAndView = new ModelAndView();
-			String botonBuscar = (request.getParameter("btnBuscar")) != null ? request
-					.getParameter("btnBuscar") : "";
+			String botonBuscar = (request.getParameter("btnBuscar")) != null ? request.getParameter("btnBuscar") : "";
+					System.out.println(botonBuscar + "es el boton");
 			mapa.put("titulo", "Orden de Planificacion");
 			if ("1".equals(botonBuscar)) {
-
+				System.out.println("searching");
+				
 				Map<String, Object> parametrosRequest = ControllerUtil.parseRequestToMap(request);
 				Map<String, Object> ordenPlanificacionMap = (Map<String, Object>) parametrosRequest.get("ordenPlanificacionBean");
+				
+				System.out.println("numeroOrden: " + ordenPlanificacionMap.get("numeroOrden"));
+				System.out.println("estadoorden: " + ordenPlanificacionMap.get("codigoEstadoOrden"));
+				System.out.println("fechaorden: " + ordenPlanificacionMap.get("fechaOrden"));
+				System.out.println("tipobusqueda: " + ordenPlanificacionMap.get("tipoBusqueda"));
+				System.out.println("nombrecliente: " + ordenPlanificacionMap.get("nombreCliente"));
 				// inserta en el bean todos los valores del mapa (property vs keys)
 				BeanUtils.populate(ordenPlanificacionBean, ordenPlanificacionMap);
-
+				System.out.println("planbean");
+				System.out.println("numeroOrden: " + ordenPlanificacionBean.getNuOrden());
+				System.out.println("estadoorden: " + ordenPlanificacionBean.getEstado());
+				System.out.println("fechaorden: " + ordenPlanificacionBean.getFeOrder());
+				System.out.println("tipobusqueda: " + ordenPlanificacionBean.getTipoBusqueda());
+				System.out.println("nombrecliente: " + ordenPlanificacionBean.getNombreCliente());
+				
 				if (!"".equals(ordenPlanificacionBean.getFeOrder())) {
 					String fechaOrden = Utils.stringToStringyyyyMMdd(ordenPlanificacionBean.getFeOrder());
 					ordenPlanificacionBean.setFeOrder(fechaOrden);
 				}
+				if (ordenPlanificacionBean.getTipoBusqueda() == 1) {
+					ordenPlanificacionBean.setDocumentoCliente(ordenPlanificacionBean.getNombreCliente());
+					ordenPlanificacionBean.setNombreCliente("");
+				} else if (ordenPlanificacionBean.getTipoBusqueda() == 2) {
+					ordenPlanificacionBean.setDocumentoCliente("");
+					ordenPlanificacionBean.setNombreCliente("%" + ordenPlanificacionBean.getNombreCliente() + "%");
+				}
+				
+				listarOrdenPlan = ordenPlanificacionService.listarOrdenPlanificacion(ordenPlanificacionBean);
 
-				lopb = ordenPlanificacionService.listarOrdenPlanificacion(ordenPlanificacionBean);
-
-				mapa.put("listaOrdenPlanificacion",  lopb);
+				mapa.put("listaOrdenPlanificacion",  listarOrdenPlan);
 
 				dataJSON.setRespuesta("ok", null, mapa);
 				flag = true;
 
 			} else {
-				lopb = ordenPlanificacionService
-						.listarOrdenPlanificacion(ordenPlanificacionBean);
-				System.out.println("size:... " + lopb.size());
-				modelAndView.addObject("listarOrdenPlanificacion",
-						SojoUtil.toJson(lopb));
-				// mapa.put("fechaInseminacion", sdf.format( new Date() ));
-				// modelAndView.addObject("mapaDatos", mapa);
-				modelAndView
-						.setViewName("ordenPlanificacion/listarOrdenPlanificacion");
+				listarOrdenPlan = ordenPlanificacionService.listarOrdenPlanificacion(ordenPlanificacionBean);
+				
+				System.out.println("size:... " + listarOrdenPlan.size());
+				modelAndView.addObject("listaOrdenPlanificacion", SojoUtil.toJson(listarOrdenPlan));
+				
+				modelAndView.setViewName("ordenPlanificacion/listarOrdenPlanificacion");
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -105,32 +140,7 @@ public class OrdenPlanificacionController {
 			return modelAndView;
 		}
 	}
-/*
-	@RequestMapping( value = "/listarCiudad", method ={RequestMethod.GET, RequestMethod.POST} )
-	public ModelAndView listarCiudad(HttpServletRequest request, HttpServletResponse response){
 
-		Map<String, Object> mapa = new HashMap<String, Object>();
-		DataJsonBean dataJSON = new DataJsonBean();
-		try {
-
-			List<CiudadBean> listaCiudad = new ArrayList<CiudadBean>();
-
-			CiudadBean ciudadBean = new CiudadBean();
-			int codigoPais = Integer.parseInt( request.getParameter("idPais") );
-			ciudadBean.setIdPais( codigoPais );
-			listaCiudad = cotizacionService.listarCiudad(ciudadBean);
-
-	        mapa.put("titulo", "Detalle Inseminaci&oacute;n");
-	        mapa.put("listaCiudad", listaCiudad);
-
-	        dataJSON.setRespuesta("ok", null, mapa);
-
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		return ControllerUtil.handleJSONResponse(dataJSON, response);
-	}*/
-	
 	@RequestMapping(value = "/formRegistrarOrdenPlanificacion", method = {RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView formRegistrarOrdenPlanificacion(
 			HttpServletRequest request, HttpServletResponse response) {
@@ -161,8 +171,7 @@ public class OrdenPlanificacionController {
 
 			modelAndView.addObject("titulo", "Orden de Planificacion - Registrar Orden");
 			modelAndView.addObject("mapaDatos", mapaDatos);
-			modelAndView.addObject("fechaOrden",
-					Utils.dateUtilToStringDDMMYYYY(new Date()));
+			modelAndView.addObject("fechaOrden",Utils.dateUtilToStringDDMMYYYY(new Date()));
 			modelAndView
 					.setViewName("ordenPlanificacion/registrarOrdenPlanificacion");
 		} catch (Exception e) {
@@ -211,9 +220,15 @@ public class OrdenPlanificacionController {
 				ordenPlanificacionBean.setFeFin(Utils.stringToStringyyyyMMdd(fecret));
 				ordenPlanificacionBean.setNuNinos(Integer.parseInt(nuninos));
 				ordenPlanificacionBean.setNuAdultos(Integer.parseInt(nuadultos));
+				ordenPlanificacionBean.setImPresupuestoMaximo(Double.parseDouble("1"));
+				ordenPlanificacionBean.setImPresupuestoMinimo(Double.parseDouble("2"));
+				ordenPlanificacionBean.setObservacion("");
+				ordenPlanificacionBean.setAutorizacion(1);
+				ordenPlanificacionBean.setFePartida("");
+				ordenPlanificacionBean.setFeRetorno("");
 				
 
-				int registro = ordenPlanificacionService.GrabarOrdenPlanificacion(ordenPlanificacionBean);
+				int registro = ordenPlanificacionService.registrarOrdenPlanificacion(ordenPlanificacionBean);
 
 				// DATOS DE DESTINO
 				String datosDestino = request.getParameter("datosDestino");
@@ -224,7 +239,7 @@ public class OrdenPlanificacionController {
 
 				String destino[] = datosDestino.split(",");
 				OrdenDestinoBean ordenDestinoBean = new OrdenDestinoBean();
-				ordenDestinoBean.setIdorden(ordenPlanificacionBean.getIdOrden());
+				ordenDestinoBean.setIdOrden(ordenPlanificacionBean.getIdOrden());
 
 				String g[];
 				if (destino.length > 0){
@@ -323,7 +338,7 @@ public class OrdenPlanificacionController {
 			System.out.println("fechaSalida: " + ordenPlanificacionBean.getFeInicio());
 			System.out.println("fechaRetorno: " + ordenPlanificacionBean.getFeFin());
 
-			int registro = ordenPlanificacionService.GrabarOrdenPlanificacion(ordenPlanificacionBean);
+			int registro = ordenPlanificacionService.registrarOrdenPlanificacion(ordenPlanificacionBean);
 
 			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 			System.out.println("Iniciando grabar Motivos");
@@ -372,7 +387,7 @@ public class OrdenPlanificacionController {
 				System.out.println("Cantidad de Destinos: " + destino.length);
 
 				OrdenDestinoBean ordenDestinoBean = new OrdenDestinoBean();
-				ordenDestinoBean.setIdorden(ordenPlanificacionBean.getIdOrden());
+				ordenDestinoBean.setIdOrden(ordenPlanificacionBean.getIdOrden());
 
 				String g[];
 

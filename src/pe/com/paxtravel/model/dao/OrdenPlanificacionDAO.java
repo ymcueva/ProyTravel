@@ -3,37 +3,55 @@ package pe.com.paxtravel.model.dao;
 import java.util.List;
 
 import pe.com.paxtravel.bean.CiudadBean;
+import pe.com.paxtravel.bean.ClienteBean;
+import pe.com.paxtravel.bean.CotizacionBean;
+import pe.com.paxtravel.bean.CotizacionServicioBean;
+import pe.com.paxtravel.bean.FareInfoBean;
+import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.OrdenDestinoBean;
 import pe.com.paxtravel.bean.OrdenPlanificacionBean;
+import pe.com.paxtravel.bean.OrdenServicioBean;
 import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
 
 public interface OrdenPlanificacionDAO {
 	
-	public List<OrdenPlanificacionBean> listarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
-
-	public int GrabarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
+	public List<OrdenPlanificacionBean> listaOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
 	
-	public List<OrdenPlanificacionBean> obtenerOrdenPlanificacion(OrdenPlanificacionBean objBean);
-	public List<OrdenPlanificacionBean> obtenerOrdenMotivo(OrdenPlanificacionBean objBean);
-	public List<OrdenPlanificacionBean> obtenerOrdenDestino(OrdenPlanificacionBean objBean);
-	public List<OrdenPlanificacionBean> obtenerOrdenServicio(OrdenPlanificacionBean objBean);
-
-	public int registrarServicio(ServicioAdicionalBean servicioAdicionalBean);
-
-	public int registrarMotivo(MotivoViajeBean motivoViajeBean);
-
 	public String generarNumeroOrden();
-
-	public int registrarOrdenDestino(OrdenDestinoBean ordenDestinoBean);
-
+	
 	public List<PaisBean> listaPais(PaisBean paisBean);
-
+	
 	public List<CiudadBean> listaCiudad(CiudadBean ciudadBean);
 	
-	int actualizarEstadoOrden(OrdenPlanificacionBean ordenPlanificacionBean);
+	public int registrarOrdenPlanificacion(OrdenPlanificacionBean ordenPlanificacionBean);
 	
+	public int registrarOrdenTicket(OrdenPlanificacionBean ordenPlanificacionBean);
+	
+	public int registrarMotivo(MotivoViajeBean motivoViajeBean);
+
+	public int registrarServicio(ServicioAdicionalBean servicioAdicionalBean);
+	
+	public int registrarHabitacion(HotelHabitacionBean hotelHabitacionBean);
+	
+	public int registrarOrdenDestino(OrdenDestinoBean ordenDestinoBean);
+	
+	List<ClienteBean> obtenerNombreCliente(ClienteBean clienteBean);
+	
+	FareInfoBean getConsolidador(FareInfoBean fareInfoBean);
+	
+	public List<OrdenServicioBean> listarOrdenServicio(OrdenServicioBean ordenServicioBean);
+
+	public int actualizarOrden(OrdenPlanificacionBean ordenPlanificacionBean);
+	
+	OrdenPlanificacionBean obtenerOrden(OrdenPlanificacionBean ordenPlanificacionBean);
+		
 	List<OrdenPlanificacionBean> obtenerOrdenDestinoPrograma(OrdenPlanificacionBean objBean);
+	////////////////////////////extras\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    public List<OrdenPlanificacionBean> obtenerOrdenPlanificacion(OrdenPlanificacionBean objBean);
+    public List<OrdenPlanificacionBean> obtenerOrdenMotivo(OrdenPlanificacionBean objBean);
+    public List<OrdenPlanificacionBean> obtenerOrdenDestino(OrdenPlanificacionBean objBean);
+    public List<OrdenPlanificacionBean> obtenerOrdenServicio(OrdenPlanificacionBean objBean);
 
 }

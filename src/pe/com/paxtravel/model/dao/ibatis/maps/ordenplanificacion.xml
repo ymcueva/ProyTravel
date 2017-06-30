@@ -3,19 +3,20 @@
 "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ordenplanificacion">
-
-
 	
 	<typeAlias alias="objBean" type="pe.com.paxtravel.bean.OrdenPlanificacionBean" />
-
-
-	<typeAlias alias="ordenPlanificacionBean" type="pe.com.paxtravel.bean.OrdenPlanificacionBean" />
+	<typeAlias alias="fareInfoBean" type="pe.com.paxtravel.bean.FareInfoBean" />	
+	<typeAlias alias="hotelHabitacionBean" type="pe.com.paxtravel.bean.HotelHabitacionBean" />
+	
 	<typeAlias alias="string" type="java.lang.String" />
 	<typeAlias alias="ordenDestinoBean" type="pe.com.paxtravel.bean.OrdenDestinoBean" />
 	<typeAlias alias="ciudadBean" type="pe.com.paxtravel.bean.CiudadBean" />
 	<typeAlias alias="paisBean" type="pe.com.paxtravel.bean.PaisBean" />
 	<typeAlias alias="motivoViajeBean" type="pe.com.paxtravel.bean.MotivoViajeBean" />
 	<typeAlias alias="servicioAdicionalBean" type="pe.com.paxtravel.bean.ServicioAdicionalBean" />
+	<typeAlias alias="ordenServicioBean" type="pe.com.paxtravel.bean.OrdenServicioBean" />
+	<typeAlias alias="clienteBean" type="pe.com.paxtravel.bean.ClienteBean" />
+	
 		<resultMap id="resultOrdenPlanificacion" class="objBean">		 	
 			<result property="idOrden"			    		column="id_orden" />			
 			<result property="idCotiza" 		    		column="id_cotiza" />			
@@ -32,17 +33,14 @@
 			<result property="idMoneda"						column="id_moneda" />
 			<result property="feInicio"  					column="fe_inicio"/>
 			<result property="feFin"						column="fe_fin"/>
-			<result property="nomCliente"					column="nomcliente"/>
+			<result property="nombreCliente"				column="nombrecliente"/>
 			<result property="fePartida"					column="fe_partida"/>
 			<result property="feRetorno"					column="fe_retorno"/>
 			<result property="nuAdultos"					column="nu_adultos"/>
 			<result property="nuNinos"					    column="nu_ninos"/>
 			<result property="idTipoPrograma"				column="id_tipo_programa"/>
 			<result property="nuCotizacion"				    column="nu_cotiza"/>
-			<result property="idOrigen"				        column="id_origen"/>
-			
-			
-			
+			<result property="idOrigen"				        column="id_origen"/>			
 		</resultMap>
 		
 		<resultMap id="resultOrdenMotivo" class="objBean">
@@ -67,8 +65,6 @@
 			<result property="nuNinos"			    	    column="nu_ninos" />	
 			<result property="isoOrigen"			    	column="iso_origen" />	
 			<result property="isoDestino"			    	column="iso_destino" />	
-			
-				
 		</resultMap>
 		
 		<resultMap id="resultOrdenDestino" class="objBean">
@@ -93,19 +89,66 @@
 			<result property="urlAerolinea"			    	column="url_ticket" />	
 			<result property="nombreAerolinea"			    column="nombre_aerolinea" />	
 			<result property="comision"			    		column="comision" />	
-			<result property="diasTour"			    		column="duracion" />	
-			
-			
-		
+			<result property="diasTour"			    		column="duracion" />
 		</resultMap>
-		
-		<resultMap id="resultOrdenServicio" class="objBean">
+
+		<resultMap id="resultOrdenServicioAd" class="objBean">
 			<result property="idOrden"			    		column="id_orden" />
 			<result property="nuOrden"			    		column="nu_orden" />
 			<result property="idServicio"			    	column="id_servicio" />			
 			<result property="nomServicio"			    	column="nombre" />				
 		</resultMap>
+				
+		<resultMap id="resultPais" class="paisBean">
+			<result property="idPais"			    column="id_destino" />
+			<result property="nomPais"			    column="descripcion" />
+		</resultMap>
+	
+		<resultMap id="resultCiudad" class="ciudadBean">
+			<result property="idCiudad"			    column="id_destino_ciudad" />
+			<result property="idPais"			    column="id_destino_pais" />
+			<result property="nomCiudad"			    column="descripcion" />
+		</resultMap>
 		
+		<resultMap id="resultOrdenServicio" class="ordenServicioBean">
+			<result property="idOrden" column="id_orden" />
+			<result property="idServicio" column="id_servicio" />
+			<result property="descripcion" column="descripcion" />
+		</resultMap>
+		
+		<resultMap id="resultFareInfo" class="fareInfoBean">						
+			<result property="comision"		    column="comision" />
+			<result property="nombreProveedor" 		    column="proveedor" />
+			<result property="nombreAerolinea" 		    column="aerolinea" />	
+			<result property="idProveedor" 		    column="id_proveedor" />
+			<result property="idAerolinea" 		    column="id_aerolinea" />
+		</resultMap>
+
+		<resultMap id="resultCliente" class="clienteBean">
+			<result property="idCliente"			    column="id_cliente" />
+			<result property="nombre"	        column="nombre_cliente" />
+			<result property="age"	        column="age" />		
+		</resultMap>
+
+		<resultMap id="resultOrderResume" class="objBean">
+			<result property="idOrden" column="id_orden" />
+			<result property="nuOrden" column="nu_order" />
+			<result property="nombreCliente" column="cliente" />
+			<result property="feOrder" column="fe_order" />		
+			<result property="estado" column="estado" />
+			<result property="tipoAlojamiento" column="alojamiento" />
+			<result property="categoriaAlojamiento" column="categoriaAlojamiento" />
+			<result property="destinos" column="destinos" />
+			<result property="habitaciones" column="habitaciones" />
+			<result property="motivos" column="motivos" />
+			<result property="servicios" column="servicios" />
+			<result property="idEstado" column="id_estado" />
+			<result property="imPresupuestoMaximo" column="im_presupuesto_maximo" />
+			<result property="cultural" column="cultural" />
+			<result property="deportes" column="deportes" />
+			<result property="relajacion" column="relajacion" />
+			<result property="playa" column="playa" />
+		</resultMap>
 	
 		<select id="obtenerOrdenPlanificacion" parameterClass="objBean" resultMap="resultOrdenPlanificacion">
 			
@@ -139,9 +182,6 @@
 			where ord.id_orden = #idOrden#
 		
 		</select>  
-		
-		
-		
 		
 		<select id="obtenerOrdenDestinoPrograma" parameterClass="objBean" resultMap="resultOrdenDestinoPrograma">	
 			select od.id_orden,
@@ -208,42 +248,13 @@
 			order by od.id_destino
 		</select>  
 		
-		<select id="obtenerOrdenServicio" parameterClass="objBean" resultMap="resultOrdenServicio">	
+		<select id="obtenerOrdenServicio" parameterClass="objBean" resultMap="resultOrdenServicioAd">	
 			select os.id_orden,ord.nu_orden,serv.id_servicio,serv.nombre 
 			from orden_servicio os
 			inner join orden ord on os.id_orden = ord.id_orden
 			inner join servicios serv on os.id_servicio = serv.id_servicio
 			where ord.nu_orden = #nuOrden#
 		</select>  
-
-	<resultMap id="resultOrdenPlanificacion" class="ordenPlanificacionBean">
-
-		<result property="idOrden" column="id_orden" />
-		<result property="idCotiza" column="id_cotiza" />
-		<result property="nuOrden" column="nu_orden" />
-		<result property="observacion" column="observacion" />
-		<result property="idTrabajador" column="id_usuario_ins" />
-		<result property="descripcion" column="descripcion" />
-		<result property="feOrder" column="fe_order" />
-		<result property="autorizacion" column="autorizacion" />
-		<result property="imPresupuestoMinimo" column="im_presupuesto_minimo" />
-		<result property="imPresupuestoMaximo" column="im_presupuesto_maximo" />
-		<result property="idCliente" column="id_cliente" />
-		<result property="idEstado" column="id_estado" />
-		<result property="idMoneda" column="id_moneda" />
-		<result property="feInicio" column="fe_inicio" />
-		<result property="feFin" column="fe_fin" />
-	</resultMap>
-	<resultMap id="resultPais" class="paisBean">
-		<result property="idPais"			    column="id_destino" />
-		<result property="nomPais"			    column="descripcion" />
-	</resultMap>
-	
-	<resultMap id="resultCiudad" class="ciudadBean">
-		<result property="idCiudad"			    column="id_destino_ciudad" />
-		<result property="idPais"			    column="id_destino_pais" />
-		<result property="nomCiudad"			    column="descripcion" />
-	</resultMap>
 
 	<insert id="insertarOrdenDestino" parameterClass="ordenDestinoBean">
 		INSERT INTO orden_destino(
@@ -252,7 +263,7 @@
 			id_destino
 		) VALUES (
 			#idDetalle#
-			#idorden#,
+			#idOrden#,
 			#destino#
 		)
 	</insert>
@@ -264,17 +275,39 @@
 	</update>
 
 
-	<select id="listarOrdenPlanificacion" parameterClass="ordenPlanificacionBean">
-		select o.nu_orden as `Numero de Orden`, o.fe_order as `Fecha
-		de Orden`,	c.nu_documento as `Numero Documento`, e.no_estado as
-		`estado` from	orden o
-		inner join cliente c on o.id_cliente =	c.id_cliente
-		inner join	estado e on o.id_estado = e.id_estado
-		where
-		o.nu_orden = #nuOrden# or
-		o.fe_order = #feOrder# or e.no_estado =
-		#idEstado#
-
+	<select id="listarOrdenPlanificacion" parameterClass="objBean">
+		SELECT @rownum:=@rownum+1 AS ca_nume_fila, o.id_orden , o.id_cotiza,
+		o.nu_orden,
+		DATE_FORMAT(o.fe_order,'%d-%m-%Y') fe_order,
+		CONCAT(c.nombres,' ',c.apellidos) cliente, 'STATUS' as no_estado,
+		IF(o.fe_partida='00-00-0000', NULL, o.fe_partida) as fe_partida,
+		IF(o.fe_retorno='00-00-0000', NULL, o.fe_retorno) as fe_retorno,
+		o.observacion,
+		o.descripcion,
+		o.id_cliente,
+		o.id_estado,
+		<!--o.id_usuario_ins, -->
+		o.autorizacion,
+		o.id_moneda,
+		o.fe_inicio,
+		o.fe_fin,
+		o.nu_ninos,
+		o.nu_adultos,
+		o.im_presupuesto_minimo,
+		o.im_presupuesto_maximo
+		FROM (SELECT @rownum:=0) r, orden o
+		INNER JOIN cliente c ON c.id_cliente=o.id_cliente
+		WHERE 1 = 1
+		<isNotEmpty prepend="AND" property="feOrder">
+			DATE_FORMAT(o.fe_order,'%Y-%m-%d') = #feOrder# </isNotEmpty>
+		<isNotEmpty prepend="AND" property="nuOrden"> o.nu_orden = #nuOrden#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="idEstado"> o.id_estado =
+			#idEstado# </isNotEmpty>
+		<isNotEmpty prepend="AND" property="nombreCliente"> CONCAT(c.nombres,'
+			',c.apellidos) LIKE %#nombreCliente#% </isNotEmpty>
+		<isNotEmpty prepend="AND" property="documentoCliente"> c.nu_documento =
+			#documentoCliente# </isNotEmpty>
 	</select>
 
 	<select id="obtenerDataCotizacion" resultClass="hashmap">
@@ -313,17 +346,9 @@
 		Inner JOIN destino_ciudad dc on
 		cz.id_destino = dc.id_destino_ciudad
 		where cz.nu_cotiza = #nuCotiza#;
-
 	</select>
-	<select id="obtenerArrayDestinos" resultClass="hashmap">
-		SELECT * FROM
-		proytraveldb.cotizacion_deta cd
-		INNER JOIN cotizacion cz on
-		cz.id_cotiza = cd.id_cotiza
-		where cz.nu_cotiza = #nuCotiza#;
-	</select>
-
-	<insert id="insertarOrdenPlanificacion" parameterClass="ordenPlanificacionBean">
+		
+	<insert id="insertarOrdenPlanificacion" parameterClass="objBean">
 		INSERT
 		INTO orden(
 		nu_orden, observacion, descripcion, fe_order,
@@ -337,7 +362,8 @@
 		#imPresupuestoMaximo#, #idCliente#,
 		 #feInicio#, #feFin#, #nuAdultos#, #nuNinos# )
 	</insert>
-		<select id="obtenerNumeroOrden" resultClass="string">
+	
+	<select id="obtenerNumeroOrden" resultClass="string">
 		SELECT CONCAT('ORD',
                YEAR(NOW()), 
                IF( LENGTH(MONTH(NOW()))=1,CONCAT('0',MONTH(NOW())),MONTH(NOW()) ),
@@ -346,8 +372,7 @@
          FROM orden;
 	</select>
 	
-	
-		<insert id="insertarMotivoViaje" parameterClass="motivoViajeBean">
+	<insert id="insertarMotivoViaje" parameterClass="motivoViajeBean">
 		INSERT INTO orden_motivo(
 			id_orden,
 			id_motivo
@@ -376,6 +401,76 @@
 		SELECT id_destino, descripcion FROM destino_pais 
 		WHERE 1=1
 		<isNotEmpty prepend="AND" property="idPais"> id_destino != #idPais# </isNotEmpty>
-	</select>	
-
+	</select>
+	
+	<select id="getConsolidador" parameterClass="fareInfoBean"
+		resultMap="resultFareInfo">
+		SELECT
+		pad.comision,
+		p.nombre as proveedor,
+		a.nombre as aerolinea,
+		p.id_proveedor,
+		a.id_aerolinea
+		FROM
+		aerolinea a
+		inner join proveedor_aerolinea_destino pad on (a.id_aerolinea =
+		pad.id_aerolinea )
+		inner join destino_ciudad d on (d.id_destino_ciudad =
+		pad.id_destino_ciudad)
+		inner join proveedor p on (p.id_proveedor = pad.id_proveedor)
+		WHERE
+		a.code_aerolinea = #airlineCode# AND
+		pad.id_destino_ciudad = #idDestino#
+		ORDER BY pad.comision DESC
+		LIMIT 1
+	</select>
+	
+	<insert id="insertarHabitacionHotel" parameterClass="hotelHabitacionBean">
+		INSERT INTO orden_deta_habitacion(
+			id_orden,
+			id_tipo_habitacion,
+			nu_habitacion
+		) VALUES (
+			#idOrden#,
+			#idTipoHabitacion#,
+			#nuHabitacion#
+		)
+	</insert>
+	
+	<insert id="insertarOrdenTicket" parameterClass="objBean">
+		INSERT INTO Orden(
+			nu_orden,
+			fe_order,
+			descripcion,
+			fe_partida,
+			fe_retorno,
+			nu_adultos,
+			nu_ninos,
+			id_cliente
+		) VALUES (
+			#nuOrden#,
+			#feOrder#,
+			#descripcion#,
+			#fePartida#,
+			#feRetorno#,
+			#nuAdultos#,
+			#nuNinos#,
+			#idCliente#
+		)
+	</insert>
+	
+	<select id="listarOrdenServicio" parameterClass="ordenServicioBean" resultMap="resultOrdenServicio">
+		select id_orden,
+			   id_servicio
+		from orden_servicio
+		where id_orden = #idOrden#
+		and	  id_servicio = #idServicio# 			
+	</select>
+	
+	<select id="obtenerNombreCliente" parameterClass="clienteBean" resultMap="resultCliente">
+		SELECT id_cliente, CONCAT(nombres, ' ', apellidos) AS nombre_cliente, TIMESTAMPDIFF(YEAR,fecha_nac,NOW()) AS age  
+		  FROM cliente
+         WHERE tipo_docu = #tipoDocumento# AND nu_documento = #numeroDocumento#
+	</select>
+	
 </sqlMap>
