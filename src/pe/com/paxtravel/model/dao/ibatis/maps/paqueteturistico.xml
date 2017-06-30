@@ -261,7 +261,7 @@
 				   ph.id_hotel_habitacion,
 				   h.id_tipo_habitacion,
 				   ph.im_precio,
-				   ph.cantidad,
+				   ifNull(ph.cantidad,0) AS cantidad,
 				   ph.id_destino,
 				   ho.descripcion nomHotel,
 				   tipo.descripcion nomtipo,
