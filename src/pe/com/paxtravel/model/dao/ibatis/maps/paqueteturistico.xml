@@ -539,4 +539,14 @@
         FROM COTIZACION;
 	</select>
 	
+	<update id="actualizarEstadoPaqueteTuristico" parameterClass="paqueteTuristicoBean">
+		update 
+			paquete_turistico 
+		set 
+			id_estado = #idEstado#, 
+			fe_upd = now()
+		where 
+			id_paquete = #idPaquete#
+	</update>
+	
 </sqlMap>

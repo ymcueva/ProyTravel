@@ -58,6 +58,14 @@ public class ExpedienteLogBean {
 	}
 	public void setDesLog(String desLog) {
 		this.desLog = desLog;
-	}		
+	}
+	@Override
+	public String toString() {
+		return "ExpedienteLogBean [idLog=" + idLog + ", tiLog=" + tiLog
+				+ ", idTx=" + idTx + ", idUser=" + idUser + ", feLog=" + feLog
+				+ ", feLogtime=" + feLogtime + ", desLog=" + desLog
+				+ ", idEstado=" + idEstado + "]";
+	}	
+	
 
 }

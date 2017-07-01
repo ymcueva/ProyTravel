@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,6 +38,8 @@ import pe.com.paxtravel.util.Constantes;
 
 @SuppressWarnings({ "unchecked" })
 public class Utils {
+	
+	private static Random rnd = new Random();
 
     /**
      * Metodo mapea una determinada clase, Te crea una objeto de una determinada
@@ -547,6 +550,14 @@ public class Utils {
     // redondea y formatea como cadena
     public static String roundString(double numero, int nroDecimales) {
         return roundBigDecimal(numero, nroDecimales).toString();
+    }
+    
+    // generar numero random
+    public static String getRandomNumber(int digCount) {
+        StringBuilder sb = new StringBuilder(digCount);
+        for(int i=0; i < digCount; i++)
+            sb.append((char)('0' + rnd.nextInt(10)));
+        return sb.toString();
     }
 
 }

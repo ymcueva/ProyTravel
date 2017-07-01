@@ -31,6 +31,7 @@ public class PaqueteTuristicoBean {
 	private double totalTicket;
 	private double totalHotel;
 	private String comentario;
+	private int cantidadPasajeros;
 	
 	public int getNumeroFila() {
 		return numeroFila;
@@ -227,6 +228,14 @@ public class PaqueteTuristicoBean {
 	}
 	public void setComentario(String comentario) {
 		this.comentario = comentario;
+	}
+
+	public int getCantidadPasajeros() {
+		return cantidadPasajeros;
+	}
+
+	public void setCantidadPasajeros(int cantidadPasajeros) {
+		this.cantidadPasajeros = cantidadPasajeros;
 	}
 	
 }

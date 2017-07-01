@@ -82,6 +82,7 @@
 		});
 		jQuery.support.cors = true;
 
+		inicia();
 		listaDestinos = ${listaDestinos};
 
 		construirTablaListaDestinos(listaDestinos);
@@ -89,11 +90,6 @@
 		$("#btnProcesarPago").on('click', function(e) {
 			e.preventDefault();
 			procesarPago();
-		})
-
-		$("#btnRechazarCotizacion").on('click', function(e) {
-			e.preventDefault();
-			rechazarCotizacion();
 		})
 
 	});
@@ -143,37 +139,9 @@
 				console.log("response: " + response);
 				var rpta = response.dataJson; // OK
 				console.log("rpta: " + rpta);
-				var rptaRes = rpta.resultadoProcesarPago;
-				console.log("rpta resultadoProcesarPago: " + rptaRes);
-				$("resultadoProcesarPago").val(rptaRes);
-			},
-			error : function(data, textStatus, errorThrown) {
-			}
-		});
-	}
-
-	function rechazarCotizacion() {
-
-		var grabarFormParams = {
-			'rechazarCotizacionBean' : formToObject('#formRechazarCotizacion')
-		};
-		//alert("params: " + JSON.stringify(grabarFormParams));
-
-		$.ajax({
-			url : '${pageContext.request.contextPath}/rechazarCotizacion',
-			data : JSON.stringify(grabarFormParams),
-			cache : false,
-			async : true,
-			type : 'POST',
-			contentType : "application/json; charset=utf-8",
-			dataType : 'json',
-			success : function(response) {
-				console.log("response: " + response);
-				var rpta = response.dataJson; // OK
-				console.log("rpta: " + rpta);
-				var rptaRes = rpta.resultadoRechazarCotizacion;
-				console.log("rpta resultado: " + rptaRes);
-				$("resultadoRechazarCotizacion").val(rptaRes);
+				console.log("rpta resultadoProcesarPago: "
+						+ resultadoProcesarPago);
+				$("resultadoProcesarPago").append(rpta);
 			},
 			error : function(data, textStatus, errorThrown) {
 			}
@@ -436,213 +404,6 @@
 		return formularioObject;
 	}
 
-	function buscarPaquete() {
-		var idTipoCotizacion = $("#inpIdTipoCotizacion").val();
-		var idCotizacion = $("#inpIdCotizacion").val();
-		var idparams = $("#idParams").val();
-
-		if (idTipoCotizacion == 1) {
-
-			console.log("**************************************");
-			console.log("paquete");
-
-			console.log("idTipoCotizacion: " + idTipoCotizacion);
-			console.log("idCotizacion: " + idCotizacion);
-			console.log("idparams: " + idparams);
-
-			$("#divMsgResultado").html("");
-
-			$
-					.ajax({
-						url : '${pageContext.request.contextPath}/buscarPaquete?idCotizacion='
-								+ idCotizacion + "&" + idparams,
-						cache : false,
-						async : true,
-						type : 'GET',
-						contentType : "application/json; charset=utf-8",
-						dataType : 'json',
-						success : function(response) {
-
-							var mensajeHTML = "";
-
-							console
-									.log("************************************************************");
-							console.log("response");
-							console.log(response);
-							console.log(response.dataJson.listaPaquetes);
-							console.log(response.dataJson.cantidadPaquetes);
-							console.log(response.dataJson.destinos);
-
-							if (response.estado = "ok") {
-
-								console.log("cantidad paquetes");
-								console
-										.log(parseInt(response.dataJson.cantidadPaquetes));
-
-								if (parseInt(response.dataJson.cantidadPaquetes) > 0) {
-									var nomPaquete = "";
-									var idPaquete = 0;
-									var precio = 0;
-
-									if (response.dataJson.destinos[0]) {
-										nomPaquete = response.dataJson.destinos[0].nomPaquete;
-										idPaquete = response.dataJson.destinos[0].idPaquete;
-										precio = response.dataJson.destinos[0].imPrecio;
-										console.log("Paquete");
-										console.log(nomPaquete);
-										console.log(idPaquete);
-										console.log(precio);
-									}
-
-									console.log("destinos");
-									console
-											.log(response.dataJson.destinos[0].destinos);
-									mensajeHTML += "<center><strong>Paquete: "
-											+ nomPaquete + " (USD. " + precio
-											+ ")</strong></center>";
-
-									$("#inpIdPaquete").val(idPaquete);
-									console.log("inpIdPaquete");
-									console.log($("#inpIdPaquete").val());
-
-									$
-											.each(
-													response.dataJson.destinos,
-													function(i, row) {
-														console
-																.log("destinos each");
-														console
-																.log(row.destinos);
-														console.log(row.hotel);
-														console.log(row.tour);
-														console
-																.log(row.aerolinea);
-
-														mensajeHTML += "<strong>"
-																+ (i + 1)
-																+ " "
-																+ row.destinos
-																+ "</strong>: <i>";
-
-														if (row.hotel) {
-															mensajeHTML += row.hotel;
-														}
-														if (row.tour) {
-															mensajeHTML += row.tour;
-														}
-														if (row.aerolinea) {
-															mensajeHTML += row.aerolinea;
-														}
-														mensajeHTML += "</i><br />";
-
-													});
-								} else {
-									mensajeHTML = "<strong>No se encontraron Paquetes disponibles.</strong>";
-									$("#btnGuardarPaquete").css("display",
-											"none");
-								}
-
-								$("#divInfoDetalleCotizacion").css("display",
-										"block");
-								$("#divMsgResultado").html(mensajeHTML);
-
-							}
-							;
-
-						},
-						error : function(data, textStatus, errorThrown) {
-
-						},
-					});
-
-		} else {
-			console.log("ticket");
-		}
-	}
-
-	function guardarPaquete() {
-
-		console
-				.log("*****************************************************************");
-		console.log("guardar paquete");
-
-		var idPaquete = $("#inpIdPaquete").val();
-		var idCotizacion = $("#inpIdCotizacion").val();
-
-		console.log("idPaquete");
-		console.log(idPaquete);
-
-		console.log("idCotizacion");
-		console.log(idCotizacion);
-
-		$("#divMsgResultadoRegistro").html("");
-		$("#divBotonCotizacionEnviar").css("display", "none");
-		if (idPaquete != '') {
-			$
-					.ajax({
-						url : '${pageContext.request.contextPath}/grabarPaquete?idCotizacion='
-								+ idCotizacion + "&idPaquete=" + idPaquete,
-						cache : false,
-						async : true,
-						type : 'GET',
-						contentType : "application/json; charset=utf-8",
-						dataType : 'json',
-						success : function(response) {
-
-							console
-									.log("************************************************************");
-							console.log(response);
-
-							if (response.estado = "ok") {
-								$("#btnBuscar").css("display", "none");
-								$("#btnGuardarPaquete").css("display", "none");
-								$("#divBotonCotizacionEnviar").css("display",
-										"block");
-								$("#divMsgResultadoRegistro")
-										.html(
-												"<strong>Su cotizacion fue actualizada</strong>");
-							}
-
-						},
-						error : function(data, textStatus, errorThrown) {
-
-						},
-					});
-		}
-		;
-	}
-
-	function enviarCotizacion() {
-		var idCotizacion = $("#inpIdCotizacion").val();
-		if (idCotizacion != '') {
-			$
-					.ajax({
-						url : '${pageContext.request.contextPath}/enviarPaquete?idCotizacion='
-								+ idCotizacion,
-						cache : false,
-						async : true,
-						type : 'GET',
-						contentType : "application/json; charset=utf-8",
-						dataType : 'json',
-						success : function(response) {
-							var mensajeHTML = "";
-							console
-									.log("************************************************************");
-							if (response.estado = "ok") {
-								$("#btnEnviarCotizacion")
-										.css("display", "none");
-								$("#divMsgResultadoEnviar")
-										.html(
-												"<strong>Su cotizacion fue enviada</strong>");
-							}
-						},
-						error : function(data, textStatus, errorThrown) {
-
-						},
-					});
-		}
-		;
-	}
 </script>
 
 </head>
@@ -815,14 +576,10 @@
 								<div class="panel-body">
 									<div class="row">
 										<form class="form-horizontal" id="formProcesarPago">
-											<input type="hidden" name="idCliente"
-												value="${cotizacionBean.idCliente}"> <input
-												type="hidden" name="imPrecio"
-												value="${cotizacionBean.precioTotal}"> <input
-												type="hidden" name="idCotiza"
-												value="${cotizacionBean.idCotizacion}"> <input
-												type="hidden" name="idPaquete"
-												value="${cotizacionBean.paqueteTuristico.idPaquete}">
+											<input type="hidden" name="idCliente" value="${cotizacionBean.idCliente}">
+											<input type="hidden" name="imPrecio" value="${cotizacionBean.precioTotal}">
+											<input type="hidden" name="idCotiza" value="${cotizacionBean.idCotizacion}">
+											<input type="hidden" name="idPaquete" value="${cotizacionBean.paqueteTuristico.idPaquete}">
 											<div class="form-group">
 												<label class="control-label col-sm-3"
 													id="resultadoProcesarPago"></label>
@@ -852,7 +609,7 @@
 													<div class="input-group date tamanoMaximo"
 														id="divFechaCotizacionBusq">
 														<input id="txtFechaCaducidad" name="fechaCaducidad"
-															type="text" maxlength="16" readonly="yes"
+															type="text" maxlength="30" readonly="yes"
 															class="form-control txtFecha" /> <span
 															class="input-group-addon datepickerbutton"> <span
 															class="glyphicon glyphicon-calendar"></span>
@@ -875,41 +632,6 @@
 											<div class="form-group">
 												<div class="col-sm-10" style="text-align: center">
 													<button id="btnProcesarPago" class="btn btn-primary"
-														title="Aceptar">ACEPTAR</button>
-												</div>
-											</div>
-										</form>
-									</div>
-
-								</div>
-							</div>
-							<div class="panel panel-primary">
-								<div class="panel-heading">
-									<strong>Rechazar Cotización</strong>
-								</div>
-								<div class="panel-body">
-									<div class="row">
-										<form class="form-horizontal" id="formRechazarCotizacion">
-											<input type="hidden" name="idCotiza"
-												value="${cotizacionBean.idCotizacion}"> <input
-												type="hidden" name="idPaquete"
-												value="${cotizacionBean.paqueteTuristico.idPaquete}">
-											<div class="form-group">
-												<label class="control-label col-sm-3"
-													id="resultadoRechazarCotizacion"></label>
-											</div>
-											<div class="form-group">
-												<label class="control-label col-sm-3">Observación</label>
-												<div class="col-sm-9">
-													<textarea rows="4" cols="5" maxlength="50"
-														name="observacion"
-														onkeypress="return validarNumeroLetra(event)"
-														id="txtObservacion" class="form-control"></textarea>
-												</div>
-											</div>
-											<div class="form-group">
-												<div class="col-sm-10" style="text-align: center">
-													<button id="btnRechazarCotizacion" class="btn btn-primary"
 														title="Aceptar">ACEPTAR</button>
 												</div>
 											</div>

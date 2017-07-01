@@ -11,6 +11,7 @@ import pe.com.paxtravel.bean.ClienteBean;
 import pe.com.paxtravel.bean.CotizacionBean;
 import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
+import pe.com.paxtravel.bean.CotizacionDetalleDestinosBean;
 import pe.com.paxtravel.bean.CotizacionServicioBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
 import pe.com.paxtravel.bean.ExpedienteLogBean;
@@ -217,6 +218,21 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements
 	public CotizacionBean obtenerCotizacionPorId(int cotizacionId) {
 		return (CotizacionBean) getSqlMapClientTemplate().queryForObject(
 				"cotizacion.getCotizacionById", cotizacionId);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CotizacionDetalleDestinosBean> listarCotizacionPaqueteDestinos(
+			int cotizacionId) {
+		return getSqlMapClientTemplate().queryForList(
+				"cotizacion.listarCotizacionPaqueteDestinos", cotizacionId);
+	}
+
+	@Override
+	public List<CotizacionDetalleDestinosBean> listarCotizacionTicketDestinos(
+			int cotizacionId) {
+		return getSqlMapClientTemplate().queryForList(
+				"cotizacion.listarCotizacionTicketDestinos", cotizacionId);
 	}
 
 }

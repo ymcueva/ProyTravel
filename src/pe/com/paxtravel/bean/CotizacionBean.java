@@ -1,9 +1,12 @@
 package pe.com.paxtravel.bean;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class CotizacionBean {
 
 	private int numeroFila;
-	private int idCotizacion;	
+	private int idCotizacion;
 	private String numeroCotizacion;
 	private String fechaCotizacion;
 	private String nombreCliente;
@@ -29,34 +32,37 @@ public class CotizacionBean {
 	private String observacion;
 	private String tipoCotizacion;
 	private String tipoPrograma;
-	private String estado;	
+	private String estado;
 	private String destinos;
 	private String habitaciones;
 	private String motivos;
 	private String servicios;
-	private int idCliente;	
+	private int idCliente;
 	private int idTipoCotizacion;
 	private int idOrigenPartida;
-	private int idTipoPrograma;	
+	private int idTipoPrograma;
 	private int tipoBusqueda;
-	private int idEstado;	
+	private int idEstado;
 	private int idTipoAlojamiento;
 	private int idCategoriaAlojamiento;
-	
+
 	private int ticket;
 	private int tour;
 	private int hotel;
 	private int cultural;
 	private int deportes;
 	private int relajacion;
-	private int playa;	
-	
+	private int playa;
+
 	private int idPaquete;
 	private String linkCotiza;
 	private String feLink;
-	
-	
-	
+
+	private String tipoDocumento;
+	private List<CotizacionDetalleDestinosBean> listCotizacionDetalleDestinos;
+	private PaqueteTuristicoBean paqueteTuristico;
+	private double precioTotal;
+
 	public int getIdPaquete() {
 		return idPaquete;
 	}
@@ -220,24 +226,23 @@ public class CotizacionBean {
 	public int getIdTipoPrograma() {
 		return idTipoPrograma;
 	}
-	
+
 	public void setIdTipoPrograma(int idTipoPrograma) {
 		this.idTipoPrograma = idTipoPrograma;
 	}
-	
+
 	public int getIdOrigenPartida() {
 		return idOrigenPartida;
 	}
-	
+
 	public void setIdOrigenPartida(int idOrigenPartida) {
 		this.idOrigenPartida = idOrigenPartida;
 	}
-	
-	
+
 	public int getIdTipoCotizacion() {
 		return idTipoCotizacion;
 	}
-	
+
 	public void setIdTipoCotizacion(int idTipoCotizacion) {
 		this.idTipoCotizacion = idTipoCotizacion;
 	}
@@ -458,5 +463,77 @@ public class CotizacionBean {
 		this.idEstado = idEstado;
 	}
 
+	public List<CotizacionDetalleDestinosBean> getListCotizacionDetalleDestinos() {
+		return listCotizacionDetalleDestinos;
+	}
+
+	public void setListCotizacionDetalleDestinos(
+			List<CotizacionDetalleDestinosBean> listCotizacionDetalleDestinos) {
+		this.listCotizacionDetalleDestinos = listCotizacionDetalleDestinos;
+	}
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
+	public PaqueteTuristicoBean getPaqueteTuristico() {
+		return paqueteTuristico;
+	}
+
+	public void setPaqueteTuristico(PaqueteTuristicoBean paqueteTuristico) {
+		this.paqueteTuristico = paqueteTuristico;
+	}
+
+	public double getPrecioTotal() {
+		return precioTotal;
+	}
+
+	public void setPrecioTotal(double precioTotal) {
+		this.precioTotal = precioTotal;
+	}
+
+	@Override
+	public String toString() {
+		return "CotizacionBean [numeroFila=" + numeroFila + ", idCotizacion="
+				+ idCotizacion + ", numeroCotizacion=" + numeroCotizacion
+				+ ", fechaCotizacion=" + fechaCotizacion + ", nombreCliente="
+				+ nombreCliente + ", documentoCliente=" + documentoCliente
+				+ ", nombreEstadoCotizacion=" + nombreEstadoCotizacion
+				+ ", codigoEstadoCotizacion=" + codigoEstadoCotizacion
+				+ ", descripcion=" + descripcion + ", tiempoMinimo="
+				+ tiempoMinimo + ", tiempoMaximo=" + tiempoMaximo
+				+ ", fechaSalida=" + fechaSalida + ", fechaRetorno="
+				+ fechaRetorno + ", seguroViaje=" + seguroViaje
+				+ ", boletoAvion=" + boletoAvion + ", idOrigen=" + idOrigen
+				+ ", idDestino=" + idDestino + ", motivoViaje="
+				+ Arrays.toString(motivoViaje) + ", tipoAlojamiento="
+				+ tipoAlojamiento + ", categoriaAlojamiento="
+				+ categoriaAlojamiento + ", cantidadAdultos=" + cantidadAdultos
+				+ ", cantidadNinos=" + cantidadNinos + ", presupuestoMinimo="
+				+ presupuestoMinimo + ", presupuestoMaximo="
+				+ presupuestoMaximo + ", observacion=" + observacion
+				+ ", tipoCotizacion=" + tipoCotizacion + ", tipoPrograma="
+				+ tipoPrograma + ", estado=" + estado + ", destinos="
+				+ destinos + ", habitaciones=" + habitaciones + ", motivos="
+				+ motivos + ", servicios=" + servicios + ", idCliente="
+				+ idCliente + ", idTipoCotizacion=" + idTipoCotizacion
+				+ ", idOrigenPartida=" + idOrigenPartida + ", idTipoPrograma="
+				+ idTipoPrograma + ", tipoBusqueda=" + tipoBusqueda
+				+ ", idEstado=" + idEstado + ", idTipoAlojamiento="
+				+ idTipoAlojamiento + ", idCategoriaAlojamiento="
+				+ idCategoriaAlojamiento + ", ticket=" + ticket + ", tour="
+				+ tour + ", hotel=" + hotel + ", cultural=" + cultural
+				+ ", deportes=" + deportes + ", relajacion=" + relajacion
+				+ ", playa=" + playa + ", idPaquete=" + idPaquete
+				+ ", linkCotiza=" + linkCotiza + ", feLink=" + feLink
+				+ ", tipoDocumento=" + tipoDocumento
+				+ ", listCotizacionDetalleDestinos="
+				+ listCotizacionDetalleDestinos + ", paqueteTuristico="
+				+ paqueteTuristico + ", precioTotal=" + precioTotal + "]";
+	}
 
 }

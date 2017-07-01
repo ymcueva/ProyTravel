@@ -50,5 +50,7 @@ public interface PaqueteTuristicoService {
 	
 	List<TourBean> listaTourBusqueda(TourBean tourBean);
 	
+	int actualizarEstadoPaqueteTuristico(PaqueteTuristicoBean paqueteTuristicoBean);
+	
 	
 }

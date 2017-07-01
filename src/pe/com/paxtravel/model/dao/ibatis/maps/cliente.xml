@@ -17,6 +17,18 @@
 		<result property="email" 		column="vch_clieemail" />
 		<result property="estado" 		column="vch_clieestado" />
 	</resultMap>
+	
+	<resultMap id="resultClienteBean" 		class="clienteBean">
+		<result property="idCliente"		column="id_cliente" />
+		<result property="tipoDocu" 		column="tipo_docu" />
+		<result property="numeroDocumento" 	column="nu_documento" />
+		<result property="nombre" 			column="nombres" />
+		<result property="apellidos" 		column="apellidos" />
+		<result property="direccion" 		column="direccion" />
+		<result property="telefono" 		column="telefono" />
+		<result property="fechaNacimiento" 	column="fecha_nac" />
+		<result property="email" 			column="email" />
+	</resultMap>
 
 	<update id="update">
 		UPDATE empleado SET emp_nom='111' WHERE emp_id='0001'
@@ -28,6 +40,15 @@
 			   vch_cliedireccion, vch_clietelefono, vch_clieemail, vch_clieestado
 		FROM cliente
 <!-- 		WHERE chr_cliecodigo = #codigo# -->
+	</select>
+	
+	<select id="obtenerCliente" parameterClass="Integer" resultMap="resultClienteBean">
+		SELECT   
+			id_cliente, tipo_docu, nu_documento, nombres, apellidos, direccion, telefono, fecha_nac, email
+		FROM 
+			cliente
+        WHERE 
+        	id_cliente = #codigo#; 
 	</select>
 
 

@@ -2,6 +2,7 @@ package pe.com.paxtravel.controller;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -23,26 +25,37 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import pe.com.paxtravel.bean.AnimalBean;
+import pe.com.paxtravel.bean.AuthorizeNetBean;
 import pe.com.paxtravel.bean.CiudadBean;
 import pe.com.paxtravel.bean.ClienteBean;
 import pe.com.paxtravel.bean.CotizacionBean;
 import pe.com.paxtravel.bean.CotizacionDetalleBean;
+import pe.com.paxtravel.bean.CotizacionDetalleDestinosBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.ExpedienteLogBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.OrdenPlanificacionBean;
+import pe.com.paxtravel.bean.PagoLogBean;
 import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.PaqueteResumeBean;
+import pe.com.paxtravel.bean.PaqueteTuristicoBean;
+import pe.com.paxtravel.bean.ProcesarPagoBean;
+import pe.com.paxtravel.bean.RechazarCotizacionBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
+import pe.com.paxtravel.service.AuthorizeNetService;
+import pe.com.paxtravel.service.ClienteService;
 import pe.com.paxtravel.service.CotizacionService;
+import pe.com.paxtravel.service.PagoLogService;
+import pe.com.paxtravel.service.PaqueteTuristicoService;
 import pe.com.paxtravel.tree.data.CSVUtils;
 import pe.com.paxtravel.tree.data.PaqueteManagerBean;
 import pe.com.paxtravel.tree.decision.DataManager;
 import pe.com.paxtravel.tree.decision.TableManager;
 import pe.com.paxtravel.util.ControllerUtil;
 import pe.com.paxtravel.util.DataJsonBean;
+import pe.com.paxtravel.util.EmailUtil;
 import pe.com.paxtravel.util.Utils;
 import pe.gob.sunat.framework.spring.util.conversion.SojoUtil;
 //import pe.gob.sunat.framework.uti
@@ -54,6 +67,15 @@ public class CotizacionController {
 
 	@Autowired
 	private CotizacionService cotizacionService;
+
+	@Autowired
+	private AuthorizeNetService authorizeNetService;
+
+	@Autowired
+	private PagoLogService pagoLogService;
+
+	@Autowired
+	private PaqueteTuristicoService paqueteTuristicoService;
 
 	private String jsonView;
 
@@ -215,32 +237,8 @@ public class CotizacionController {
 			HttpServletResponse response,
 			@RequestParam(value = "cotizacionId") String cotizacionId) {
 
-		if (cotizacionId != null && cotizacionId.length() > 0) {
-			System.out.println("paramterer cotizacion id: " + cotizacionId);
-
-			// Consultar info segun cotizacion id
-			CotizacionBean cotizacionBean = cotizacionService
-					.obtenerCotizacionPorId(Integer.parseInt(cotizacionId));
-			if (cotizacionBean != null) {
-				System.out.println("coti bean " + cotizacionBean.getIdCotizacion());
-				// Si es tipo paquete turistico
-				if (cotizacionBean.getIdTipoCotizacion() == 1) {
-					System.out.println("tipo 1");
-					
-					
-				}
-				// Si es tipo ticket aereo
-				else if (cotizacionBean.getIdTipoCotizacion() == 2) {
-					System.out.println("tipo 2");
-				}
-			}
-
-		}
-
-		ModelAndView modelAndView = null;
+		ModelAndView modelAndView = new ModelAndView();
 		HashMap<String, Object> mapa = new HashMap<String, Object>();
-
-		List<CotizacionBean> listarCotizacion = new ArrayList<CotizacionBean>();
 
 		CotizacionBean cotizacionBean = new CotizacionBean();
 
@@ -251,107 +249,274 @@ public class CotizacionController {
 
 		System.out.println("Bienvenido a revisar cotizacion");
 
-		try {
-			modelAndView = new ModelAndView();
+		if (cotizacionId != null && cotizacionId.length() > 0) {
+			System.out.println("paramterer cotizacion id: " + cotizacionId);
 
-			String botonBuscar = (request.getParameter("btnBuscar")) != null ? request
-					.getParameter("btnBuscar") : "";
+			// Consultar info segun cotizacion id
+			cotizacionBean = cotizacionService.obtenerCotizacionPorId(Integer
+					.parseInt(cotizacionId));
+			if (cotizacionBean != null) {
+				System.out.println("coti bean "
+						+ cotizacionBean.getIdCotizacion());
+				// Si es tipo paquete turistico
+				if (cotizacionBean.getIdTipoCotizacion() == 1) {
+					System.out.println("tipo 1 paquete turistico");
+					List<CotizacionDetalleDestinosBean> listCotDetDestBean = cotizacionService
+							.listarCotizacionPaqueteDestinos(Integer
+									.parseInt(cotizacionId));
+					if (listCotDetDestBean != null
+							&& listCotDetDestBean.size() > 0) {
+						// Lista destinos
+						cotizacionBean
+								.setListCotizacionDetalleDestinos(listCotDetDestBean);
+						cotizacionBean.setIdCotizacion(listCotDetDestBean
+								.get(0).getIdCotiza());
+						cotizacionBean.setIdCliente(listCotDetDestBean.get(0)
+								.getIdCliente());
+						cotizacionBean.setNumeroCotizacion(listCotDetDestBean
+								.get(0).getNuCotiza());
+						cotizacionBean.setFechaCotizacion(listCotDetDestBean
+								.get(0).getFeCotiza());
+						cotizacionBean.setNombreCliente(listCotDetDestBean.get(
+								0).getNombresCliente()
+								+ " "
+								+ listCotDetDestBean.get(0)
+										.getApellidosCliente());
+						cotizacionBean.setTipoDocumento(listCotDetDestBean.get(
+								0).getTipoDocu());
+						cotizacionBean.setDocumentoCliente(listCotDetDestBean
+								.get(0).getNuDocumento());
+						PaqueteTuristicoBean paqueteTuristicoBean = new PaqueteTuristicoBean();
+						paqueteTuristicoBean.setIdPaquete(listCotDetDestBean
+								.get(0).getIdPaqueteTuristico());
+						paqueteTuristicoBean.setFeInicio(listCotDetDestBean
+								.get(0).getFePartida());
+						paqueteTuristicoBean.setFeFin(listCotDetDestBean.get(0)
+								.getFeRetorno());
+						paqueteTuristicoBean.setNombre(listCotDetDestBean
+								.get(0).getNombrePaqueteTuristico());
+						paqueteTuristicoBean
+								.setCantidadPasajeros(listCotDetDestBean.get(0)
+										.getNuAdultos()
+										+ listCotDetDestBean.get(0)
+												.getNuNinos());
+						cotizacionBean
+								.setPaqueteTuristico(paqueteTuristicoBean);
+						cotizacionBean.setPrecioTotal(listCotDetDestBean.get(0)
+								.getImPrecio());
+						System.out.println("[cotizacionBean] "
+								+ cotizacionBean.toString());
+						modelAndView
+								.addObject("cotizacionBean", cotizacionBean);
+						modelAndView.addObject("listaDestinos", SojoUtil
+								.toJson(cotizacionBean
+										.getListCotizacionDetalleDestinos()));
+						modelAndView
+								.setViewName("cotizacion/revisarCotizacion");
 
-			mapa.put("titulo", "");
-
-			System.out.println("boton: " + botonBuscar);
-
-			if ("1".equals(botonBuscar)) {
-
-				System.out.println("Ingreso....");
-
-				Map<String, Object> parametrosRequest = ControllerUtil
-						.parseRequestToMap(request);
-				Map<String, Object> cotizacionBeanMap = (Map<String, Object>) parametrosRequest
-						.get("cotizacionBean");
-
-				// "numeroCotizacion":"","codigoEstadoCotizacion":"1","fechaCotizacion":"14/06/2017","tipoBusqueda":"1","nombreCliente"
-
-				System.out.println("[cotizacionBeanMap]");
-
-				System.out.println("numeroCotizacion: "
-						+ cotizacionBeanMap.get("numeroCotizacion"));
-				System.out.println("codigoEstadoCotizacion: "
-						+ cotizacionBeanMap.get("codigoEstadoCotizacion"));
-				System.out.println("fechaCotizacion: "
-						+ cotizacionBeanMap.get("fechaCotizacion"));
-				System.out.println("tipoBusqueda: "
-						+ cotizacionBeanMap.get("tipoBusqueda"));
-				System.out.println("nombreCliente: "
-						+ cotizacionBeanMap.get("nombreCliente"));
-
-				// inserta en el bean todos los valores del mapa (property vs
-				// keys)
-
-				BeanUtils.populate(cotizacionBean, cotizacionBeanMap);
-				System.out.println("[cotizacionBean]");
-
-				System.out.println("numeroCotizacion: "
-						+ cotizacionBean.getNumeroCotizacion());
-				System.out.println("codigoEstadoCotizacion: "
-						+ cotizacionBean.getCodigoEstadoCotizacion());
-				System.out.println("fechaCotizacion: "
-						+ cotizacionBean.getFechaCotizacion());
-				System.out.println("tipoBusqueda: "
-						+ cotizacionBean.getTipoBusqueda());
-				System.out.println("nombreCliente: "
-						+ cotizacionBean.getNombreCliente());
-
-				if (!"".equals(cotizacionBean.getFechaCotizacion())) {
-					String fechaCotizacion = Utils
-							.stringToStringyyyyMMdd(cotizacionBean
-									.getFechaCotizacion());
-					cotizacionBean.setFechaCotizacion(fechaCotizacion);
+					}
 				}
+				// Si es tipo ticket aereo
+				else if (cotizacionBean.getIdTipoCotizacion() == 2) {
+					System.out.println("tipo 2 ticket");
 
-				if (cotizacionBean.getTipoBusqueda() == 1) {
-					cotizacionBean.setDocumentoCliente(cotizacionBean
-							.getNombreCliente());
-					cotizacionBean.setNombreCliente("");
-				} else if (cotizacionBean.getTipoBusqueda() == 2) {
-					cotizacionBean.setDocumentoCliente("");
-					cotizacionBean.setNombreCliente("%"
-							+ cotizacionBean.getNombreCliente() + "%");
+					List<CotizacionDetalleDestinosBean> listCotDetDestBean = cotizacionService
+							.listarCotizacionTicketDestinos(Integer
+									.parseInt(cotizacionId));
+					if (listCotDetDestBean != null
+							&& listCotDetDestBean.size() > 0) {
+						// Lista destinos
+						cotizacionBean
+								.setListCotizacionDetalleDestinos(listCotDetDestBean);
+						cotizacionBean.setIdCotizacion(listCotDetDestBean
+								.get(0).getIdCotiza());
+						cotizacionBean.setIdCliente(listCotDetDestBean.get(0)
+								.getIdCliente());
+						cotizacionBean.setNumeroCotizacion(listCotDetDestBean
+								.get(0).getNuCotiza());
+						cotizacionBean.setFechaCotizacion(listCotDetDestBean
+								.get(0).getFeCotiza());
+						cotizacionBean.setNombreCliente(listCotDetDestBean.get(
+								0).getNombresCliente()
+								+ " "
+								+ listCotDetDestBean.get(0)
+										.getApellidosCliente());
+						cotizacionBean.setTipoDocumento(listCotDetDestBean.get(
+								0).getTipoDocu());
+						cotizacionBean.setDocumentoCliente(listCotDetDestBean
+								.get(0).getNuDocumento());
+						PaqueteTuristicoBean paqueteTuristicoBean = new PaqueteTuristicoBean();
+						paqueteTuristicoBean.setIdPaquete(listCotDetDestBean
+								.get(0).getIdPaqueteTuristico());
+						paqueteTuristicoBean.setFeInicio(listCotDetDestBean
+								.get(0).getFePartida());
+						paqueteTuristicoBean.setFeFin(listCotDetDestBean.get(0)
+								.getFeRetorno());
+						paqueteTuristicoBean.setNombre(listCotDetDestBean
+								.get(0).getNombrePaqueteTuristico());
+						paqueteTuristicoBean
+								.setCantidadPasajeros(listCotDetDestBean.get(0)
+										.getNuAdultos()
+										+ listCotDetDestBean.get(0)
+												.getNuNinos());
+						cotizacionBean
+								.setPaqueteTuristico(paqueteTuristicoBean);
+						cotizacionBean.setPrecioTotal(listCotDetDestBean.get(0)
+								.getImPrecio());
+						System.out.println("[cotizacionBean] "
+								+ cotizacionBean.toString());
+						modelAndView
+								.addObject("cotizacionBean", cotizacionBean);
+						modelAndView.addObject("listaDestinos", SojoUtil
+								.toJson(cotizacionBean
+										.getListCotizacionDetalleDestinos()));
+						modelAndView
+								.setViewName("cotizacion/revisarCotizacionTicket");
+					}
 				}
-
-				listarCotizacion = cotizacionService
-						.listarCotizacion(cotizacionBean);
-				mapa.put("listaCotizacion", listarCotizacion);
-				dataJSON.setRespuesta("ok", null, mapa);
-				flag = true;
-
-			} else {
-
-				listarCotizacion = cotizacionService
-						.listarCotizacion(cotizacionBean);
-				modelAndView.addObject("listaCotizacion",
-						SojoUtil.toJson(listarCotizacion));
-
-				// mapa.put("fechaInseminacion", sdf.format( new Date() ));
-				// modelAndView.addObject("mapaDatos", mapa);
-
-				modelAndView.setViewName("cotizacion/revisarCotizacion");
-
 			}
-
-			System.out.println("fin: ");
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e.getMessage());
 		}
-
-		System.out.println("......................... ");
-
 		if (flag) {
 			return ControllerUtil.handleJSONResponse(dataJSON, response);
 		} else {
 			return modelAndView;
+		}
+	}
+
+	@RequestMapping(value = "/procesarPagoCotizacion", method = {
+			RequestMethod.POST, RequestMethod.GET })
+	public ModelAndView procesarPagoCotizacion(HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			Map<String, Object> parametrosRequest = ControllerUtil
+					.parseRequestToMap(request);
+			Map<String, Object> procesarPagoBeanMap = (Map<String, Object>) parametrosRequest
+					.get("procesarPagoBean");
+			ProcesarPagoBean procesarPagoBean = new ProcesarPagoBean();
+			BeanUtils.populate(procesarPagoBean, procesarPagoBeanMap);
+			System.out.println("procesarPagoBean: "
+					+ procesarPagoBean.toString());
+			// Procesar pago en Authorize
+			AuthorizeNetBean authorizeNetBean = authorizeNetService
+					.procesarPago(procesarPagoBean);
+			System.out.println("se proceso pago en authorize "
+					+ authorizeNetBean.toString());
+			// Grabar la operacion
+			PagoLogBean pagoLogBean = new PagoLogBean();
+			pagoLogBean.setIdCliente(procesarPagoBean.getIdCliente());
+			pagoLogBean.setIdCotiza(procesarPagoBean.getIdCotiza());
+			pagoLogBean.setImPrecio(procesarPagoBean.getImPrecio());
+			pagoLogBean.setIdPaquete(procesarPagoBean.getIdPaquete());
+			pagoLogBean.setNuOperacion(authorizeNetBean.getNumeroOperacion());
+			pagoLogBean.setStOperacion(authorizeNetBean.getEstadoOperacion());
+			pagoLogBean.setDeMensaje(authorizeNetBean.getMensajeProcesador());
+			pagoLogService.grabarPagoLog(pagoLogBean);
+			System.out.println("se grabo pago" + pagoLogBean.toString());
+			// Actualizar el expediente con estado de la operacion
+			ExpedienteLogBean expedienteLogBean = new ExpedienteLogBean();
+			expedienteLogBean.setTiLog("COTIZA");
+			expedienteLogBean.setIdTx(procesarPagoBean.getIdCotiza());
+			expedienteLogBean.setIdUser(0);
+			expedienteLogBean.setIdEstado(12);
+			expedienteLogBean.setDesLog("Cotizacion Confirmada");
+			cotizacionService.registrarExpedienteLog(expedienteLogBean);
+			System.out.println("se actualizo con estado de la operacion "
+					+ expedienteLogBean.toString());
+			// Actualizar cotizacion estado aprobado
+			CotizacionBean cotizacionBean = new CotizacionBean();
+			cotizacionBean.setIdEstado(15);
+			cotizacionBean.setIdCotizacion(procesarPagoBean.getIdCotiza());
+			cotizacionBean.setIdPaquete(procesarPagoBean.getIdPaquete());
+			cotizacionService.actualizarCotizacion(cotizacionBean);
+			System.out.println("se actualizo ctoizacion estado aprobado");
+			// Enviar correo al cliente
+			buildEmail(procesarPagoBean.getEmailCliente(), "PAGO COTIZACION",
+					"SE PAGO EXITOSAMENTE LA COTIZACION");
+			System.out.println("se envio correo al cliente");
+			// Actualizar el expediente con estado Aprobado de la cotizacion
+			expedienteLogBean = new ExpedienteLogBean();
+			expedienteLogBean.setTiLog("COTIZA");
+			expedienteLogBean.setIdTx(procesarPagoBean.getIdCotiza());
+			expedienteLogBean.setIdUser(0);
+			expedienteLogBean.setIdEstado(15);
+			expedienteLogBean.setDesLog("Cotizacion Aprobada");
+			cotizacionService.registrarExpedienteLog(expedienteLogBean);
+			System.out
+					.println("se actualizo expediente con estado aprobado de la cotizacion");
+			// Actualizar paquete turistico a estado asignado
+			PaqueteTuristicoBean paqueteTuristicoBean = new PaqueteTuristicoBean();
+			paqueteTuristicoBean.setIdEstado(6);
+			paqueteTuristicoBean.setIdPaquete(procesarPagoBean.getIdPaquete());
+			paqueteTuristicoService
+					.actualizarEstadoPaqueteTuristico(paqueteTuristicoBean);
+			System.out.println("se actualizo paquete con estado asignado");
+			// Mostrar el numero de operacion de la cotizacion
+			HashMap<String, Object> mapa = new HashMap<String, Object>();
+			mapa.put(
+					"resultadoProcesarPago",
+					"PAGO REALIZADO (NRO. TRANSACCION: "
+							+ authorizeNetBean.getNumeroOperacion() + ")");
+			DataJsonBean dataJSON = new DataJsonBean();
+			dataJSON.setRespuesta("ok1", null, mapa);
+			System.out.println("retornando.. ");
+
+			return ControllerUtil.handleJSONResponse(dataJSON, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@RequestMapping(value = "/rechazarCotizacion", method = {
+			RequestMethod.POST, RequestMethod.GET })
+	public ModelAndView rechazarCotizacion(HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			Map<String, Object> parametrosRequest = ControllerUtil
+					.parseRequestToMap(request);
+			Map<String, Object> rechazarBeanMap = (Map<String, Object>) parametrosRequest
+					.get("rechazarCotizacionBean");
+			RechazarCotizacionBean rechazarCotizacionBean = new RechazarCotizacionBean();
+			BeanUtils.populate(rechazarCotizacionBean, rechazarBeanMap);
+			System.out.println("rechazarCotizacionBean: "
+					+ rechazarCotizacionBean.toString());
+			// Actualizar la cotizacion a estado rechazado
+			CotizacionBean cotizacionBean = new CotizacionBean();
+			cotizacionBean.setIdEstado(16);
+			cotizacionBean
+					.setIdCotizacion(rechazarCotizacionBean.getIdCotiza());
+			cotizacionBean.setIdPaquete(rechazarCotizacionBean.getIdPaquete());
+			cotizacionService.actualizarCotizacion(cotizacionBean);
+			System.out.println("se actualizo la cotizacion a estado rechazado");
+			// Actualizar expediente con estado rechazado a la cotizacion
+			ExpedienteLogBean expedienteLogBean = new ExpedienteLogBean();
+			expedienteLogBean.setTiLog("COTIZA");
+			expedienteLogBean.setIdTx(rechazarCotizacionBean.getIdCotiza());
+			expedienteLogBean.setIdUser(0);
+			expedienteLogBean.setIdEstado(16);
+			expedienteLogBean.setDesLog("Cotizacion Rechazada");
+			cotizacionService.registrarExpedienteLog(expedienteLogBean);
+			System.out.println("se registro expediente con estado rechazado");
+			// Mostrar el numero de operacion de la cotizacion
+			HashMap<String, Object> mapa = new HashMap<String, Object>();
+			mapa.put("resultadoProcesarPago", "LA COTIZACION HA SIDO RECHAZADA");
+			DataJsonBean dataJSON = new DataJsonBean();
+			dataJSON.setRespuesta("ok1", null, mapa);
+			System.out.println("retornando.. ");
+
+			return ControllerUtil.handleJSONResponse(dataJSON, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private void buildEmail(String email, String subject, String text) {
+		String[] recipientsTO = { email };
+		try {
+			EmailUtil.sendEmail(recipientsTO, null, null, subject, text);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

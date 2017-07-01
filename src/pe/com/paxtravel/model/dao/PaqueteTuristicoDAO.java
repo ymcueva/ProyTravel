@@ -52,5 +52,7 @@ public interface PaqueteTuristicoDAO {
 	
 	List<TourBean> listaTourBusqueda(TourBean tourBean);
 	
+	int actualizarEstadoPaqueteTuristico(PaqueteTuristicoBean paqueteTuristicoBean);
+	
 	
 }

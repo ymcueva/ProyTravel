@@ -16,8 +16,9 @@ public class ClienteBean {
 	private String email;
 	private String estado;
 	private int age;
-	
-	
+	private int tipoDocu;
+	private String apellidos;
+	private String fechaNacimiento;
 	
 	public int getAge() {
 		return age;
@@ -102,6 +103,30 @@ public class ClienteBean {
 	}
 	public void setEstado(String estado) {
 		this.estado = estado;
+	}
+
+	public int getTipoDocu() {
+		return tipoDocu;
+	}
+
+	public void setTipoDocu(int tipoDocu) {
+		this.tipoDocu = tipoDocu;
+	}
+
+	public String getApellidos() {
+		return apellidos;
+	}
+
+	public void setApellidos(String apellidos) {
+		this.apellidos = apellidos;
+	}
+
+	public String getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+
+	public void setFechaNacimiento(String fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
 	}
 	
 }
