@@ -62,8 +62,27 @@ public class CotizacionBean {
 	
 	private int isAprobado;
 	
+	private int cantidadAdultosTicket;
+	private int cantidadNinosTicket;
 	
 	
+	
+	public int getCantidadAdultosTicket() {
+		return cantidadAdultosTicket;
+	}
+
+	public void setCantidadAdultosTicket(int cantidadAdultosTicket) {
+		this.cantidadAdultosTicket = cantidadAdultosTicket;
+	}
+
+	public int getCantidadNinosTicket() {
+		return cantidadNinosTicket;
+	}
+
+	public void setCantidadNinosTicket(int cantidadNinosTicket) {
+		this.cantidadNinosTicket = cantidadNinosTicket;
+	}
+
 	public int getIsAprobado() {
 		return isAprobado;
 	}

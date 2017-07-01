@@ -241,7 +241,8 @@
 					
 					$("#inpIdTipoCotizacion").val(response.dataJson.cotizacion.idTipoCotizacion);
 					$("#inpIdCotizacion").val(response.dataJson.cotizacion.idCotizacion);
-					$("#inpIdEstado").val(response.dataJson.cotizacion.idEstado);									
+					$("#inpIdEstado").val(response.dataJson.cotizacion.idEstado);	
+					$("#inpIdCliente").val(response.dataJson.cotizacion.idCliente);
 					
 					$("#divCodigo").html(response.dataJson.cotizacion.numeroCotizacion);
 					$("#divCliente").html(response.dataJson.cotizacion.nombreCliente);
@@ -267,10 +268,9 @@
 					
 					console.log("motivos");
 					var motivos = response.dataJson.cotizacion.motivos;
-					console.log(motivos);
-					console.log(motivos.length);
+					console.log(motivos);					
 					
-					if ( motivos.length > 0 ) {
+					if ( motivos == "" ) {
 						$("#divContenedorMotivos").css("display", "none");
 					} else {
 						$("#divMotivos").html(response.dataJson.cotizacion.motivos);
@@ -488,9 +488,11 @@
 	
 	function enviarCotizacion() {		
 		var idCotizacion = $("#inpIdCotizacion").val();		
+		var idCliente = $("#inpIdCliente").val();
+		
 		if ( idCotizacion != '' ) {
 			$.ajax({
-				url: '${pageContext.request.contextPath}/enviarPaquete?idCotizacion='+idCotizacion,
+				url: '${pageContext.request.contextPath}/enviarPaquete?idCotizacion='+idCotizacion+'&idCliente='+idCliente,
 				cache: false,
 				async: true,
 				type: 'GET',
@@ -500,8 +502,16 @@
 					console.log("************************************************************");
 					if ( response.estado = "ok" ) {
 						$("#btnEnviarCotizacion").css("display", "none"); 
-						$("#divMsgResultadoEnviar").html("<strong>Su cotizacion fue enviada</strong>");						
-						$("#divBotonCotizacionAprobar").css("display", "none");
+						
+						var mensaje = response.dataJson.mensaje;
+						
+						if ( response.dataJson.envio == 1 ) {
+							$("#divMsgResultadoEnviar").html("<strong>Su cotizacion fue enviada</strong>");
+							$("#divBotonCotizacionAprobar").css("display", "none");
+		            	} else {            		
+		            		$("#divMsgResultadoEnviar").html("<strong style='color: red'>"+mensaje+"</strong>");
+		            	}
+						
 					}
 				},
 				error: function(data, textStatus, errorThrown) {
@@ -509,6 +519,7 @@
 				},
 			});
 		};
+		
 	}	
 
 	function aprobarCotizacion() {		
@@ -739,6 +750,7 @@
 <input type="hidden" id="inpIdTipoCotizacion" name="idTipoCotizacion" />
 <input type="hidden" id="inpIdCotizacion" name="idCotizacion" />
 <input type="hidden" id="inpIdEstado" name="idEstado" />
+<input type="hidden" id="inpIdCliente" name="idCliente" />
 <input type="hidden" id="inpIdParams" name="idParams" />
 <input type="hidden" id="inpIdPaquete" name="idPaquete" />
 

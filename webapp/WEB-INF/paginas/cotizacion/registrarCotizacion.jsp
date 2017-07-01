@@ -1423,8 +1423,11 @@
 	function enviarVuelos(){
 		console.log("enviar vuelos");
 		var idCotizacion = $("#inpIdCotizacion").val();
+		var idCliente = $("#txtIdCliente").val();
+		$("#mensajeEnvioCotizacion").html("");
+		
 		$.ajax({
-			url: '${pageContext.request.contextPath}/enviarPaquete?idCotizacion='+idCotizacion,
+			url: '${pageContext.request.contextPath}/enviarPaquete?idCotizacion='+idCotizacion+'&idCliente='+idCliente,
 			cache: false,
 			async: true,
 			type: 'GET',
@@ -1436,9 +1439,16 @@
             	console.log(response);
             	console.log(response.dataJson);
             	
-            	$("#botonEnviarCotizacion").css("display", "none");            	
             	$("#mensajeEnvioCotizacion").css("display", "inline");
-        		$("#mensajeEnvioCotizacion").html("Cotizacion enviada");
+            	
+            	var mensaje = response.dataJson.mensaje;
+            	
+            	if ( response.dataJson.envio == 1 ) {
+            		$("#mensajeEnvioCotizacion").html("<strong>Cotizacion enviada</strong>");
+            		$("#botonEnviarCotizacion").css("display", "none");
+            	} else {            		
+            		$("#mensajeEnvioCotizacion").html("<strong style='color: red'>"+mensaje+"</strong>");
+            	};
             	
             },
             error: function(data, textStatus, errorThrown) {
@@ -1447,6 +1457,7 @@
             	//alert(errorThrown);
             },
         });
+		
 	}
 	
 
@@ -2298,10 +2309,10 @@
 															<input name="cantidadNinosTicket" id="txtCantidadNinosTicket" type="text" class="form-control tamanoMaximo" onkeypress="return validarNumero(event)" ></input>
 														</div>
 														
-														<div class="col-sm-3" style="text-align:right; ">N° Infante:</div>
+														<!-- <div class="col-sm-3" style="text-align:right; ">N° Infante:</div>
 														<div class="col-sm-1">
 															<input name="cantidadInfantesTicket" id="txtCantidadInfantesTicket" type="text" class="form-control tamanoMaximo" onkeypress="return validarNumero(event)" ></input>
-														</div>
+														</div> -->
 														
 													</div>
 													

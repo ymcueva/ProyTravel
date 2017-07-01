@@ -27,7 +27,17 @@ public class CotizacionDetalleBean {
 	
 	private int idCotizaDeta;
 	
+	private int cantidadPasajeros;
 	
+	
+
+	public int getCantidadPasajeros() {
+		return cantidadPasajeros;
+	}
+
+	public void setCantidadPasajeros(int cantidadPasajeros) {
+		this.cantidadPasajeros = cantidadPasajeros;
+	}
 
 	public int getIdCotizaDeta() {
 		return idCotizaDeta;

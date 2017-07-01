@@ -43,6 +43,7 @@
 		<result property="desTiVuelo"			    column="vuelo" />
 		<result property="fechaPartida"			    column="fe_partida" />
 		<result property="fechaRetorno"			    column="fe_retorno" />
+		<result property="cantidadPasajeros"			    column="cantidad" />		
 	</resultMap>
 
 	<resultMap id="resultCotizacion" class="cotizacionBean">
@@ -96,7 +97,8 @@
 	<resultMap id="resultCliente" class="clienteBean">
 		<result property="idCliente"			    column="id_cliente" />
 		<result property="nombre"	        column="nombre_cliente" />
-		<result property="age"	        column="age" />		
+		<result property="age"	        column="age" />
+		<result property="email"	        column="email" />
 	</resultMap>
 	
 	
@@ -151,6 +153,7 @@
 	
 	<resultMap id="resultCotizacionResume" class="cotizacionBean">
 		<result property="idCotizacion" column="id_cotiza" />
+		<result property="idCliente" column="id_cliente" />		
 		<result property="numeroCotizacion" column="nu_cotiza" />
 		<result property="nombreCliente" column="cliente" />
 		<result property="fechaCotizacion" column="fe_cotiza" />		
@@ -381,7 +384,7 @@
 				im_precio = (SELECT total_gasto as im_precio FROM paquete_turistico where id_paquete = #idPaquete#)
 			</isGreaterThan>			
 			<isEqual prepend="," property="ticket" compareValue="1">
-				im_precio = (SELECT SUM(im_precio) as im_precio FROM cotizacion_deta_ticket where id_cotiza = #numeroCotizacion#),
+				im_precio = (SELECT SUM(im_precio) * #cantidadAdultos# as im_precio FROM cotizacion_deta_ticket where id_cotiza = #numeroCotizacion#),
 				link_cotiza = CONCAT('http://localhost/ProyTravel/?idCotizacion', #idCotizacion#), fe_link = NOW()				
 			</isEqual>
 			<isEqual prepend="," property="isAprobado" compareValue="1">
@@ -414,9 +417,13 @@
 	</insert>
 		
 	<select id="obtenerNombreCliente" parameterClass="clienteBean" resultMap="resultCliente">
-		SELECT id_cliente, CONCAT(nombres, ' ', apellidos) AS nombre_cliente, TIMESTAMPDIFF(YEAR,fecha_nac,NOW()) AS age  
-		  FROM cliente
-         WHERE tipo_docu = #tipoDocumento# AND nu_documento = #numeroDocumento#
+		SELECT id_cliente, CONCAT(nombres, ' ', apellidos) AS nombre_cliente, TIMESTAMPDIFF(YEAR,fecha_nac,NOW()) AS age, email  
+		  	FROM cliente
+         WHERE 1 = 1
+	         <isNotEmpty prepend="AND" property="numeroDocumento"> tipo_docu = #tipoDocumento# AND nu_documento = #numeroDocumento# </isNotEmpty>
+	         <isGreaterThan prepend="AND" property="idCliente" compareValue="0">
+				id_cliente = #idCliente#
+			</isGreaterThan>			
 	</select>
 
 	<insert id="insertarCotizacionDetalleTicketVueloTab2" parameterClass="cotizacionDetalleTicketVueloBean">
@@ -541,7 +548,7 @@
 		
 	<select id="getCotizacionResume" parameterClass="cotizacionBean" resultMap="resultCotizacionResume">	
 		SELECT 
-			c.nu_cotiza, c.id_cotiza, c.fe_cotiza, concat(cli.nombres, ' ',cli.apellidos) AS cliente, tc.nombre AS cotizacion,
+			c.nu_cotiza, c.id_cliente, c.id_cotiza, c.fe_cotiza, concat(cli.nombres, ' ',cli.apellidos) AS cliente, tc.nombre AS cotizacion,
 			c.id_tipo_cotiza AS id_tipo_cotizacion, 
 			c.im_presupuesto_maximo,
 			c.id_tipo_alojamiento,
@@ -697,7 +704,8 @@
 		    c.ti_ida, 
 		    if (c.ti_ida=1,'Solo Ida','Ida y Vuelta') AS vuelo, 
 		    c.fe_partida,
-		    ifNull(c.fe_retorno, '0000-00-00') AS fe_retorno
+		    ifNull(c.fe_retorno, '0000-00-00') AS fe_retorno,
+		    (ifNull(co.nu_adultos,0) + ifNull(co.nu_ninos,0)) AS cantidad
 		FROM `cotizacion_deta` AS c  	
 			INNER JOIN `cotizacion` AS co ON (co.nu_cotiza = c.id_cotiza)
 			LEFT JOIN destino_ciudad AS dcorigen ON (c.id_destino_origen=dcorigen.id_destino_ciudad)
@@ -705,5 +713,7 @@
 		WHERE 
 			c.id_cotiza = #numeroCotizacion#
 	</select>
+	
+	
 
 </sqlMap>
