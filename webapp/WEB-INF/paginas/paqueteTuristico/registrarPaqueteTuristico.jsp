@@ -1573,6 +1573,9 @@
 	            contentType : "application/json; charset=utf-8",
 	            dataType: 'json',
 	            success: function(response) {
+	            	
+	            	console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+	            	console.log(response);
 	                
 					var rpta = response.dataJson;
 					var msj = rpta.mensaje;

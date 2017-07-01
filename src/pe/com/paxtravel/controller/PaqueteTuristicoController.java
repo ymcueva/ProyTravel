@@ -397,6 +397,8 @@ public class PaqueteTuristicoController {
 			System.out.println("Size Orden :" + listaOrdenPlanificacion.size());
 			int idorden = 0;
 			String motivo = "";
+			mapa.put("mensaje","");
+			
 			if(listaOrdenPlanificacion.size() > 0){
 				mapa.put("idestado",listaOrdenPlanificacion.get(0).getIdEstado());
 				mapa.put("descripcion",listaOrdenPlanificacion.get(0).getDescripcion());
