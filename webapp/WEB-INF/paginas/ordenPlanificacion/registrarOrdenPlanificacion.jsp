@@ -50,20 +50,17 @@
 
 <!-- bootstrap validator-->
 <script
-	src="/a/resources/js/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+	src="/a/resources/js/bootstrapvalidator/js/bootstrapValidator.min.js">
+</script>
 
 <script>
-	
-	
-	
 	function validarNumeroLetra(e){
-		 var key = window.Event ? e.which : e.keyCode;
-		return ( (key >= 48 && key <= 57) || (key==32 ) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90) ); 
+		/* var key = window.Event ? e.which : e.keyCode;
+		return ( (key >= 48 && key <= 57) || (key==32 ) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90) ); */
  	}
-	
 	function validarNumero(e){
-		var key = window.Event ? e.which : e.keyCode;
-		return ( key.which != 8 && key.which != 0 && (key.which < 48 || key.which > 57) );
+		//var key = window.Event ? e.which : e.keyCode;
+		//return ( key.which != 8 && key.which != 0 && (key.which < 48 || key.which > 57) );
 		
 	}
 	
@@ -88,6 +85,12 @@
 	            if (e.which != 46 && e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
 	                		return false;
 	            }
+	            
+	            /* var RE = /^[0-9]+([,\.][0-9]*)?$/;
+	 			
+	 		    if ( !RE.test($(this).val()) ) {
+	 		    	return false;
+	 		    }; */
 	 		    
     	});
  		
@@ -265,38 +268,6 @@
 				$("#divPaqueteTuristico").css("display","none");
 				$("#divTicketAereo").css("display","none");
 			}
-		})
-		$('#divFechaCotizacionBusq').datetimepicker({
-			language : 'es',
-            autoClose : true,
- 			minDate: '01/01/2000',
-			
-            format: 'DD/MM/YYYY',
-            pickTime: false,
-			useCurrent: false
-        });
-		$('#divFechaPartida').datetimepicker({
-			language : 'es',
-            autoClose : true,
- 			minDate: '01/01/2000',
-			
-            format: 'DD/MM/YYYY',
-            pickTime: false,
-			useCurrent: false
-        });
-		$('#divFechaRetorno').datetimepicker({
-			language : 'es',
-            autoClose : true,
- 			minDate: '01/01/2000',
-			
-            format: 'DD/MM/YYYY',
-            pickTime: false,
-			useCurrent: false
-        });
-		
-		$("#eliminarFecha").on("click", function(e){
-			e.preventDefault();
-			$("#txtFechaCotizacionBusq").val("");
 		})
 		
 		
@@ -596,7 +567,23 @@
 		        $("#divFechaPartida").data("DateTimePicker").setMaxDate(e.date);
 		        //$("#divFechaPartida").datetimepicker( 'setEndDate', e.date );
 		    });		    					
-			
+		
+		$("#btnBuscarVacaAInseminar").on("click", function(e){
+			e.preventDefault();
+			buscarVacaAInseminar();
+		});
+		
+		$("#selectTIpoBusqueda").on("change", function(){
+			if ($(this).val() == 1) {
+				$("#txtBusquedaVaca").val("");
+				$("#txtBusquedaVaca").attr("name","codigoAnimal");
+				$("#txtBusquedaVaca").focus();
+			} else {
+				$("#txtBusquedaVaca").val("");
+				$("#txtBusquedaVaca").attr("name","nombreAnimal");
+				$("#txtBusquedaVaca").focus();
+			}
+		});				
 				
 		$('#radTipoticket2').change(function() {
 								
@@ -1127,7 +1114,7 @@
         }
 		
 		var chkValMotivoViaje = "";
-		$('input[name="motivoViajeOrden[]"]:checked').each(function() {
+		$('input[name="motivoViajeCotiza[]"]:checked').each(function() {
 			chkValMotivoViaje += $(this).val() + ",";
 		});
 		
@@ -1137,7 +1124,7 @@
 		});
 
 		var grabarFormParams = {
-			'cotizacionBean' : formToObject( '#frmOrdenPlanificacion' ),
+			'cotizacionBean' : formToObject( '#frmCotizacion' ),
 		};
 		
 		var idCliente = $("#txtIdCliente").val();
@@ -1145,6 +1132,9 @@
 		var params = "?motivoViaje="+chkValMotivoViaje+"&servAdicional="+chkValServicioAdicional+"&datosDestino="+datosDestino+"&idCliente="+idCliente+"&datosHoteles="+datosHoteles;
 		
 		console.log( "GET params: " + params );
+		
+		$("#txtNroCotizacion").html("");
+		$("#inpNuCotizacion").val(0);
 		
 		$.ajax({
             //url: '${pageContext.request.contextPath}/grabarTransaccionCotizacion?motivoViaje='+chkValMotivoViaje+"&servAdicional"+chkValServicioAdicional,
@@ -1157,7 +1147,14 @@
             dataType: 'json',
             success: function(response) {
                 
-            	console.log("response " + response);
+            	console.log("response******************************");
+            	console.log(response);
+            	
+            	console.log("Numero Cotizacion");
+            	console.log(response.dataJson.nroCotizacion);
+            	
+            	$("#txtNroCotizacion").html(response.dataJson.nroCotizacion);  
+            	$("#inpNuCotizacion").val(response.dataJson.nroCotizacion);
             	
 				//alert("response: "+ response);
 				
@@ -1284,11 +1281,17 @@
 		console.log("Parametros Vuelos: " + datosVuelos);
 	
 		var grabarFormParams = {
-			'cotizacionBean' : formToObject( '#frmOrdenPlanificacion' ),
+			'cotizacionBean' : formToObject( '#frmCotizacion' ),
 		};
 
 		var idCliente = $("#txtIdCliente").val();
 		var params = "?datosVuelos="+datosVuelos+"&idCliente="+idCliente;
+		$("#txtNroCotizacion").html("");
+		$("#inpNuCotizacion").val(0);
+		$("#inpIdCotizacion").val(0);
+				
+		$("#mensajeDetalleTransaccion").html("");		
+		$("#contenedorDetalleTransaccion").css("display", "none");
 		
 		$.ajax({
 			url: '${pageContext.request.contextPath}/grabarCotiTicket'+params,
@@ -1299,6 +1302,24 @@
             contentType : "application/json; charset=utf-8",
             dataType: 'json',
             success: function(response) {
+            	
+            	console.log("response******************************");
+            	console.log(response);
+            	
+            	console.log("Numero Cotizacion");
+            	console.log(response.dataJson.nroCotizacion);            	
+            	
+            	$("#txtNroCotizacion").html(response.dataJson.nroCotizacion);
+            	$("#inpIdCotizacion").val(response.dataJson.idCotizacion);
+            	$("#inpNuCotizacion").val(response.dataJson.nroCotizacion);
+            	
+            	$("#contenedorDetalleTransaccion").css("display", "inline");
+            	
+            	console.log(response.dataJson.listDestinosDetalle);
+            	console.log(response.dataJson.detalle);
+            	
+            	//Los detinos y sus caracteristicas solicitadas
+            	$("#mensajeDetalleTransaccion").html(response.dataJson.detalle);
                 
 				$("#divRegistroOK").modal({
 					backdrop: 'static',
@@ -1307,6 +1328,133 @@
 				
 				return false;
                 
+            },
+            error: function(data, textStatus, errorThrown) {
+            	//alert(data);
+            	//alert(textStatus);
+            	//alert(errorThrown);
+            },
+        });
+	}
+	
+	var vuelosListParams = {};
+	
+	function buscarVuelos() {
+		console.log("***********************************************************************");
+		console.log("buscar vuelos");
+		
+		$("#infoDetalleVuelos").html("");		
+		$("#botonGrabarVuelos").css("display", "none");
+		$("#botonEnviarCotizacion").css("display", "none");
+		$("#contenedorDetalleVuelos").css("display", "none");
+		
+		var nroCotizacion = $("#inpNuCotizacion").val();
+		
+		console.log("Numero Cotizacion");
+		console.log(nroCotizacion);		
+		
+		$.ajax({
+			url: '${pageContext.request.contextPath}/buscarVuelos?nroCotizacion='+nroCotizacion,
+			cache: false,
+			async: true,
+			type: 'GET',
+			contentType : "application/json; charset=utf-8",
+			dataType: 'json',
+            success: function(response) {
+            	
+            	console.log("respuesta buscar vuelos");
+            	console.log(response);
+            	console.log(response.dataJson.detalleVuelos);
+            	console.log(response.dataJson.listaVuelos);
+            	console.log(response.dataJson.cantidadVuelos);
+            	
+            	var mensajeDetalleVuelos = "";
+            	
+            	if ( response.dataJson.cantidadVuelos > 0 ){
+            	
+	            	vuelosListParams = response.dataJson.listaVuelos;
+	            	
+	            	console.log("transform");
+	            	console.log(vuelosListParams);
+	            	
+	            	mensajeDetalleVuelos = response.dataJson.detalleVuelos;
+	            	
+	            	$("#botonGrabarVuelos").css("display", "inline");
+	            	//$("#botonBuscarVuelos").css("", "");
+            	
+            	} else {
+            		mensajeDetalleVuelos = "No se encontraron vuelos disponibles";
+            	}
+            	
+            	$("#contenedorDetalleVuelos").css("display", "inline");
+            	$("#infoDetalleVuelos").html(mensajeDetalleVuelos);            	
+            	
+            },
+            error: function(data, textStatus, errorThrown) {
+            	//alert(data);
+            	//alert(textStatus);
+            	//alert(errorThrown);
+            },
+        });
+	}
+	
+	function grabarVuelos(){		
+		console.log("grabar vuelos");
+		
+		console.log(vuelosListParams);
+		
+		var nroCotizacion = $("#txtNroCotizacion").text();
+		$("#botonEnviarCotizacion").css("display", "none");
+		$("#mensajeEnvioCotizacion").css("display", "none");
+		$("#mensajeEnvioCotizacion").html("");
+		$("#mensajeGrabarCotizacion").html("");
+		
+		$.ajax({
+			url: '${pageContext.request.contextPath}/grabarVuelos?nroCotizacion='+nroCotizacion,
+			cache: false,
+			async: true,
+			type: 'GET',
+			contentType : "application/json; charset=utf-8",
+			dataType: 'json',
+            success: function(response) {
+            	console.log("respuesta grabar vuelos");
+            	console.log(response);
+            	console.log(response.dataJson);
+            	$("#botonGrabarVuelos").css("display", "none");
+            	$("#botonBuscarVuelos").css("display", "none");
+            	$("#botonEnviarCotizacion").css("display", "inline");
+            	
+            	$("#mensajeGrabarCotizacion").css("display", "inline");
+            	$("#mensajeGrabarCotizacion").html("Vuelo registrado en la cotizacion");
+            },
+            error: function(data, textStatus, errorThrown) {
+            	//alert(data);
+            	//alert(textStatus);
+            	//alert(errorThrown);
+            },
+        });
+	}
+	
+	function enviarVuelos(){
+		console.log("enviar vuelos");
+		var idCotizacion = $("#inpIdCotizacion").val();
+		$.ajax({
+			url: '${pageContext.request.contextPath}/enviarPaquete?idCotizacion='+idCotizacion,
+			cache: false,
+			async: true,
+			type: 'GET',
+			contentType : "application/json; charset=utf-8",
+			dataType: 'json',
+            success: function(response) {
+            	
+            	console.log("respuesta enviar vuelos");
+            	console.log(response);
+            	console.log(response.dataJson);
+            	
+            	$("#botonEnviarCotizacion").css("display", "none");            	
+            	$("#mensajeEnvioCotizacion").css("display", "inline");
+        		$("#mensajeEnvioCotizacion").html("Cotizacion enviada");
+            	
             },
             error: function(data, textStatus, errorThrown) {
             	//alert(data);
@@ -1371,12 +1519,9 @@
         });
 	}
 	
-	
-	
 	function aceptar(){
 		location.href = '${pageContext.request.contextPath}/cargarFormRegistrarCotizacion';
-	}
-	
+	}	
 	
 	function formToObject(formID) {
 	    var formularioObject = {};
@@ -1386,197 +1531,183 @@
 	    });
 	    return formularioObject;
 	}
-
 	
 	function verDetalleVuelos() {
-		
 		console.log("cadenaVuelo? " + cadenaVuelo);
-		
-		
-		
-	}
-	
+	}	
 	
 	var cadenaStringVuelo = "";
-	
-function verDetalleControlAnimal(cadenaVuelo){
 		
-	console.log("cadenaVuelo? " + cadenaVuelo);
-		
-		cadenaStringVuelo = cadenaVuelo;
-		
-		$.ajax({
-			url: '${pageContext.request.contextPath}/verDetalleVuelos?cadenaVuelo='+cadenaVuelo,
-			cache: false,
-			async: true,
-			type: 'GET',
-			contentType : "application/json; charset=utf-8",
-			dataType: 'json',
-			success: function(response) {
-				
-				
-				var rpta = response.dataJson;
-				
-                // actualizando lista
-                var listaCotizacion = [];
-                
-                if (rpta.vuelosBean != null) {
-                    listaCotizacion = rpta.vuelosBean;
-                }
-                
-                construirTablaDetalleVuelo(listaCotizacion);	
-                
-                $("#divVerDetalleControlAnimal").modal({
-					backdrop: 'static',
-					keyboard: false
-				});
-				
-			},
-			error: function(data, textStatus, errorThrown) {
-			}
-		});
-	}
-
-	
-	
-function construirTablaDetalleVuelo(dataGrilla){
-	
-	var ix = 1;
-	
-	//Detalle de Vuelos 		 		
-		
-		var table = $('#tblDetalleVuelos').dataTable({
-        data: dataGrilla,
-		bDestroy: true,
-        ordering: false,
-        searching: false,
-        paging: true,
-        bScrollAutoCss: true,
-        bStateSave: false,
-        bAutoWidth: false,
-        info: false,
-        bScrollCollapse: false,
-        pagingType: "full_numbers",
-        pageLength: 5,
-        responsive: true,
-        bLengthChange: false,
-		
-        fnDrawCallback: function(oSettings) {
-            if (oSettings.fnRecordsTotal() == 0) {
-                $('#tblDetalleVuelos_paginate').addClass('hiddenDiv');
-            } else {
-                $('#tblDetalleVuelos_paginate').removeClass('hiddenDiv');
-            }
-        },
-        
-        fnRowCallback: function (nRow, aData, iDisplayIndex) {
-			//alert(aData[0]);
-			//$(nRow).attr('id', aData[0]);
-			$(nRow).attr('align', 'center');
-			$(nRow).attr('rowClasses','tableOddRow');
-            return nRow;
-        },
-		language: {
-            url: "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
-		},
-		columnDefs: [{
-			targets: 4,
-			render: function(data, type, row){
-				if (row !=null && typeof row != 'undefined') {
+	function verDetalleControlAnimal(cadenaVuelo){
+			
+		console.log("cadenaVuelo? " + cadenaVuelo);
+			
+			cadenaStringVuelo = cadenaVuelo;
+			
+			$.ajax({
+				url: '${pageContext.request.contextPath}/verDetalleVuelos?cadenaVuelo='+cadenaVuelo,
+				cache: false,
+				async: true,
+				type: 'GET',
+				contentType : "application/json; charset=utf-8",
+				dataType: 'json',
+				success: function(response) {
 					
-					var cadenaProvee = ix + "-" +row.idProveedor + "-" + row.idAerolinea ;					
-					var VerDetalle = "<span> <input type='radio' name='selectConsolidador' id='' value='"+ cadenaProvee +"' /> </span>";
-					ix += 1;
 					
-					return VerDetalle;
+					var rpta = response.dataJson;
+					
+	                // actualizando lista
+	                var listaCotizacion = [];
+	                
+	                if (rpta.vuelosBean != null) {
+	                    listaCotizacion = rpta.vuelosBean;
+	                }
+	                
+	                construirTablaDetalleVuelo(listaCotizacion);	
+	                
+	                $("#divVerDetalleControlAnimal").modal({
+						backdrop: 'static',
+						keyboard: false
+					});
+					
+				},
+				error: function(data, textStatus, errorThrown) {
 				}
-				return '';
-			}
-		}],
-		columns: [			
-			{"data": "airlineCode"},
-			{"data": "fare"},
-			{"data": "nombreProveedor"},
-			{"data": "comision"}			
-		]
-    });
+			});
+	}
 	
-}
+		
+		
+	function construirTablaDetalleVuelo(dataGrilla){
+		
+		var ix = 1;
+		
+		//Detalle de Vuelos 		 		
+			
+			var table = $('#tblDetalleVuelos').dataTable({
+	        data: dataGrilla,
+			bDestroy: true,
+	        ordering: false,
+	        searching: false,
+	        paging: true,
+	        bScrollAutoCss: true,
+	        bStateSave: false,
+	        bAutoWidth: false,
+	        info: false,
+	        bScrollCollapse: false,
+	        pagingType: "full_numbers",
+	        pageLength: 5,
+	        responsive: true,
+	        bLengthChange: false,
+			
+	        fnDrawCallback: function(oSettings) {
+	            if (oSettings.fnRecordsTotal() == 0) {
+	                $('#tblDetalleVuelos_paginate').addClass('hiddenDiv');
+	            } else {
+	                $('#tblDetalleVuelos_paginate').removeClass('hiddenDiv');
+	            }
+	        },
+	        
+	        fnRowCallback: function (nRow, aData, iDisplayIndex) {
+				//alert(aData[0]);
+				//$(nRow).attr('id', aData[0]);
+				$(nRow).attr('align', 'center');
+				$(nRow).attr('rowClasses','tableOddRow');
+	            return nRow;
+	        },
+			language: {
+	            url: "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
+			},
+			columnDefs: [{
+				targets: 4,
+				render: function(data, type, row){
+					if (row !=null && typeof row != 'undefined') {
+						
+						var cadenaProvee = ix + "-" +row.idProveedor + "-" + row.idAerolinea ;					
+						var VerDetalle = "<span> <input type='radio' name='selectConsolidador' id='' value='"+ cadenaProvee +"' /> </span>";
+						ix += 1;
+						
+						return VerDetalle;
+					}
+					return '';
+				}
+			}],
+			columns: [			
+				{"data": "airlineCode"},
+				{"data": "fare"},
+				{"data": "nombreProveedor"},
+				{"data": "comision"}			
+			]
+	    });
+		
+	}
+		
+		
+	function cerraVerDetalle(){
+		$('#divVerDetalleControlAnimal').modal("hide");
+	}	
+		
+		
+	function guardarDetalleFareInfo(){		
+			
+			var cadenaOption = $('input:radio[name=selectConsolidador]:checked').val(); //fila, idproveedor, idaerolinea
+			
+			console.log("check? " + cadenaOption);
+			
+			var dataOption = cadenaOption.split("-");
+			
+			var rowOption = dataOption[0];
+			
+			var idProveedor = dataOption[1];
+			
+			var idAerolinea = dataOption[2];
+			
+			var dataJson = $("#tblDetalleVuelos").DataTable().rows().data();
+			
+			var comision = dataJson[rowOption-1].comision;
+			
+			var fare = dataJson[rowOption-1].fare;
+		
+			var grabarFormParams = {
+				'cotizacionBean' : formToObject( '#frmCotizacion' )
+			};
 	
-	
-function cerraVerDetalle(){
-	$('#divVerDetalleControlAnimal').modal("hide");
-}	
-function limpiarForm(){
-	document.getElementById("frmOrdenPlanificacion").reset();
-}
-	
-function guardarDetalleFareInfo(){		
+			//var params = "?datosVuelos="+datosVuelos+"&tipoCotizacion=2&flagIdaVuelta="+flagIdaVuelta+"&flagIda="+flagIda+"&flagRuta="+flagRuta;
+			var params = "?idProveedor="+idProveedor+"&idAerolinea="+idAerolinea+"&fare="+fare;
+			
+			console.log ("params?guardarDetalleFareInfo? " + params );
+			
+			$.ajax({
+				url: '${pageContext.request.contextPath}/grabarDetalleVuelos'+params,
+	           	data: JSON.stringify(grabarFormParams),
+	            cache: false,
+	            async: true,
+	            type: 'POST',
+	            contentType : "application/json; charset=utf-8",
+	            dataType: 'json',
+	            success: function(response) {
+	                
+					/* $("#divRegistroOK").modal({
+						backdrop: 'static',
+						keyboard: false
+					});
+					
+					return false; */
+					
+	            	cerraVerDetalle();
+			
+	                
+	            },
+	            error: function(data, textStatus, errorThrown) {
+	            	//alert(data);
+	            	//alert(textStatus);
+	            	//alert(errorThrown);
+	            }
+	        });
 		
-		var cadenaOption = $('input:radio[name=selectConsolidador]:checked').val(); //fila, idproveedor, idaerolinea
-		
-		console.log("check? " + cadenaOption);
-		
-		var dataOption = cadenaOption.split("-");
-		
-		var rowOption = dataOption[0];
-		
-		var idProveedor = dataOption[1];
-		
-		var idAerolinea = dataOption[2];
-		
-		var dataJson = $("#tblDetalleVuelos").DataTable().rows().data();
-		
-		var comision = dataJson[rowOption-1].comision;
-		
-		var fare = dataJson[rowOption-1].fare;
-	
-		var grabarFormParams = {
-			'cotizacionBean' : formToObject( '#frmOrdenPlanificacion' )
-		};
-
-		//var params = "?datosVuelos="+datosVuelos+"&tipoCotizacion=2&flagIdaVuelta="+flagIdaVuelta+"&flagIda="+flagIda+"&flagRuta="+flagRuta;
-		var params = "?idProveedor="+idProveedor+"&idAerolinea="+idAerolinea+"&fare="+fare;
-		
-		console.log ("params?guardarDetalleFareInfo? " + params );
-		
-		$.ajax({
-			url: '${pageContext.request.contextPath}/grabarDetalleVuelos'+params,
-           	data: JSON.stringify(grabarFormParams),
-            cache: false,
-            async: true,
-            type: 'POST',
-            contentType : "application/json; charset=utf-8",
-            dataType: 'json',
-            success: function(response) {
-                
-				/* $("#divRegistroOK").modal({
-					backdrop: 'static',
-					keyboard: false
-				});
-				
-				return false; */
-				
-            	cerraVerDetalle();
-		
-                
-            },
-            error: function(data, textStatus, errorThrown) {
-            	//alert(data);
-            	//alert(textStatus);
-            	//alert(errorThrown);
-            }
-        });
-		
-		
-	
-	
-	
-}
+	}
 	
 </script>
-
-
 <style>
 fieldset {
 	border: 1px solid #DDD;
@@ -1602,7 +1733,7 @@ legend {
 			style="margin: 0px 0px 0px 0px;">
 			<div class="col-sm-7">&nbsp;</div>
 			<div class="col-sm-3">
-				<span style="color: #337ab7">Usuario: <%=session.getAttribute("codigoUsuario")%></span>
+				<span style="color: #337ab7"> Usuario: </span>
 			</div>
 			<div class="col-sm-2">
 				<a href="logout">Cerrar Sesion</a>
@@ -1624,28 +1755,37 @@ legend {
 									role="form" class="form-horizontal" method="post">
 
 									<div class="form-group">
-										<div class="col-sm-3"
+										<div class="col-sm-2"
 											style="text-align: right; font-weight: bold">Fecha
 											Orden:</div>
-										<div class="col-sm-3" id="divCodigoAnimal">${fechaOrden}
-											<span style="display: none"> <input type="text"
-												name="txtfecorden" id="txtidfecorden" value="${fechaOrden}" />
+										<div class="col-sm-2" id="divCodigoAnimal">
+											${fechaOrden} <span style="display: none"> <input
+												type="text" name="txtfecorden" id="txtfecorden"
+												value="${fechaOrden}" />
 											</span>
 										</div>
 
 									</div>
-
 									<div class="form-group">
-										<div class="col-sm-3"
+										<div class="col-sm-2"
+											style="text-align: right; font-weight: bold">Nro
+											Cotizacion:</div>
+										<div class="col-sm-2">
+											<input name="txtnrocotizacion" id="txtnrocotizacion"
+												type="text" class="form-control" />
+										</div>
+										<div class="col-sm-2" style="text-align: left;">
+											<button id="btnbuscarcotr" type="button"
+												class="btn btn-primary " title="Buscarcot">Buscar</button>
+										</div>
+										<!--  <div class="col-sm-3"
 											style="text-align: right; font-weight: bold">Descripcion:</div>
 
 										<div class="col-sm-4">
 											<input type="text" class="form-control tamanoMaximo"
-												name="txtdescripcion" id="txtiddescripcion" />
-										</div>
-
+												name="txtdescripcion" id="txtdescripcion" />
+										</div>-->
 									</div>
-
 
 									<div id="datosCotizacion" style="display: yes">
 										<div class="panel panel-primary">
@@ -1659,24 +1799,14 @@ legend {
 													<div class="col-sm-12">
 
 														<div class="form-group">
-															<div class="col-sm-2"
-																style="text-align: right; font-weight: bold">Nro
-																Cotizacion:</div>
-															<div class="col-sm-2">
-																<input name="txtnrocotizacion" id="txtidnrocotizacion"
-																	type="text" class="form-control" />
-															</div>
-															<div class="col-sm-2" style="text-align: left;">
-																<button id="btnbuscarcotr" type="button"
-																	class="btn btn-primary " title="Buscarcot">.....</button>
-															</div>
+
 															<div class="col-sm-2"
 																style="text-align: right; font-weight: bold">Fecha
 																Cotizacion:</div>
 															<div class="col-sm-3">
 																<div class="input-group date tamanoMaximo"
 																	id="divFechaCotizacionBusq">
-																	<input name="txtfechacot" id="txtidfechacot" readonly
+																	<input name="txtfechacot" id="txtfechacot" readonly
 																		type="text" class="form-control tamanoMaximo txtFecha" />
 																	<span class="input-group-addon datepickerbutton">
 																		<span class="glyphicon glyphicon-calendar"></span>
@@ -1684,12 +1814,12 @@ legend {
 																</div>
 															</div>
 														</div>
-														
+
 														<div class="form-group">
 															<div class="col-sm-2"
 																style="text-align: right; font-weight: bold">Cliente:</div>
 															<div class="col-sm-9">
-																<input name="txtcliente" id="txtidcliente" type="text"
+																<input name="txtcliente" id="txtcliente" type="text"
 																	class="form-control" />
 															</div>
 														</div>
@@ -1697,10 +1827,10 @@ legend {
 														<div class="form-group">
 
 															<div class="col-sm-2"
-																style="text-align: right; font-weight: bold">Tipo de
+																style="text-align: right; font-weight: bold">Tipo
 																Programa:</div>
 															<div class="col-sm-2" id="divNombreAnimal">
-																<select name="seltipprog" id="selidtipprog"
+																<select name="idTipoPrograma" id="selTipoPrograma"
 																	class="form-control tamanoMaximo">
 																	<option value="0">---Seleccione---</option>
 																	<option value="1">Nacional</option>
@@ -1714,11 +1844,10 @@ legend {
 															<div class="col-sm-2">
 																<div class="input-group date tamanoMaximo"
 																	id="divFechaPartida">
-																	<input name="txtfecpartida" id="txtidfecpartida"
-																		readonly type="text"
-																		class="form-control tamanoMaximo txtFecha" /> <span
-																		class="input-group-addon datepickerbutton"> <span
-																		class="glyphicon glyphicon-calendar"></span>
+																	<input name="txtfecpartida" id="txtfecpartida" readonly
+																		type="text" class="form-control tamanoMaximo txtFecha" />
+																	<span class="input-group-addon datepickerbutton">
+																		<span class="glyphicon glyphicon-calendar"></span>
 																	</span>
 																</div>
 															</div>
@@ -1729,11 +1858,10 @@ legend {
 															<div class="col-sm-2">
 																<div class="input-group date tamanoMaximo"
 																	id="divFechaRetorno">
-																	<input name="txtfecretorno" id="txtidfecretorno"
-																		readonly type="text"
-																		class="form-control tamanoMaximo txtFecha" /> <span
-																		class="input-group-addon datepickerbutton"> <span
-																		class="glyphicon glyphicon-calendar"></span>
+																	<input name="txtfecretorno" id="txtfecretorno" readonly
+																		type="text" class="form-control tamanoMaximo txtFecha" />
+																	<span class="input-group-addon datepickerbutton">
+																		<span class="glyphicon glyphicon-calendar"></span>
 																	</span>
 																</div>
 															</div>
@@ -1745,7 +1873,7 @@ legend {
 																	style="text-align: right; font-weight: bold">Origen:</div>
 
 																<div class="col-sm-2" id="divCiudadDestino">
-																	<select name="selorigenpart" id="selidorigenpart"
+																	<select name="selorigenpart" id="selorigenpart"
 																		class="form-control tamanoMaximo">
 																		<option value="0">---Seleccione Ciudad---</option>
 																	</select>
@@ -1783,7 +1911,7 @@ legend {
 																	style="text-align: right; font-weight: bold">Cantidad
 																	Adultos:</div>
 																<div class="col-sm-1">
-																	<input name="txtcantadult" id="txtidcantadult"
+																	<input name="txtcantadult" id="txtcantadult"
 																		type="number" min="1"
 																		class="form-control tamanoMaximo"></input>
 																</div>
@@ -1791,45 +1919,181 @@ legend {
 																	style="text-align: right; font-weight: bold">Cantidad
 																	Ni&ntilde;os:</div>
 																<div class="col-sm-1">
-																	<input name="txtcantnin" id="txtidcantnin"
-																		type="number" min="0"
-																		class="form-control tamanoMaximo"></input>
+																	<input name="txtcantnin" id="txtcantnin" type="number"
+																		min="0" class="form-control tamanoMaximo"></input>
 																</div>
 															</div>
 														</div>
 
 														<div class="form-group">
-															<div class="col-sm-1"
-																style="text-align: right; font-weight: bold">
-																<div id="divNacional">
-																	<div class="col-sm-12">Destinos:</div>
-																</div>
-																<div class="col-sm-12">&nbsp;</div>
-															</div>
-
-															<div class="col-sm-8">
-																<table id="tblDestino"
-																	class="table table-bordered responsive"
-																	style="width: 100%">
-																	<thead>
-																		<tr>
-																			<th width="5%" class="text-center">Item</th>
-																			<th width="15%" class="text-center">Destino</th>
-																			<th width="15%" class="text-center">Cantidad
-																				Dias</th>
-																			<th width="15%" class="text-center">Opciones</th>
-																		</tr>
-																	</thead>
-																</table>
+															<div class="col-sm-2"
+																style="text-align: right; font-weight: bold">Presupuesto
+																:</div>
+															<div class="col-sm-2">
+																<input class="form-control" type="number" min="0"
+																	id="txtpmin" name="txtpmin">
 															</div>
 														</div>
-																												<div class="form-group">
+
+														<div class="form-group">
+															<div class="col-sm-2"
+																style="text-align: right; font-weight: bold">Servicios:</div>
+															<div class="col-sm-9">
+																<fieldset>
+																	<legend style="margin: 7px; font-size: 15px;"></legend>
+
+																	<div class="form-group">
+																		<div class="col-sm-12">
+																			<label style="width: auto; padding-right: 80px;"
+																				for="selServicioAdicional2"> <input
+																				type="checkbox" name="servicioAdicional[]"
+																				id="selServicioAdicional2" value="2" /> Ticket
+																				A&eacute;reo
+																			</label> <label style="width: auto; padding-right: 80px;"
+																				for="selServicioAdicional3"> <input
+																				type="checkbox" name="servicioAdicional[]"
+																				id="selServicioAdicional3" value="3" /> Tour
+																			</label> <label style="width: auto; padding-right: 80px;"
+																				for="selServicioAdicional6"> <input
+																				type="checkbox" name="servicioAdicional[]"
+																				id="selServicioAdicional6" value="6" /> Hotel
+																			</label>
+																			<!-- <label style="width:auto; padding-left:50px; padding-right:80px;" for="selServicioAdicional1">
+																				<input type="checkbox" name="servicioAdicional[]" id="selServicioAdicional1" value="1"> Seguro M&eacute;dico</input>
+																				</label> 
+																				<label style="width:auto; padding-left:50px; padding-right:80px;" for="selServicioAdicional4">
+																				<input type="checkbox" name="servicioAdicional[]" id="selServicioAdicional4" value="4"> Transporte Local</input>
+																				</label>																		
+																				<label style="width:auto; padding-right:80px;" for="selServicioAdicional5">
+																				<input type="checkbox" name="servicioAdicional[]" id="selServicioAdicional5" value="5"> Restaurante</input>
+																				</label> -->
+																		</div>
+
+																		<!-- DIV HOTELES INICIO -->
+																		<div id="hoteles-group" style="display: none">
+
+																			<div class="col-sm-12">&nbsp;</div>
+
+																			<div class="col-sm-12">
+																				<div class="col-sm-2"
+																					style="text-align: right; font-weight: bold">Tipo
+																					Alojamiento:</div>
+																				<div class="col-sm-4">
+																					<select name="tipoAlojamiento"
+																						id="selTipoAlojamiento"
+																						class="form-control tamanoMaximo">
+																						<option value="0">---Seleccione---</option>
+																						<option value="1">Hotel</option>
+																						<option value="2">Hostal</option>
+																						<option value="3">Casa</option>
+																					</select>
+																				</div>
+																				<div class="col-sm-2"
+																					style="text-align: right; font-weight: bold">Categor&iacute;a
+																					Alojamiento:</div>
+																				<div class="col-sm-4">
+																					<select name="categoriaAlojamiento"
+																						id="selCategoriaAlojamiento"
+																						class="form-control tamanoMaximo">
+																						<option value="0">---Seleccione---</option>
+																						<option value="1">1 Estrella</option>
+																						<option value="2">2 Estrellas</option>
+																						<option value="3">3 Estrellas</option>
+																						<option value="4">4 Estrellas</option>
+																						<option value="5">5 Estrellas</option>
+																						<option value="6">Est&aacute;ndar</option>
+																						<option value="7">Premium</option>
+																					</select>
+																				</div>
+
+																			</div>
+
+																			<div class="col-sm-12">&nbsp;</div>
+
+																			<div class="col-sm-12">&nbsp;</div>
+
+																			<div class="col-sm-12">
+
+																				<div class="col-sm-6">
+																					<!--  fila uno -->
+																					<div class="col-sm-12" style="text-align: left;">Cantidad
+																						Habitaciones:</div>
+																					<!--  fila dos -->
+																					<div class="col-sm-12">
+																						<div class="col-sm-6" style="text-align: left;">
+																							<input name="cantidadHabitacion"
+																								id="txtCantidadHabitacion" type="text"
+																								class="form-control tamanoMaximo"
+																								onkeypress="return validarNumero(event)"></input>
+																						</div>
+																					</div>
+																					<!--  fila tres -->
+																					<div class="col-sm-12" style="text-align: left;">Tipo
+																						Habitaci&oacute;n:</div>
+																					<!--  fila cuatro -->
+																					<div class="col-sm-12">
+																						<div class="col-sm-10" style="text-align: left;">
+																							<select name="tipoHabitacion"
+																								id="selTipoHabitacion"
+																								class="form-control tamanoMaximo">
+																								<option value="0">---Seleccione---</option>
+																								<option value="1">Deluxe</option>
+																								<option value="2">Executive</option>
+																								<option value="3">Classic</option>
+																								<option value="4">Sheraton Club</option>
+																								<option value="5">Habitacion Doble</option>
+																							</select>
+																						</div>
+																					</div>
+
+																					<!--  fila seis -->
+
+																					<div class="col-sm-12">&nbsp;</div>
+
+																					<!--  fila seis -->
+																					<div class="col-sm-12" style="text-align: left;">
+																						<button id="btnCerrar" type="button"
+																							class="btn btn-primary "
+																							onclick="agregarTipoHabitacion()" title="Agregar">Agregar</button>
+																					</div>
+																				</div>
+
+																				<div class="col-sm-6">
+																					<div class="col-sm-12">
+																						<table id="tblTipoHabitacion"
+																							class="table table-bordered responsive">
+																							<thead>
+																								<tr>
+																									<th width="5%" class="text-center">&nbsp;</th>
+																									<th width="75%" class="text-center">Cantidad
+																										/ Habitaci&oacute;n</th>
+																									<th width="10%" class="text-center">Opciones</th>
+																									<th width="5%" class="text-center">&nbsp;</th>
+																									<th width="5%" class="text-center">&nbsp;</th>
+																								</tr>
+																							</thead>
+																						</table>
+																					</div>
+																				</div>
+
+																			</div>
+																		</div>
+																		<!-- DIV HOTELES FIN -->
+
+																	</div>
+
+																</fieldset>
+															</div>
+														</div>
+
+														<div class="form-group">
 															<div class="col-sm-12">
 																<div class="col-sm-2"
 																	style="text-align: right; font-weight: bold">Tipo
 																	Alojamiento:</div>
 																<div class="col-sm-4">
-																	<select name="tipoAlojamiento" id="selTipoAlojamiento"
+																	<select name="seltipoAlojamiento"
+																		id="selTipoAlojamiento"
 																		class="form-control tamanoMaximo">
 																		<option value="0">---Seleccione---</option>
 																		<option value="1">Hotel</option>
@@ -1842,7 +2106,7 @@ legend {
 																	Alojamiento:</div>
 																<div class="col-sm-4">
 																	<select name="categoriaAlojamiento"
-																		id="selCategoriaAlojamiento"
+																		id="categoriaAlojamiento"
 																		class="form-control tamanoMaximo">
 																		<option value="0">---Seleccione---</option>
 																		<option value="1">1 Estrella</option>
@@ -1857,54 +2121,70 @@ legend {
 															</div>
 														</div>
 
+
 														<div class="form-group">
-
 															<div class="col-sm-12">
-
 																<div class="panel panel-primary">
 
 																	<div class="panel-heading">
-																		<h3 class="panel-title" align="left"
-																			id="tituloInseminacion">Servicios Adicionales</h3>
+																		<h3 class="panel-title" align="center"
+																			id="tituloInseminacion">DESTINOS</h3>
 																	</div>
 
 																	<div class="panel-body">
 																		<div class="form-group">
-																			<fieldset>
-																				<legend style="margin: 7px; font-size: 15px;"></legend>
-																				<div class="form-group">
-																					<div class="col-sm-12">
-																						<label style="width: auto; padding-right: 80px;"
-																							for="selServicioAdicional2"> <input
-																							type="checkbox" name="servicioAdicional[]"
-																							id="selServicioAdicional1" value="1" /> Seguro
-																							Medico
-																						</label> <label style="width: auto; padding-right: 80px;"
-																							for="selServicioAdicional3"> <input
-																							type="checkbox" name="servicioAdicional[]"
-																							id="selServicioAdicional2" value="2" /> Tour
-																						</label> <label style="width: auto; padding-right: 80px;"
-																							for="selServicioAdicional6"> <input
-																							type="checkbox" name="servicioAdicional[]"
-																							id="selServicioAdicional3" value="3" /> Ticket
-																							Aereo
-																						</label>
-																					</div>
-																					<div class="col-sm-12">
-																						<label style="width: auto; padding-right: 80px;"
-																							for="selServicioAdicional2"> <input
-																							type="checkbox" name="servicioAdicional[]"
-																							id="selServicioAdicional1" value="4" />
-																							Transporte Local
-																						</label> <label style="width: auto; padding-right: 80px;"
-																							for="selServicioAdicional3"> <input
-																							type="checkbox" name="servicioAdicional[]"
-																							id="selServicioAdicional2" value="5" />
-																							Restaurante
-																						</label>
+																			<div class="col-sm-4">
+																				<div id="divNacional">
+																					<div class="col-sm-12">Ciudad:</div>
+																					<div class="col-sm-12" id="divCiudadDestino">
+																						<select name="ciudadDestino" id="selCiudadDestino"
+																							class="form-control tamanoMaximo">
+																							<option value="0">---Seleccione---</option>
+																						</select>
 																					</div>
 																				</div>
-																			</fieldset>
+
+																				<div id="divInternacional" style="display: none">
+																					<div class="col-sm-12">Pais:</div>
+																					<div class="col-sm-12" id="divPaisDestino">
+																						<select name="paisDestino" id="selPaisDestino"
+																							class="form-control tamanoMaximo">
+																							<option value="0">---Seleccione---</option>
+																						</select>
+																					</div>
+																					<div class="col-sm-12">&nbsp;</div>
+																					<div class="col-sm-12">Ciudad:</div>
+																					<div class="col-sm-12" id="divCiudadDestino">
+																						<select name="paisCiudadDestino"
+																							id="selPaisCiudadDestino"
+																							class="form-control tamanoMaximo">
+																							<option value="0">---Seleccione---</option>
+																						</select>
+																					</div>
+																				</div>
+
+																				<div class="col-sm-12">&nbsp;</div>
+
+																				<div class="col-sm-12" style="text-align: left;">
+																					<button id="btnCerrar" type="button"
+																						class="btn btn-primary "
+																						onclick="agregarDestino()" title="Agregar Destino">Agregar</button>
+																				</div>
+																			</div>
+																			<div class="col-sm-8">
+																				<table id="tblDestino"
+																					class="table table-bordered responsive"
+																					style="width: 100%">
+																					<thead>
+																						<tr>
+																							<th width="5%" class="text-center">Orden</th>
+																							<th width="15%" class="text-center">Pa&iacute;s</th>
+																							<th width="15%" class="text-center">Destino</th>
+																							<th width="15%" class="text-center">Opciones</th>
+																						</tr>
+																					</thead>
+																				</table>
+																			</div>
 																		</div>
 																	</div>
 																</div>
@@ -1913,68 +2193,38 @@ legend {
 
 														<div class="form-group">
 															<div class="col-sm-2"
-																style="text-align: right; font-weight: bold">Presupuesto
-																Maximo:</div>
-															<div class="col-sm-2">
-																<input class="form-control" type="number" min="0"
-																	id="txtidpmax" name="txtpmax">
-															</div>
-															<div class="col-sm-2"
-																style="text-align: right; font-weight: bold">Presupuesto
-																Minimo:</div>
-															<div class="col-sm-2">
-																<input class="form-control" type="number" min="0"
-																	id="txtidpmin" name="txtpmin">
-															</div>
-														</div>
-														
-														<div class="form-group">
-															<div class="col-sm-2"
-																style="text-align: right; font-weight: bold">Observaciones:</div>
+																style="text-align: right; font-weight: bold">Comentarios:</div>
 															<div class="col-sm-9" id="divNombreAnimal">
 																<textarea class="form-control" name="txtobservacion"
-																	id="txtidobservacion"
+																	id="txtobservacion"
 																	onkeypress="return validarNumeroLetra(event)" rows="4"
 																	cols="98" /></textarea>
 															</div>
 														</div>
-													
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-
+									
 									<div class="form-group">
 										<div class="col-sm-3"
-											style="text-align: right; font-weight: bold">Asignar
-											Ejecutivo de Ventas:</div>
-
-										<div class="col-sm-2">
-											<select name="selejecutivo" id="selejecutivo"
-												class="form-control tamanoMaximo">
-												<option value="0">---Seleccione---</option>
-												<option value="1">ejecutivo1</option>
-												<option value="2">ejecutivo2</option>
-											</select>
-										</div>
-
-										<div class="col-sm-3">
-											<label for="chkreservahis"> <input type="checkbox"
-												name="chkreservahis" id="chkreservahis"> Autorizar
-												Reservas Historicas
-											</label>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-sm-3"
-											style="text-align: right; font-weight: bold">Observacion:
+											style="text-align: right; font-weight: bold">Descripcion de la Orden de Planificacion:
 										</div>
 										<div class="col-sm-9" id="divobservacionfooter">
 											<textarea class="form-control" name="txtObservacionft"
 												id="txtObservacionft" rows="4" cols="98" /></textarea>
 										</div>
 									</div>
+									
+									<div class="form-group">
+										<div class="col-sm-3">
+											<label for="chkreservahis"> <input type="checkbox"
+												name="chkreservahis" id="chkreservahis"> Busqueda Automatica de Informacion
+											</label>
+										</div>
+									</div>
+									
 									<div class="form-group">
 										<div class="col-sm-12" style="text-align: center">
 											<button id="btnRegistrar" class="btn btn-primary"
@@ -2045,7 +2295,7 @@ legend {
 				<div class="panel-body">
 					<div class="modal-body">
 						<p class="text-center" id="mensajeTransaccion">Se registro
-							satisfactoriamente la Cotizaci&oacute;n</p>
+							satisfactoriamente la Orden</p>
 					</div>
 					<div class="modal-footer">
 						<div class="col-sm-12" align="center">
