@@ -34,7 +34,16 @@ public class PaqueteTuristicoBean {
 	private int idTipoPaquete;
 	private int idOrigen;
 	
+	private String tickets;
 	
+	
+	
+	public String getTickets() {
+		return tickets;
+	}
+	public void setTickets(String tickets) {
+		this.tickets = tickets;
+	}
 	public int getNumeroFila() {
 		return numeroFila;
 	}

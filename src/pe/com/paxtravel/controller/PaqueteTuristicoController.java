@@ -1127,6 +1127,8 @@ public class PaqueteTuristicoController {
 
 			try {
 				
+				
+				System.out.println(" - - - - - - -  - - - - - - -  - - - - - - -  - - - - - - -  - - - - - - -  - - - - - - -  - - - - - - -  " );
 				System.out.println(" grabarTransaccionPaqTuristico " );
 				
 				modelAndView = new ModelAndView();
@@ -1221,7 +1223,16 @@ public class PaqueteTuristicoController {
 					
 					String destinos = request.getParameter("destinos").toString();
 					String tours = request.getParameter("tours").toString();
-					String tickets = request.getParameter("tickets").toString();
+					
+					//String tickets = request.getParameter("tickets").toString();
+					System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+					System.out.println("Validando Tickets...");
+					String tickets = String.valueOf(paqueteTuristicoBeanMap.get("tickets"));
+					System.out.println(tickets);
+					tickets = objbean.getTickets();
+					System.out.println(tickets);
+					System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+					
 					String hoteles = request.getParameter("hoteles").toString();
 					  
 					System.out.println("Modo :" + modo);
@@ -1316,6 +1327,8 @@ public class PaqueteTuristicoController {
 					
 					System.out.println("Fin registrar tours");
 					
+					System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+					
 					System.out.println("Inicio registrar tickets");
 					
 					int idOrigen = 0;
@@ -1332,14 +1345,27 @@ public class PaqueteTuristicoController {
 							tickets = tickets.substring(0, tickets.length() -1);
 						}
 						
+						System.out.println("limpiando tickets: " + tickets);
+						
 						String[] listaTickets = tickets.split(";");
+						
+						System.out.println("size tickets: " + listaTickets.length);
+						
 						String[] ticket ;
 						int idPaqueteDestinoTicket = 0;
+						
 						PaqueteTuristicoTicketBean paqueteTuristicoTicketBean = new PaqueteTuristicoTicketBean();
 						
-						System.out.println("Recorrer tickets");
+						System.out.println("Recorrer tickets...........");
+						
 						for(int i = 0;i<listaTickets.length;i++){
+							
+							System.out.println("fila listaTickets["+i+"]: " + listaTickets[i]);
+							
 							ticket = listaTickets[i].split(",");
+													
+							System.out.println("size ticket[]: " + tickets.length());
+							
 							//System.out.println("IdPaquete :" + registro);
 							
 							//System.out.println("Proveedor : " + ticket[0].toString());
@@ -1350,6 +1376,9 @@ public class PaqueteTuristicoController {
 							//System.out.println("Adultos : " + ticket[4].toString());
 						//	System.out.println("Ninos : " + ticket[5].toString());
 						//	System.out.println("Tipo : " + ticket[6].toString());
+							
+							System.out.println("change ticket[0]: " + ticket[0].toString());
+							
 							if(Integer.parseInt(ticket[0].toString()) > 0){
 							
 								if(i == 0)

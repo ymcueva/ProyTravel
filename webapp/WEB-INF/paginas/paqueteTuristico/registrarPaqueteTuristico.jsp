@@ -709,6 +709,10 @@
 		}
 		
 		function agregarTipoHabitacion(){
+			
+			console.log("- - - - - - - - - - - - - - - - - -- - - - -- - - - - - - - - - -- - - - - - - - - - - -");
+			console.log("Agregar Tipo Habitacion");
+			
 			var idtipo = $("#tipoHabitacion").val();
 			var cantidad = $("#txtCantidad").val();
 			var msj = "";
@@ -739,19 +743,23 @@
 			
 			var idhotelhabitacion = $("#hdnHotelHabitacion").val();
         	var nomtipo = $("#hdnNomTipoHabitacion").val();
-        	var precio = $("#hdnPrecio").val();
-        	
+        	var precio = $("#hdnPrecio").val();        	
 			
 			var nuevaFila = "";
 			nuevaFila = "<tr>";
 			
 			var dias = $("#hdnDiasHotel").val();
 			
+			console.log("idtipo, cantidad idhotelhabitacion, nomtipo, precio, dias");
+			console.log(idtipo + ", " + cantidad + ", " + idhotelhabitacion + ", " + nomtipo + ", " + precio + ", " + dias);			
+			
+			console.log("(parseFloat(precio) * parseInt(cantidad)) * parseInt(dias)");
+			console.log((parseFloat(precio) * parseInt(cantidad)) * parseInt(dias));
+			
 			var subtotal = (parseFloat(precio) * parseInt(cantidad)) * parseInt(dias);
 			
 			var VerEliminar = "<span> <a href='javascript:;' onclick='eliminarRegistroTabla(this)' title='Eliminar' ><span class='glyphicon glyphicon-remove'></span></a> </span>";
-				
-			
+							
 			nuevaFila+= "<input type='hidden' id='idHotelHabitacion' value='" + idhotelhabitacion + "' />";
 			nuevaFila+= "<input type='hidden' id='idTipo' value='" + idtipo + "' />";
 			
@@ -759,12 +767,13 @@
 			nuevaFila+= "<td class='text-center'>" + cantidad + "</td>";
 			nuevaFila+= "<td class='text-center'>" + precio + "</td>";
 			nuevaFila+= "<td class='text-center'>" + subtotal + "</td>";
-			nuevaFila+= "<td class='text-center'>" + VerEliminar + "</td>";
-			
+			nuevaFila+= "<td class='text-center'>" + VerEliminar + "</td>";			
 			
 			nuevaFila += "</tr>"; 
+			
 			var total = 0;
 			var encontro = "0";
+			
 			//validando que no se ingresedos veces el mismo tipo de habitacion
 			$("#tblTipoHabitacion tbody > tr").each(function () {
 				var row = $(this);
@@ -796,19 +805,22 @@
 			
 			
 			//Calculando subtotal
+			console.log("- - - - - - - - - - - - - - - - - - -");
+			console.log("calculando subtotal:");
+			
 			$("#tblTipoHabitacion tbody > tr").each(function () {
-				var row = $(this);
 				
-				var subtotal = parseFloat(row.find("td").eq(3).text());
-				
-				total += subtotal;
-				
+				var row = $(this);				
+				var subtotal = parseFloat(row.find("td").eq(3).text());				
+				console.log("each subtotal");
+				console.log(subtotal);				
+				total += subtotal;				
 				
 			});
 			
-			var tr = $("#tblHoteles tbody").find('input[name="optSelHotel"]:checked').closest('tr');
+			console.log("creando fila:");
+			var tr = $("#tblHoteles tbody").find('input[name="optSelHotel"]:checked').closest('tr');			
 			tr.find("td").eq(2).text(total);
-			
 			
 		}
 		
@@ -826,15 +838,14 @@
 	            contentType : "application/json; charset=utf-8",
 	            dataType: 'json',
 	            success: function(response) {
+	            	
+	            	
 	            	var rpta = response.dataJson;
 	            	
 	            	$("#hdnHotelHabitacion").val(rpta.idHotelHabitacion);
 	            	$("#hdnIdTipoHabitacion").val(rpta.idTipoHabitacion);
 	            	$("#hdnNomTipoHabitacion").val(rpta.nomTipoHabitacion);
 	            	$("#hdnPrecio").val(rpta.precio);
-	            	
-	            	
-	                
 					
 	                
 	            },
@@ -1816,9 +1827,7 @@
 			
 			$('#txtTotalGasto').removeAttr('disabled');
 			
-			var grabarFormParams = {
-					'paqueteTuristicoBean' : formToObject('#frmRegPaqueteTuristico')
-			};
+			
 			
 			var idOrden = $("#txtcodOrden").val();
 			//var nomPaquete = $("#txtpaqueteTuristico").val();
@@ -1843,6 +1852,7 @@
 			var personas = parseInt(adultos) + parseInt(ninos);
 			
 			$("#tblDestinos tbody > tr").each(function () {
+				
 				var row = $(this);
 				var destinoRow = row.find('input[id="tmp_idDestino"]').val();
 				var dias = row.find('input[id="tmp_dias"]').val();
@@ -1882,8 +1892,15 @@
 				
 				//registrando tickets	
 				if(idAerolinea != "0"){
-					filaTicket = idProvAerolinea + "," + idAerolinea + "," + precioAerolinea + "," + destinoRow + "," + tipo + "," + fechaPartida + "," + urlAerolinea.substring(0, 60) ;
+					
+					console.log("- - - - - - - - - - - Ticket[]");
+
+					filaTicket = idProvAerolinea + "," + idAerolinea + "," + precioAerolinea + "," + destinoRow + "," + tipo + "," + fechaPartida + "," + urlAerolinea ;					
+					console.log(filaTicket);
+					
 					tickets += filaTicket + ";";
+					console.log(tickets);
+					
 				}
 				
 				//registrando hoteles
@@ -1896,15 +1913,22 @@
 				
 			});
 			
-			
+			console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+			console.log("tickets");
+			console.log(tickets);
 			
 			
 			var modo = $("#txtflagEdicion").val();
+			
 			var params = "?destinos=" + destinos; 
 			params += "&tours=" + tours;
-			params += "&tickets=" + tickets;
+			//params += "&tickets=" + tickets;
 			params += "&hoteles=" + hoteles;
 			params += "&modo=" + modo;
+			
+			console.log("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+			console.log("params");
+			console.log(params);
 			
 			var ruta ="";
 			/*
@@ -1914,8 +1938,17 @@
 				ruta = '${pageContext.request.contextPath}/grabarTransaccionPaqTuristico'+params;
 			}
 			*/
+			
 			ruta = '${pageContext.request.contextPath}/grabarTransaccionPaqTuristico'+params;
+			
 			//alert(ruta);
+			
+			var obj = formToObject('#frmRegPaqueteTuristico');
+			obj["tickets"] = tickets;
+			
+			var grabarFormParams = {
+					'paqueteTuristicoBean' : obj					
+			};
 			
 			$.ajax({
 				url: ruta,
@@ -2002,58 +2035,7 @@
             format: 'DD/MM/YYYY',
             pickTime: false,
 			useCurrent: false
-        });
-		
- 
-	
-	
- 	function construirTablaCotizacion( dataGrilla ){
-		
-		// construyendo tabla destino
-		var table = $('#tblDestinos').dataTable({
-            data: dataGrilla,
-			bDestroy: true,
-           ordering: false,
-            searching: false,
-            paging: true,
-            bScrollAutoCss: true,
-            bStateSave: false,
-            bAutoWidth: false,
-            info: false,
-            bScrollCollapse: false,
-            pagingType: "full_numbers",
-            pageLength: 5,
-            responsive: true,
-            bLengthChange: false,
-			
-            fnDrawCallback: function(oSettings) {
-               if (oSettings.fnRecordsTotal() == 0) {
-                   $('#tblDestino_paginate').addClass('hiddenDiv');
-               } else {
-                   $('#tblDestino_paginate').removeClass('hiddenDiv');
-               }
-            },
-            
-           fnRowCallback: function (nRow, aData, iDisplayIndex) {
-				alert(aData[0]);
-				$(nRow).attr('id', aData[0]);
-				$(nRow).attr('align', 'center');
-				$(nRow).attr('rowClasses','tableOddRow');
-               return nRow;
-            },
-			language: {
-               url: "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
-			},
-			columns: [
-	            {"class": "botones"},
-				{"class": ""},
-				{"class": ""},
-				{"class": ""},
-				{"class": "hidden"}
-			]
-       });
-		
-}		
+        });			
 	
 	
 </script>
@@ -2385,7 +2367,7 @@
 									<div class="form-group">
 										<div class="col-sm-3" style="text-align:right; font-weight:bold">Observaciones:</div>
 											<div class="col-sm-8" id="divObservacionPaquete">
-													<textarea class="form-control" name="observacion" id="txtObservacionPaquete"  onkeypress="return validarNumeroLetra(event)" rows="3" cols="90"  placeholder="Observaciones">${observacion}</textarea>
+													<textarea class="form-control" name="observacion" id="txtObservacionPaquete" rows="3" cols="90"  placeholder="Observaciones">${observacion}</textarea>
 										    </div>
 									</div>
 									
