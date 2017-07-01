@@ -22,6 +22,8 @@
 	<!-- Bean Busqueda de Paquetes - Fin -->	
 	<typeAlias alias="string" type="java.lang.String" />
 	
+	<typeAlias alias="cotizacionDetalleDestinosBean" type="pe.com.paxtravel.bean.CotizacionDetalleDestinosBean" />
+	
 	<resultMap id="resultFareInfo" class="fareInfoBean">						
 		<result property="comision"		    column="comision" />
 		<result property="nombreProveedor" 		    column="proveedor" />
@@ -210,6 +212,41 @@
 		<result property="aerolinea" column="nomAerolinea" />
 		<!--  nomAerolinea nomHotel nomTour ciudad gasto precio  id_paquete_turistico  -->
 	</resultMap>
+	
+	 <resultMap id="resultCotizacionById" class="cotizacionBean">
+        <result property="idCotizacion"                column="id_cotiza" />
+        <result property="numeroCotizacion"            column="nu_cotiza" />
+        <result property="fechaCotizacion"             column="fe_cotiza" />
+        <result property="fechaSalida"                 column="fe_partida" />
+        <result property="observacion"                 column="observacion" />
+        <result property="idTipoPrograma" column="id_tipo_programa" />
+        <result property="idTipoCotizacion" column="id_tipo_cotiza" />
+        <result property="estado" column="no_estado" />
+    </resultMap>
+    
+    <resultMap id="resultCotPatTurDestinos" class="cotizacionDetalleDestinosBean">
+	    <result property="idCotiza"                    column="id_cotiza" />
+	    <result property="idCliente"               column="id_cliente" />
+	    <result property="idPaqueteTuristico"      column="id_paquete" />
+        <result property="nuCotiza"                column="nu_cotiza" />
+        <result property="feCotiza"            column="fe_cotiza" />
+        <result property="nombresCliente"      column="nombres" />
+        <result property="apellidosCliente"        column="apellidos" />
+        <result property="tipoDocu"                column="tipo_doc" />
+        <result property="nuDocumento"                 column="nu_documento" />
+        <result property="fePartida"               column="fe_partida" />
+        <result property="feRetorno"               column="fe_retorno" />
+        <result property="nombrePaqueteTuristico"  column="nombrePaqueteTuristico" />
+        <result property="nuNinos"                     column="nu_ninos" />
+        <result property="nuAdultos"               column="nu_adultos" />
+        <result property="imPrecio"                column="im_precio" />
+        <result property="idPaqueteTuristico"      column="id_paquete_turistico" />
+        <result property="descripcionCiudad"       column="descripcion" />
+        <result property="nombreProveedor"             column="nombreProveedor" />
+        <result property="nomTour"                     column="nomTour" />
+        <result property="nomHotel"                column="nomHotel" />
+        <result property="nomAerolinea"            column="nomAerolinea" />       
+    </resultMap>
 	
 	
 	
@@ -714,6 +751,93 @@
 			c.id_cotiza = #numeroCotizacion#
 	</select>
 	
+	<select id="getCotizacionById" parameterClass="Integer" resultMap="resultCotizacionById">
+        SELECT 
+            c.id_cotiza, 
+            nu_cotiza, 
+            case when fe_cotiza != '0000-00-00' then fe_cotiza else '' end as fe_cotiza, 
+            case when fe_partida != '0000-00-00' then fe_partida else '' end as fe_partida, 
+            case when fe_partida != '0000-00-00' then fe_retorno else '' end as fe_retorno, 
+            observacion, 
+            id_tipo_programa, 
+            id_tipo_cotiza,
+            e.no_estado
+        FROM 
+            cotizacion c inner join estado e on c.id_estado = e.id_estado
+        WHERE 
+            c.id_cotiza = #cotizacionId#
+    </select>
+    
+    <select id="listarCotizacionPaqueteDestinos" parameterClass="Integer" resultMap="resultCotPatTurDestinos">
+        SELECT 
+            Distinct     
+            co.id_cotiza, cl.id_cliente, pturis.id_paquete, cl.email,  
+            co.nu_cotiza, co.fe_cotiza, cl.nombres, cl.apellidos, td.descripcion as tipo_doc, cl.nu_documento,
+            pturis.fe_partida, pturis.fe_retorno,
+            pturis.nombre as nombrePaqueteTuristico,
+            pturis.nu_ninos, pturis.nu_adultos,
+            co.im_precio,   
+            pd.id_paquete_turistico,  
+            dc.descripcion,
+            (select t.descripcion From paquete_turistico_destino_tour AS ptt                     
+                INNER JOIN tour AS t ON (ptt.id_tour = t.id_tour)
+                WHERE (pd.id_paquete_turistico = ptt.id_paquete AND pd.id_destino_ciudad = ptt.id_destino)
+                LIMIT 1) AS nomTour,                
+            (select h.descripcion from paquete_turistico_destino_hotel AS ph 
+                INNER JOIN hotel AS h ON (ph.id_hotel=h.id_hotel)
+                WHERE (pd.id_paquete_turistico = ph.id_paquete AND ph.id_destino=pd.id_destino_ciudad)
+                LIMIT 1) AS nomHotel,
+            (Select Concat(a.nombre, ' / ') from paquete_turistico_ticket AS pticket 
+                INNER JOIN aerolinea AS a ON (pticket.id_aerolinea=a.id_aerolinea)
+                WHERE (pticket.id_paquete_turistico=pd.id_paquete_turistico AND pticket.id_destino_destino=pd.id_destino_ciudad)
+                LIMIT 1) AS nomAerolinea,
+            prov.nombre as nombreProveedor                          
+        FROM paquete_turistico_destino AS pd 
+            INNER JOIN cotizacion AS co ON (co.id_paquete=pd.id_paquete_turistico)
+            INNER JOIN paquete_turistico AS pturis ON (pturis.id_paquete=pd.id_paquete_turistico)
+            INNER JOIN destino_ciudad AS dc ON (pd.id_destino_ciudad=dc.id_destino_ciudad)            
+            INNER JOIN proveedor_aerolinea_destino AS pad ON (dc.id_destino_ciudad = pad.id_destino_ciudad)
+            INNER JOIN proveedor AS prov ON (pad.id_proveedor = prov.id_proveedor)
+            inner join cliente cl on co.id_cliente = cl.id_cliente
+            inner join tipo_documento td on cl.tipo_docu = td.id_tipo_docu
+        WHERE 
+            co.id_cotiza = #cotizacionId# AND co.id_tipo_cotiza=1
+    </select>
+    
+    <select id="listarCotizacionTicketDestinos" parameterClass="Integer" resultMap="resultCotPatTurDestinos">
+        SELECT 
+            Distinct     
+            co.id_cotiza, cl.id_cliente, pturis.id_paquete, cl.email,  
+            co.nu_cotiza, co.fe_cotiza, cl.nombres, cl.apellidos, td.descripcion as tipo_doc, cl.nu_documento,
+            pturis.fe_partida, pturis.fe_retorno,
+            pturis.nombre as nombrePaqueteTuristico,
+            pturis.nu_ninos, pturis.nu_adultos,
+            co.im_precio,   
+            pd.id_paquete_turistico,  
+            dc.descripcion,
+            (select t.descripcion From paquete_turistico_destino_tour AS ptt                     
+                INNER JOIN tour AS t ON (ptt.id_tour = t.id_tour)
+                WHERE (pd.id_paquete_turistico = ptt.id_paquete AND pd.id_destino_ciudad = ptt.id_destino)
+                LIMIT 1) AS nomTour,                
+            (select h.descripcion from paquete_turistico_destino_hotel AS ph 
+                INNER JOIN hotel AS h ON (ph.id_hotel=h.id_hotel)
+                WHERE (pd.id_paquete_turistico = ph.id_paquete AND ph.id_destino=pd.id_destino_ciudad)
+                LIMIT 1) AS nomHotel,
+            (Select Concat(a.nombre, ' / ') from paquete_turistico_ticket AS pticket 
+                INNER JOIN aerolinea AS a ON (pticket.id_aerolinea=a.id_aerolinea)
+                WHERE (pticket.id_paquete_turistico=pd.id_paquete_turistico AND pticket.id_destino_destino=pd.id_destino_ciudad)
+                LIMIT 1) AS nomAerolinea,
+            prov.nombre as nombreProveedor                          
+        FROM paquete_turistico_destino AS pd 
+            INNER JOIN cotizacion AS co ON (co.id_paquete=pd.id_paquete_turistico)
+            INNER JOIN paquete_turistico AS pturis ON (pturis.id_paquete=pd.id_paquete_turistico)
+            INNER JOIN destino_ciudad AS dc ON (pd.id_destino_ciudad=dc.id_destino_ciudad)            
+            INNER JOIN proveedor_aerolinea_destino AS pad ON (dc.id_destino_ciudad = pad.id_destino_ciudad)
+            INNER JOIN proveedor AS prov ON (pad.id_proveedor = prov.id_proveedor)
+            inner join cliente cl on co.id_cliente = cl.id_cliente
+            inner join tipo_documento td on cl.tipo_docu = td.id_tipo_docu
+        WHERE 
+            co.id_cotiza = #cotizacionId# AND co.id_tipo_cotiza=1
+    </select>
 	
-
 </sqlMap>

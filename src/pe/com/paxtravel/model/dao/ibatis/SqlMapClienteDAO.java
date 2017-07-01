@@ -1,12 +1,8 @@
 package pe.com.paxtravel.model.dao.ibatis;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
-import org.springframework.stereotype.Repository;
 
 import pe.com.paxtravel.bean.ClienteBean;
 import pe.com.paxtravel.model.dao.ClienteDAO;
@@ -19,6 +15,12 @@ public class SqlMapClienteDAO extends SqlMapClientDaoSupport implements ClienteD
 		List<ClienteBean> lista = null;
 		lista = getSqlMapClientTemplate().queryForList("cliente.listarCliente", clienteBean);
 		return lista;
+	}
+
+	@Override
+	public ClienteBean obtenerCliente(int idCliente) {
+		return (ClienteBean) getSqlMapClientTemplate().queryForObject(
+				"cliente.obtenerCliente", idCliente);
 	}
 
 //	private static class CiudadMapper implements

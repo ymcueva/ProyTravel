@@ -1,9 +1,11 @@
 package pe.com.paxtravel.bean;
 
+import java.util.List;
+
 public class CotizacionBean {
 
 	private int numeroFila;
-	private int idCotizacion;	
+	private int idCotizacion;
 	private String numeroCotizacion;
 	private String fechaCotizacion;
 	private String nombreCliente;
@@ -29,44 +31,47 @@ public class CotizacionBean {
 	private String observacion;
 	private String tipoCotizacion;
 	private String tipoPrograma;
-	private String estado;	
+	private String estado;
 	private String destinos;
 	private String habitaciones;
 	private String motivos;
 	private String servicios;
-	private int idCliente;	
+	private int idCliente;
 	private int idTipoCotizacion;
 	private int idOrigenPartida;
-	private int idTipoPrograma;	
+	private int idTipoPrograma;
 	private int tipoBusqueda;
-	private int idEstado;	
+	private int idEstado;
 	private int idTipoAlojamiento;
 	private int idCategoriaAlojamiento;
-	
+
 	private int ticket;
 	private int tour;
 	private int hotel;
 	private int cultural;
 	private int deportes;
 	private int relajacion;
-	private int playa;	
-	
+	private int playa;
+
 	private int idPaquete;
 	private String linkCotiza;
-	private String feLink;		
-	
+	private String feLink;
+
+	private String tipoDocumento;
+	private List<CotizacionDetalleDestinosBean> listCotizacionDetalleDestinos;
+	private PaqueteTuristicoBean paqueteTuristico;
+	private double precioTotal;
+
 	private double imPrecio;
 	private String observacionTicket;
-	
+
 	private String comentario;
-	
+
 	private int isAprobado;
-	
+
 	private int cantidadAdultosTicket;
 	private int cantidadNinosTicket;
-	
-	
-	
+
 	public int getCantidadAdultosTicket() {
 		return cantidadAdultosTicket;
 	}
@@ -278,24 +283,23 @@ public class CotizacionBean {
 	public int getIdTipoPrograma() {
 		return idTipoPrograma;
 	}
-	
+
 	public void setIdTipoPrograma(int idTipoPrograma) {
 		this.idTipoPrograma = idTipoPrograma;
 	}
-	
+
 	public int getIdOrigenPartida() {
 		return idOrigenPartida;
 	}
-	
+
 	public void setIdOrigenPartida(int idOrigenPartida) {
 		this.idOrigenPartida = idOrigenPartida;
 	}
-	
-	
+
 	public int getIdTipoCotizacion() {
 		return idTipoCotizacion;
 	}
-	
+
 	public void setIdTipoCotizacion(int idTipoCotizacion) {
 		this.idTipoCotizacion = idTipoCotizacion;
 	}
@@ -516,5 +520,37 @@ public class CotizacionBean {
 		this.idEstado = idEstado;
 	}
 
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
+	public List<CotizacionDetalleDestinosBean> getListCotizacionDetalleDestinos() {
+		return listCotizacionDetalleDestinos;
+	}
+
+	public void setListCotizacionDetalleDestinos(
+			List<CotizacionDetalleDestinosBean> listCotizacionDetalleDestinos) {
+		this.listCotizacionDetalleDestinos = listCotizacionDetalleDestinos;
+	}
+
+	public PaqueteTuristicoBean getPaqueteTuristico() {
+		return paqueteTuristico;
+	}
+
+	public void setPaqueteTuristico(PaqueteTuristicoBean paqueteTuristico) {
+		this.paqueteTuristico = paqueteTuristico;
+	}
+
+	public double getPrecioTotal() {
+		return precioTotal;
+	}
+
+	public void setPrecioTotal(double precioTotal) {
+		this.precioTotal = precioTotal;
+	}
 
 }
