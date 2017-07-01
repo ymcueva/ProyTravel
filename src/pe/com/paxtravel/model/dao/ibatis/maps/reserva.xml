@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="reserva">
+	
+	<typeAlias alias="reservaBean" type="pe.com.paxtravel.bean.ReservaBean" />
+	<typeAlias alias="reservaPasajeroBean" type="pe.com.paxtravel.bean.ReservaPasajeroDetalleBean" />
+	<typeAlias alias="string" type="java.lang.String" />
+	<typeAlias alias="integer" type="java.lang.Integer" />
+	
+	<resultMap id="listadoReserva" class="reservaBean">
+		<result property="numeroFila"			    column="ca_nume_fila" />
+		<result property="idReserva"			    column="id_reserva" />	
+		<result property="numeroReserva"			    column="nu_reserva" />		
+		<result property="numeroCotizacion"			    column="nu_cotiza" />
+		<result property="fechaReserva" 		    		column="fe_reserva" />
+		<result property="cliente" 				column="cliente" />
+		<result property="nombreEstadoReserva" 		    	column="no_estado" />
+		<result property="idEstadoReserva" 		    	column="id_estado_reserva" />
+	</resultMap>
+	
+	<resultMap id="resultReservaResume" class="reservaBean">
+		<result property="idReserva"			    column="id_reserva" />
+		<result property="numeroReserva"			    column="nu_reserva" />	
+		<result property="numeroCotizacion"			    column="nu_cotiza" />
+		<result property="fechaCotizacion"			    column="fe_cotiza" />
+		<result property="cliente"			    column="no_cliente" />
+		<result property="precioCotizacion"			    column="precio_cotiza" />
+		<result property="fechaReserva"			    column="fe_reserva" />		
+		<result property="idCliente"			    column="id_cliente" />
+		<result property="idCotizacion" 		    		column="id_cotiza" />
+	</resultMap>
+	
+	<resultMap id="obtieneCotizacion" class="reservaBean">
+		<result property="cliente"			    column="cliente" />	
+		<result property="numeroDocumento"			    column="nu_documento" />		
+		<result property="direccion"			    column="direccion" />
+		<result property="telefonoCliente" 		    		column="telefono" />
+		<result property="fechaCotizacion" 				column="fe_cotiza" />
+		<result property="nombreTipoCotizacion" 		    	column="no_tipo_cotizacion" />
+		<result property="estadoCotizacion" 		    	column="no_estado_cotizacion" />
+		<result property="numeroAdultos" 		    	column="nu_adultos" />
+		<result property="numeroNinos" 		    	column="nu_ninos" />
+		<result property="precioCotizacion" 		    	column="im_precio" />
+		<result property="idCotizacion" 		    	column="id_cotiza" />
+		<result property="idCliente" 		    	column="id_cliente" />
+		<result property="idTipoCotizacion" 		    	column="id_tipo_cotiza" />
+	</resultMap>
+	
+	<resultMap id="listaTicketAereoCotizacion" class="reservaBean">
+		<result property="numeroFila"			    column="ca_nume_fila" />
+		<result property="idCotizaDeta"			    column="id_cotiza_deta" />	
+		<result property="ciudadOrigen"			    column="ciudad_origen" />		
+		<result property="ciudadDestino"			    column="ciudad_destino" />
+		<result property="isoOrigen" 		    		column="iso_origen" />
+		<result property="isoDestino" 				column="iso_destino" />
+		<result property="idOrigen" 		    	column="id_origen" />
+		<result property="idDestino" 		    	column="id_destino" />
+		<result property="tiIda" 		    	column="ti_ida" />
+		<result property="tipoVuelo" 		    	column="vuelo" />
+		<result property="fechaPartida" 		    	column="fe_partida" />
+		<result property="fechaRetorno" 		    	column="fe_retorno" />
+	</resultMap>
+	
+	<resultMap id="listaPaqueteCotizacion" class="reservaBean">
+		<result property="idPaqueteTuristico"			    column="id_paquete_turistico" />
+		<result property="numeroFila"			    column="ca_nume_fila" />	
+		<result property="nombrePaqueteTuristico"			    column="paquete" />		
+		<result property="precioPaquete"			    column="precioPaquete" />
+		<result property="precioPaqueteCotiza" 		    		column="precioPaqueteCotiza" />
+		<result property="ciudadDestinoPaquete" 				column="ciudad" />
+		<result property="servicioTour" 		    	column="nomTour" />
+		<result property="servicioHotel" 		    	column="nomHotel" />
+		<result property="servicioAerolinea" 		    	column="nomAeroLinea" />
+	</resultMap>
+	
+	<select id="listarReserva" parameterClass="reservaBean" resultMap="listadoReserva">		
+		SELECT 
+			@rownum:=@rownum+1 AS ca_nume_fila,
+			a.id_reserva,
+			a.nu_reserva, 
+			b.nu_cotiza,
+			a.fe_reserva, 
+			CONCAT(d.nombres, ' ', d.apellidos) cliente,
+			c.no_estado,
+			a.id_estado id_estado_reserva
+			 FROM (SELECT @rownum:=0) r, reserva a 
+			INNER JOIN cotizacion b ON a.id_cotiza=b.id_cotiza
+			INNER JOIN estado c ON a.id_estado=c.id_estado
+			INNER JOIN cliente d ON a.id_cliente=d.id_cliente           
+		 WHERE 1 = 1
+		 <isNotEmpty prepend="AND" property="cliente"> CONCAT(d.nombres, ' ', d.apellidos) LIKE #cliente# </isNotEmpty>
+		 <isNotEmpty prepend="AND" property="numeroDocumento"> d.nu_documento = #numeroDocumento# </isNotEmpty>
+		 <isNotEmpty prepend="AND" property="idEstadoReserva"> a.id_estado = #idEstadoReserva# </isNotEmpty>
+		 <isNotEmpty prepend="AND" property="fechaInicio" >
+	         <isNotEmpty property="fechaFin" >
+	            DATE_FORMAT(a.fe_reserva,'%Y-%m-%d') between #fechaInicio# AND #fechaFin#
+	         </isNotEmpty>
+   		 </isNotEmpty>
+		 order by a.id_reserva desc
+		
+	</select>
+	
+	<select id="obtenerCotizacion" parameterClass="reservaBean" resultMap="obtieneCotizacion">
+		SELECT 
+		CONCAT(b.nombres, ' ', b.apellidos) cliente, b.nu_documento, b.direccion, b.telefono, 
+		a.fe_cotiza, c.nombre no_tipo_cotizacion,
+		d.no_estado no_estado_cotizacion, a.nu_adultos, a.nu_ninos, a.im_precio, 
+		a.id_cotiza, a.id_cliente, a.id_tipo_cotiza
+		FROM cotizacion a
+		INNER JOIN cliente b ON a.id_cliente=b.id_cliente
+		INNER JOIN tipo_cotizacion c ON a.id_tipo_cotiza=c.id_tipo
+		INNER JOIN estado d ON a.id_estado=d.id_estado
+		 WHERE 1 = 1
+		 <isNotEmpty prepend="AND" property="numeroCotizacion"> a.nu_cotiza = #numeroCotizacion# </isNotEmpty>
+		 AND a.id_estado='15'
+	</select>
+	
+	<select id="listarTicketAereoCotizacion" parameterClass="reservaBean" resultMap="listaTicketAereoCotizacion">
+		SELECT 
+				@rownum:=@rownum+1 AS ca_nume_fila,
+				c.id_cotiza_deta,
+				dcorigen.descripcion AS ciudad_origen, 
+				dc.descripcion AS ciudad_destino, 
+				dcorigen.codigo_iso AS iso_origen, 
+				dc.codigo_iso AS iso_destino,
+				dcorigen.id_destino_ciudad AS id_origen,
+				dc.id_destino_ciudad AS id_destino,
+				c.ti_ida,
+				IF (c.ti_ida=1,'Solo Ida','Ida y Vuelta') AS vuelo, 
+				c.fe_partida,
+				c.fe_retorno
+			FROM (SELECT @rownum:=0) r, `cotizacion_deta` AS c  	
+				INNER JOIN `cotizacion` AS co ON ( co.nu_cotiza=c.id_cotiza )
+				LEFT JOIN destino_ciudad AS dcorigen ON (c.id_destino_origen=dcorigen.id_destino_ciudad)
+				LEFT JOIN destino_ciudad AS dc ON (c.id_destino=dc.id_destino_ciudad)
+		 WHERE 1 = 1
+		 <isNotEmpty prepend="AND" property="numeroCotizacion"> co.nu_cotiza = #numeroCotizacion# </isNotEmpty>
+		 AND co.id_tipo_cotiza = 2
+	</select>
+	
+	<select id="listarPaqueteCotizacion" parameterClass="reservaBean" resultMap="listaPaqueteCotizacion">
+		 SELECT 
+		 
+			DISTINCT            
+			pd.id_paquete_turistico,
+			@rownum:=@rownum+1 AS ca_nume_fila,  
+		    pturis.nombre AS paquete,
+		    IFNULL(pturis.total_gasto,0) AS precioPaquete,	
+            co.im_precio AS precioPaqueteCotiza,		    
+			dc.descripcion AS ciudad,            
+			(SELECT t.descripcion FROM paquete_turistico_destino_tour AS ptt 					 
+				INNER JOIN tour AS t ON (ptt.id_tour = t.id_tour)
+				WHERE (pd.id_paquete_turistico = ptt.id_paquete AND pd.id_destino_ciudad = ptt.id_destino)
+				LIMIT 1) AS nomTour,                
+			(SELECT h.descripcion FROM paquete_turistico_destino_hotel AS ph 
+				INNER JOIN hotel AS h ON (ph.id_hotel=h.id_hotel)
+				WHERE (pd.id_paquete_turistico = ph.id_paquete AND ph.id_destino=pd.id_destino_ciudad)
+				LIMIT 1) AS nomHotel,
+			(SELECT CONCAT(a.nombre, ' / ') FROM paquete_turistico_ticket AS pticket 
+				INNER JOIN aerolinea AS a ON (pticket.id_aerolinea=a.id_aerolinea)
+				WHERE (pticket.id_paquete_turistico=pd.id_paquete_turistico AND pticket.id_destino_destino=pd.id_destino_ciudad)
+				LIMIT 1) AS nomAerolinea
+			                
+		FROM (SELECT @rownum:=0) r, paquete_turistico_destino AS pd 
+			INNER JOIN cotizacion AS co ON (co.id_paquete=pd.id_paquete_turistico)
+			INNER JOIN paquete_turistico AS pturis ON (pturis.id_paquete=pd.id_paquete_turistico)
+			INNER JOIN destino_ciudad AS dc ON (pd.id_destino_ciudad=dc.id_destino_ciudad)	      
+			
+		 WHERE 1 = 1
+		 <isNotEmpty prepend="AND" property="numeroCotizacion"> co.nu_cotiza LIKE #numeroCotizacion# </isNotEmpty>
+		 AND co.id_tipo_cotiza = 1;
+	</select>
+	    
+	
+	<select id="obtenerNumeroReserva" resultClass="string">
+		SELECT CONCAT('RESV',
+               YEAR(NOW()), 
+               IF( LENGTH(MONTH(NOW()))=1,CONCAT('0',MONTH(NOW())),MONTH(NOW()) ),
+               MAX( SUBSTR( NU_RESERVA, 11) ) +1 
+               ) AS NRO_RESERVA
+         FROM RESERVA;
+	</select>
+	
+	<insert id="insertarReserva" parameterClass="reservaBean" >
+		INSERT INTO reserva(
+			nu_reserva,
+			fe_reserva,			
+			id_cliente,
+			id_cotiza,
+			id_tipo_reserva,
+			fe_ins,
+			id_usuario_ins,
+			id_estado,
+			comentario
+		) VALUES (
+			#numeroReserva#,
+			#fechaReserva#,						
+			#idCliente#,
+			#idCotizacion#,
+			#idTipoCotizacion#,
+			#fechaRegistro#,
+			#idUsuario#,
+			#estadoCotizacion#,
+			#comentarioReserva#
+		)
+		<selectKey keyProperty="idReserva" resultClass="int">
+            select LAST_INSERT_ID();
+        </selectKey>
+	</insert>
+	
+		
+	<select id="getReservaResume" parameterClass="reservaBean" resultMap="resultReservaResume">
+		SELECT a.id_reserva, a.nu_reserva, b.nu_cotiza, b.fe_cotiza, 
+				CONCAT(c.nombres, ' ', c.apellidos) no_cliente,
+				b.im_precio precio_cotiza, a.fe_reserva, a.id_cliente, a.id_cotiza 
+  		  FROM reserva a
+         INNER JOIN cotizacion b ON a.id_cotiza=b.id_cotiza
+         INNER JOIN cliente c ON a.id_cliente=c.id_cliente
+		 WHERE 1=1
+		<isNotEmpty prepend="AND" property="idReserva"> a.id_reserva = #idReserva# </isNotEmpty>
+	</select>
+	
+	<update id="actualizarEstadoReserva" parameterClass="reservaBean" >
+		UPDATE reserva
+		   SET id_estado = #idEstadoReserva#
+		 WHERE id_RESERVA = #idReserva# 
+	</update>
+	
+	<insert id="insertarReservaPasajero" parameterClass="reservaPasajeroBean" >
+		INSERT INTO reserva_pasajero(
+			id_reserva,
+			tipo_documento,
+			nu_documento,
+			nombres,
+			apellidos,
+			fecha_nacimiento,
+			id_parentesco
+		) VALUES (
+			#idReserva#,
+			#tipoDocumento#,						
+			#numeroDocumento#,
+			#nombres#,
+			#apellidos#,
+			#fechaNacimiento#,
+			#idParentesco#
+		)
+	</insert>
+	
+	
+  
+</sqlMap>
