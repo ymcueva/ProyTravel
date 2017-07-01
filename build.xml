@@ -43,6 +43,7 @@
 			<include name="WEB-INF/paginas/cotizacion/*.*"/>
 			<include name="WEB-INF/paginas/ordenPlanificacion/*.*"/>
 			<include name="WEB-INF/paginas/paqueteTuristico/*.*"/>
+            <include name="WEB-INF/paginas/reserva/*.*"/>
 			<include name="WEB-INF/config/*.*"/>
 			<include name="WEB-INF/*.xml"/>
 			<include name="index.jsp"/>

@@ -55,6 +55,10 @@
 		<property name="sqlMapClient" ref="SqlMapClientConfig" />
 	</bean>
 
+	<bean id="ReservaDAO" class="pe.com.paxtravel.model.dao.ibatis.SqlMapReservaDAO">
+        <property name="dataSource" ref="dataSource" />
+        <property name="sqlMapClient" ref="SqlMapClientConfig" />
+    </bean>
 	
 
 	
@@ -85,9 +89,14 @@
 		<property name="paqueteTuristicoDAO"> <ref bean="PaqueteTuristicoDAO" /> </property>
 	</bean>
 	
+	<bean id="reservaService" class="pe.com.paxtravel.service.ReservaServiceImpl">
+        <property name="reservaDAO"> <ref bean="ReservaDAO" /> </property>
+    </bean>
+	
 	<bean id="objService" class="pe.com.paxtravel.service.OrdenPlanificacionServiceImpl">
 		<property name="objDAO"> <ref bean="OrdenPlanificacionDAO" /> </property>
 	</bean>
+	
 	
 	
 

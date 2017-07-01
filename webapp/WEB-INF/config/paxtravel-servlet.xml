@@ -32,6 +32,12 @@
 	<bean name="paqueteTuristicoController"	class="pe.com.paxtravel.controller.PaqueteTuristicoController">
 		<property name="jsonView" value="jsonView" />
 	</bean>
+	
+	    
+    <bean name="reservaController"    class="pe.com.paxtravel.controller.ReservaController">
+        <property name="jsonView" value="jsonView" />
+    </bean>
+	
 
 	<bean name="inseminacionController" class="pe.com.paxtravel.controller.InseminacionController">
 		<property name="jsonView" value="jsonView" />

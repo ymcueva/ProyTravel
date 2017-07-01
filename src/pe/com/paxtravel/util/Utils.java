@@ -533,6 +533,29 @@ public class Utils {
     	String formatedDate = cal.get(Calendar.HOUR) + ":" + minutoStr;
     	return formatedDate;
     }
+    
+    public static String dateUtilToStringYYYYMMDD(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int mes = cal.get(Calendar.MONTH) + 1;
+        String mesStr="";
+        int dia = cal.get(Calendar.DATE);
+        String diaStr="";
+        if(mes<10){
+            mesStr = "0"+mes;
+        }else{
+            mesStr=""+ mes;
+        }
+        if(dia<10){
+            diaStr = "0"+dia;
+        }else{
+            diaStr = ""+dia;
+        } 
+        String formatedDate = cal.get(Calendar.YEAR) + "/" + (mesStr) + "/" + diaStr + "/" ;
+        return formatedDate;
+    }
+    
+
 
     // redondea al nro de decimales establecido sin el problema de la coma flotante/double de Java
     public static BigDecimal roundBigDecimal(double numero, int nroDecimales) {
