@@ -2098,7 +2098,7 @@
 									<input type="hidden" name="totalTour" id="hdnTotalTour" value="${totalTour}"/>
 									<input type="hidden" name="totalTicket" id="hdnTotalTicket" value="${totalTicket}"/>
 									<input type="hidden" name="totalHotel" id="hdnTotalHotel" value="${totalHotel}"/>
-									<input type="hidden" id="hdnIdCotizacion" value="${idCotizacion}"/>
+									<input type="hidden" name="idCotizacion" id="hdnIdCotizacion" value="${idCotizacion}"/>
 									<input type="hidden" name="idOrigen" id="hdnIdOrigen" value="${idOrigen}"/>
 									
 									

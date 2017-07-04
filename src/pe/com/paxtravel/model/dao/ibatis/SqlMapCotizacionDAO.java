@@ -137,6 +137,16 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements
 				"cotizacion.listarCotizacionServicio", cotizacionServicioBean);
 		return lista;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CotizacionServicioBean> obtenerCotizacionServicio(
+			CotizacionServicioBean cotizacionServicioBean) {
+		List<CotizacionServicioBean> lista = null;
+		lista = getSqlMapClientTemplate().queryForList(
+				"cotizacion.obtenerCotizacionServicio", cotizacionServicioBean);
+		return lista;
+	}
 
 	@Override
 	public FareInfoBean getConsolidador(FareInfoBean fareInfoBean) {

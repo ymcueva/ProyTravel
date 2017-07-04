@@ -78,6 +78,14 @@ public class CotizacionServiceImpl implements CotizacionService {
 		lista = cotizacionDAO.listarCotizacionServicio(cotizacionServicioBean);
 		return lista;
 	}
+	
+	@Override
+	public List<CotizacionServicioBean> obtenerCotizacionServicio(
+			CotizacionServicioBean cotizacionServicioBean) {
+		List<CotizacionServicioBean> lista = new ArrayList<CotizacionServicioBean>();
+		lista = cotizacionDAO.obtenerCotizacionServicio(cotizacionServicioBean);
+		return lista;
+	}
 
 	@Override
 	public int registrarCotizacion(CotizacionBean cotizacionBean) {

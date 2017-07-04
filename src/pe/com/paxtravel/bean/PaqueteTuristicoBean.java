@@ -33,6 +33,7 @@ public class PaqueteTuristicoBean {
 	private int idTipoPaquete;
 	private int idOrigen;
 	private String tickets;
+	private int idCotizacion;
 
 	public String getTickets() {
 		return tickets;
@@ -294,6 +295,14 @@ public class PaqueteTuristicoBean {
 
 	public void setCantidadPasajeros(int cantidadPasajeros) {
 		this.cantidadPasajeros = cantidadPasajeros;
+	}
+
+	public int getIdCotizacion() {
+		return idCotizacion;
+	}
+
+	public void setIdCotizacion(int idCotizacion) {
+		this.idCotizacion = idCotizacion;
 	}
 
 }

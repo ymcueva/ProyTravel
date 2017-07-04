@@ -96,7 +96,7 @@
 			<result property="idOrden"			    		column="id_orden" />
 			<result property="nuOrden"			    		column="nu_orden" />
 			<result property="idServicio"			    	column="id_servicio" />			
-			<result property="nomServicio"			    	column="nombre" />				
+			<result property="nomServicio"			    	column="nombre" />				 
 		</resultMap>
 				
 		<resultMap id="resultPais" class="paisBean">

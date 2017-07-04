@@ -4,6 +4,7 @@ public class CotizacionServicioBean {
 
 	private String idCotiza;
 	private int idServicio;
+	private String nomServicio;
 	private String descripcion;
 	public String getIdCotiza() {
 		return idCotiza;
@@ -22,6 +23,12 @@ public class CotizacionServicioBean {
 	}
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+	public String getNomServicio() {
+		return nomServicio;
+	}
+	public void setNomServicio(String nomServicio) {
+		this.nomServicio = nomServicio;
 	}
 	
 }

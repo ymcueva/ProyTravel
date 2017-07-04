@@ -89,6 +89,12 @@
 		<result property="idServicio"			    column="id_servicio" />
 	</resultMap>
 	
+	<resultMap id="resultCotizacionServicioAd" class="cotizacionServicioBean">
+		<result property="idCotiza"			    column="id_cotiza" />
+        <result property="idServicio"			column="id_servicio" /> 		
+        <result property="nomServicio"			column="nombre" />		
+	</resultMap>
+	
 	<resultMap id="resultCiudad" class="ciudadBean">
 		<result property="idCiudad"			    column="id_destino_ciudad" />
 		<result property="idPais"			    column="id_destino_pais" />
@@ -305,6 +311,16 @@
 		where id_cotiza = #idCotiza#
 		and	  id_servicio = #idServicio# 			
 	</select>	
+	
+	<select id="obtenerCotizacionServicio" parameterClass="cotizacionServicioBean" resultMap="resultCotizacionServicioAd">	
+			select cs.id_cotiza,serv.id_servicio,serv.nombre 
+			from cotizacion_servicio cs
+			inner join servicios serv on cs.id_servicio = serv.id_servicio
+			where cs.id_cotiza = #idCotiza#
+    </select>  
+    
+    
+	
 	
 	<select id="listarPais" parameterClass="paisBean" resultMap="resultPais">
 		SELECT id_destino, descripcion FROM destino_pais 

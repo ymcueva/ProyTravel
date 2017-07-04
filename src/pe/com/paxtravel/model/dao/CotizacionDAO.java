@@ -53,6 +53,8 @@ public interface CotizacionDAO {
 
 	List<CotizacionServicioBean> listarCotizacionServicio(
 			CotizacionServicioBean cotizacionServicioBean);
+	
+	List<CotizacionServicioBean> obtenerCotizacionServicio(CotizacionServicioBean cotizacionServicioBean);
 
 	int actualizarCotizacion(CotizacionBean cotizacionBean);
 

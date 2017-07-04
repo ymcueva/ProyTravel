@@ -789,16 +789,42 @@ public class PaqueteTuristicoController {
 			}
 			
 			ordenServicio.setNuOrden(nuOrden);
-			listaOrdenServicio = ordenPlanificacionService.obtenerOrdenServicio(ordenServicio);
-			System.out.println("Size Orden Servicio :" + listaOrdenServicio.size());
-			if(listaOrdenServicio.size()  > 0){
-				mapa.put("listaOrdenServicio", listaOrdenServicio);
-				mapa.put("statusServicio", "1");
+			//listaOrdenServicio = ordenPlanificacionService.obtenerOrdenServicio(ordenServicio);
+			
+			CotizacionServicioBean cotizacionServicio = new CotizacionServicioBean();
+			cotizacionServicio.setIdCotiza(nuCotizacion);
+			
+			System.out.println("Numero Cotizacion :" + cotizacionServicio.getIdCotiza());
+			
+			
+			List<CotizacionServicioBean> listaCotizacionServicio = new ArrayList<CotizacionServicioBean>();
+			
+			if(busqueda.equals("1")) {
+				listaCotizacionServicio = cotizacionService.obtenerCotizacionServicio(cotizacionServicio);
+				if(listaCotizacionServicio.size()  > 0){
+					mapa.put("listaOrdenServicio", listaCotizacionServicio);
+					mapa.put("statusServicio", "1");
+				}
+				else {
+					mapa.put("listaOrdenServicio", null);
+					mapa.put("statusServicio", "0");
+				}
 			}
 			else {
-				mapa.put("listaOrdenServicio", null);
-				mapa.put("statusServicio", "0");
+				listaOrdenServicio = ordenPlanificacionService.obtenerOrdenServicio(ordenServicio);
+				if(listaOrdenServicio.size()  > 0){
+					mapa.put("listaOrdenServicio", listaOrdenServicio);
+					mapa.put("statusServicio", "1");
+				}
+				else {
+					mapa.put("listaOrdenServicio", null);
+					mapa.put("statusServicio", "0");
+				}
 			}
+			
+			System.out.println("Size Cotizacion Servicio :" + listaCotizacionServicio.size());
+			System.out.println("Size Orden Servicio :" + listaOrdenServicio.size());
+			
 			
 			dataJSON.setRespuesta("ok", null, mapa);
 		}
@@ -1521,8 +1547,9 @@ public class PaqueteTuristicoController {
 						if(listaOrden.size() >0)
 							idCotizacion = listaOrden.get(0).getIdCotiza();
 						
+						System.out.println("IdCotizacion :" + objbean.getIdCotizacion());
 						CotizacionBean cotizacionBean = new CotizacionBean();
-						cotizacionBean.setIdCotizacion(idCotizacion);
+						cotizacionBean.setIdCotizacion(objbean.getIdCotizacion());
 						cotizacionBean.setIdEstado(5);
 						cotizacionBean.setIdPaquete(registro);
 						
