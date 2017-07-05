@@ -2,7 +2,6 @@ package pe.com.paxtravel.bean;
 
 public class ReservaBean {
 	
-	
 	private int numeroFila;
 	private int idReserva;
 	private String numeroReserva;
@@ -13,7 +12,6 @@ public class ReservaBean {
 	private String idEstadoReserva;
 	private String nombreEstadoReserva;
 	private String comentarioReserva;
-	
 	
 	public String getComentarioReserva() {
 		return comentarioReserva;
@@ -84,7 +82,16 @@ public class ReservaBean {
 	private String tipoVuelo;
 	private String fechaPartida;
 	private String fechaRetorno;
+	private String idEstadoCotizacion;
 	
+	
+	
+	public String getIdEstadoCotizacion() {
+		return idEstadoCotizacion;
+	}
+	public void setIdEstadoCotizacion(String idEstadoCotizacion) {
+		this.idEstadoCotizacion = idEstadoCotizacion;
+	}
 	//datos de paquete turistico
 	private String idPaqueteTuristico;
 	private String nombrePaqueteTuristico;
@@ -95,6 +102,30 @@ public class ReservaBean {
 	private String servicioHotel;
 	private String servicioAerolinea;
 	
+	//datos del pasajero
+	private String numeroDocumentoPasajero;
+	private String nombresPasajero;
+	private String apellidosPasajero;
+	
+	
+	public String getNombresPasajero() {
+		return nombresPasajero;
+	}
+	public void setNombresPasajero(String nombresPasajero) {
+		this.nombresPasajero = nombresPasajero;
+	}
+	public String getApellidosPasajero() {
+		return apellidosPasajero;
+	}
+	public void setApellidosPasajero(String apellidosPasajero) {
+		this.apellidosPasajero = apellidosPasajero;
+	}
+	public String getNumeroDocumentoPasajero() {
+		return numeroDocumentoPasajero;
+	}
+	public void setNumeroDocumentoPasajero(String numeroDocumentoPasajero) {
+		this.numeroDocumentoPasajero = numeroDocumentoPasajero;
+	}
 	public String getIdPaqueteTuristico() {
 		return idPaqueteTuristico;
 	}

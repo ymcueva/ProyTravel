@@ -46,6 +46,8 @@
 		<result property="idCotizacion" 		    	column="id_cotiza" />
 		<result property="idCliente" 		    	column="id_cliente" />
 		<result property="idTipoCotizacion" 		    	column="id_tipo_cotiza" />
+		<result property="numeroCotizacion" 		    	column="nu_cotiza" />
+		<result property="idEstadoCotizacion" 		    	column="id_estado_cotizacion" />
 	</resultMap>
 	
 	<resultMap id="listaTicketAereoCotizacion" class="reservaBean">
@@ -75,6 +77,12 @@
 		<result property="servicioAerolinea" 		    	column="nomAeroLinea" />
 	</resultMap>
 	
+	<resultMap id="listaDatosPasajero" class="reservaBean">
+		<result property="numeroDocumentoPasajero"			    column="nu_documento" />
+		<result property="nombresPasajero"			    column="nombres" />
+		<result property="apellidosPasajero"			    column="apellidos" />
+	</resultMap>
+	
 	<select id="listarReserva" parameterClass="reservaBean" resultMap="listadoReserva">		
 		SELECT 
 			@rownum:=@rownum+1 AS ca_nume_fila,
@@ -90,6 +98,8 @@
 			INNER JOIN estado c ON a.id_estado=c.id_estado
 			INNER JOIN cliente d ON a.id_cliente=d.id_cliente           
 		 WHERE 1 = 1
+		 <isNotEmpty prepend="AND" property="numeroReserva"> a.nu_reserva = #numeroReserva# </isNotEmpty>
+		 <isNotEmpty prepend="AND" property="numeroCotizacion"> b.nu_cotiza = #numeroCotizacion# </isNotEmpty>
 		 <isNotEmpty prepend="AND" property="cliente"> CONCAT(d.nombres, ' ', d.apellidos) LIKE #cliente# </isNotEmpty>
 		 <isNotEmpty prepend="AND" property="numeroDocumento"> d.nu_documento = #numeroDocumento# </isNotEmpty>
 		 <isNotEmpty prepend="AND" property="idEstadoReserva"> a.id_estado = #idEstadoReserva# </isNotEmpty>
@@ -107,14 +117,15 @@
 		CONCAT(b.nombres, ' ', b.apellidos) cliente, b.nu_documento, b.direccion, b.telefono, 
 		a.fe_cotiza, c.nombre no_tipo_cotizacion,
 		d.no_estado no_estado_cotizacion, a.nu_adultos, a.nu_ninos, a.im_precio, 
-		a.id_cotiza, a.id_cliente, a.id_tipo_cotiza
+		a.id_cotiza, a.id_cliente, a.id_tipo_cotiza,
+		a.nu_cotiza, a.id_estado id_estado_cotizacion
 		FROM cotizacion a
 		INNER JOIN cliente b ON a.id_cliente=b.id_cliente
 		INNER JOIN tipo_cotizacion c ON a.id_tipo_cotiza=c.id_tipo
 		INNER JOIN estado d ON a.id_estado=d.id_estado
 		 WHERE 1 = 1
 		 <isNotEmpty prepend="AND" property="numeroCotizacion"> a.nu_cotiza = #numeroCotizacion# </isNotEmpty>
-		 AND a.id_estado='15'
+		 
 	</select>
 	
 	<select id="listarTicketAereoCotizacion" parameterClass="reservaBean" resultMap="listaTicketAereoCotizacion">
@@ -236,7 +247,8 @@
 			nombres,
 			apellidos,
 			fecha_nacimiento,
-			id_parentesco
+			id_parentesco, 
+			fe_registro
 		) VALUES (
 			#idReserva#,
 			#tipoDocumento#,						
@@ -244,10 +256,24 @@
 			#nombres#,
 			#apellidos#,
 			#fechaNacimiento#,
-			#idParentesco#
+			#idParentesco#,
+			sysdate()
 		)
 	</insert>
 	
+	<select id="buscaCorreo" parameterClass="reservaBean" resultClass="String">
+		SELECT IF(LENGTH(b.email)>0,1,0) correo FROM reserva a 
+		 INNER JOIN cliente b ON a.id_cliente=b.id_cliente
+		 WHERE 1=1
+		<isNotEmpty prepend="AND" property="numeroReserva"> a.nu_reserva = #numeroReserva# </isNotEmpty>
+	</select>
 	
+	<select id="buscaPasajeroXReserva" parameterClass="reservaBean" resultMap="listaDatosPasajero">
+		SELECT nu_documento, nombres, apellidos FROM reserva_pasajero a
+		 WHERE 1=1
+		<isNotEmpty prepend="AND" property="numeroDocumentoPasajero"> a.nu_documento = #numeroDocumentoPasajero# </isNotEmpty>
+		ORDER BY fe_registro DESC
+	 LIMIT 1
+	</select>
   
 </sqlMap>

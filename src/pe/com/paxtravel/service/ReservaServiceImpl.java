@@ -111,5 +111,15 @@ public class ReservaServiceImpl implements ReservaService {
 		listaPaqueteCotizacion = reservaDAO.listarPaqueteCotizacion(reservaBean);
 		return listaPaqueteCotizacion;
 	}
+
+	@Override
+	public String validaCorreo(ReservaBean reservaBean) {
+		return reservaDAO.validaCorreo(reservaBean);
+	}
+
+	@Override
+	public ReservaBean buscarDocumentoXPasajero(ReservaBean reservaBean) {
+		return reservaDAO.buscarDocumentoXPasajero(reservaBean);
+	}
 	
 }

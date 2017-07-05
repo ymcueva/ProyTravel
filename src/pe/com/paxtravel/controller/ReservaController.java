@@ -1,6 +1,7 @@
 package pe.com.paxtravel.controller;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.validation.ValidatorHandler;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.mysql.jdbc.Util;
 
 import pe.com.paxtravel.bean.AnimalBean;
 import pe.com.paxtravel.bean.CotizacionBean;
@@ -42,13 +46,7 @@ public class ReservaController {
 	
 	@Autowired
 	private CotizacionService cotizacionService;
-	//	
-//	@Autowired
-//	private CotizacionService cotizacionService;
-//	
-//	@Autowired
-//	private OrdenPlanificacionService ordenPlanificacionService;
-		
+
 	private String jsonView;
 
 	public String getJsonView() {
@@ -85,7 +83,6 @@ public class ReservaController {
 //				// inserta en el bean todos los valores del mapa (property vs keys)
 				BeanUtils.populate(reservaBean, paqueteBeanMap);
 				
-				
 				if (!"".equals(reservaBean.getFechaInicio() ) ) {
 					String fechaini = Utils.stringToStringyyyyMMdd(reservaBean.getFechaInicio());
 					reservaBean.setFechaInicio(fechaini);
@@ -95,11 +92,6 @@ public class ReservaController {
 					String fechafin = Utils.stringToStringyyyyMMdd(reservaBean.getFechaFin());
 					reservaBean.setFechaFin(fechafin);
 				}
-				
-//				//System.out.print("Numero Orden : " + paqueteTuristicoBean.getIdOrden());
-//				System.out.println("Cliente : " + paqueteTuristicoBean.getCliente());
-//				System.out.println("Tipo Busqueda : " + paqueteTuristicoBean.getTipoBusqueda());
-				
 				
 				if(reservaBean.getTipoBusqueda() == 1)
 					reservaBean.setNumeroDocumento(reservaBean.getCliente());
@@ -210,43 +202,83 @@ public class ReservaController {
 			List<ReservaBean> listaPaqueteTuristico = new ArrayList<ReservaBean>();
 			
 			ReservaBean reservaBean = new ReservaBean();
-			reservaBean.setNumeroCotizacion(request.getParameter("numeroCotizacion"));
+			String numeroCotizacion = request.getParameter("numeroCotizacion");
+			reservaBean.setNumeroCotizacion(numeroCotizacion);
 			
 			obtenerCotizacion = reservaService.obtenerCotizacion(reservaBean);
 
 			mapa.put("titulo", "Cliente");
 			String idTipoCotizacion = "";
+			
 	        if (obtenerCotizacion.size() > 0){
-	        	idTipoCotizacion = obtenerCotizacion.get(0).getIdTipoCotizacion() + "";
+	        	String idCotizacion = obtenerCotizacion.get(0).getIdEstadoCotizacion();
 	        	
-		        mapa.put("nombreCliente", obtenerCotizacion.get(0).getCliente());
-		        mapa.put("documentoCliente", obtenerCotizacion.get(0).getNumeroDocumento());
-		        mapa.put("direccionCliente", obtenerCotizacion.get(0).getDireccion());
-		        mapa.put("telefonoCliente", obtenerCotizacion.get(0).getTelefonoCliente());
-		        mapa.put("fechaCotizacion", obtenerCotizacion.get(0).getFechaCotizacion());
-		        mapa.put("tipoCotizacion", obtenerCotizacion.get(0).getNombreTipoCotizacion());
-		        mapa.put("estadoCotizacion", obtenerCotizacion.get(0).getEstadoCotizacion());
-		        mapa.put("numeroAdultos", obtenerCotizacion.get(0).getNumeroAdultos());
-		        mapa.put("numeroNinos", obtenerCotizacion.get(0).getNumeroNinos());
-		        mapa.put("precioCotizacion", obtenerCotizacion.get(0).getPrecioCotizacion());
-		        mapa.put("idCotizacion", obtenerCotizacion.get(0).getIdCotizacion());
-		        mapa.put("idCliente", obtenerCotizacion.get(0).getIdCliente());
-		        mapa.put("idTipoCotizacion", obtenerCotizacion.get(0).getIdTipoCotizacion());
-		        mapa.put("status", "1");
-		       
+		        if (! idCotizacion.equals("15")) {
+		        	mapa.put("flagCotiEncontrada", "1");
+		        	mapa.put("flagEstadoCotizacion", "1");
+		        	mapa.put("numeroCotizacion", obtenerCotizacion.get(0).getNumeroCotizacion());
+		        } else {
+
+		        	String fechaCotizacion = obtenerCotizacion.get(0).getFechaCotizacion();
+		        	SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+		        	String fechaActual = formateador.format(new Date());
+		        	
+		        	
+		            String anio = fechaCotizacion.substring(0, 4);
+		            String mes = fechaCotizacion.substring(5, 7);
+		            String dia = fechaCotizacion.substring(8 ,10);
+		            fechaCotizacion = dia + "/" + mes + "/" + anio;
+		        	
+		        	int resultadoFecha = compararFechasConDate(fechaCotizacion, fechaActual);
+		        	
+		        	if (resultadoFecha != 1){
+		        		
+		        		mapa.put("flagFechaValida", "0");
+		        		mapa.put("numeroCotizacion", numeroCotizacion);
+		        	} else {
+			        	
+		        		mapa.put("flagFechaValida", "1");
+		        		
+			        	idTipoCotizacion = obtenerCotizacion.get(0).getIdTipoCotizacion() + "";
+			        	
+				        mapa.put("nombreCliente", obtenerCotizacion.get(0).getCliente());
+				        mapa.put("documentoCliente", obtenerCotizacion.get(0).getNumeroDocumento());
+				        mapa.put("direccionCliente", obtenerCotizacion.get(0).getDireccion());
+				        mapa.put("telefonoCliente", obtenerCotizacion.get(0).getTelefonoCliente());
+				        mapa.put("fechaCotizacion", obtenerCotizacion.get(0).getFechaCotizacion());
+				        mapa.put("tipoCotizacion", obtenerCotizacion.get(0).getNombreTipoCotizacion());
+				        mapa.put("estadoCotizacion", obtenerCotizacion.get(0).getEstadoCotizacion());
+				        mapa.put("numeroAdultos", obtenerCotizacion.get(0).getNumeroAdultos());
+				        mapa.put("numeroNinos", obtenerCotizacion.get(0).getNumeroNinos());
+				        mapa.put("precioCotizacion", obtenerCotizacion.get(0).getPrecioCotizacion());
+				        mapa.put("idCotizacion", obtenerCotizacion.get(0).getIdCotizacion());
+				        mapa.put("idCliente", obtenerCotizacion.get(0).getIdCliente());
+				        mapa.put("idTipoCotizacion", obtenerCotizacion.get(0).getIdTipoCotizacion());
+				        mapa.put("status", "1");
+			        
+			        	mapa.put("flagCotiEncontrada", "");
+			        	mapa.put("flagEstadoCotizacion", "");
+			        	
+
+				        listaTicketAereo = reservaService.obtenerTicketAereoCotizacion(reservaBean);
+				        listaPaqueteTuristico = reservaService.listarPaqueteCotizacion(reservaBean);
+				        
+						mapa.put("listaTicketAereo", listaTicketAereo);
+						mapa.put("listaPaqueteTuristico", listaPaqueteTuristico);
+		        	}
+		        }
+
 	        } else {
 	        	mapa.put("status", "0");
 	        	mapa.put("nombreCliente", "");
 		        mapa.put("idCliente", "" );
 		        mapa.put("mensajeCliente", "No se encontro el cliente. ");
-
+		        
+		        mapa.put("numeroCotizacion", numeroCotizacion);
+		        mapa.put("flagCotiEncontrada", "2");
+		        mapa.put("flagFechaValida", "");
 	        }
 
-	        listaTicketAereo = reservaService.obtenerTicketAereoCotizacion(reservaBean);
-	        listaPaqueteTuristico = reservaService.listarPaqueteCotizacion(reservaBean);
-	        
-			mapa.put("listaTicketAereo", listaTicketAereo);
-			mapa.put("listaPaqueteTuristico", listaPaqueteTuristico);
 
 	        dataJSON.setRespuesta("ok", null, mapa);
 
@@ -371,6 +403,36 @@ public class ReservaController {
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
 	}
 	
+	@RequestMapping( value = "/buscarPasajero", method ={RequestMethod.GET, RequestMethod.POST} )
+	public ModelAndView buscarPasajero(HttpServletRequest request, HttpServletResponse response){
+		Map<String, Object> mapa = new HashMap<String, Object>();
+		DataJsonBean dataJSON = new DataJsonBean();
+		try {
+			
+			String numeroDocumento = request.getParameter("numeroDocumento");
+			
+			// actualiza la reserva a estado Emitido - 13
+			ReservaBean reservaBean = new ReservaBean();
+			reservaBean.setNumeroDocumentoPasajero(numeroDocumento);
+			
+			reservaBean = reservaService.buscarDocumentoXPasajero(reservaBean);
+			
+			if (reservaBean != null) {
+				mapa.put("resultado", "1");
+				mapa.put("nombresPasajero", reservaBean.getNombresPasajero());
+				mapa.put("apellidosPasajero", reservaBean.getApellidosPasajero());
+			} else {
+				mapa.put("resultado", "0");
+			}
+			
+	        
+	        dataJSON.setRespuesta("ok", null, mapa);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return ControllerUtil.handleJSONResponse(dataJSON, response);
+	}
+	
 	
 	@RequestMapping( value = "/enviarReservaCliente", method ={RequestMethod.GET, RequestMethod.POST} )
 	public ModelAndView enviarReservaCliente(HttpServletRequest request, HttpServletResponse response){
@@ -385,20 +447,30 @@ public class ReservaController {
 			ReservaBean reservaBean = new ReservaBean();
 			reservaBean.setIdReserva( idReserva );
 			reservaBean.setIdEstadoReserva("13");
-			reservaService.actualizarEstadoReserva(reservaBean);
+			reservaBean.setNumeroReserva(numReserva);
 			
-			ExpedienteLogBean expedienteLogBean = new ExpedienteLogBean();
-			 
-			// registra en auditoria el cambio de estado en RESERVA - Emitido
-			expedienteLogBean.setTiLog("RESERVA");
-			expedienteLogBean.setIdTx( idReserva );
-			expedienteLogBean.setIdUser(0);
-			expedienteLogBean.setIdEstado(13);
-			expedienteLogBean.setDesLog("Reserva - Estado Emitido");
-			cotizacionService.registrarExpedienteLog(expedienteLogBean);
-			
-			
-	        mapa.put("titulo", "Detalle Reserva");
+			Integer validaCorreoCliente = Integer.parseInt(reservaService.validaCorreo(reservaBean) );
+			if (validaCorreoCliente == 0) {
+				
+				mapa.put("flagValidaCorreo", "1");
+				
+			} else {
+				
+				reservaService.actualizarEstadoReserva(reservaBean);
+				
+				ExpedienteLogBean expedienteLogBean = new ExpedienteLogBean();
+				 
+				// registra en auditoria el cambio de estado en RESERVA - Emitido
+				expedienteLogBean.setTiLog("RESERVA");
+				expedienteLogBean.setIdTx( idReserva );
+				expedienteLogBean.setIdUser(0);
+				expedienteLogBean.setIdEstado(13);
+				expedienteLogBean.setDesLog("Reserva - Estado Emitido");
+				cotizacionService.registrarExpedienteLog(expedienteLogBean);
+				
+		        mapa.put("flagValidaCorreo", "0");
+			}
+			mapa.put("titulo", "Detalle Reserva");
 	        mapa.put("numReserva", numReserva);
 	        dataJSON.setRespuesta("ok", null, mapa);
 		} catch (Exception e) {
@@ -407,5 +479,35 @@ public class ReservaController {
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
 	}
 	
+	private int compararFechasConDate(String fecha1, String fechaActual) {
+		System.out.println("Parametro String Fecha 1 = " + fecha1 + "\n"
+				+ "Parametro String fechaActual = " + fechaActual + "\n");
+		int resultado = 0;
+		try {
+			/** Obtenemos las fechas enviadas en el formato a comparar */
+			SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+			Date fechaDate1 = formateador.parse(fecha1);
+			Date fechaDate2 = formateador.parse(fechaActual);
+
+			System.out.println("Parametro Date Fecha 1 = " + fechaDate1 + "\n"
+					+ "Parametro Date fechaActual = " + fechaDate2 + "\n");
+
+			if (fechaDate1.before(fechaDate2)) {
+				// "La Fecha 1 es menor "
+				resultado = 1;;
+			} else {
+				if (fechaDate2.before(fechaDate1)) {
+					//"La Fecha 1 es Mayor "
+					resultado = 0;
+				} else {
+					// "Las Fechas Son iguales "
+					resultado = 1;
+				}
+			}
+		} catch (ParseException e) {
+			System.out.println("Se Produjo un Error!!!  " + e.getMessage());
+		}
+		return resultado;
+	}
 	
 }

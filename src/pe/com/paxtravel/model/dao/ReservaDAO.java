@@ -25,4 +25,7 @@ public interface ReservaDAO {
 	
 	List<ReservaBean> listarPaqueteCotizacion(ReservaBean reservaBean);
 	
+	String validaCorreo(ReservaBean reservaBean);
+	
+	ReservaBean buscarDocumentoXPasajero(ReservaBean reservaBean);
 }
