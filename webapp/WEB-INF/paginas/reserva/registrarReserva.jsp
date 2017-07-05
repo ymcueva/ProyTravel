@@ -537,7 +537,7 @@
 			
 			return false;
 			
-        }       
+        }
         
 		console.log("2- agregando nueva fila.............................: ");	
 		
@@ -599,299 +599,8 @@
 		
 	}
 	
-	
-	
-	
 	var contadorPasajeros = 0;
-	
-	function agregarDestino(){
-		
-		console.log("Agregar Destinos........... ");	
-		
-		console.log("1- validacion de los campos.............................: ");
-		
-		var msgHtml = '<strong>Por favor verifique la siguiente información:</strong><br /><br />\n\n';
-		var validationFail = false;
-				
-		var tipoPrograma = $("#selTipoPrograma option:selected").val();
-		
-		if ( tipoPrograma == 0 ) {			
-			msgHtml += '- Seleccione el tipo de programa para filtrar los destinos<br />\n';
-			validationFail = true;
-		}		 		
-		
-		 var ciudadOrigenVal = $("#selCiudadOrigenPaquete option:selected").val();
-		var ciudadDestinoVal = $("#selPaisCiudadDestino option:selected").val();		
-		var ciudadDestinoNacVal = $("#selCiudadDestino option:selected").val();
-		
-		if (ciudadOrigenVal == 0) {        	        	
-     		msgHtml += '- Seleccione la ciudad de origen<br />\n';
-     		validationFail = true;
-      	}
-		
-		if ( tipoPrograma == 1 ) {
-			//Programa Nacional		
-			
-			if (ciudadDestinoNacVal == 0) {        	        	
-	    		msgHtml += '- Seleccione la ciudad nacional de destino<br />\n';
-	    		validationFail = true;        	
-	      	};
-			
-		} else if ( tipoPrograma == 2 ) {
-			//Programa Internacional
-						
-			if (ciudadDestinoVal == 0) {        	        	
-	    		msgHtml += '- Seleccione la ciudad de destino<br />\n';
-	    		validationFail = true;        	
-	      	};
-			
-		}
-		
-		var fPartida = $("#txtFechaPartida").val();		
-		var fRetorno = $("#txtFechaRetorno").val();
-		
-		
-		if ( fPartida == '' ) {
-			msgHtml += '- Seleccione la fecha de partida<br />\n';
-			validationFail = true;
-    	};
-    	
-    	if ( fRetorno == '' ) {
-			msgHtml += '- Seleccione la fecha de retorno<br />\n';
-			validationFail = true;
-    	};		
-        
-        if ( validationFail ) {
-			
-			console.log("mensaje validacion: " + msgHtml);					
-			
-			$("#mensajeClienteError").html(msgHtml);
-			
-			$('#divMensajeErrorCliente').modal({
-				backdrop: 'static',
-				keyboard: false,
-			});
-			
-			return false;
-			
-        }       
-        
-		
-		console.log("2- agregando nueva fila.............................: ");	
-		
-		
-		
-		
-		
-		
-		
-		
-		var tipoPrograma = $("#selTipoPrograma").val();
-		var pais = "";
-		var ciudad = "";		
-		
-		var dataJson = $("#tblDestino").DataTable().rows().data();					
-		
-		
-		
-		if ( dataJson.length > 0 ) {
-			
-			var ciudadSeleccionada = ciudad = $("#selCiudadDestino option:selected").text();
-		
-			for (var i=0; i<dataJson.length; i++) {
-								
-				console.log("destino[0]: " + dataJson[i][0]);//contador
-				console.log("destino[1]: " + dataJson[i][1]);//pais
-				console.log("destino[2]: " + dataJson[i][2]);//ciudad
-				console.log("destino[3]: " + dataJson[i][3]);//boton eliminar
-				console.log("destino[4]: " + dataJson[i][4]);//id de fila
-				
-				if ( ciudadSeleccionada == dataJson[i][2] ){
-					
-					var mensaje = "La ciudad ya fue agregada, seleccione otra";
-					
-					console.log("mensaje ciudad: " + mensaje);					
-					
-					$("#mensajeClienteError").html(mensaje);
-					
-					$('#divMensajeErrorCliente').modal({
-						backdrop: 'static',
-						keyboard: false,
-					});
-					
-					return false;
-				}
-				
-			}
-		
-		}
-		
-		if (tipoPrograma == 1) {
-			parametros = "1_"+$("#selCiudadDestino option:selected").val();
-			pais = "Peru";
-			ciudad = $("#selCiudadDestino option:selected").text();
-		} else if (tipoPrograma == 2) {
-			parametros = $("#selPaisDestino option:selected").val()+"_"+$("#selPaisCiudadDestino option:selected").val();
-			pais = $("#selPaisDestino option:selected").text();
-			ciudad = $("#selPaisCiudadDestino option:selected").text();
-		}
-		
-		contadorDestinos += 1;
-			
-		var botonEliminar ="<button name='"+contadorDestinos+"' id='"+contadorDestinos+"'  type='button' class='btn btn-default' onclick='eliminarRegistroTabla(\"tblDestino\",this.name)'>";
-			 botonEliminar +="<span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
- 		
-		// columnas de la tabla destino
- 		var data = [contadorDestinos,pais,ciudad,botonEliminar,parametros];
- 		
-		// prepara y agrega nueva fila a la grilla
-		var row = $('#tblDestino').DataTable().row;		
-		row.add(data).draw( false );
-		
-	}
-	
-	function preAgregarFilaTicket(){
-		$('#mdlConfirmaRegistroTicket').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
-		//validacionTicketMsg mdlValidacionTicket	
-	}
-	
 	var contadorVuelo = 0;
-	
-	function agregarFilaTicket(){
-		
-		console.log("agregarFilaTicket.............................: ");		
-		
-		console.log("1- validacion de los campos.............................: ");
-		
-		var isSoloIda = false;
-		var txtOpcion = 'Ida y Vuelta';
-		
-		var fPartidaTicket = $("#txtFechaPartidaTicket").val();
-		var fRetornoTicket = $("#txtFechaRetornoTicket").val();
-		
-		var msgHtml = '<strong>Por favor verifique la siguiente información:</strong><br /><br />\n\n';
-		var validation = false;
-		
-		if ( fPartidaTicket == '' ) {
-			msgHtml += '- Seleccione la fecha de partida<br />\n';
-			validation = true;
-    	};
-		
-        if($("#radTipoticket2").is(":checked")) {
-        	isSoloIda = true;
-        	txtOpcion = 'Sólo ida';
-        	fRetornoTicket = '-';
-        }
-        
-        if (!isSoloIda) {        	
-        	if ( fRetornoTicket == '' ) {
-        		msgHtml += '- Seleccione la fecha de retorno<br />\n';
-        		validation = true;
-        	};        	
-        }
-        
-        var ciudadOrigenVal = $("#selCiudadOrigenTicket option:selected").val();
-		var ciudadDestinoVal = $("#selCiudadDestinoTicket option:selected").val();
-		
-		if (ciudadOrigenVal == 0) {        	        	
-       		msgHtml += '- Seleccione la ciudad de origen<br />\n';
-       		validation = true;     	
-        }
-		
-		if (ciudadDestinoVal == 0) {        	        	
-      		msgHtml += '- Seleccione la ciudad de destino<br />\n';
-      		validation = true;        	
-        }
-        
-        if ( validation ) {
-			
-			console.log("mensaje validacion: " + msgHtml);					
-			
-			$("#mensajeClienteError").html(msgHtml);
-			
-			$('#divMensajeErrorCliente').modal({
-				backdrop: 'static',
-				keyboard: false,
-			});
-			
-			return false;
-			
-        }       
-        
-		
-		console.log("2- agregando nueva fila.............................: ");	
-		
-		        
-		
-		/* var tipoTicket = $('input:radio[name=tipoTicket]:checked').val();
-		var tipoOperacion = "";
-		
-		if (tipoTicket==1){
-			tipoOperacion = "Ida/Vuelta";
-		} else {
-			tipoOperacion = "Ida";
-		} */
-		
-					
-		var ciudadOrigen = $("#selCiudadOrigenTicket option:selected").text();
-		var ciudadDestino = $("#selCiudadDestinoTicket option:selected").text();
-		
-		var paisOrigen = $("#selPaisOrigenTicket option:selected").text();
-		var paisDestino = $("#selPaisDestinoTicket option:selected").text();
-		
-		/* var cantidadAdultos = $("#txtCantidadAdultosTicket").val();
-		var cantidadNinos = $("#txtCantidadNinosTicket").val();
-		var cantidadInfantes = $("#txtCantidadInfantesTicket").val(); */
-		
-		//var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleControlAnimal()' title='Ver' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";		
-		// + "-" + $("#numeroCotizacion").val() + "-" + tipoOperacion
-		
-		var parametrosDetalle = ciudadOrigen + "-" + ciudadDestino + "-"  + 
-			fPartidaTicket  + "-" + fRetornoTicket + "-"  + 
-			ciudadOrigenVal + "-" + ciudadDestinoVal ;		
-		
-		console.log("parametrosDetalle: " + parametrosDetalle);
-		
-		//var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleControlAnimal(\""+ parametrosDetalle + "\")' title='Ver' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";		
-		//var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleVuelos(\""+ parametrosDetalle + "\")' title='Ver' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";
-				
-		contadorVuelo += 1;
-		
-		var botonEliminar ="<button name='"+contadorVuelo+"' id='"+contadorVuelo+"'  type='button' class='btn btn-default' onclick='eliminarRegistroTabla(\"tblVuelos\",this.name)'>";
-			 botonEliminar +="<span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
- 		
-		//var parametros = fPartidaTicket+","+fRetornoTicket+","+ciudadOrigenVal+","+ciudadDestinoVal+","+cantidadAdultos+","+cantidadNinos+";";
-		var parametros = fPartidaTicket+","+fRetornoTicket+","+ciudadOrigenVal+","+ciudadDestinoVal+","+ ((isSoloIda)?'1':'0')+";";
-		console.log("parametros vuelos: " + parametros);
-		
-		//tipoOperacion
-		//" " + VerDetalle
- 		var data = [contadorVuelo, txtOpcion, fPartidaTicket,fRetornoTicket,ciudadOrigen+ " ("+ paisOrigen +")", ciudadDestino + 
- 		            " ("+ paisDestino +")",botonEliminar,parametros];		
- 		var row = $('#tblVuelos').DataTable().row;
-		
-		row.add(data).draw( false );		
-						
-		$("#selCiudadOrigenTicket").empty().append('whatever');			
-		$("#selCiudadDestinoTicket").empty().append('whatever');
-				
-		$('#selPaisOrigenTicket').val(0);
-		$('#selPaisDestinoTicket').val(0);
-		
-		$("#txtFechaPartidaTicket").val("");
-		$("#txtFechaRetornoTicket").val("");
-		
-		$('#radTipoticket2').attr('checked', false);
-		
-		$("#divFechaRegreso").css("display","inline");	
-				
-		
-		
-	}
-	
 	
 
 	function eliminarRegistroTabla(tablaw, fila){
@@ -906,164 +615,6 @@
 		$("#txtObservacion").val("");
 	}
 	
-	function validarCotiPaquete() {
-		
-		console.log("Grabando cotizacion.............");	
-		
-		var msgHTML = '';
-		
-		//1- Validar Cliente
-		if ( $("#txtIdCliente").val() <= 0 || $("#txtDescripcionCliente").val() == '' ) {
-			msgHTML += 'Debe buscar un <strong>cliente. <br />';
-		}
-		
-		//2- Validar Tipo de Cotizacion							
-		if ( $("#selTipoCotizacion").val() == 0 ){
-			msgHTML += 'Debe seleccionar el <strong>tipo de cotizacion</strong> <br />';
-		}
-		
-		//3- Validar Tipo de Programa
-		if ( $("#selTipoPrograma").val() == 0 ){
-			msgHTML += 'Debe seleccionar el <strong>tipo de programa</strong> <br />';
-		}		
-		
-		//4- Fecha de partida
-		if ( $("#txtFechaPartida").val() == '' ){
-			msgHTML += 'Seleccione la <strong>fecha de partida</strong> <br />';
-		}
-		
-		//5- Fecha de salida
-		if ( $("#txtFechaRetorno").val() == '' ){
-			msgHTML += 'Seleccione la <strong>fecha de retorno</strong> <br />';
-		}
-		
-		//6- Destinos
-		var dataJson = $("#tblDestino").DataTable().rows().data();		
-		
-		if ( dataJson.length <= 0 ) {
-			msgHTML += 'Ingrese al menos un <strong>destino</strong> <br />';
-		}		
-		
-		//7- Cantidad Adultos
-		if ( $("#txtCantidadAdultos").val() == '' ){
-			msgHTML += 'Ingrese la <strong>cantidad de adultos</strong> <br />';
-		}		
-		
-		//8- Comentarios
-		if ( $("#txtObservacion").val() == '' ){
-			msgHTML += 'Ingrese un <strong>comentario</strong> <br />';
-		}				
-		
-		if ( msgHTML.length > 0 || msgHTML != '' ) {
-			
-			
-			var mensaje = "<strong>Verifique la siguiente informacion:</strong> <br /><br />" + msgHTML;
-			
-			console.log("mensaje: " + mensaje);					
-			
-			$("#mensajeClienteError").html(mensaje);
-			
-			$('#divMensajeErrorCliente').modal({
-				backdrop: 'static',
-				keyboard: false
-			}); 
-			
-			return false;
-			
-			
-		} 
-		
-		console.log("Paso las validaciones... ");	
-		
-		return true;
-		
-	}
-	
-	
-	function registrarCotiPaquete(){					
-		
-		var dataJson = $("#tblDestino").DataTable().rows().data();
-		
-		var datosDestino = "";		
-		
-		for (var i=0; i<dataJson.length; i++) {						
-			datosDestino +=  dataJson[i][4] + ",";
-		}
-		
-		console.log("Destinos: " + datosDestino);
-		
-		var datosHoteles = "";
-		
-		if($("#selServicioAdicional6").is(":checked")) {			
-			var dataJsonHoteles = $("#tblTipoHabitacion").DataTable().rows().data();
-			
-			for (var i=0; i<dataJsonHoteles.length; i++) {						
-				datosHoteles +=  dataJsonHoteles[i][4] + ",";
-			};			
-        }
-		
-		var chkValMotivoViaje = "";
-		$('input[name="motivoViajeCotiza[]"]:checked').each(function() {
-			chkValMotivoViaje += $(this).val() + ",";
-		});
-		
-		var chkValServicioAdicional = "";
-		$('input[name="servicioAdicional[]"]:checked').each(function() {
-			chkValServicioAdicional += $(this).val() + ",";
-		});
-
-		var grabarFormParams = {
-			'cotizacionBean' : formToObject( '#frmCotizacion' ),
-		};
-		
-		var idCliente = $("#txtIdCliente").val();
-		
-		var params = "?motivoViaje="+chkValMotivoViaje+"&servAdicional="+chkValServicioAdicional+"&datosDestino="+datosDestino+"&idCliente="+idCliente+"&datosHoteles="+datosHoteles;
-		
-		console.log( "GET params: " + params );
-		
-		$("#txtNroCotizacion").html("");
-		$("#inpNuCotizacion").val(0);
-		
-		$.ajax({
-            //url: '${pageContext.request.contextPath}/grabarTransaccionCotizacion?motivoViaje='+chkValMotivoViaje+"&servAdicional"+chkValServicioAdicional,
-			url: '${pageContext.request.contextPath}/grabarCotiPaquete'+params,
-           	data: JSON.stringify(grabarFormParams),
-            cache: false,
-            async: true,
-            type: 'POST',
-            contentType : "application/json; charset=utf-8",
-            dataType: 'json',
-            success: function(response) {
-                
-            	console.log("response******************************");
-            	console.log(response);
-            	
-            	console.log("Numero Cotizacion");
-            	console.log(response.dataJson.nroCotizacion);
-            	
-            	$("#txtNroCotizacion").html(response.dataJson.nroCotizacion);  
-            	$("#inpNuCotizacion").val(response.dataJson.nroCotizacion);
-            	
-				//alert("response: "+ response);
-				
-				$("#divRegistroOK").modal({
-					backdrop: 'static',
-					keyboard: false
-				});
-				
-				return false;
-                
-            },
-            error: function(data, textStatus, errorThrown) {
-            	//alert(data);
-            	//alert(textStatus);
-            	//alert(errorThrown);
-            }
-        });
-	}
-	
-	
 	function cargarConfirmacionRegistro(e){
 		
 		e.preventDefault();
@@ -1074,64 +625,6 @@
 		});
 			
 	}
-	
-	function validarCotiTicket() {		
-			
-			console.log("Grabando cotizacion (Ticket).............");	
-			
-			var msgHTML = '';
-			
-			//1- Validar Cliente
-			if ( $("#txtIdCliente").val() <= 0 || $("#txtDescripcionCliente").val() == '' ) {
-				msgHTML += 'Debe buscar un cliente. <br />';
-			}
-			
-			//2- Validar Tipo de Cotizacion							
-			if ( $("#selTipoCotizacion").val() == 0 ){
-				msgHTML += 'Debe seleccionar el tipo de cotizacion. <br />';
-			}
-			
-			//6- Vuelos
-			var dataJson = $("#tblVuelos").DataTable().rows().data();		
-			
-			if ( dataJson.length <= 0 ) {
-				msgHTML += 'Ingrese al menos un vuelo. <br />';
-			}		
-			
-			//7- Cantidad Adultos
-			if ( $("#txtCantidadAdultosTicket").val() == '' ){
-				msgHTML += 'Ingrese la cantidad de adultos. <br />';
-			}		
-			
-			//8- Comentarios
-			if ( $("#txtObservacionTicket").val() == '' ){
-				msgHTML += 'Ingrese un comentario. <br />';
-			}				
-			
-			if ( msgHTML.length > 0 || msgHTML != '' ) {				
-				
-				var mensaje = "Verifique la siguiente informacion: <br /><br />" + msgHTML;
-				
-				console.log("mensaje: " + mensaje);					
-				
-				$("#mensajeClienteError").html(mensaje);
-				
-				$('#divMensajeErrorCliente').modal({
-					backdrop: 'static',
-					keyboard: false,
-				}); 
-				
-				return false;
-				
-				
-			} 
-			
-			console.log("Paso las validaciones... ");	
-			
-			return true;
-					
-	}
-	
 	
 	function registrarReserva(){
 		
@@ -1199,31 +692,17 @@
                 
             },
             error: function(data, textStatus, errorThrown) {
-            	//alert(data);
-            	//alert(textStatus);
-            	//alert(errorThrown);
+            	
             },
         });
 	}
 	
-	var vuelosListParams = {};
-	
-	function buscarVuelos() {
-		console.log("***********************************************************************");
-		console.log("buscar vuelos");
+	function buscarPasajero(){
 		
-		$("#infoDetalleVuelos").html("");		
-		$("#botonGrabarVuelos").css("display", "none");
-		$("#botonEnviarCotizacion").css("display", "none");
-		$("#contenedorDetalleVuelos").css("display", "none");
-		
-		var nroCotizacion = $("#inpNuCotizacion").val();
-		
-		console.log("Numero Cotizacion");
-		console.log(nroCotizacion);		
+		var numeroDocumento = $("#txtNumeroDocumentoPasajero").val();
 		
 		$.ajax({
-			url: '${pageContext.request.contextPath}/buscarVuelos?nroCotizacion='+nroCotizacion,
+			url: '${pageContext.request.contextPath}/buscarPasajero?numeroDocumento='+numeroDocumento,
 			cache: false,
 			async: true,
 			type: 'GET',
@@ -1231,109 +710,29 @@
 			dataType: 'json',
             success: function(response) {
             	
-            	console.log("respuesta buscar vuelos");
-            	console.log(response);
-            	console.log(response.dataJson.detalleVuelos);
-            	console.log(response.dataJson.listaVuelos);
-            	console.log(response.dataJson.cantidadVuelos);
-            	
-            	var mensajeDetalleVuelos = "";
-            	
-            	if ( response.dataJson.cantidadVuelos > 0 ){
-            	
-	            	vuelosListParams = response.dataJson.listaVuelos;
-	            	
-	            	console.log("transform");
-	            	console.log(vuelosListParams);
-	            	
-	            	mensajeDetalleVuelos = response.dataJson.detalleVuelos;
-	            	
-	            	$("#botonGrabarVuelos").css("display", "inline");
-	            	//$("#botonBuscarVuelos").css("", "");
-            	
-            	} else {
-            		mensajeDetalleVuelos = "No se encontraron vuelos disponibles";
-            	}
-            	
-            	$("#contenedorDetalleVuelos").css("display", "inline");
-            	$("#infoDetalleVuelos").html(mensajeDetalleVuelos);            	
-            	
+				var rpta = response.dataJson;
+				
+				$("#txtNombresPasajero").val( "" );
+				$("#txtApellidosPasajero").val( "" );
+					
+				if (rpta.resultado == 1) {
+					$("#txtNombresPasajero").val( rpta.nombresPasajero );
+					$("#txtApellidosPasajero").val( rpta.apellidosPasajero );
+				} else {
+					$("#divBusquedaPasajero").modal({
+						backdrop: 'static',
+						keyboard: false,
+					});
+				}
+				
             },
             error: function(data, textStatus, errorThrown) {
-            	//alert(data);
-            	//alert(textStatus);
-            	//alert(errorThrown);
+            	
             },
         });
+	
 	}
 	
-	function grabarVuelos(){		
-		console.log("grabar vuelos");
-		
-		console.log(vuelosListParams);
-		
-		var nroCotizacion = $("#txtNroCotizacion").text();
-		$("#botonEnviarCotizacion").css("display", "none");
-		$("#mensajeEnvioCotizacion").css("display", "none");
-		$("#mensajeEnvioCotizacion").html("");
-		$("#mensajeGrabarCotizacion").html("");
-		
-		$.ajax({
-			url: '${pageContext.request.contextPath}/grabarVuelos?nroCotizacion='+nroCotizacion,
-			cache: false,
-			async: true,
-			type: 'GET',
-			contentType : "application/json; charset=utf-8",
-			dataType: 'json',
-            success: function(response) {
-            	console.log("respuesta grabar vuelos");
-            	console.log(response);
-            	console.log(response.dataJson);
-            	$("#botonGrabarVuelos").css("display", "none");
-            	$("#botonBuscarVuelos").css("display", "none");
-            	$("#botonEnviarCotizacion").css("display", "inline");
-            	
-            	$("#mensajeGrabarCotizacion").css("display", "inline");
-            	$("#mensajeGrabarCotizacion").html("Vuelo registrado en la cotizacion");
-            },
-            error: function(data, textStatus, errorThrown) {
-            	//alert(data);
-            	//alert(textStatus);
-            	//alert(errorThrown);
-            },
-        });
-	}
-	
-	function enviarVuelos(){
-		console.log("enviar vuelos");
-		var idCotizacion = $("#inpIdCotizacion").val();
-		$.ajax({
-			url: '${pageContext.request.contextPath}/enviarPaquete?idCotizacion='+idCotizacion,
-			cache: false,
-			async: true,
-			type: 'GET',
-			contentType : "application/json; charset=utf-8",
-			dataType: 'json',
-            success: function(response) {
-            	
-            	console.log("respuesta enviar vuelos");
-            	console.log(response);
-            	console.log(response.dataJson);
-            	
-            	$("#botonEnviarCotizacion").css("display", "none");            	
-            	$("#mensajeEnvioCotizacion").css("display", "inline");
-        		$("#mensajeEnvioCotizacion").html("Cotizacion enviada");
-            	
-            },
-            error: function(data, textStatus, errorThrown) {
-            	//alert(data);
-            	//alert(textStatus);
-            	//alert(errorThrown);
-            },
-        });
-	}
-	
-
 	function buscarCotizacion(){
 		var params = "";
 		var nuCoti = $("#txtNumeroCotizacion").val();
@@ -1350,69 +749,103 @@
                 
 				var rpta = response.dataJson;
 				
-				if ( rpta.status == 1 ) {
-									
-					$("#txtNombreCliente").val(rpta.nombreCliente);
-					$("#txtNumeroDocumento").val(rpta.documentoCliente);
-					$("#txtDireccionCliente").val(rpta.direccionCliente);
-					$("#txtTelefonoCliente").val(rpta.telefonoCliente);
-					$("#txtFechaCotizacion").val(rpta.fechaCotizacion);
-					$("#txtTipoCotizacion").val(rpta.tipoCotizacion);
-					$("#txtEstadoCotizacion").val(rpta.estadoCotizacion);
-					$("#txtNumeroAdultos").val(rpta.numeroAdultos);
-					$("#txtNumeroNinos").val(rpta.numeroNinos);
-					$("#txtPrecioCotizacion").val(rpta.precioCotizacion);
-					
-					$("#txtIdCotizacion").val(rpta.idCotizacion);
-					$("#txtIdCliente").val(rpta.idCliente);
-					$("#txtIdTipoCotizacion").val(rpta.idTipoCotizacion);
-					
-					if (rpta.idTipoCotizacion == 1) {
-						var listaPaqueteTuristico = [];
-						
-						if (rpta.listaPaqueteTuristico != null) {
-							listaPaqueteTuristico = rpta.listaPaqueteTuristico;
-						}
-						$("#divTblPaqueteTuristico").show();
-						$("#divTblTicketAereo").hide();
-						construirTablaListaPaqueteTuristico(listaPaqueteTuristico);
-					} else {
-						var listaTicketAereo = [];
-						
-						if (rpta.listaTicketAereo != null) {
-							listaTicketAereo = rpta.listaTicketAereo;
-						}
-						$("#divTblPaqueteTuristico").hide();
-						$("#divTblTicketAereo").show();
-						construirTablaListaTicketAereo(listaTicketAereo);
-					}
+				$("#txtNombreCliente").val("");
+				$("#txtNumeroDocumento").val("");
+				$("#txtDireccionCliente").val("");
+				$("#txtTelefonoCliente").val("");
+				$("#txtFechaCotizacion").val("");
+				$("#txtTipoCotizacion").val("");
+				$("#txtEstadoCotizacion").val("");
+				$("#txtNumeroAdultos").val("");
+				$("#txtNumeroNinos").val("");
+				$("#txtPrecioCotizacion").val("");
 				
+				
+				if (rpta.flagCotiEncontrada==1){
+					
+					$("#mensajeEstadoCotizacion").html("La cotización [" + rpta.numeroCotizacion+ "] no encuentra en estado APROBADO.");
+					
+					$("#mdlEstadoCotizacion").modal({
+						backdrop: 'static',
+						keyboard: false,
+					});
+					
+					return false;
+				}
+				
+				if (rpta.flagCotiEncontrada==2){
+					
+					$("#mensajeEstadoCotizacion").html("La cotización [" + rpta.numeroCotizacion+ "] no se encuentra registrada.");
+					
+					$("#mdlEstadoCotizacion").modal({
+						backdrop: 'static',
+						keyboard: false,
+					});
+					
+					return false;
+				}
+									
+								
+				if (rpta.flagFechaValida==0){
+				
+					$("#mensajeEstadoCotizacion").html("La fecha cotización [" + rpta.numeroCotizacion+ "] no está vigente.");
+					
+					$("#mdlEstadoCotizacion").modal({
+						backdrop: 'static',
+						keyboard: false,
+					});
+					
+					return false;
+					
+				} else {
+					if ( rpta.status == 1 ) {
+					
+						$("#txtNombreCliente").val(rpta.nombreCliente);
+						$("#txtNumeroDocumento").val(rpta.documentoCliente);
+						$("#txtDireccionCliente").val(rpta.direccionCliente);
+						$("#txtTelefonoCliente").val(rpta.telefonoCliente);
+						$("#txtFechaCotizacion").val(rpta.fechaCotizacion);
+						$("#txtTipoCotizacion").val(rpta.tipoCotizacion);
+						$("#txtEstadoCotizacion").val(rpta.estadoCotizacion);
+						$("#txtNumeroAdultos").val(rpta.numeroAdultos);
+						$("#txtNumeroNinos").val(rpta.numeroNinos);
+						$("#txtPrecioCotizacion").val(rpta.precioCotizacion);
+						
+						$("#txtIdCotizacion").val(rpta.idCotizacion);
+						$("#txtIdCliente").val(rpta.idCliente);
+						$("#txtIdTipoCotizacion").val(rpta.idTipoCotizacion);
+						
+						if (rpta.idTipoCotizacion == 1) {
+							var listaPaqueteTuristico = [];
+							
+							if (rpta.listaPaqueteTuristico != null) {
+								listaPaqueteTuristico = rpta.listaPaqueteTuristico;
+							}
+							$("#divTblPaqueteTuristico").show();
+							$("#divTblTicketAereo").hide();
+							construirTablaListaPaqueteTuristico(listaPaqueteTuristico);
+						} else {
+							var listaTicketAereo = [];
+							
+							if (rpta.listaTicketAereo != null) {
+								listaTicketAereo = rpta.listaTicketAereo;
+							}
+							$("#divTblPaqueteTuristico").hide();
+							$("#divTblTicketAereo").show();
+							construirTablaListaTicketAereo(listaTicketAereo);
+						}
+					}
+				}
 					
 
-				} else {
 				
-					/*
-					var mensaje = rpta.mensajeCliente;
-					
-					console.log("mensaje cliente: " + mensaje);					
-					
-					$("#mensajeClienteError").html(mensaje);
-					
-					$('#divMensajeErrorCliente').modal({
-						backdrop: 'static',
-						keyboard: false
-					}); */
-					
-				}
 				
 				
 				return false;				
                 
             },
             error: function(data, textStatus, errorThrown) {
-            	//alert(data);
-            	//alert(textStatus);
-            	//alert(errorThrown);
+            	
             }
         });
 	}
@@ -1546,6 +979,24 @@
 		var apellidosPasajero = $("#txtApellidosPasajero").val();
 		var fechaNacimiento = $("#txtFechaNacimiento").val();
 		var idParentesco = $("#selParentesco").val();
+		
+		//if (idTipoDocumento = "" || numerodocPasajero = "" || nombrecliente = "" 
+			//|| apellidosPasajero = "" || fechaNacimiento = "" || idParentesco = "") {
+			
+		if (idTipoDocumento == "" || numerodocPasajero == "" || nombrecliente == "" 
+			|| apellidosPasajero == "" || fechaNacimiento == "" || idParentesco == ""
+			){
+				
+			$("#divIngresarDatosPasajero").modal({
+				backdrop: 'static',
+				keyboard: false,
+			});
+			
+			return false;
+		}
+			
+		
+		
 		var parentesco = $("#selParentesco option:selected").text();
 		var botonEliminar ="<button name='"+contadorPasajeros+"' id='"+contadorPasajeros+"'  type='button' class='btn btn-default' onclick='eliminarRegistroTabla(\"tblPasajero\",this.name)'>";
 			 botonEliminar +="<span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
@@ -1558,31 +1009,9 @@
  		var row = $('#tblPasajero').DataTable().row;
 		
 		row.add(data).draw( false );		
-					
-		
-		//$("#selParentesco").empty().append('whatever');			
-/*		$("#selCiudadDestinoTicket").empty().append('whatever');
 				
-		$('#selPaisOrigenTicket').val(0);
-		$('#selPaisDestinoTicket').val(0);
-		
-		$("#txtFechaPartidaTicket").val("");
-		$("#txtFechaRetornoTicket").val("");
-		
-		$('#radTipoticket2').attr('checked', false);
-		
-		$("#divFechaRegreso").css("display","inline");	
-				*/
-		
-		
 	}
-	
-	
-	
-	
-	
-		
-		
+			
 	function construirTablaDetalleVuelo(dataGrilla){
 		
 		var ix = 1;
@@ -1644,63 +1073,12 @@
 			]
 	    });
 		
-	}
-		
+	}	
 		
 	function cerraVerDetalle(){
 		$('#divVerDetalleControlAnimal').modal("hide");
 	}	
 		
-		
-	function guardarDetalleFareInfo(){		
-			
-			var cadenaOption = $('input:radio[name=selectConsolidador]:checked').val(); //fila, idproveedor, idaerolinea
-			
-			console.log("check? " + cadenaOption);
-			
-			var dataOption = cadenaOption.split("-");
-			
-			var rowOption = dataOption[0];
-			
-			var idProveedor = dataOption[1];
-			
-			var idAerolinea = dataOption[2];
-			
-			var dataJson = $("#tblDetalleVuelos").DataTable().rows().data();
-			
-			var comision = dataJson[rowOption-1].comision;
-			
-			var fare = dataJson[rowOption-1].fare;
-		
-			var grabarFormParams = {
-				'cotizacionBean' : formToObject( '#frmCotizacion' )
-			};
-	
-			//var params = "?datosVuelos="+datosVuelos+"&tipoCotizacion=2&flagIdaVuelta="+flagIdaVuelta+"&flagIda="+flagIda+"&flagRuta="+flagRuta;
-			var params = "?idProveedor="+idProveedor+"&idAerolinea="+idAerolinea+"&fare="+fare;
-			
-			console.log ("params?guardarDetalleFareInfo? " + params );
-			
-			$.ajax({
-				url: '${pageContext.request.contextPath}/grabarDetalleVuelos'+params,
-	           	data: JSON.stringify(grabarFormParams),
-	            cache: false,
-	            async: true,
-	            type: 'POST',
-	            contentType : "application/json; charset=utf-8",
-	            dataType: 'json',
-	            success: function(response) {
-	                
-	            	cerraVerDetalle();
-			
-	                
-	            },
-	            error: function(data, textStatus, errorThrown) {
-	            	
-	            }
-	        });
-		
-	}
 	
 </script>
 
@@ -1780,7 +1158,7 @@
 										<input type="text" name="idTipoCotizacion" id="txtIdTipoCotizacion" />
 									</div>
 								
-									<div class="col-sm-3" style="text-align:right; font-weight:bold">${idCotizacion} - Fecha Cotizaci&oacute;n:</div>
+									<div class="col-sm-3" style="text-align:right; font-weight:bold">Fecha Cotizaci&oacute;n:</div>
 									<div class="col-sm-3">
 										<input type="text" name="fechaCotizacion" id="txtFechaCotizacion" class="form-control tamanoMaximo" readonly="yes" />
 									</div>
@@ -1889,9 +1267,14 @@
 												</select>
 											</div>
 											
-											<div class="col-sm-3" style="text-align:right; font-weight:bold">N&uacute;mero Documento:</div>
-											<div class="col-sm-3">
+											<div class="col-sm-2" style="text-align:right; font-weight:bold">N&uacute;mero Documento:</div>
+											<div class="col-sm-2">
 												<input type="text" name="numeroDocumento" id="txtNumeroDocumentoPasajero" class="form-control tamanoMaximo" />
+											</div>
+											
+											<div class="col-sm-2" style="text-align:right; font-weight:bold">
+												<button id="btnCerrar" type="button" class="btn btn-primary centro" onclick="buscarPasajero()"
+												title="Cerrar">Buscar Pasajero</button>
 											</div>
 										</div>
 										
@@ -2042,6 +1425,23 @@
 	</div>
 </div>
 
+<div id="mdlEstadoCotizacion" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="panel panel-info">
+			<div class="panel-heading"> <strong>Mensaje:</strong></div>
+			<div class="panel-body">
+				<div class="modal-body"> <p class="text-center" id="mensajeEstadoCotizacion"></p></div>
+				<div class="modal-footer">
+					<div class="col-sm-12" align="center">
+						<input type="button" class="btn btn-primary" intermediateChanges="false" data-dismiss="" value="Aceptar"
+							onclick="$('#mdlEstadoCotizacion').modal('hide');" id="btnGrabaRegistro"></input>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div id="mdlValidacionTicket" class="modal fade" role="dialog">
 	<div class="modal-dialog">
 		<div class="panel panel-info">
@@ -2059,6 +1459,39 @@
 	</div>
 </div>
 
+
+<div id="divIngresarDatosPasajero" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="panel panel-info">
+			<div class="panel-heading"> <strong>B&uacte;squeda Pasajero</strong></div>
+			<div class="panel-body">
+				<div class="modal-body"> <p class="text-center" id="mensajeClienteError">Por favor ingresar los datos del pasajero</p></div>
+				<div class="modal-footer">
+					<div class="col-sm-12" align="center">					
+						<input type="button" id="btnRegistro" class="btn btn-primary" onclick="$('#divIngresarDatosPasajero').modal('hide');" value="Aceptar"/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div id="divBusquedaPasajero" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="panel panel-info">
+			<div class="panel-heading"> <strong>B&uacte;squeda Pasajero</strong></div>
+			<div class="panel-body">
+				<div class="modal-body"> <p class="text-center" id="mensajeClienteError">El pasajero no existe</p></div>
+				<div class="modal-footer">
+					<div class="col-sm-12" align="center">					
+						<input type="button" id="btnRegistro" class="btn btn-primary" onclick="$('#divBusquedaPasajero').modal('hide');" value="Aceptar"/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 <div id="divMensajeErrorCliente" class="modal fade" role="dialog">
 	<div class="modal-dialog">

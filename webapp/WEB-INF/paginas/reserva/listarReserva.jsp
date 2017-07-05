@@ -285,7 +285,7 @@
 	function enviarReservaCliente(){
 			
 		var idReserva = $("#idReservaDetalle").html();
-		var numReserva = $("#divNumeroReserva").html();
+		var numReserva = $("#divNumReservaDetalle").html();
 		
 			
 		$.ajax({
@@ -298,17 +298,31 @@
 			success: function(response) {
 				
 				var rpta = response.dataJson;
-				$("#divNumeroReserva").html(rpta.numReserva);
 				
-				var mensaje = "Se actualizó la reserva [" + rpta.numReserva + "] al estado Emitido.";
-				$("#msjEnviaReserva").html(mensaje);
-				
-				$('#divVerDetalleReserva').modal("hide");
-				
-				$("#mdlEnviaReservaCliente").modal({
-					backdrop: 'static',
-					keyboard: false
-				});
+				if (rpta.flagValidaCorreo == 1) {
+					
+					$("#divVerDetalleReserva").modal("hide");
+					
+					$("#mdlValidaCorreoCliente").modal({
+						backdrop: 'static',
+						keyboard: false
+					});
+					
+				} else {
+					$("#divNumeroReserva").html(rpta.numReserva);
+					
+					$("#divVerDetalleReserva").modal("hide");
+					
+					var mensaje = "Se actualizó la reserva [" + rpta.numReserva + "] al estado Emitido.";
+					$("#msjEnviaReserva").html(mensaje);
+					
+					
+					$("#mdlEnviaReservaCliente").modal({
+						backdrop: 'static',
+						keyboard: false
+					});
+				}
+					
 				
 			},
 			error: function(data, textStatus, errorThrown) {
@@ -411,7 +425,7 @@
 												
 												<label class="col-sm-2 control-label alignDerecha">Estado:</label>
 												<div class="col-sm-2">
-													<select name="idEstado" id="selcodigoEstadoCotizacion" class="form-control tamanoMaximo"> 
+													<select name="idEstadoReserva" id="selcodigoEstadoCotizacion" class="form-control tamanoMaximo"> 
 														<option value="">--- Seleccione ---</option>
 														<option value="12">Confirmado</option>
 														<option value="13">Emitido</option> 
@@ -505,6 +519,25 @@
 		</div>
 	</div>
 </div>
+
+
+<div id="mdlValidaCorreoCliente" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="panel panel-info">
+			<div class="panel-heading"> <strong>Cliente no tiene correo electrónico:</strong></div>
+			<div class="panel-body">
+				<div class="modal-body"> <p class="text-center">El cliente no tiene registrado un correo electr&oacute;nico<br />No se puede enviar la reserva.</p></div>
+				<div class="modal-footer">
+					<div class="col-sm-12" align="center">
+						<input type="button" class="btn btn-primary" intermediateChanges="false" data-dismiss="" value="Aceptar"
+							onclick="cerrarPopupReserva();"></input>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <div id="mdlEnviaReservaCliente" class="modal fade" role="dialog">
 	<div class="modal-dialog">
