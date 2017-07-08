@@ -273,6 +273,7 @@
         <result property="idCliente"               column="id_cliente" />
         <result property="tipoDocu"                column="tipo_doc" />
         <result property="nuDocumento"                 column="nu_documento" />
+        <result property="nomAerolinea"            column="nomAerolinea" />
     </resultMap>
     
 	<select id="listarCotizacion" parameterClass="cotizacionBean" resultMap="resultCotizacion">
@@ -849,7 +850,11 @@
 		    td.descripcion as tipo_doc, cl.nu_documento,
 		    ifnull(co.im_precio, 0) as im_precio,
 		    co.nu_adultos, co.nu_ninos,
-		    cl.id_cliente, td.descripcion as tipo_doc, cl.nu_documento
+		    cl.id_cliente, td.descripcion as tipo_doc, cl.nu_documento,
+		    (Select a.nombre from cotizacion_deta_ticket AS cticket
+                INNER JOIN aerolinea AS a ON (cticket.id_aerolinea=a.id_aerolinea)
+                WHERE (cticket.id_cotiza=c.id_cotiza AND cticket.id_destino=dc.id_destino_ciudad)
+                LIMIT 1) AS nomAerolinea
 		FROM `cotizacion_deta` AS c  	
 			INNER JOIN `cotizacion` AS co ON ( co.nu_cotiza=c.id_cotiza )
 			LEFT JOIN destino_ciudad AS dcorigen ON (c.id_destino_origen=dcorigen.id_destino_ciudad)
