@@ -376,22 +376,6 @@ public class CotizacionController {
 								0).getTipoDocu());
 						cotizacionBean.setDocumentoCliente(listCotDetDestBean
 								.get(0).getNuDocumento());
-						PaqueteTuristicoBean paqueteTuristicoBean = new PaqueteTuristicoBean();
-						paqueteTuristicoBean.setIdPaquete(listCotDetDestBean
-								.get(0).getIdPaqueteTuristico());
-						paqueteTuristicoBean.setFeInicio(listCotDetDestBean
-								.get(0).getFePartida());
-						paqueteTuristicoBean.setFeFin(listCotDetDestBean.get(0)
-								.getFeRetorno());
-						paqueteTuristicoBean.setNombre(listCotDetDestBean
-								.get(0).getNombrePaqueteTuristico());
-						paqueteTuristicoBean
-								.setCantidadPasajeros(listCotDetDestBean.get(0)
-										.getNuAdultos()
-										+ listCotDetDestBean.get(0)
-												.getNuNinos());
-						cotizacionBean
-								.setPaqueteTuristico(paqueteTuristicoBean);
 						cotizacionBean.setPrecioTotal(listCotDetDestBean.get(0)
 								.getImPrecio());
 						System.out.println("[cotizacionBean] "

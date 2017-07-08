@@ -22,6 +22,16 @@ public class CotizacionDetalleDestinosBean {
 	private String nomTour;
 	private String nomHotel;
 	private String nomAerolinea;
+	
+	private int idCotizaDeta;
+	private String ciudadOrigen;
+	private String ciudadDestino;
+	 private String isoOrigen;
+	 private String isoDestino;
+	 private int idOrigen;
+	 private int idDestino;
+	 private int tiIda;
+	 private String vuelo;
 
 	public int getIdCotiza() {
 		return idCotiza;
@@ -181,6 +191,78 @@ public class CotizacionDetalleDestinosBean {
 
 	public void setIdCliente(int idCliente) {
 		this.idCliente = idCliente;
+	}
+
+	public int getIdCotizaDeta() {
+		return idCotizaDeta;
+	}
+
+	public void setIdCotizaDeta(int idCotizaDeta) {
+		this.idCotizaDeta = idCotizaDeta;
+	}
+
+	public String getCiudadOrigen() {
+		return ciudadOrigen;
+	}
+
+	public void setCiudadOrigen(String ciudadOrigen) {
+		this.ciudadOrigen = ciudadOrigen;
+	}
+
+	public String getCiudadDestino() {
+		return ciudadDestino;
+	}
+
+	public void setCiudadDestino(String ciudadDestino) {
+		this.ciudadDestino = ciudadDestino;
+	}
+
+	public String getIsoOrigen() {
+		return isoOrigen;
+	}
+
+	public void setIsoOrigen(String isoOrigen) {
+		this.isoOrigen = isoOrigen;
+	}
+
+	public String getIsoDestino() {
+		return isoDestino;
+	}
+
+	public void setIsoDestino(String isoDestino) {
+		this.isoDestino = isoDestino;
+	}
+
+	public int getIdOrigen() {
+		return idOrigen;
+	}
+
+	public void setIdOrigen(int idOrigen) {
+		this.idOrigen = idOrigen;
+	}
+
+	public int getIdDestino() {
+		return idDestino;
+	}
+
+	public void setIdDestino(int idDestino) {
+		this.idDestino = idDestino;
+	}
+
+	public int getTiIda() {
+		return tiIda;
+	}
+
+	public void setTiIda(int tiIda) {
+		this.tiIda = tiIda;
+	}
+
+	public String getVuelo() {
+		return vuelo;
+	}
+
+	public void setVuelo(String vuelo) {
+		this.vuelo = vuelo;
 	}
 
 }

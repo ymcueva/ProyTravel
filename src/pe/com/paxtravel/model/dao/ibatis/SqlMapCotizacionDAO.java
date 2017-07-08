@@ -228,6 +228,7 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements
 				"cotizacion.listarCotizacionPaqueteDestinos", cotizacionId);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CotizacionDetalleDestinosBean> listarCotizacionTicketDestinos(
 			int cotizacionId) {

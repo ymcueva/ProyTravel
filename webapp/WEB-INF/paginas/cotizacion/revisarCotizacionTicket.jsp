@@ -83,7 +83,7 @@
 		inicia();
 		listaDestinos = ${listaDestinos};
 
-		//construirTablaListaDestinos(listaDestinos);
+		construirTablaListaDestinos(listaDestinos);
 
 		$("#btnProcesarPago").on('click', function(e) {
 			e.preventDefault();
@@ -215,15 +215,15 @@
 								url : "/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/plug-ins/1.10.7/i18n/Spanish.json"
 							},
 							columns : [ {
-								data : "descripcionCiudad"
-							}, {
-								data : "nomTour"
-							}, {
-								data : "nomHotel"
+								data : "fePartida"
 							}, {
 								data : "nomAerolinea"
 							}, {
-								data : "nombreProveedor"
+								data : "ciudadOrigen"
+							}, {
+								data : "ciudadDestino"
+							}, {
+								data : "imPrecio"
 							} ]
 						});
 	}
@@ -704,14 +704,14 @@
 												</div>
 											</div>
 											<div class="form-group">
-												<label class="control-label col-sm-2">Precio Total</label>
-												<div class="col-sm-2">
-													<label class="form-control">${cotizacionBean.precioTotal}</label>
-												</div>
 												<label class="control-label col-sm-2">Cantidad
 													Pasajeros</label>
 												<div class="col-sm-2">
 													<label class="form-control">${cotizacionBean.paqueteTuristico.cantidadPasajeros}</label>
+												</div>
+												<label class="control-label col-sm-4">Precio Total</label>
+												<div class="col-sm-2">
+													<label class="form-control">${cotizacionBean.precioTotal}</label>
 												</div>
 											</div>
 
@@ -733,32 +733,16 @@
 																						style="width: 100%">
 																						<thead>
 																							<tr>
-																								<th width="20%" class="text-center">Descripción
+																								<th width="20%" class="text-center">Fecha Partida
 																								</th>
-																								<th width="20%" class="text-center">Tour</th>
-																								<th width="10%" class="text-center">Hotel</th>
-																								<th width="10%" class="text-center">Aerolinea
+																								<th width="20%" class="text-center">Aerolinea</th>
+																								<th width="10%" class="text-center">Origen</th>
+																								<th width="10%" class="text-center">Destino
 																								</th>
-																								<th width="10%" class="text-center">Proveedor
+																								<th width="10%" class="text-center">Precio
 																								</th>
 																							</tr>
 																						</thead>
-																						<!-- <tbody>
-																							<tr role="row" class="odd" align="center"
-																								rowclasses="tableOddRow">
-																								<td>Alguna desc 1</td>
-																								<td>20-05-2017</td>
-																								<td>Proveedor 1</td>
-																								<td>item1 item2 item3</td>
-																							</tr>
-																							<tr role="row" class="odd" align="center"
-																								rowclasses="tableOddRow">
-																								<td>Alguna desc 2</td>
-																								<td>20-05-2017</td>
-																								<td>Proveedor 2</td>
-																								<td>item1 / item2 / item3</td>
-																							</tr>
-																						</tbody> -->
 																					</table>
 																				</div>
 																			</div>
