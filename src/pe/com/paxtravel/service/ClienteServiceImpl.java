@@ -15,4 +15,17 @@ public class ClienteServiceImpl implements ClienteService {
 		return clienteDAO.obtenerCliente(idCliente);
 	}
 
+	public ClienteDAO getClienteDAO() {
+		return clienteDAO;
+	}
+
+	public void setClienteDAO(ClienteDAO clienteDAO) {
+		this.clienteDAO = clienteDAO;
+	}
+
+	@Override
+	public int actualizarFlagValidacionEmail(ClienteBean clienteBean) {
+		return clienteDAO.actualizarFlagValidacionEmail(clienteBean);
+	}
+
 }

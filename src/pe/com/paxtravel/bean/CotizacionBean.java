@@ -71,6 +71,7 @@ public class CotizacionBean {
 
 	private int cantidadAdultosTicket;
 	private int cantidadNinosTicket;
+	private int cantidadPasajeros;
 
 	public int getCantidadAdultosTicket() {
 		return cantidadAdultosTicket;
@@ -551,6 +552,14 @@ public class CotizacionBean {
 
 	public void setPrecioTotal(double precioTotal) {
 		this.precioTotal = precioTotal;
+	}
+
+	public int getCantidadPasajeros() {
+		return cantidadPasajeros;
+	}
+
+	public void setCantidadPasajeros(int cantidadPasajeros) {
+		this.cantidadPasajeros = cantidadPasajeros;
 	}
 
 }

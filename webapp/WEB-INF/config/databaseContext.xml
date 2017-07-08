@@ -65,6 +65,11 @@
 		<property name="sqlMapClient" ref="SqlMapClientConfig" />
 	</bean>
 	
+	<bean id="ClienteDAO" class="pe.com.paxtravel.model.dao.ibatis.SqlMapClienteDAO">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sqlMapClient" ref="SqlMapClientConfig" />
+	</bean>
+	
 	<!-- BEANS NECESARIOS PARA LA INJECCION DE DAO -->
 	<!-- Injeccion del bean persona dao en el controllador de PersonaController -->
 	<bean id="empleadoService" class="pe.com.paxtravel.service.EmpleadoServiceImpl">
@@ -101,6 +106,10 @@
 	
 	<bean id="pagologService" class="pe.com.paxtravel.service.PagoLogServiceImpl">
 		<property name="pagoLogDAO"> <ref bean="PagoLogDAO" /> </property>
+	</bean>
+	
+	<bean id="clienteService" class="pe.com.paxtravel.service.ClienteServiceImpl">
+		<property name="clienteDAO"> <ref bean="ClienteDAO" /> </property>
 	</bean>
 
 	<!-- Para recoger la configuracion de la base de datos de nuestro fichero properties -->

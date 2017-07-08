@@ -10,5 +10,7 @@ public interface ClienteDAO {
 
 	ClienteBean obtenerCliente(int idCliente);
 	// void listaCliente();
+	
+	int actualizarFlagValidacionEmail(ClienteBean clienteBean);
 
 }

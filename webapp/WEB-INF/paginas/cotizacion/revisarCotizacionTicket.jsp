@@ -707,7 +707,7 @@
 												<label class="control-label col-sm-2">Cantidad
 													Pasajeros</label>
 												<div class="col-sm-2">
-													<label class="form-control">${cotizacionBean.paqueteTuristico.cantidadPasajeros}</label>
+													<label class="form-control">${cotizacionBean.cantidadPasajeros}</label>
 												</div>
 												<label class="control-label col-sm-4">Precio Total</label>
 												<div class="col-sm-2">

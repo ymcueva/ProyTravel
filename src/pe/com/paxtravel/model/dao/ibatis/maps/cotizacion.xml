@@ -222,6 +222,7 @@
         <result property="idTipoPrograma" column="id_tipo_programa" />
         <result property="idTipoCotizacion" column="id_tipo_cotiza" />
         <result property="estado" column="no_estado" />
+        <result property="idCliente" column="id_cliente" />
     </resultMap>
     
     <resultMap id="resultCotPatTurDestinos" class="cotizacionDetalleDestinosBean">
@@ -787,7 +788,8 @@
             observacion, 
             id_tipo_programa, 
             id_tipo_cotiza,
-            e.no_estado
+            e.no_estado,
+            id_cliente
         FROM 
             cotizacion c inner join estado e on c.id_estado = e.id_estado
         WHERE 

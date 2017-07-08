@@ -5,5 +5,7 @@ import pe.com.paxtravel.bean.ClienteBean;
 public interface ClienteService {
 	
 	ClienteBean obtenerCliente(int idCliente);
+	
+	int actualizarFlagValidacionEmail(ClienteBean clienteBean);
 
 }
