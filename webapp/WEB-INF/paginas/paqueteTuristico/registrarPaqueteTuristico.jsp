@@ -185,11 +185,21 @@
 					
 					//Mostrando datos del vuelo
 					if(idAerolinea != "0") {
+						
+						var precio = row.find('input[id="tmp_precioAerolinea"]').val();
+						
+						var adultos = parseInt($("#txtcantAdultos").val());
+						var ninos = parseInt($("#txtcantNinos").val());
+						var personas = parseInt(adultos + ninos);
+						var preciofinal = parseFloat(precio) * parseInt(personas);
+						
+						
+						
 						var verEliminarVuelo = "<span> <a href='javascript:;' onclick='eliminarVuelo(this)' title='Eliminar' ><span class='glyphicon glyphicon-trash'></span></a> </span>";
 						
 						detalleAerolinea = "Aerolinea: " + row.find('input[id="tmp_nomAerolinea"]').val();
 						detalleAerolinea+= "<br />";
-						detalleAerolinea+= "Precio: " + row.find('input[id="tmp_precioAerolinea"]').val();
+						detalleAerolinea+= "Precio: " + preciofinal;
 						detalleAerolinea+= "<br />";
 						detalleAerolinea+= "Comision: " + row.find('input[id="tmp_comision"]').val();
 						
@@ -310,6 +320,13 @@
 			var destino = $("#hdnRowDestino").val();
 			var aerolinea = tr.find("td").eq(1).text();
 			var precio = tr.find("td").eq(2).text();
+			
+			var adultos = parseInt($("#txtcantAdultos").val());
+			var ninos = parseInt($("#txtcantNinos").val());
+			var personas = parseInt(adultos + ninos);
+			var preciofinal = parseFloat(precio) * parseInt(personas);
+			
+			
 			var comision = tr.find("td").eq(4).text();
 			
 			
@@ -322,7 +339,7 @@
 				
 				if(destinoRow == destino) {
 					row.find('input[id="tmp_idAerolinea"]').val(idaerolinea);
-					row.find('input[id="tmp_precioAerolinea"]').val(precio);
+					row.find('input[id="tmp_precioAerolinea"]').val(preciofinal);
 					row.find('input[id="tmp_idProveedorAerolinea"]').val(idproveedor);
 					row.find('input[id="tmp_urlAerolinea"]').val(urlaerolinea);
 					row.find('input[id="tmp_comision"]').val(comision);
@@ -335,7 +352,7 @@
 					
 					detalle = "Aerolinea: " + aerolinea;
 					detalle+= "<br />";
-					detalle+= "Precio: " + precio;
+					detalle+= "Precio: " + preciofinal;
 					detalle+= "<br />";
 					detalle+= "Comision: " + comision;
 					detalle+= "<br />";
@@ -1209,9 +1226,15 @@
 				var numOrden = $("#txtcodOrden").val();
 				
 				var cotizacion = $("#hdnIdCotizacion").val();
+				$("#txtTotalGasto").val("0");
+				$("#hdnTotalTour").val("0");
+				$("#hdnTotalTicket").val("0");
+				$("#hdnTotalHotel").val("0");
 				
 				if(cotizacion == "0" && busInteligente == 1) {
 					$("#mensajeClienteError").html("Debe tener una cotización asociada para realizar la busqueda historica");
+					$("#chkPropuesta").prop("checked", false);
+					$("#chkPropuesta").attr('disabled','disabled');
 					
 					$('#divMensajeErrorCliente').modal({
 						backdrop: 'static',
@@ -1361,11 +1384,21 @@
 									
 									//Mostrando datos del vuelo
 									if(idAerolinea != "0") {
+										
+										var precio = row.find('input[id="tmp_precioAerolinea"]').val();
+										
+										var adultos = parseInt($("#txtcantAdultos").val());
+										var ninos = parseInt($("#txtcantNinos").val());
+										var personas = parseInt(adultos + ninos);
+										var preciofinal = parseFloat(precio) * parseInt(personas);
+										
+										
+										
 										var verEliminarVuelo = "<span> <a href='javascript:;' onclick='eliminarVuelo(this)' title='Eliminar' ><span class='glyphicon glyphicon-trash'></span></a> </span>";
 										totalTicket = totalTicket + parseFloat(row.find('input[id="tmp_precioAerolinea"]').val());
 										detalleAerolinea = "Aerolinea: " + row.find('input[id="tmp_nomAerolinea"]').val();
 										detalleAerolinea+= "<br />";
-										detalleAerolinea+= "Precio: " + row.find('input[id="tmp_precioAerolinea"]').val();
+										detalleAerolinea+= "Precio: " + preciofinal;
 										detalleAerolinea+= "<br />";
 										detalleAerolinea+= "Comision: " + row.find('input[id="tmp_comision"]').val();
 										detalleAerolinea+= verEliminarVuelo;
@@ -1826,6 +1859,7 @@
 			}
 			
 			$('#txtTotalGasto').removeAttr('disabled');
+			$("#chkPropuesta").removeAttr('disabled');
 			
 			
 			
