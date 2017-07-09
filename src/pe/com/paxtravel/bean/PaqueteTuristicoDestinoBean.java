@@ -6,6 +6,8 @@ public class PaqueteTuristicoDestinoBean {
 	private int idDestinoCiudad;
 	private int item;
 	private int nuDias;
+	private String feEstadia;
+	
 	public int getIdPaqueteDestino() {
 		return idPaqueteDestino;
 	}
@@ -35,6 +37,12 @@ public class PaqueteTuristicoDestinoBean {
 	}
 	public void setNuDias(int nuDias) {
 		this.nuDias = nuDias;
+	}
+	public String getFeEstadia() {
+		return feEstadia;
+	}
+	public void setFeEstadia(String feEstadia) {
+		this.feEstadia = feEstadia;
 	}
 	
 

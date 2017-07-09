@@ -1306,6 +1306,7 @@ public class PaqueteTuristicoController {
 								paqueteTuristicoDestino.setIdDestinoCiudad(Integer.parseInt(destino[0].toString()));
 								paqueteTuristicoDestino.setItem(Integer.parseInt(destino[1].toString()));
 								paqueteTuristicoDestino.setNuDias(Integer.parseInt(destino[2].toString()));
+								paqueteTuristicoDestino.setFeEstadia(destino[3].toString());
 								
 								paqueteDestino = paqueteTuristicoService.RegistrarPaqueteTuristicoDestino(paqueteTuristicoDestino);
 							}

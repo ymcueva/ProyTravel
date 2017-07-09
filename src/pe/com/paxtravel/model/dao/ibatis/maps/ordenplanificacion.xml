@@ -58,8 +58,6 @@
 			<result property="idOrigen"			    		column="id_origen" />			
 			<result property="idDestino"			    	column="id_destino" />
 			<result property="nuDias"			    	    column="nu_dias" />
-			<result property="idaVuelta"			    	column="ida_vuelta" />	
-			<result property="tiIda"			    	    column="tipo" />	
 			<result property="idCotiza"			    	    column="id_cotiza" />	
 			<result property="nuAdultos"			    	column="nu_adultos" />	
 			<result property="nuNinos"			    	    column="nu_ninos" />	
@@ -76,8 +74,6 @@
 			<result property="idOrigen"			    		column="id_origen" />			
 			<result property="idDestino"			    	column="id_destino" />
 			<result property="nuDias"			    	    column="nu_dias" />
-			<result property="idaVuelta"			    	column="ida_vuelta" />	
-			<result property="tiIda"			    	    column="tipo" />	
 			<result property="idTour"			    	    column="id_tour" />	
 			<result property="nomTour"			    	    column="destour" />	
 			<result property="nuPersonastour"			    column="personastour" />	
@@ -197,8 +193,6 @@
        			   ord.id_origen,
        			   od.id_destino,
        			   od.nu_dias,
-       			   case when od.ida_vuelta= 1 then 'Ida' when od.ida_vuelta = 0 then 'Ida y vuelta' else '' end ida_vuelta ,
-       			   od.ida_vuelta tipo,
        			   ord.id_cotiza,
        			   ord.nu_adultos,
        			   ord.nu_ninos,
@@ -222,8 +216,6 @@
        			   ord.id_origen,
        			   od.id_destino,
        			   od.nu_dias,
-       			   case when od.ida_vuelta= 1 then 'Ida' when od.ida_vuelta = 0 then 'Ida y vuelta' else '' end ida_vuelta ,
-       			   od.ida_vuelta tipo,
        			   ifnull(pt.id_tour,0) id_tour,
        			   ifnull(pt.descripcion,'') destour,
        			   ifnull(pt.nu_personas,0) personastour,

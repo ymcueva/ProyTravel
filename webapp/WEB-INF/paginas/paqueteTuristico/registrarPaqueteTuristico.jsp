@@ -178,7 +178,7 @@
 							detalleTour += verEliminarTour;
 						
 						
-						row.find("td").eq(5).html(detalleTour);
+						row.find("td").eq(4).html(detalleTour);
 					}
 					
 					
@@ -207,7 +207,7 @@
 							detalleAerolinea+= verEliminarVuelo;
 						
 						
-						row.find("td").eq(4).html(detalleAerolinea);
+						row.find("td").eq(3).html(detalleAerolinea);
 					}
 					
 					
@@ -278,7 +278,7 @@
 						if(modifica == 1)
 							detalleHotel += verEliminarHotel;
 						
-						row.find("td").eq(3).html(detalleHotel);      
+						row.find("td").eq(2).html(detalleHotel);      
 					}
 					
 			
@@ -358,7 +358,7 @@
 					detalle+= "<br />";
 					detalle+= verEliminar;
 					
-					row.find("td").eq(4).html(detalle);
+					row.find("td").eq(3).html(detalle);
 				}
 				
 				totalFilaGasto = totalFilaGasto + parseFloat(row.find('input[id="tmp_precioAerolinea"]').val());
@@ -479,7 +479,7 @@
 					detalle += "<br />";
 					detalle += verEliminar;
 					
-					row.find("td").eq(3).html(detalle);
+					row.find("td").eq(2).html(detalle);
 				}
 				
 				totalFilaGasto = totalFilaGasto + parseFloat(row.find('input[id="tmp_totalHotel"]').val());
@@ -578,7 +578,7 @@
 					
 					//row.children('td')[6].innerHTML(detalle);
 					//row.find('label[id="tmp-tour"]').text(detalle);
-					row.find("td").eq(5).html(detalle);
+					row.find("td").eq(4).html(detalle);
 				}
 				
 				totalFilaGasto = totalFilaGasto + parseFloat(row.find('input[id="tmp_totalTour"]').val());
@@ -1322,7 +1322,6 @@
 											
 									 
 									 
-									 nuevaFila+= "<td class='text-center'>" + listaOrdenDestino[i].idaVuelta + "</td>";
 									 nuevaFila+= "<td class='text-center'>" + listaOrdenDestino[i].nomDestino + "</td>";
 									 nuevaFila+= "<td class='text-left'>" + "" + "</td>";
 									 nuevaFila+= "<td class='text-left'>" + "" + "</td>";
@@ -1378,7 +1377,7 @@
 										detalleTour += "Costo :" + totalTour;
 										detalleTour += "<br />";
 										detalleTour += verEliminarTour;
-										row.find("td").eq(5).html(detalleTour);
+										row.find("td").eq(4).html(detalleTour);
 									}
 									
 									
@@ -1402,7 +1401,7 @@
 										detalleAerolinea+= "<br />";
 										detalleAerolinea+= "Comision: " + row.find('input[id="tmp_comision"]').val();
 										detalleAerolinea+= verEliminarVuelo;
-										row.find("td").eq(4).html(detalleAerolinea);
+										row.find("td").eq(3).html(detalleAerolinea);
 									}
 									
 									
@@ -1477,7 +1476,7 @@
 											detalleHotel += "<br />";
 											detalleHotel += verEliminarHotel;
 											
-											row.find("td").eq(3).html(detalleHotel);      
+											row.find("td").eq(2).html(detalleHotel);      
 										}
 										
 										
@@ -1913,7 +1912,7 @@
 				
 				//registrando destinos 
 				
-				filaDestino = destinoRow + "," + item + "," + dias;
+				filaDestino = destinoRow + "," + item + "," + dias + "," + fechaPartida;
 				
 				destinos += filaDestino + ";";
 				
@@ -2343,7 +2342,6 @@
 																		<thead>
 																			<tr>
 																				<th width="5%" class="text-center">Item</td>
-																				<th width="5%" class="text-center">Tipo</td>
 																				<th width="10%" class="text-center">Destino</td>
 																				<th width="15%" class="text-center">Hotel</td>
 																				<th width="15%" class="text-center">Vuelo</td>

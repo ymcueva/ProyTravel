@@ -404,14 +404,16 @@
 			id_paquete_turistico,
 			id_destino_ciudad,
 			item,
-			nu_dias
+			nu_dias,
+			fe_estadia
 		) 
 		VALUES 
 		(
 			#idPaqueteTuristico#,
 			#idDestinoCiudad#,
 			#item#,
-			#nuDias#		
+			#nuDias#,
+			#feEstadia#		
 		)
 		
 	</insert>
