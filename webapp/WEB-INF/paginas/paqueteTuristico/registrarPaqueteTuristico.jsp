@@ -1390,7 +1390,7 @@
 										var ninos = parseInt($("#txtcantNinos").val());
 										var personas = parseInt(adultos + ninos);
 										var preciofinal = parseFloat(precio) * parseInt(personas);
-										
+										row.find('input[id="tmp_precioAerolinea"]').val(preciofinal);
 										
 										
 										var verEliminarVuelo = "<span> <a href='javascript:;' onclick='eliminarVuelo(this)' title='Eliminar' ><span class='glyphicon glyphicon-trash'></span></a> </span>";
