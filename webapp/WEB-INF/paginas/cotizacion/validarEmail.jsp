@@ -99,7 +99,7 @@
 		};
 
 		$.ajax({
-			url : '${pageContext.request.contextPath}/validarEmail2',
+			url : '${pageContext.request.contextPath}/validarEmail',
 			data : JSON.stringify(grabarFormParams),
 			cache : false,
 			async : true,
@@ -108,9 +108,20 @@
 			dataType : 'json',
 			success : function(response) {
 				var rpta = response.dataJson; // OK
-				var rptaRes = rpta.resultadoProcesarPago;
-				console.log("respuesta procesar pago: " + rptaRes);
-				$("#resultadoProcesarPago").html(rptaRes);
+ 				var rptaRes = rpta.resultadoValidarEmail;
+// 				console.log("respuesta procesar pago: " + rptaRes);
+// 				$("#resultadoProcesarPago").html(rptaRes);
+				console.log("rpta...");
+				console.log(rptaRes);
+				if(rptaRes == "ERROR"){
+					console.log("es error");
+					$("#resultadoValidarEmail").html("El email no corresponde al cliente");
+				} else {
+					console.log("es ok redirect");
+					console.log(rpta.url);
+					window.location.replace(rpta.url);
+				}
+				console.log("saliendo del if");
 			},
 			error : function(data, textStatus, errorThrown) {
 			}
@@ -610,6 +621,10 @@
 												value="${cotizacionBean.idCliente}"> 
 											<input type="hidden" name="idCotizacion"
 												value="${cotizacionBean.idCotizacion}">
+											<div class="form-group">
+												<label class="control-label col-sm-7"
+													id="resultadoValidarEmail"></label>
+											</div>
 											<div class="form-group">
 												<label class="control-label col-sm-5">Email</label>
 												<div class="col-sm-3">

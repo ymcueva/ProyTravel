@@ -175,4 +175,11 @@ public class ClienteBean {
 		this.emailValidado = emailValidado;
 	}
 
+	@Override
+	public String toString() {
+		return "ClienteBean [idCliente=" + idCliente + ", numeroDocumento="
+				+ numeroDocumento + ", email=" + email + ", emailValidado="
+				+ emailValidado + "]";
+	}
+
 }

@@ -232,9 +232,9 @@ public class CotizacionController {
 		}
 	}
 
-	@RequestMapping(value = "/validarEmail", method = { RequestMethod.GET,
+	@RequestMapping(value = "/revisarCotizacion", method = { RequestMethod.GET,
 			RequestMethod.POST })
-	public ModelAndView validarEmail(HttpServletRequest request,
+	public ModelAndView revisarCotizacion(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(value = "cotizacionId") String cotizacionId) {
 
@@ -254,7 +254,7 @@ public class CotizacionController {
 						modelAndView.setViewName("cotizacion/validarEmail");
 						return modelAndView;
 					} else {
-						return this.revisarCotizacion(request, response,
+						return this.loadRevisarCotizacion(request, response,
 								cotizacionId);
 					}
 				}
@@ -265,9 +265,9 @@ public class CotizacionController {
 		return null;
 	}
 
-	@RequestMapping(value = "/revisarCotizacion", method = { RequestMethod.GET,
+	@RequestMapping(value = "/loadRevisarCotizacion", method = { RequestMethod.GET,
 			RequestMethod.POST })
-	public ModelAndView revisarCotizacion(HttpServletRequest request,
+	public ModelAndView loadRevisarCotizacion(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(value = "cotizacionId") String cotizacionId) {
 
@@ -416,9 +416,9 @@ public class CotizacionController {
 		}
 	}
 
-	@RequestMapping(value = "/validarEmail2", method = { RequestMethod.POST,
+	@RequestMapping(value = "/validarEmail", method = { RequestMethod.POST,
 			RequestMethod.GET })
-	public ModelAndView validarEmail2(HttpServletRequest request,
+	public ModelAndView validarEmail(HttpServletRequest request,
 			HttpServletResponse response) {
 		try {
 			Map<String, Object> parametrosRequest = ControllerUtil
@@ -427,17 +427,39 @@ public class CotizacionController {
 					.get("validarEmailBean");
 			ValidarEmailBean validarEmailBean = new ValidarEmailBean();
 			BeanUtils.populate(validarEmailBean, validarEmailBeanMap);
+			System.out.println("validarEmailBean: "
+					+ validarEmailBean.toString());
 			ClienteBean clienteBean = clienteService
 					.obtenerCliente(validarEmailBean.getIdCliente());
 			if (clienteBean != null) {
+				System.out.println("clienteBean: " + clienteBean.toString());
 				// Si es email valido
 				if (validarEmailBean.getEmail().equals(clienteBean.getEmail())) {
+					System.out.println("email valido");
 					// Actualizar flag de validacion email
+					HashMap<String, Object> mapa = new HashMap<String, Object>();
+					mapa.put("resultadoValidarEmail", "OK");
+					String url = "http://localhost:7001/ProyTravel/loadRevisarCotizacion?cotizacionId="
+							+ validarEmailBean.getIdCotizacion();
+					mapa.put("url", url);
+					DataJsonBean dataJSON = new DataJsonBean();
+					dataJSON.setRespuesta("ok1", null, mapa);
 					clienteService
 							.actualizarFlagValidacionEmail(new ClienteBean(
 									validarEmailBean.getIdCliente(), true));
-					return this.revisarCotizacion(request, response,
-							String.valueOf(validarEmailBean.getIdCotizacion()));
+					return ControllerUtil
+							.handleJSONResponse(dataJSON, response);
+					// return this.revisarCotizacion(request, response,
+					// String.valueOf(validarEmailBean.getIdCotizacion()));
+				} else {
+					System.out.println("email no valido");
+					// Mostrar mensaje de error
+					HashMap<String, Object> mapa = new HashMap<String, Object>();
+					mapa.put("resultadoValidarEmail", "ERROR");
+					DataJsonBean dataJSON = new DataJsonBean();
+					dataJSON.setRespuesta("ok1", null, mapa);
+					return ControllerUtil
+							.handleJSONResponse(dataJSON, response);
 				}
 			}
 

@@ -30,4 +30,10 @@ public class ValidarEmailBean {
 		this.idCliente = idCliente;
 	}
 
+	@Override
+	public String toString() {
+		return "ValidarEmailBean [email=" + email + ", idCotizacion="
+				+ idCotizacion + ", idCliente=" + idCliente + "]";
+	}
+
 }
