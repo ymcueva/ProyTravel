@@ -2,6 +2,7 @@ package pe.com.paxtravel.model.dao.ibatis;
 
 import java.util.List;
 
+import org.springframework.orm.ibatis.SqlMapClientTemplate;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
 import pe.com.paxtravel.bean.ClienteBean;
@@ -21,6 +22,13 @@ public class SqlMapClienteDAO extends SqlMapClientDaoSupport implements ClienteD
 	public ClienteBean obtenerCliente(int idCliente) {
 		return (ClienteBean) getSqlMapClientTemplate().queryForObject(
 				"cliente.obtenerCliente", idCliente);
+	}
+
+	@Override
+	public int actualizarFlagValidacionEmail(ClienteBean clienteBean) {
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).update("cliente.actualizarFlagValidacionEmail",
+				clienteBean);
+		return 1;
 	}
 
 //	private static class CiudadMapper implements

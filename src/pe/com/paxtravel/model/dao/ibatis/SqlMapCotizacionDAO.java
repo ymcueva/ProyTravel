@@ -10,21 +10,17 @@ import pe.com.paxtravel.bean.CiudadBean;
 import pe.com.paxtravel.bean.ClienteBean;
 import pe.com.paxtravel.bean.CotizacionBean;
 import pe.com.paxtravel.bean.CotizacionDetalleBean;
-import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.CotizacionDetalleDestinosBean;
+import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.CotizacionServicioBean;
-import pe.com.paxtravel.bean.EmpleadoBean;
 import pe.com.paxtravel.bean.ExpedienteLogBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
-import pe.com.paxtravel.bean.InseminacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.PaqueteResumeBean;
-import pe.com.paxtravel.bean.ProduccionBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
 import pe.com.paxtravel.model.dao.CotizacionDAO;
-import pe.com.paxtravel.model.dao.EmpleadoDAO;
 import pe.com.paxtravel.tree.data.PaqueteManagerBean;
 
 public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements
@@ -137,7 +133,7 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements
 				"cotizacion.listarCotizacionServicio", cotizacionServicioBean);
 		return lista;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<CotizacionServicioBean> obtenerCotizacionServicio(
@@ -238,6 +234,7 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements
 				"cotizacion.listarCotizacionPaqueteDestinos", cotizacionId);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CotizacionDetalleDestinosBean> listarCotizacionTicketDestinos(
 			int cotizacionId) {

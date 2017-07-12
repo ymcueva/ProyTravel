@@ -228,6 +228,7 @@
         <result property="idTipoPrograma" column="id_tipo_programa" />
         <result property="idTipoCotizacion" column="id_tipo_cotiza" />
         <result property="estado" column="no_estado" />
+        <result property="idCliente" column="id_cliente" />
     </resultMap>
     
     <resultMap id="resultCotPatTurDestinos" class="cotizacionDetalleDestinosBean">
@@ -253,9 +254,35 @@
         <result property="nomHotel"                column="nomHotel" />
         <result property="nomAerolinea"            column="nomAerolinea" />       
     </resultMap>
-	
-	
-	
+    
+    <resultMap id="resultCotTicketDestinos" class="cotizacionDetalleDestinosBean">
+    	<result property="idCotizaDeta"                column="id_cotiza_deta" />
+	    <result property="idCotiza"                column="id_cotiza" />
+	    <result property="ciudadOrigen"       column="ciudad_origen" />
+	    <result property="ciudadDestino"       column="ciudad_destino" />
+	    <result property="isoOrigen"       column="iso_origen" />
+	    <result property="isoDestino"       column="iso_destino" />
+	    <result property="idOrigen"       column="id_origen" />
+	    <result property="idDestino"       column="id_destino" />
+	    <result property="tiIda"       column="ti_ida" />
+	    <result property="vuelo"       column="vuelo" />
+	    <result property="fePartida"       column="fe_partida" />
+	    <result property="feRetorno"       column="fe_retorno" />
+	    <result property="nuCotiza"                column="nu_cotiza" />
+	    <result property="feCotiza"            column="fe_cotiza" />
+	    <result property="nombresCliente"      column="nombres" />
+        <result property="apellidosCliente"        column="apellidos" />
+        <result property="tipoDocu"                column="tipo_doc" />
+        <result property="nuDocumento"                 column="nu_documento" />
+        <result property="imPrecio"                column="im_precio" />
+        <result property="nuNinos"                     column="nu_ninos" />
+        <result property="nuAdultos"               column="nu_adultos" />
+        <result property="idCliente"               column="id_cliente" />
+        <result property="tipoDocu"                column="tipo_doc" />
+        <result property="nuDocumento"                 column="nu_documento" />
+        <result property="nomAerolinea"            column="nomAerolinea" />
+    </resultMap>
+    
 	<select id="listarCotizacion" parameterClass="cotizacionBean" resultMap="resultCotizacion">
 		SELECT  @rownum:=@rownum+1 AS ca_nume_fila, coti.id_cotiza, coti.nu_cotiza,
                 DATE_FORMAT(coti.fe_cotiza,'%d-%m-%Y') fe_cotiza,
@@ -777,7 +804,8 @@
             observacion, 
             id_tipo_programa, 
             id_tipo_cotiza,
-            e.no_estado
+            e.no_estado,
+            id_cliente
         FROM 
             cotizacion c inner join estado e on c.id_estado = e.id_estado
         WHERE 
@@ -820,40 +848,38 @@
             co.id_cotiza = #cotizacionId# AND co.id_tipo_cotiza=1
     </select>
     
-    <select id="listarCotizacionTicketDestinos" parameterClass="Integer" resultMap="resultCotPatTurDestinos">
+    <select id="listarCotizacionTicketDestinos" parameterClass="Integer" resultMap="resultCotTicketDestinos">
         SELECT 
-            Distinct     
-            co.id_cotiza, cl.id_cliente, pturis.id_paquete, cl.email,  
-            co.nu_cotiza, co.fe_cotiza, cl.nombres, cl.apellidos, td.descripcion as tipo_doc, cl.nu_documento,
-            pturis.fe_partida, pturis.fe_retorno,
-            pturis.nombre as nombrePaqueteTuristico,
-            pturis.nu_ninos, pturis.nu_adultos,
-            co.im_precio,   
-            pd.id_paquete_turistico,  
-            dc.descripcion,
-            (select t.descripcion From paquete_turistico_destino_tour AS ptt                     
-                INNER JOIN tour AS t ON (ptt.id_tour = t.id_tour)
-                WHERE (pd.id_paquete_turistico = ptt.id_paquete AND pd.id_destino_ciudad = ptt.id_destino)
-                LIMIT 1) AS nomTour,                
-            (select h.descripcion from paquete_turistico_destino_hotel AS ph 
-                INNER JOIN hotel AS h ON (ph.id_hotel=h.id_hotel)
-                WHERE (pd.id_paquete_turistico = ph.id_paquete AND ph.id_destino=pd.id_destino_ciudad)
-                LIMIT 1) AS nomHotel,
-            (Select Concat(a.nombre, ' / ') from paquete_turistico_ticket AS pticket 
-                INNER JOIN aerolinea AS a ON (pticket.id_aerolinea=a.id_aerolinea)
-                WHERE (pticket.id_paquete_turistico=pd.id_paquete_turistico AND pticket.id_destino_destino=pd.id_destino_ciudad)
-                LIMIT 1) AS nomAerolinea,
-            prov.nombre as nombreProveedor                          
-        FROM paquete_turistico_destino AS pd 
-            INNER JOIN cotizacion AS co ON (co.id_paquete=pd.id_paquete_turistico)
-            INNER JOIN paquete_turistico AS pturis ON (pturis.id_paquete=pd.id_paquete_turistico)
-            INNER JOIN destino_ciudad AS dc ON (pd.id_destino_ciudad=dc.id_destino_ciudad)            
-            INNER JOIN proveedor_aerolinea_destino AS pad ON (dc.id_destino_ciudad = pad.id_destino_ciudad)
-            INNER JOIN proveedor AS prov ON (pad.id_proveedor = prov.id_proveedor)
-            inner join cliente cl on co.id_cliente = cl.id_cliente
-            inner join tipo_documento td on cl.tipo_docu = td.id_tipo_docu
-        WHERE 
-            co.id_cotiza = #cotizacionId# AND co.id_tipo_cotiza=1
+			c.id_cotiza_deta,
+		    co.id_cotiza, 
+			dcorigen.descripcion AS ciudad_origen, 
+			dc.descripcion AS ciudad_destino, 
+			dcorigen.codigo_iso AS iso_origen, 
+			dc.codigo_iso AS iso_destino,
+			dcorigen.id_destino_ciudad AS id_origen,
+			dc.id_destino_ciudad AS id_destino,
+			c.ti_ida, 
+			if (c.ti_ida=1,'Solo Ida','Ida y Vuelta') AS vuelo, 
+			c.fe_partida,
+			c.fe_retorno,
+		    co.nu_cotiza,
+		    co.fe_cotiza,
+		    cl.nombres, cl.apellidos, 
+		    td.descripcion as tipo_doc, cl.nu_documento,
+		    ifnull(co.im_precio, 0) as im_precio,
+		    co.nu_adultos, co.nu_ninos,
+		    cl.id_cliente, td.descripcion as tipo_doc, cl.nu_documento,
+		    (Select a.nombre from cotizacion_deta_ticket AS cticket
+                INNER JOIN aerolinea AS a ON (cticket.id_aerolinea=a.id_aerolinea)
+                WHERE (cticket.id_cotiza=c.id_cotiza AND cticket.id_destino=dc.id_destino_ciudad)
+                LIMIT 1) AS nomAerolinea
+		FROM `cotizacion_deta` AS c  	
+			INNER JOIN `cotizacion` AS co ON ( co.nu_cotiza=c.id_cotiza )
+			LEFT JOIN destino_ciudad AS dcorigen ON (c.id_destino_origen=dcorigen.id_destino_ciudad)
+			LEFT JOIN destino_ciudad AS dc ON (c.id_destino=dc.id_destino_ciudad)
+		    inner join cliente cl on co.id_cliente = cl.id_cliente
+		    inner join tipo_documento td on cl.tipo_docu = td.id_tipo_docu
+		WHERE co.id_cotiza = #cotizacionId# AND co.id_tipo_cotiza = 2;
     </select>
 	
 </sqlMap>

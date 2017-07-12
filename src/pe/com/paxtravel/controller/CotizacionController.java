@@ -1,13 +1,7 @@
 package pe.com.paxtravel.controller;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.lang.reflect.Type;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,28 +10,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//import pe.gob.sunat.framework.uti
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-//import org.apache.commons.beanutils.BeanUtils;
-import net.sf.sojo.interchange.json.JsonSerializer;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.method.annotation.ExceptionHandlerMethodResolver;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import pe.com.paxtravel.bean.AnimalBean;
 import pe.com.paxtravel.bean.AuthorizeNetBean;
@@ -47,11 +29,9 @@ import pe.com.paxtravel.bean.CotizacionBean;
 import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleDestinosBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
-import pe.com.paxtravel.bean.EmpleadoBean;
 import pe.com.paxtravel.bean.ExpedienteLogBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
-import pe.com.paxtravel.bean.InseminacionBean;
 import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.OrdenPlanificacionBean;
 import pe.com.paxtravel.bean.PagoLogBean;
@@ -59,33 +39,35 @@ import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.PaqueteResumeBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoBean;
 import pe.com.paxtravel.bean.ProcesarPagoBean;
-import pe.com.paxtravel.bean.ProduccionBean;
 import pe.com.paxtravel.bean.RechazarCotizacionBean;
 import pe.com.paxtravel.bean.ServicioAdicionalBean;
-import pe.com.paxtravel.service.AnimalService;
+import pe.com.paxtravel.bean.ValidarEmailBean;
 import pe.com.paxtravel.service.AuthorizeNetService;
+import pe.com.paxtravel.service.ClienteService;
 import pe.com.paxtravel.service.CotizacionService;
-import pe.com.paxtravel.service.EmpleadoService;
-import pe.com.paxtravel.service.InseminacionService;
 import pe.com.paxtravel.service.PagoLogService;
 import pe.com.paxtravel.service.PaqueteTuristicoService;
 import pe.com.paxtravel.tree.data.CSVUtils;
 import pe.com.paxtravel.tree.data.PaqueteManagerBean;
 import pe.com.paxtravel.tree.decision.DataManager;
-import pe.com.paxtravel.tree.decision.DataManagerTest2;
 import pe.com.paxtravel.tree.decision.TableManager;
-//import pe.com.paxtravel.service.ProduccionService;
 import pe.com.paxtravel.util.ControllerUtil;
 import pe.com.paxtravel.util.DataJsonBean;
 import pe.com.paxtravel.util.EmailUtil;
 import pe.com.paxtravel.util.Utils;
 import pe.gob.sunat.framework.spring.util.conversion.SojoUtil;
+//import pe.gob.sunat.framework.uti
+//import org.apache.commons.beanutils.BeanUtils;
+//import pe.com.paxtravel.service.ProduccionService;
 
 @Controller
 public class CotizacionController {
 
 	@Autowired
 	private CotizacionService cotizacionService;
+
+	@Autowired
+	private ClienteService clienteService;
 
 	@Autowired
 	private AuthorizeNetService authorizeNetService;
@@ -257,6 +239,39 @@ public class CotizacionController {
 			@RequestParam(value = "cotizacionId") String cotizacionId) {
 
 		ModelAndView modelAndView = new ModelAndView();
+		try {
+			// Consultar info segun cotizacion id
+			CotizacionBean cotizacionBean = cotizacionService
+					.obtenerCotizacionPorId(Integer.parseInt(cotizacionId));
+			if (cotizacionBean != null) {
+				// Consultar si aun no se ha verificado el email
+				ClienteBean clienteBean = clienteService
+						.obtenerCliente(cotizacionBean.getIdCliente());
+				if (clienteBean != null) {
+					if (!clienteBean.isEmailValidado()) {
+						modelAndView
+								.addObject("cotizacionBean", cotizacionBean);
+						modelAndView.setViewName("cotizacion/validarEmail");
+						return modelAndView;
+					} else {
+						return this.loadRevisarCotizacion(request, response,
+								cotizacionId);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@RequestMapping(value = "/loadRevisarCotizacion", method = { RequestMethod.GET,
+			RequestMethod.POST })
+	public ModelAndView loadRevisarCotizacion(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(value = "cotizacionId") String cotizacionId) {
+
+		ModelAndView modelAndView = new ModelAndView();
 		HashMap<String, Object> mapa = new HashMap<String, Object>();
 
 		CotizacionBean cotizacionBean = new CotizacionBean();
@@ -376,24 +391,11 @@ public class CotizacionController {
 								0).getTipoDocu());
 						cotizacionBean.setDocumentoCliente(listCotDetDestBean
 								.get(0).getNuDocumento());
-						PaqueteTuristicoBean paqueteTuristicoBean = new PaqueteTuristicoBean();
-						paqueteTuristicoBean.setIdPaquete(listCotDetDestBean
-								.get(0).getIdPaqueteTuristico());
-						paqueteTuristicoBean.setFeInicio(listCotDetDestBean
-								.get(0).getFePartida());
-						paqueteTuristicoBean.setFeFin(listCotDetDestBean.get(0)
-								.getFeRetorno());
-						paqueteTuristicoBean.setNombre(listCotDetDestBean
-								.get(0).getNombrePaqueteTuristico());
-						paqueteTuristicoBean
-								.setCantidadPasajeros(listCotDetDestBean.get(0)
-										.getNuAdultos()
-										+ listCotDetDestBean.get(0)
-												.getNuNinos());
-						cotizacionBean
-								.setPaqueteTuristico(paqueteTuristicoBean);
 						cotizacionBean.setPrecioTotal(listCotDetDestBean.get(0)
 								.getImPrecio());
+						cotizacionBean.setCantidadPasajeros(listCotDetDestBean
+								.get(0).getNuAdultos()
+								+ listCotDetDestBean.get(0).getNuNinos());
 						System.out.println("[cotizacionBean] "
 								+ cotizacionBean.toString());
 						modelAndView
@@ -412,6 +414,59 @@ public class CotizacionController {
 		} else {
 			return modelAndView;
 		}
+	}
+
+	@RequestMapping(value = "/validarEmail", method = { RequestMethod.POST,
+			RequestMethod.GET })
+	public ModelAndView validarEmail(HttpServletRequest request,
+			HttpServletResponse response) {
+		try {
+			Map<String, Object> parametrosRequest = ControllerUtil
+					.parseRequestToMap(request);
+			Map<String, Object> validarEmailBeanMap = (Map<String, Object>) parametrosRequest
+					.get("validarEmailBean");
+			ValidarEmailBean validarEmailBean = new ValidarEmailBean();
+			BeanUtils.populate(validarEmailBean, validarEmailBeanMap);
+			System.out.println("validarEmailBean: "
+					+ validarEmailBean.toString());
+			ClienteBean clienteBean = clienteService
+					.obtenerCliente(validarEmailBean.getIdCliente());
+			if (clienteBean != null) {
+				System.out.println("clienteBean: " + clienteBean.toString());
+				// Si es email valido
+				if (validarEmailBean.getEmail().equals(clienteBean.getEmail())) {
+					System.out.println("email valido");
+					// Actualizar flag de validacion email
+					HashMap<String, Object> mapa = new HashMap<String, Object>();
+					mapa.put("resultadoValidarEmail", "OK");
+					String url = "http://localhost:7001/ProyTravel/loadRevisarCotizacion?cotizacionId="
+							+ validarEmailBean.getIdCotizacion();
+					mapa.put("url", url);
+					DataJsonBean dataJSON = new DataJsonBean();
+					dataJSON.setRespuesta("ok1", null, mapa);
+					clienteService
+							.actualizarFlagValidacionEmail(new ClienteBean(
+									validarEmailBean.getIdCliente(), true));
+					return ControllerUtil
+							.handleJSONResponse(dataJSON, response);
+					// return this.revisarCotizacion(request, response,
+					// String.valueOf(validarEmailBean.getIdCotizacion()));
+				} else {
+					System.out.println("email no valido");
+					// Mostrar mensaje de error
+					HashMap<String, Object> mapa = new HashMap<String, Object>();
+					mapa.put("resultadoValidarEmail", "ERROR");
+					DataJsonBean dataJSON = new DataJsonBean();
+					dataJSON.setRespuesta("ok1", null, mapa);
+					return ControllerUtil
+							.handleJSONResponse(dataJSON, response);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@RequestMapping(value = "/procesarPagoCotizacion", method = {

@@ -81,21 +81,52 @@
 		jQuery.support.cors = true;
 
 		inicia();
-		listaDestinos = ${listaDestinos};
+		// listaDestinos = ${listaDestinos};
 
-		construirTablaListaDestinos(listaDestinos);
-
-		$("#btnProcesarPago").on('click', function(e) {
+		//construirTablaListaDestinos(listaDestinos);
+		
+		$("#btnValidarEmail").on('click', function(e) {
 			e.preventDefault();
-			procesarPago();
-		})
-
-		$("#btnRechazarCotizacion").on('click', function(e) {
-			e.preventDefault();
-			rechazarCotizacion();
+			validarEmail();
 		})
 
 	});
+	
+	function validarEmail() {
+
+		var grabarFormParams = {
+			'validarEmailBean' : formToObject('#formValidarEmail')
+		};
+
+		$.ajax({
+			url : '${pageContext.request.contextPath}/validarEmail',
+			data : JSON.stringify(grabarFormParams),
+			cache : false,
+			async : true,
+			type : 'POST',
+			contentType : "application/json; charset=utf-8",
+			dataType : 'json',
+			success : function(response) {
+				var rpta = response.dataJson; // OK
+ 				var rptaRes = rpta.resultadoValidarEmail;
+// 				console.log("respuesta procesar pago: " + rptaRes);
+// 				$("#resultadoProcesarPago").html(rptaRes);
+				console.log("rpta...");
+				console.log(rptaRes);
+				if(rptaRes == "ERROR"){
+					console.log("es error");
+					$("#resultadoValidarEmail").html("El email no corresponde al cliente");
+				} else {
+					console.log("es ok redirect");
+					console.log(rpta.url);
+					window.location.replace(rpta.url);
+				}
+				console.log("saliendo del if");
+			},
+			error : function(data, textStatus, errorThrown) {
+			}
+		});
+	}
 
 	function inicia() {
 		$('#divFechaCotizacionBusq').datetimepicker({
@@ -118,62 +149,6 @@
 
 	}
 
-	/* function validarNumeroLetra(e){
-		var key = window.Event ? e.which : e.keyCode;
-		return ( (key==32 ) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90) );
-	} */
-
-	function procesarPago() {
-
-		var grabarFormParams = {
-			'procesarPagoBean' : formToObject('#formProcesarPago')
-		};
-		//alert("params: " + JSON.stringify(grabarFormParams));
-
-		$.ajax({
-			url : '${pageContext.request.contextPath}/procesarPagoCotizacion',
-			data : JSON.stringify(grabarFormParams),
-			cache : false,
-			async : true,
-			type : 'POST',
-			contentType : "application/json; charset=utf-8",
-			dataType : 'json',
-			success : function(response) {
-				var rpta = response.dataJson; // OK
-				var rptaRes = rpta.resultadoProcesarPago;
-				console.log("respuesta procesar pago: " + rptaRes);
-				$("#resultadoProcesarPago").html(rptaRes);
-			},
-			error : function(data, textStatus, errorThrown) {
-			}
-		});
-	}
-
-	function rechazarCotizacion() {
-
-		var grabarFormParams = {
-			'rechazarCotizacionBean' : formToObject('#formRechazarCotizacion')
-		};
-		//alert("params: " + JSON.stringify(grabarFormParams));
-
-		$.ajax({
-			url : '${pageContext.request.contextPath}/rechazarCotizacion',
-			data : JSON.stringify(grabarFormParams),
-			cache : false,
-			async : true,
-			type : 'POST',
-			contentType : "application/json; charset=utf-8",
-			dataType : 'json',
-			success : function(response) {
-				var rpta = response.dataJson; // OK
-				var rptaRes = rpta.resultadoRechazarCotizacion;
-				console.log("rpta resultado: " + rptaRes);
-				$("#resultadoRechazarCotizacion").html(rptaRes);
-			},
-			error : function(data, textStatus, errorThrown) {
-			}
-		});
-	}
 
 	function construirTablaListaDestinos(dataGrilla) {
 		//alert(dataGrilla);
@@ -372,39 +347,6 @@
 					},
 				});
 
-		/*
-		$.ajax({
-			url: '${pageContext.request.contextPath}/verDetalleCotizacion?numCotizacion='+numeroCotizacion,
-			cache: false,
-			async: true,
-			type: 'GET',
-			contentType : "application/json; charset=utf-8",
-			dataType: 'json',
-			success: function(response) {
-				
-				if (response.estado = "ok") {
-					var tipoInseminacion = (response.dataJson.inseminacionBean.tipoInseminacion=1?"Inseminaci&oacute;n":"Natural");
-					
-					$("#tituloInseminacion").html(response.dataJson.titulo);
-					$("#divCodigoInseminacion").html(response.dataJson.inseminacionBean.codigoVaca);
-					$("#divFechaCotizacionDeta").html(response.dataJson.inseminacionBean.fechaInseminacion);
-					$("#divTipoInseminacion").html(tipoInseminacion);
-					$("#divCodigoVaca").html(response.dataJson.inseminacionBean.codigoVaca);
-					$("#divNombreVaca").html(response.dataJson.inseminacionBean.nombreVaca);
-					$("#divCodigoToro").html(response.dataJson.inseminacionBean.codigoToro);
-					$("#divDiasInseminado").html(response.dataJson.inseminacionBean.diasInseminado);
-					$("#divObservacion").html(response.dataJson.inseminacionBean.observacion);
-					$("#divUsuario").html("ocalderon");
-					
-					$("#divVerDetalleInseminacion").modal({
-						backdrop: 'static',
-						keyboard: false
-					});
-				}
-			},
-			error: function(data, textStatus, errorThrown) {
-			}
-		}); */
 	}
 
 	function limpiarFormularioInseminacion() {
@@ -662,262 +604,51 @@
 					<div class="panel-heading">
 						<h3 class="panel-title">
 							<center>
-								<strong>REVISAR COTIZACIÓN</strong>
+								<strong>VALIDAR EMAIL</strong>
 							</center>
 						</h3>
 					</div>
 					<div class="panel-body">
 
-						<!-- START - REVISAR COTIZACION -->
-						<div class="col-sm-8" id="divInfoCotizacion"
+						<div class="col-sm-12" id="divInfoCotizacion"
 							style="font-size: 12px;">
 							<div class="panel panel-primary">
-								<div class="panel-heading">
-									<strong>Información de Cotización</strong>
-								</div>
 
 								<div class="panel-body">
 									<div class="row">
-										<form class="form-horizontal">
-											<div class="form-group">
-												<label class="control-label col-sm-2">Nro.
-													Cotización</label>
-												<div class="col-sm-4">
-													<label class="form-control">${cotizacionBean.numeroCotizacion}</label>
-												</div>
-												<label class="control-label col-sm-2">Fecha
-													Cotización</label>
-												<div class="col-sm-3">
-													<label class="form-control">${cotizacionBean.fechaCotizacion}</label>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="control-label col-sm-2">Cliente</label>
-												<div class="col-sm-4">
-													<label class="form-control">${cotizacionBean.nombreCliente}</label>
-												</div>
-												<label class="control-label col-sm-2">Tipo / Num.
-													Documento</label>
-												<div class="col-sm-3">
-													<label class="form-control">${cotizacionBean.tipoDocumento}
-														/ ${cotizacionBean.documentoCliente}</label>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="control-label col-sm-2">Cantidad
-													Pasajeros</label>
-												<div class="col-sm-2">
-													<label class="form-control">${cotizacionBean.cantidadPasajeros}</label>
-												</div>
-												<label class="control-label col-sm-4">Precio Total</label>
-												<div class="col-sm-2">
-													<label class="form-control">${cotizacionBean.precioTotal}</label>
-												</div>
-											</div>
-
-											<div class="col-sm-12" id="divInfoPaqueteTur">
-												<div class="panel panel-primary">
-													<div class="panel-body">
-														<div class="row">
-															<div class="form-group">
-																<div class="col-sm-12" id="divDestinos">
-																	<div class="panel">
-																		<div class="panel-heading">
-																			<strong>Lista de Destinos:</strong>
-																		</div>
-																		<div class="panel-body">
-																			<div id="dvSubDestinos">
-																				<div class="col-sm-12" id="divTblListaDestinos">
-																					<table id="tblListaDestinos"
-																						class="table table-bordered responsive"
-																						style="width: 100%">
-																						<thead>
-																							<tr>
-																								<th width="20%" class="text-center">Fecha Partida
-																								</th>
-																								<th width="20%" class="text-center">Aerolinea</th>
-																								<th width="10%" class="text-center">Origen</th>
-																								<th width="10%" class="text-center">Destino
-																								</th>
-																								<th width="10%" class="text-center">Precio
-																								</th>
-																							</tr>
-																						</thead>
-																					</table>
-																				</div>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-
-															</div>
-
-														</div>
-													</div>
-												</div>
-											</div>
-										</form>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="col-sm-4" id="divProcesarPago"
-							style="font-size: 12px;">
-							<div class="panel panel-primary">
-								<div class="panel-heading">
-									<strong>Procesar Pago</strong>
-								</div>
-								<div class="panel-body">
-									<div class="row">
-										<form class="form-horizontal" id="formProcesarPago">
+										<form class="form-horizontal" id="formValidarEmail">
 											<input type="hidden" name="idCliente"
-												value="${cotizacionBean.idCliente}"> <input
-												type="hidden" name="imPrecio"
-												value="${cotizacionBean.precioTotal}"> <input
-												type="hidden" name="idCotiza"
-												value="${cotizacionBean.idCotizacion}"> <input
-												type="hidden" name="idPaquete"
-												value="${cotizacionBean.paqueteTuristico.idPaquete}">
+												value="${cotizacionBean.idCliente}"> 
+											<input type="hidden" name="idCotizacion"
+												value="${cotizacionBean.idCotizacion}">
 											<div class="form-group">
-												<label class="control-label col-sm-9"
-													id="resultadoProcesarPago"></label>
+												<label class="control-label col-sm-7"
+													id="resultadoValidarEmail"></label>
 											</div>
 											<div class="form-group">
-												<label class="control-label col-sm-3">Tipo Tarjeta</label>
-												<div class="col-sm-9">
-													<div class="cc-selector-2">
-														<input type="radio" name="tipoTarjeta" value="1" /> <label>VISA</label>
-														<input type="radio" name="tipoTarjeta" value="2" /> <label>MASTERCARD</label>
-													</div>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="control-label col-sm-3">Número</label>
-												<div class="col-sm-7">
-													<input id="txtNumeroTarjCred"
-														onkeypress="return validarNumeroLetra(event)"
-														name="numeroTarjeta" type="text" maxlength="16"
-														class="form-control">
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="control-label col-sm-3">Fecha de
-													Caducidad</label>
-												<div class="col-sm-7">
-													<div class="input-group date tamanoMaximo"
-														id="divFechaCotizacionBusq">
-														<input id="txtFechaCaducidad" name="fechaCaducidad"
-															type="text" maxlength="16" readonly="yes"
-															class="form-control txtFecha" /> <span
-															class="input-group-addon datepickerbutton"> <span
-															class="glyphicon glyphicon-calendar"></span>
-														</span> <span class="input-group-addon" id="eliminarFecha">
-															<span class="glyphicon glyphicon-remove"></span>
-														</span>
-													</div>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="control-label col-sm-3">Código de
-													Seguridad</label>
+												<label class="control-label col-sm-5">Email</label>
 												<div class="col-sm-3">
-													<input id="txtCodSeg"
+													<input id="txtEmail"
 														onkeypress="return validarNumeroLetra(event)"
-														name="codigoSeguridad" type="text" maxlength="30"
+														name="email" type="text" maxlength="30"
 														class="form-control">
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-sm-10" style="text-align: center">
-													<button id="btnProcesarPago" class="btn btn-primary"
+													<button id="btnValidarEmail" class="btn btn-primary"
 														title="Aceptar">ACEPTAR</button>
 												</div>
 											</div>
 										</form>
 									</div>
-
-								</div>
-							</div>
-							<div class="panel panel-primary">
-								<div class="panel-heading">
-									<strong>Rechazar Cotización</strong>
-								</div>
-								<div class="panel-body">
-									<div class="row">
-										<form class="form-horizontal" id="formRechazarCotizacion">
-											<input type="hidden" name="idCotiza"
-												value="${cotizacionBean.idCotizacion}"> <input
-												type="hidden" name="idPaquete"
-												value="${cotizacionBean.paqueteTuristico.idPaquete}">
-											<div class="form-group">
-												<label class="control-label col-sm-9"
-													id="resultadoRechazarCotizacion"></label>
-											</div>
-											<div class="form-group">
-												<label class="control-label col-sm-3">Observación</label>
-												<div class="col-sm-9">
-													<textarea rows="4" cols="5" maxlength="50"
-														name="observacion"
-														onkeypress="return validarNumeroLetra(event)"
-														id="txtObservacion" class="form-control"></textarea>
-												</div>
-											</div>
-											<div class="form-group">
-												<div class="col-sm-10" style="text-align: center">
-													<button id="btnRechazarCotizacion" class="btn btn-primary"
-														title="Aceptar">ACEPTAR</button>
-												</div>
-											</div>
-										</form>
-									</div>
-
 								</div>
 							</div>
 						</div>
-						<!-- END - REVISAR COTZACION -->
+
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-
-
-	<div id="mdlConfirmaEliminacion" class="modal fade" role="dialog">
-		<div class="modal-dialog">
-			<div class="panel panel-info">
-				<div class="panel-heading">
-					<strong>Confirmaci&oacute;n Eliminaci&oacute;n</strong>
-				</div>
-				<div class="panel-body">
-					<div class="modal-body">
-						<p class="text-center">&iquest;Desea Eliminar?</p>
-					</div>
-					<div class="modal-footer">
-						<div class="col-sm-12" align="center">
-							<input type="button" class="btn btn-primary"
-								intermediateChanges="false" data-dismiss="" value="Si"
-								onclick="eliminarInseminacion();" id="btnEliminaRegistro"></input>
-							<button type="button" id="btnEliminaNo" class="btn btn-primary"
-								data-dismiss="modal">No</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div id="divRegistroInseminacion" class="modal fade" role="dialog"
-		style="text-center: center">
-		<div class="modal-dialog">
-			<div class="panel panel-primary"></div>
-		</div>
-	</div>
-
-	<div id="divVerDetalleInseminacion" class="modal fade" role="dialog"
-		style="text-center: center">
-		<div class="modal-dialog">
-			<div class="panel panel-primary"></div>
 		</div>
 	</div>
 

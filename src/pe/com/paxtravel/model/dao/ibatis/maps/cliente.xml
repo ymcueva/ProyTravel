@@ -28,6 +28,7 @@
 		<result property="telefono" 		column="telefono" />
 		<result property="fechaNacimiento" 	column="fecha_nac" />
 		<result property="email" 			column="email" />
+		<result property="emailValidado" 	column="emailValidado" />
 	</resultMap>
 
 	<update id="update">
@@ -44,12 +45,21 @@
 	
 	<select id="obtenerCliente" parameterClass="Integer" resultMap="resultClienteBean">
 		SELECT   
-			id_cliente, tipo_docu, nu_documento, nombres, apellidos, direccion, telefono, fecha_nac, email
+			id_cliente, tipo_docu, nu_documento, nombres, apellidos, direccion, telefono, fecha_nac, email, emailValidado
 		FROM 
 			cliente
         WHERE 
         	id_cliente = #codigo#; 
 	</select>
+	
+	<update id="actualizarFlagValidacionEmail" parameterClass="clienteBean">
+		UPDATE
+			cliente
+		SET
+			emailValidado = #emailValidado#	
+		WHERE
+			id_cliente = #idCliente#
+	</update>
 
 
 </sqlMap>
