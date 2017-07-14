@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="orden">
+	
+	<typeAlias alias="ordenBean" type="pe.com.paxtravel.bean.OrdenBean" />
+
+	<resultMap id="resultOrden" class="ordenBean">		 	
+		<result property="numeroFila"			    		column="ca_nume_fila" />			
+		<result property="numeroOrden" 		    		column="nu_orden" />			
+		<result property="fechaOrden" 		    			column="fe_order" />			 
+		<result property="descripcionOrden" 		    		column="descripcion" />			
+		<result property="descripcionEstadoOrden" 		    	column="no_estado" />
+	</resultMap>
+	
+	<select id="obtenerOrden" parameterClass="ordenBean" resultMap="resultOrden">	
+		SELECT @rownum:=@rownum+1 AS ca_nume_fila, a.nu_orden,
+		       DATE_FORMAT(a.fe_order,'%d-%m-%Y') fe_order, 
+		       IFNULL(a.descripcion,'') descripcion, b.no_estado
+		  FROM (SELECT @rownum:=0) r,orden a
+         INNER JOIN estado b ON a.id_estado=b.id_estado
+ 	     <isNotEmpty prepend="AND" property="numeroOrden"> a.nu_orden = #numeroOrden# </isNotEmpty>
+ 	     <isNotEmpty prepend="AND" property="fechaOrden"> DATE_FORMAT(a.fe_order,'%d/%m/%Y') = #fechaOrden# </isNotEmpty>
+ 	     <isNotEmpty prepend="AND" property="idEstadoOrden"> a.id_estado = #idEstadoOrden# </isNotEmpty>
+ 	</select>
+ 	
+ 	<select id="obtenerNumeroOrden" resultClass="string">
+		SELECT CONCAT( MAX(nu_orden)+1, "") AS nu_orden
+		  FROM orden
+	</select>
+ 	
+ 	<insert id="insertarOrden" parameterClass="ordenBean" >
+ 	    INSERT INTO orden(
+ 	    	nu_orden, 
+ 	    	observacion, 
+ 	    	fe_order, 
+ 	    	id_estado, 
+ 	    	fe_partida, 
+ 	    	fe_retorno, 
+ 	    	im_presupuesto_maximo, 
+ 	    	id_tipo_programa,
+ 	    	autorizacion,
+ 	    	flag_nu_estadia,
+ 	    	nu_estadia
+		) VALUES (
+			#numeroOrden#,
+			#comentarioOrden#,
+			sysdate(),
+			'6',
+			#fechaPartida#,
+			#fechaRetorno#,
+			#presupuestoMaximo#,
+			#idTipoPaqueteTuristico#,
+			#autorizacion#,
+			#flagCantidadDias#,
+			#numeroDias#
+		)
+		<selectKey keyProperty="idOrden" resultClass="int">
+            select LAST_INSERT_ID();
+        </selectKey>
+	</insert>
+	
+ 	<insert id="insertarDestino" parameterClass="ordenBean" >
+ 	    INSERT INTO orden_destino(
+ 	    	id_orden, 
+ 	    	id_destino
+		) VALUES (
+			#idOrden#,
+			#idDestinoCiudad#
+		)
+	</insert>
+	
+	<insert id="insertarServicio" parameterClass="ordenBean" >
+ 	    INSERT INTO orden_servicio(
+ 	    	id_orden, 
+ 	    	id_servicio
+		) VALUES (
+			#idOrden#,
+			#idServicio#
+		)
+	</insert>
+	
+	<insert id="insertarMotivo" parameterClass="ordenBean" >
+ 	    INSERT INTO orden_motivo(
+ 	    	id_orden, 
+ 	    	id_motivo
+		) VALUES (
+			#idOrden#,
+			#idMotivo#
+		)
+	</insert>
+
+</sqlMap>
