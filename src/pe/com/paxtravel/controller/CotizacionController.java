@@ -144,8 +144,7 @@ public class CotizacionController {
 
 				Map<String, Object> parametrosRequest = ControllerUtil
 						.parseRequestToMap(request);
-				Map<String, Object> cotizacionBeanMap = (Map<String, Object>) parametrosRequest
-						.get("cotizacionBean");
+				Map<String, Object> cotizacionBeanMap = (Map<String, Object>) parametrosRequest.get("cotizacionBean");
 
 				// "numeroCotizacion":"","codigoEstadoCotizacion":"1","fechaCotizacion":"14/06/2017","tipoBusqueda":"1","nombreCliente"
 

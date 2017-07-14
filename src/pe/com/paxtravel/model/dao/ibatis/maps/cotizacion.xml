@@ -861,7 +861,7 @@
 			c.ti_ida, 
 			if (c.ti_ida=1,'Solo Ida','Ida y Vuelta') AS vuelo, 
 			c.fe_partida,
-			c.fe_retorno,
+			ifNull(c.fe_retorno, '') AS fe_retorno,
 		    co.nu_cotiza,
 		    co.fe_cotiza,
 		    cl.nombres, cl.apellidos, 
