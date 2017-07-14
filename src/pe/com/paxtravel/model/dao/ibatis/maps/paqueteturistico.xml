@@ -164,8 +164,8 @@
 			       precio_adulto,
 			       precio_nino,
 			       descripcion,
-			       itinerario,
-			       servicios
+			       ifnull(itinerario,'')itinerario,
+			       ifnull(servicios,'')servicios
 			 from tour
 			 where id_destino_ciudad = #idDestinoCiudad#      
 	</select>	

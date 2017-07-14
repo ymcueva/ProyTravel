@@ -5,13 +5,30 @@
 	
 	String idEstado = "0";
 	String modifica = "1";
+	Double totalGasto = 0d;
+	Double totalTicket = 0d;
+	Double totalTour = 0d;
+	Double totalHotel = 0d;
 
 	if(mapaDatos.get("idEstadoPaquete") != "")
 	   idEstado = mapaDatos.get("idEstadoPaquete").toString();
 	
 	if(mapaDatos.get("modifica") != "")
 		   modifica = mapaDatos.get("modifica").toString();
-		
+	
+	if(mapaDatos.get("totalGasto") != "")
+		totalGasto = Double.parseDouble(mapaDatos.get("totalGasto").toString());
+	
+	if(mapaDatos.get("totalTicket") != "")
+		totalTicket = Double.parseDouble(mapaDatos.get("totalTicket").toString());
+	
+	if(mapaDatos.get("totalTour") != "")
+		totalTour = Double.parseDouble(mapaDatos.get("totalTour").toString());
+	
+	if(mapaDatos.get("totalHotel") != "")
+		totalHotel = Double.parseDouble(mapaDatos.get("totalHotel").toString());
+	
+	
 	
 	ArrayList listaDetalleHotel = (ArrayList) mapaDatos.get("listaDetalleHotel");
 	
@@ -101,6 +118,9 @@
 		function inicia() {
 			
 			$("#btnBuscarPropuesta").attr("disabled", true);
+			soloNumeros("#txtCantidad","keypress");
+			soloLetrasNumeros("#nombre","keypress");
+			soloLetrasNumeros("#txtObservacionPaquete","keypress");
 			
 		
 			
@@ -111,6 +131,11 @@
 				
 				var idestado = <%=idEstado%>;
 				var modifica = <%=modifica%>;
+				var totalGastos = <%=totalGasto%>;
+				var totalTickets = <%=totalTicket%>;
+				var totalHoteles = <%=totalHotel%>;
+				var totalTours = <%=totalTour%>;
+				
 				
 				
 				$("#selTipoPrograma").val(idestado);
@@ -191,8 +216,8 @@
 						var adultos = parseInt($("#txtcantAdultos").val());
 						var ninos = parseInt($("#txtcantNinos").val());
 						var personas = parseInt(adultos + ninos);
-						var preciofinal = parseFloat(precio) * parseInt(personas);
-						
+						var preciofinal = parseFloat(precio) / parseInt(personas);
+						row.find('input[id="tmp_precioAerolinea"]').val(preciofinal);
 						
 						
 						var verEliminarVuelo = "<span> <a href='javascript:;' onclick='eliminarVuelo(this)' title='Eliminar' ><span class='glyphicon glyphicon-trash'></span></a> </span>";
@@ -284,11 +309,42 @@
 			
 				});
 				
+				//Calculando los totales
+				$("#hdnTotalTour").val(totalTours);
+				$("#hdnTotalTicket").val(totalTickets);
+				$("#hdnTotalHotel").val(totalHoteles);
+				$("#txtTotalGasto").val(totalGastos);
+				
 				
 				
 			}
 			
 			
+		}
+		
+		function soloNumeros(obj, evt) {
+			
+			$(obj).bind(evt, function (e) {
+				return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) ? false : true;
+			})
+
+			$(obj).on("paste", function (e) {
+				e.preventDefault();
+			});
+		}
+		
+		function soloLetras(obj, evt) {
+			$(obj).bind(evt, function (e) {
+				charCode = (document.all) ? e.keyCode : e.which;
+			    return (/^[a-zA-Z ñÑ áÁ éÉ íÍ óÓ úÚ]$/.test(String.fromCharCode(charCode))) ? true : false;
+			})
+		}
+		
+		function soloLetrasNumeros(obj, evt) {
+			$(obj).bind(evt, function (e) {
+				charCode = (document.all) ? e.keyCode : e.which;
+			    return (/[^A-Za-z0-9]$/.test(String.fromCharCode(charCode))) ? false : true;
+			})
 		}
 		
 		function cerrarVuelo(){
@@ -625,7 +681,7 @@
 			tr.find('input[id="tmp_preNinoTour"]').val("0");
 			tr.find('input[id="tmp_duracionTour"]').val("0");
 			tr.find('input[id="tmp_totalTour"]').val("0");
-			tr.find('td').eq(5).text("");
+			tr.find('td').eq(4).text("");
 			
 			//Calcular el total gastado y el total por tour
 			var totalGasto = parseFloat(0);
@@ -653,7 +709,7 @@
 			tr.find('input[id="tmp_idCategoriaAlojamiento"]').val("0");
 			tr.find('input[id="tmp_Habitaciones"]').val("");
 			tr.find('input[id="tmp_totalHotel"]').val("0");
-			tr.find('td').eq(3).text("");
+			tr.find('td').eq(2).text("");
 			
 			//Calcular el total gastado y el total por hotel
 			var totalGasto = parseFloat(0);
@@ -682,7 +738,7 @@
 			tr.find('input[id="tmp_nomAerolinea"]').val("");
 			tr.find('input[id="tmp_comision"]').val("0");
 			tr.find('input[id="tmp_totalAerolinea"]').val("0");
-			tr.find('td').eq(4).text("");
+			tr.find('td').eq(3).text("");
 			
 			//Calcular el total gastado y el total por Vuelo
 			var totalGasto = parseFloat(0);
@@ -1232,15 +1288,16 @@
 				$("#hdnTotalHotel").val("0");
 				
 				if(cotizacion == "0" && busInteligente == 1) {
-					$("#mensajeClienteError").html("Debe tener una cotización asociada para realizar la busqueda historica");
+					//$("#mensajeClienteError").html("Debe tener una cotización asociada para realizar la busqueda historica");
 					$("#chkPropuesta").prop("checked", false);
 					$("#chkPropuesta").attr('disabled','disabled');
 					
+					/*
 					$('#divMensajeErrorCliente').modal({
 						backdrop: 'static',
 						keyboard: false
 					}); 
-					
+					*/
 					return false;
 					
 				}
@@ -2171,7 +2228,7 @@
 																
 																																													
 																<div class="col-sm-2">
-																	<input id="txtDescripcionOrden" onkeypress="return validarNumeroLetra(event)" name="descripcionOrden" value="${descripcion}" type="text" maxlength="30" class="form-control" />
+																	<input id="txtDescripcionOrden" readonly="readonly" onkeypress="return validarNumeroLetra(event)" name="descripcionOrden" value="${descripcion}" type="text" maxlength="30" class="form-control" />
 																</div>
 																
 																<div class="col-sm-2">
@@ -2181,7 +2238,7 @@
 																
 																<label class="col-sm-2 control-label">Fecha Orden:</label>	
 																<div class="col-sm-2">
-																	<input id="txtFechaOrden" name="fechaOrden" type="text" maxlength="10" class="form-control" value="${fechaorden}" />	
+																	<input id="txtFechaOrden" readonly="readonly" name="fechaOrden" type="text" maxlength="10" class="form-control" value="${fechaorden}" />	
 																
 																</div>
 															</div>
@@ -2193,14 +2250,14 @@
 															<div class="form-group">
 																<div class="col-sm-2" style="text-align:right; font-weight:bold">Cliente:</div>
 																<div class="col-sm-9" id="divNombreAnimal">
-																	<input id="txtCliente" name="nombreCliente" type="text" maxlength="80" class="form-control" value="${cliente}" />
+																	<input id="txtCliente" readonly="readonly" name="nombreCliente" type="text" maxlength="80" class="form-control" value="${cliente}" />
 																</div>
 															</div>
 															
 															<div class="form-group">
 																<div class="col-sm-2" style="text-align:right; font-weight:bold">Motivo de Viaje</div>
 																<div class="col-sm-9" id="divNombreAnimal">
-																	<textarea class="form-control" name="descripcion" id="txtDescripcion" onkeypress="return validarNumeroLetra(event)" rows="3" cols="98" >${motivoViaje}</textarea>
+																	<textarea class="form-control" readonly="readonly" name="descripcion" id="txtDescripcion" onkeypress="return validarNumeroLetra(event)" rows="3" cols="98" >${motivoViaje}</textarea>
 																</div>
 															</div>
 															
@@ -2208,7 +2265,7 @@
 																
 																<label class=" control-label col-sm-2">Presupuesto:</label>	
 																<div class="col-sm-3">
-																	<input name="ImMax" id="txtPresupuestoMaximo" type="text" class="form-control tamanoMaximo" value="${presupuestomax}"></input>
+																	<input name="ImMax" readonly="readonly" id="txtPresupuestoMaximo" type="text" class="form-control tamanoMaximo" value="${presupuestomax}"></input>
 																</div>
 															</div>
 															
@@ -2218,7 +2275,7 @@
 																	
 																	<div class="col-sm-3">
 																		<div class="input-group date tamanoMaximo" id="divFechaPartida">
-																			<input name="feInicio" id="txtFechaPartida"  type="text" class="form-control tamanoMaximo txtFecha" value="${fechapartida}" />
+																			<input name="feInicio" readonly="readonly" id="txtFechaPartida"  type="text" class="form-control tamanoMaximo txtFecha" value="${fechapartida}" />
 																			
 																		</div>
 																	</div>
@@ -2227,7 +2284,7 @@
 																	
 																	<div class="col-sm-3">
 																		<div class="input-group date tamanoMaximo" id="divFechaRetorno">
-																			<input name="feFin" id="txtFechaRetorno"  type="text" class="form-control tamanoMaximo txtFecha" value="${fecharetorno}" />																		
+																			<input name="feFin" readonly="readonly" id="txtFechaRetorno"  type="text" class="form-control tamanoMaximo txtFecha" value="${fecharetorno}" />																		
 																		</div>
 																	</div>		
 															</div>		
@@ -2237,12 +2294,12 @@
 																	<label class=" control-label col-sm-2">Cantidad adultos:</label>	
 																
 																	<div class="col-sm-3">
-																		<input id="txtcantAdultos" name="nuNinos" type="text" maxlength="30" class="form-control" value="${nuaultos}" placeholder="Cantidad Adultos">
+																		<input id="txtcantAdultos" readonly="readonly" name="nuNinos" type="text" maxlength="30" class="form-control" value="${nuaultos}" placeholder="Cantidad Adultos">
 																	</div>
 																	<label class=" control-label col-sm-2 col-md-offset-2">Cantidad Ninos:</label>	
 																
 																	<div class="col-sm-2">
-																		<input id="txtcantNinos" name="nuAdultos" type="text" maxlength="30" class="form-control" value="${nuninos}" placeholder="Cantidad Ninos">
+																		<input id="txtcantNinos" readonly="readonly" name="nuAdultos" type="text" maxlength="30" class="form-control" value="${nuninos}" placeholder="Cantidad Ninos">
 																	</div>		
 															</div>
 																		
@@ -2250,7 +2307,7 @@
 															<div class="form-group">
 																<div class="col-sm-2" style="text-align:right; font-weight:bold">Comentario:</div>
 																<div class="col-sm-9" id="divNombreAnimal">
-																	<textarea class="form-control" id="txtObservacion" name="comentario"  onkeypress="return validarNumeroLetra(event)" rows="3" cols="98"  placeholder="Observaciones de la Orden">${comentario}</textarea>
+																	<textarea class="form-control" readonly="readonly" id="txtObservacion" name="comentario"  onkeypress="return validarNumeroLetra(event)" rows="3" cols="98"  placeholder="Observaciones de la Orden">${comentario}</textarea>
 																</div>
 															</div>
 													</div>
@@ -2262,7 +2319,7 @@
 									
 									<div class="col-sm-12" id="divReservaHistoricas">
 										<div class="panel panel-primary">
-											<div class="panel-heading">	<strong>Reservas Historicas</strong></div>
+											<div class="panel-heading">	<strong>B&uacute;squeda Autom&aacute;tica</strong></div>
 											
 											<div class="panel-body">
 																
@@ -2399,7 +2456,7 @@
 									<div class="form-group">
 										<div class="col-sm-3" style="text-align:right; font-weight:bold">Observaciones:</div>
 											<div class="col-sm-8" id="divObservacionPaquete">
-													<textarea class="form-control" name="observacion" id="txtObservacionPaquete" rows="3" cols="90"  placeholder="Observaciones">${observacion}</textarea>
+													<textarea class="form-control" name="observacion" maxlength="2000" id="txtObservacionPaquete" rows="3" cols="90"  placeholder="Observaciones">${observacion}</textarea>
 										    </div>
 									</div>
 									
