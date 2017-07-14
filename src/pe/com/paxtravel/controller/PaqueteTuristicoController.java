@@ -1072,11 +1072,22 @@ public class PaqueteTuristicoController {
 						totalTour = listaPaqueteTuristicoBean.get(0).getTotalTour();
 						totalTicket = listaPaqueteTuristicoBean.get(0).getTotalTicket();
 						totalHotel = listaPaqueteTuristicoBean.get(0).getTotalHotel();
+						
+						mapaDatos.put("totalGasto", totalGasto);
+						mapaDatos.put("totalTour", totalTour);
+						mapaDatos.put("totalTicket", totalTicket);
+						mapaDatos.put("totalHotel", totalHotel);
+						
+						
 					}
 					else {
 						nombrePaquete = "";
 						idEstadoPaquete = "";
 						observacion = "";
+						mapaDatos.put("totalGasto", "0");
+						mapaDatos.put("totalTour", "0");
+						mapaDatos.put("totalTicket", "0");
+						mapaDatos.put("totalHotel", "0");
 					}
 					
 					//cargando detalle hotel
@@ -1085,6 +1096,12 @@ public class PaqueteTuristicoController {
 					
 					
 				
+				}
+				else {
+					mapaDatos.put("totalGasto", "0");
+					mapaDatos.put("totalTour", "0");
+					mapaDatos.put("totalTicket", "0");
+					mapaDatos.put("totalHotel", "0");
 				}
 				
 				
