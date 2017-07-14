@@ -93,7 +93,7 @@
 		   	<div class="form-group">
 		   		<label class="col-sm-4 control-label">Cantidad:</label>
 		   		<div class="col-sm-3">
-					<input type="text" class="form-control" name="cantidad" id="txtCantidad" />
+					<input type="text" class="form-control" name="cantidad" id="txtCantidad" maxlength="2"/>
 				</div>	
 		   	</div>
 		   	
