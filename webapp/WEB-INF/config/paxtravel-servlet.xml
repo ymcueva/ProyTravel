@@ -38,6 +38,9 @@
         <property name="jsonView" value="jsonView" />
     </bean>
 	
+	<bean name="ordenController"	class="pe.com.paxtravel.controller.OrdenController">
+		<property name="jsonView" value="jsonView" />
+	</bean>
 
 	<bean name="inseminacionController" class="pe.com.paxtravel.controller.InseminacionController">
 		<property name="jsonView" value="jsonView" />

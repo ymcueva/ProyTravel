@@ -13,6 +13,7 @@
 	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/usuario.xml" />
 	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/cotizacion.xml" />
 	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/ordenplanificacion.xml" />
+	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/orden.xml" />
 	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/paqueteturistico.xml" />
 	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/reserva.xml" />
 	<sqlMap resource="pe/com/paxtravel/model/dao/ibatis/maps/pagolog.xml" />
