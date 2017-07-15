@@ -265,8 +265,8 @@ public class CotizacionController {
 		return null;
 	}
 
-	@RequestMapping(value = "/loadRevisarCotizacion", method = { RequestMethod.GET,
-			RequestMethod.POST })
+	@RequestMapping(value = "/loadRevisarCotizacion", method = {
+			RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView loadRevisarCotizacion(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(value = "cotizacionId") String cotizacionId) {
@@ -295,9 +295,28 @@ public class CotizacionController {
 				// vigente
 				if (!cotizacionBean.getEstado().equalsIgnoreCase("ENVIADO")) {
 					modelAndView
-							.addObject(
-									"mensajeResultado",
-									"No puede acceder a esta cotización porque no se encuentra con estado Enviado o no tiene fecha vigente");
+							.addObject("mensajeResultado",
+									"No puede acceder a esta cotización porque no se encuentra con estado Enviado");
+					modelAndView.setViewName("cotizacion/mensajeResultado");
+					return modelAndView;
+				}
+				try {
+					String currentDate = new SimpleDateFormat("yyyy-MM-dd")
+							.format(new Date());
+					// Si la fecha maxima de aprobacion es mayor a la fecha
+					// actual
+					if (Utils.compareDates(
+							cotizacionBean.getFeMaxAprobCotiza(), currentDate) > 0) {
+						modelAndView
+								.addObject("mensajeResultado",
+										"No puede acceder a esta cotización porque no no tiene fecha vigente");
+						modelAndView.setViewName("cotizacion/mensajeResultado");
+						return modelAndView;
+					}
+				} catch (Exception e) {
+					modelAndView
+							.addObject("mensajeResultado",
+									"Ocurrió un error desconocido. Intentar nuevamente");
 					modelAndView.setViewName("cotizacion/mensajeResultado");
 					return modelAndView;
 				}

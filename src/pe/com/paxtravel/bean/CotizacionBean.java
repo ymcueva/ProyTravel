@@ -72,6 +72,8 @@ public class CotizacionBean {
 	private int cantidadAdultosTicket;
 	private int cantidadNinosTicket;
 	private int cantidadPasajeros;
+	
+	private String feMaxAprobCotiza;
 
 	public int getCantidadAdultosTicket() {
 		return cantidadAdultosTicket;
@@ -560,6 +562,14 @@ public class CotizacionBean {
 
 	public void setCantidadPasajeros(int cantidadPasajeros) {
 		this.cantidadPasajeros = cantidadPasajeros;
+	}
+
+	public String getFeMaxAprobCotiza() {
+		return feMaxAprobCotiza;
+	}
+
+	public void setFeMaxAprobCotiza(String feMaxAprobCotiza) {
+		this.feMaxAprobCotiza = feMaxAprobCotiza;
 	}
 
 }

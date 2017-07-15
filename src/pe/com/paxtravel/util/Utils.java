@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+
 //import org.apache.commons.beanutils.BeanUtils;
 
 /**
@@ -26,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 public class Utils {
 
 	private static Random rnd = new Random();
+	private static final SimpleDateFormat SDF_DATE = new SimpleDateFormat(
+			"yyyy-MM-dd");
 
 	/**
 	 * Metodo mapea una determinada clase, Te crea una objeto de una determinada
@@ -575,6 +578,13 @@ public class Utils {
 		for (int i = 0; i < digCount; i++)
 			sb.append((char) ('0' + rnd.nextInt(10)));
 		return sb.toString();
+	}
+
+	// comparar con fecha actual
+	public static int compareDates(String date1, String date2) throws Exception {
+		Date dateA = SDF_DATE.parse(date1);
+		Date dateB = SDF_DATE.parse(date2);
+		return dateA.compareTo(dateB);
 	}
 
 }
