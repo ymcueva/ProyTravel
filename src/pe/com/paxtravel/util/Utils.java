@@ -29,6 +29,9 @@ public class Utils {
 	private static Random rnd = new Random();
 	private static final SimpleDateFormat SDF_DATE = new SimpleDateFormat(
 			"yyyy-MM-dd");
+	private static final SimpleDateFormat SDF_DATETIME = new SimpleDateFormat(
+			"yyyy-MM-dd HH:mm:ss");
+	private static final String REGEX_ONLY_NUMERIC = "[0-9]+";
 
 	/**
 	 * Metodo mapea una determinada clase, Te crea una objeto de una determinada
@@ -585,6 +588,16 @@ public class Utils {
 		Date dateA = SDF_DATE.parse(date1);
 		Date dateB = SDF_DATE.parse(date2);
 		return dateA.compareTo(dateB);
+	}
+
+	// validar solo numerico positivo
+	public static boolean isPositiveNumeric(String field) {
+		return field.matches(REGEX_ONLY_NUMERIC);
+	}
+
+	// obtener fecha actual
+	public static String getCurrentDate() {
+		return SDF_DATETIME.format(new Date());
 	}
 
 }

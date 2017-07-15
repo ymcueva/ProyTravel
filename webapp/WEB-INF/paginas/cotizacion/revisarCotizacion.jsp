@@ -99,13 +99,10 @@
 
 	function inicia() {
 		$('#divFechaCotizacionBusq').datetimepicker({
-			language : 'es',
-			autoClose : true,
-			minDate : '01/01/2000',
-
-			format : 'DD/MM/YYYY',
-			pickTime : false,
-			useCurrent : false
+            format: 'MM/YYYY',        
+            viewMode: "months",
+            pickTime: false,
+            useCurrent: true
 		});
 
 		$("#eliminarFecha").on("click", function(e) {
@@ -863,7 +860,7 @@
 												<div class="col-sm-3">
 													<input id="txtCodSeg"
 														onkeypress="return validarNumeroLetra(event)"
-														name="codigoSeguridad" type="text" maxlength="30"
+														name="codigoSeguridad" type="text" maxlength="4"
 														class="form-control">
 												</div>
 											</div>

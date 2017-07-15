@@ -488,6 +488,36 @@ public class CotizacionController {
 		return null;
 	}
 
+	private String validarCamposProcesarPago(ProcesarPagoBean bean) {
+		if (bean.getTipoTarjeta() == 0) {
+			return "Debe seleccionar el tipo de tarjeta";
+		}
+		if (bean.getNumeroTarjeta() == null
+				|| bean.getNumeroTarjeta().trim().length() == 0) {
+			return "Debe ingresar el número de tarjeta";
+		}
+		if (!Utils.isPositiveNumeric(bean.getNumeroTarjeta())) {
+			return "Debe ingresar un número válido de tarjeta";
+		}
+		if (bean.getFechaCaducidad() == null
+				|| bean.getFechaCaducidad().trim().length() == 0) {
+			return "Debe ingresar una fecha de caducidad";
+		}
+		try {
+			Integer mes = Integer.parseInt(bean.getFechaCaducidad().substring(
+					0, bean.getFechaCaducidad().indexOf("/")));
+			Integer anio = Integer.parseInt(bean.getFechaCaducidad().substring(
+					bean.getFechaCaducidad().indexOf("/") + 1));
+			System.out.println("mes: " + mes + " anio: " + anio);
+		} catch (Exception e) {
+			return "Debe ingresar una fecha de caducidad válida";
+		}
+		if (bean.getCodigoSeguridad() <= 0 || bean.getCodigoSeguridad() > 9999) {
+			return "Debe ingresar un código de seguridad válido";
+		}
+		return "OK";
+	}
+
 	@RequestMapping(value = "/procesarPagoCotizacion", method = {
 			RequestMethod.POST, RequestMethod.GET })
 	public ModelAndView procesarPagoCotizacion(HttpServletRequest request,
@@ -499,6 +529,14 @@ public class CotizacionController {
 					.get("procesarPagoBean");
 			ProcesarPagoBean procesarPagoBean = new ProcesarPagoBean();
 			BeanUtils.populate(procesarPagoBean, procesarPagoBeanMap);
+			String resultadoValidacion = validarCamposProcesarPago(procesarPagoBean);
+			if (!resultadoValidacion.equalsIgnoreCase("OK")) {
+				HashMap<String, Object> mapa = new HashMap<String, Object>();
+				mapa.put("resultadoProcesarPago", resultadoValidacion);
+				DataJsonBean dataJSON = new DataJsonBean();
+				dataJSON.setRespuesta("ok1", null, mapa);
+				return ControllerUtil.handleJSONResponse(dataJSON, response);
+			}
 			System.out.println("procesarPagoBean: "
 					+ procesarPagoBean.toString());
 			// Procesar pago en Authorize
@@ -589,7 +627,10 @@ public class CotizacionController {
 			cotizacionBean
 					.setIdCotizacion(rechazarCotizacionBean.getIdCotiza());
 			cotizacionBean.setIdPaquete(rechazarCotizacionBean.getIdPaquete());
-			cotizacionService.actualizarCotizacion(cotizacionBean);
+			cotizacionBean.setComentario(rechazarCotizacionBean
+					.getObservacion());
+			cotizacionBean.setFeUpd(Utils.getCurrentDate());
+			cotizacionService.actualizarCotizacionRechazo(cotizacionBean);
 			System.out.println("se actualizo la cotizacion a estado rechazado");
 			// Actualizar expediente con estado rechazado a la cotizacion
 			ExpedienteLogBean expedienteLogBean = new ExpedienteLogBean();

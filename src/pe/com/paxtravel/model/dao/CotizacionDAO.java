@@ -2,6 +2,8 @@ package pe.com.paxtravel.model.dao;
 
 import java.util.List;
 
+import org.springframework.orm.ibatis.SqlMapClientTemplate;
+
 import pe.com.paxtravel.bean.CiudadBean;
 import pe.com.paxtravel.bean.ClienteBean;
 import pe.com.paxtravel.bean.CotizacionBean;
@@ -53,8 +55,9 @@ public interface CotizacionDAO {
 
 	List<CotizacionServicioBean> listarCotizacionServicio(
 			CotizacionServicioBean cotizacionServicioBean);
-	
-	List<CotizacionServicioBean> obtenerCotizacionServicio(CotizacionServicioBean cotizacionServicioBean);
+
+	List<CotizacionServicioBean> obtenerCotizacionServicio(
+			CotizacionServicioBean cotizacionServicioBean);
 
 	int actualizarCotizacion(CotizacionBean cotizacionBean);
 
@@ -76,5 +79,7 @@ public interface CotizacionDAO {
 
 	List<CotizacionDetalleDestinosBean> listarCotizacionTicketDestinos(
 			int cotizacionId);
+
+	public int actualizarCotizacionRechazo(CotizacionBean cotizacionBean);
 
 }
