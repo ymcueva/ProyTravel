@@ -119,8 +119,8 @@
 			
 			$("#btnBuscarPropuesta").attr("disabled", true);
 			soloNumeros("#txtCantidad","keypress");
-			soloLetrasNumeros("#nombre","keypress");
-			soloLetrasNumeros("#txtObservacionPaquete","keypress");
+			soloLetras("#nombre","keypress");
+			soloLetras("#txtObservacionPaquete","keypress");
 			
 		
 			
@@ -336,7 +336,7 @@
 		function soloLetras(obj, evt) {
 			$(obj).bind(evt, function (e) {
 				charCode = (document.all) ? e.keyCode : e.which;
-			    return (/^[a-zA-Z Ò— ·¡ È… ÌÕ Û” ˙⁄]$/.test(String.fromCharCode(charCode))) ? true : false;
+			    return (/^[a-zA-Z0-9 Ò— ·¡ È… ÌÕ Û” ˙⁄]$/.test(String.fromCharCode(charCode))) ? true : false;
 			})
 		}
 		
@@ -1905,6 +1905,9 @@
 				
 			if(msj != "") {
 				$("#mensajeClienteError").html(msj);
+				
+				$('#mdlConfirmaRegistro').modal("hide");
+				
 				
 				$('#divMensajeErrorCliente').modal({
 					backdrop: 'static',
