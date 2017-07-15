@@ -4,7 +4,6 @@ public class ProcesarPagoBean {
 
 	private int tipoTarjeta;
 	private String numeroTarjeta;
-	private String fechaCaducidad;
 	private int codigoSeguridad;
 
 	private int idCliente;
@@ -12,6 +11,8 @@ public class ProcesarPagoBean {
 	private double imPrecio;
 	private int idPaquete;
 	private String emailCliente;
+	private String mes;
+	private String anio;
 
 	public int getTipoTarjeta() {
 		return tipoTarjeta;
@@ -27,14 +28,6 @@ public class ProcesarPagoBean {
 
 	public void setNumeroTarjeta(String numeroTarjeta) {
 		this.numeroTarjeta = numeroTarjeta;
-	}
-
-	public String getFechaCaducidad() {
-		return fechaCaducidad;
-	}
-
-	public void setFechaCaducidad(String fechaCaducidad) {
-		this.fechaCaducidad = fechaCaducidad;
 	}
 
 	public int getCodigoSeguridad() {
@@ -85,13 +78,20 @@ public class ProcesarPagoBean {
 		this.emailCliente = emailCliente;
 	}
 
-	@Override
-	public String toString() {
-		return "ProcesarPagoBean [tipoTarjeta=" + tipoTarjeta
-				+ ", numeroTarjeta=" + numeroTarjeta + ", fechaCaducidad="
-				+ fechaCaducidad + ", codigoSeguridad=" + codigoSeguridad
-				+ ", idCliente=" + idCliente + ", idCotiza=" + idCotiza
-				+ ", imPrecio=" + imPrecio + ", idPaquete=" + idPaquete + "]";
+	public String getMes() {
+		return mes;
+	}
+
+	public void setMes(String mes) {
+		this.mes = mes;
+	}
+
+	public String getAnio() {
+		return anio;
+	}
+
+	public void setAnio(String anio) {
+		this.anio = anio;
 	}
 
 }

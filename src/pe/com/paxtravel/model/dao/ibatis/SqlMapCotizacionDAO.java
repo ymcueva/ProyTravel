@@ -242,4 +242,11 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements
 				"cotizacion.listarCotizacionTicketDestinos", cotizacionId);
 	}
 
+	@Override
+	public int actualizarCotizacionRechazo(CotizacionBean cotizacionBean) {
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient())
+				.update("cotizacion.actualizarCotizacionRechazo", cotizacionBean);
+		return 1;
+	}
+
 }

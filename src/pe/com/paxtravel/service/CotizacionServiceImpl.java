@@ -78,7 +78,7 @@ public class CotizacionServiceImpl implements CotizacionService {
 		lista = cotizacionDAO.listarCotizacionServicio(cotizacionServicioBean);
 		return lista;
 	}
-	
+
 	@Override
 	public List<CotizacionServicioBean> obtenerCotizacionServicio(
 			CotizacionServicioBean cotizacionServicioBean) {
@@ -429,6 +429,11 @@ public class CotizacionServiceImpl implements CotizacionService {
 	public List<CotizacionDetalleDestinosBean> listarCotizacionTicketDestinos(
 			int cotizacionId) {
 		return cotizacionDAO.listarCotizacionTicketDestinos(cotizacionId);
+	}
+
+	@Override
+	public int actualizarCotizacionRechazo(CotizacionBean cotizacionBean) {
+		return cotizacionDAO.actualizarCotizacionRechazo(cotizacionBean);
 	}
 
 	// @Override

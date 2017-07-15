@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+
 //import org.apache.commons.beanutils.BeanUtils;
 
 /**
@@ -26,6 +27,11 @@ import javax.servlet.http.HttpServletRequest;
 public class Utils {
 
 	private static Random rnd = new Random();
+	private static final SimpleDateFormat SDF_DATE = new SimpleDateFormat(
+			"yyyy-MM-dd");
+	private static final SimpleDateFormat SDF_DATETIME = new SimpleDateFormat(
+			"yyyy-MM-dd HH:mm:ss");
+	private static final String REGEX_ONLY_NUMERIC = "[0-9]+";
 
 	/**
 	 * Metodo mapea una determinada clase, Te crea una objeto de una determinada
@@ -575,6 +581,23 @@ public class Utils {
 		for (int i = 0; i < digCount; i++)
 			sb.append((char) ('0' + rnd.nextInt(10)));
 		return sb.toString();
+	}
+
+	// comparar con fecha actual
+	public static int compareDates(String date1, String date2) throws Exception {
+		Date dateA = SDF_DATE.parse(date1);
+		Date dateB = SDF_DATE.parse(date2);
+		return dateA.compareTo(dateB);
+	}
+
+	// validar solo numerico positivo
+	public static boolean isPositiveNumeric(String field) {
+		return field.matches(REGEX_ONLY_NUMERIC);
+	}
+
+	// obtener fecha actual
+	public static String getCurrentDate() {
+		return SDF_DATETIME.format(new Date());
 	}
 
 }

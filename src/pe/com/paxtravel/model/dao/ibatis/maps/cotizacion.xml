@@ -229,6 +229,7 @@
         <result property="idTipoCotizacion" column="id_tipo_cotiza" />
         <result property="estado" column="no_estado" />
         <result property="idCliente" column="id_cliente" />
+        <result property="feMaxAprobCotiza" column="fe_max_aprob_cotiza" />
     </resultMap>
     
     <resultMap id="resultCotPatTurDestinos" class="cotizacionDetalleDestinosBean">
@@ -805,7 +806,8 @@
             id_tipo_programa, 
             id_tipo_cotiza,
             e.no_estado,
-            id_cliente
+            id_cliente,
+            fe_max_aprob_cotiza
         FROM 
             cotizacion c inner join estado e on c.id_estado = e.id_estado
         WHERE 
@@ -881,5 +883,16 @@
 		    inner join tipo_documento td on cl.tipo_docu = td.id_tipo_docu
 		WHERE co.id_cotiza = #cotizacionId# AND co.id_tipo_cotiza = 2;
     </select>
+    
+    <update id="actualizarCotizacionRechazo" parameterClass="cotizacionBean" >
+		update 
+			cotizacion 
+		set 
+			id_estado = #idEstado#,
+			comentario = #comentario#,
+			fe_upd = #feUpd#
+		where 
+			id_cotiza = #idCotizacion# 
+	</update>
 	
 </sqlMap>
