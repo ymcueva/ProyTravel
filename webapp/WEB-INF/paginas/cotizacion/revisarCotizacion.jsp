@@ -849,6 +849,7 @@
 														class="form-control">
 												</div>
 											</div>
+											<!--  cajas -->
 											<div class="form-group">
 												<label class="control-label col-sm-3">Año</label>
 												<div class="col-sm-3">
