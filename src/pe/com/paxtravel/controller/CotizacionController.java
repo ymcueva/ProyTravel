@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -533,6 +534,7 @@ public class CotizacionController {
 			if (!resultadoValidacion.equalsIgnoreCase("OK")) {
 				HashMap<String, Object> mapa = new HashMap<String, Object>();
 				mapa.put("resultadoProcesarPago", resultadoValidacion);
+				mapa.put("resultado", "error");
 				DataJsonBean dataJSON = new DataJsonBean();
 				dataJSON.setRespuesta("ok1", null, mapa);
 				return ControllerUtil.handleJSONResponse(dataJSON, response);
@@ -595,10 +597,13 @@ public class CotizacionController {
 			System.out.println("se actualizo paquete con estado asignado");
 			// Mostrar el numero de operacion de la cotizacion
 			HashMap<String, Object> mapa = new HashMap<String, Object>();
-			mapa.put(
-					"resultadoProcesarPago",
-					"PAGO REALIZADO (NRO. TRANSACCION: "
-							+ authorizeNetBean.getNumeroOperacion() + ")");
+			String resultadoProcesarPago = "PAGO REALIZADO - NUMERO TRANSACCION: "
+					+ authorizeNetBean.getNumeroOperacion();
+			mapa.put("resultadoProcesarPago", resultadoProcesarPago);
+			mapa.put("resultado", "ok");
+			mapa.put("url",
+					"http://localhost:7001/ProyTravel/loadMensajeResultado?mensaje="
+							+ resultadoProcesarPago);
 			DataJsonBean dataJSON = new DataJsonBean();
 			dataJSON.setRespuesta("ok1", null, mapa);
 			return ControllerUtil.handleJSONResponse(dataJSON, response);
@@ -606,6 +611,17 @@ public class CotizacionController {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@RequestMapping(value = "/loadMensajeResultado", method = { RequestMethod.GET })
+	public ModelAndView loadMensajeResultado(HttpServletRequest request,
+			HttpServletResponse response,
+			@RequestParam(value = "mensaje") String mensaje) {
+		System.out.println("[loadMensajeResultado] mensaje: " + mensaje);
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("mensajeResultado", mensaje);
+		modelAndView.setViewName("cotizacion/mensajeResultado");
+		return modelAndView;
 	}
 
 	@RequestMapping(value = "/rechazarCotizacion", method = {
@@ -621,6 +637,18 @@ public class CotizacionController {
 			BeanUtils.populate(rechazarCotizacionBean, rechazarBeanMap);
 			System.out.println("rechazarCotizacionBean: "
 					+ rechazarCotizacionBean.toString());
+
+			if (rechazarCotizacionBean.getObservacion() == null
+					|| rechazarCotizacionBean.getObservacion().trim().length() == 0) {
+				HashMap<String, Object> mapa = new HashMap<String, Object>();
+				mapa.put("resultadoRechazarCotizacion",
+						"Debe ingresar una observación");
+				mapa.put("resultado", "error");
+				DataJsonBean dataJSON = new DataJsonBean();
+				dataJSON.setRespuesta("ok1", null, mapa);
+				return ControllerUtil.handleJSONResponse(dataJSON, response);
+			}
+
 			// Actualizar la cotizacion a estado rechazado
 			CotizacionBean cotizacionBean = new CotizacionBean();
 			cotizacionBean.setIdEstado(16);
@@ -643,8 +671,12 @@ public class CotizacionController {
 			System.out.println("se registro expediente con estado rechazado");
 			// Mostrar el numero de operacion de la cotizacion
 			HashMap<String, Object> mapa = new HashMap<String, Object>();
-			mapa.put("resultadoRechazarCotizacion",
-					"LA COTIZACION HA SIDO RECHAZADA");
+			String resultadoRechazarCotizacion = "LA COTIZACION HA SIDO RECHAZADA";
+			mapa.put("resultadoRechazarCotizacion", resultadoRechazarCotizacion);
+			mapa.put("resultado", "ok");
+			mapa.put("url",
+					"http://localhost:7001/ProyTravel/loadMensajeResultado?mensaje="
+							+ resultadoRechazarCotizacion);
 			DataJsonBean dataJSON = new DataJsonBean();
 			dataJSON.setRespuesta("ok1", null, mapa);
 			return ControllerUtil.handleJSONResponse(dataJSON, response);

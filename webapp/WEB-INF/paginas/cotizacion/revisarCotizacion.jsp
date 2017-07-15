@@ -136,10 +136,17 @@
 			contentType : "application/json; charset=utf-8",
 			dataType : 'json',
 			success : function(response) {
-				var rpta = response.dataJson; // OK
+				var rpta = response.dataJson;
 				var rptaRes = rpta.resultadoProcesarPago;
+				var result = rpta.resultado;
 				console.log("respuesta procesar pago: " + rptaRes);
-				$("#resultadoProcesarPago").html(rptaRes);
+				console.log("result: " + result);
+				if(result == 'ok'){
+					window.location.replace(rpta.url);
+				}else{
+					$("#resultadoProcesarPago").html(rptaRes);	
+				}
+				
 			},
 			error : function(data, textStatus, errorThrown) {
 			}
@@ -164,8 +171,13 @@
 			success : function(response) {
 				var rpta = response.dataJson; // OK
 				var rptaRes = rpta.resultadoRechazarCotizacion;
+				var result = rpta.resultado;
 				console.log("rpta resultado: " + rptaRes);
-				$("#resultadoRechazarCotizacion").html(rptaRes);
+				if(result == 'ok'){
+					window.location.replace(rpta.url);
+				}else{
+					$("#resultadoRechazarCotizacion").html(rptaRes);
+				}
 			},
 			error : function(data, textStatus, errorThrown) {
 			}
