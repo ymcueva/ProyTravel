@@ -99,10 +99,10 @@
 
 	function inicia() {
 		$('#divFechaCotizacionBusq').datetimepicker({
-            format: 'MM/YYYY',        
-            viewMode: "months",
-            pickTime: false,
-            useCurrent: true
+			format : 'MM/YYYY',
+			viewMode : "months",
+			pickTime : false,
+			useCurrent : true
 		});
 
 		$("#eliminarFecha").on("click", function(e) {
@@ -141,12 +141,12 @@
 				var result = rpta.resultado;
 				console.log("respuesta procesar pago: " + rptaRes);
 				console.log("result: " + result);
-				if(result == 'ok'){
+				if (result == 'ok') {
 					window.location.replace(rpta.url);
-				}else{
-					$("#resultadoProcesarPago").html(rptaRes);	
+				} else {
+					$("#resultadoProcesarPago").html(rptaRes);
 				}
-				
+
 			},
 			error : function(data, textStatus, errorThrown) {
 			}
@@ -173,9 +173,9 @@
 				var rptaRes = rpta.resultadoRechazarCotizacion;
 				var result = rpta.resultado;
 				console.log("rpta resultado: " + rptaRes);
-				if(result == 'ok'){
+				if (result == 'ok') {
 					window.location.replace(rpta.url);
-				}else{
+				} else {
 					$("#resultadoRechazarCotizacion").html(rptaRes);
 				}
 			},
@@ -850,20 +850,17 @@
 												</div>
 											</div>
 											<div class="form-group">
-												<label class="control-label col-sm-3">Fecha de
-													Caducidad</label>
-												<div class="col-sm-7">
-													<div class="input-group date tamanoMaximo"
-														id="divFechaCotizacionBusq">
-														<input id="txtFechaCaducidad" name="fechaCaducidad"
-															type="text" maxlength="16" readonly="yes"
-															class="form-control txtFecha" /> <span
-															class="input-group-addon datepickerbutton"> <span
-															class="glyphicon glyphicon-calendar"></span>
-														</span> <span class="input-group-addon" id="eliminarFecha">
-															<span class="glyphicon glyphicon-remove"></span>
-														</span>
-													</div>
+												<label class="control-label col-sm-3">Año</label>
+												<div class="col-sm-3">
+													<input id="txtAnio"
+														name="anio" type="text" maxlength="4"
+														class="form-control">
+												</div>
+												<label class="control-label col-sm-1">Mes</label>
+												<div class="col-sm-3">
+													<input id="txtMes"
+														name="mes" type="text" maxlength="2"
+														class="form-control">
 												</div>
 											</div>
 											<div class="form-group">
@@ -965,8 +962,7 @@
 	<div id="divVerDetalleInseminacion" class="modal fade" role="dialog"
 		style="text-center: center">
 		<div class="modal-dialog">
-			<div class="panel panel-primary">
-			</div>
+			<div class="panel panel-primary"></div>
 		</div>
 	</div>
 

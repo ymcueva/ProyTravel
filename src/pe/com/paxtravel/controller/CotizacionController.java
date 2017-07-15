@@ -500,18 +500,18 @@ public class CotizacionController {
 		if (!Utils.isPositiveNumeric(bean.getNumeroTarjeta())) {
 			return "Debe ingresar un número válido de tarjeta";
 		}
-		if (bean.getFechaCaducidad() == null
-				|| bean.getFechaCaducidad().trim().length() == 0) {
-			return "Debe ingresar una fecha de caducidad";
+		if (bean.getAnio() == null || bean.getAnio().trim().length() == 0) {
+			return "Debe ingresar el año de caducidad";
+		}
+		if (bean.getMes() == null || bean.getMes().trim().length() == 0) {
+			return "Debe ingresar el mes de caducidad";
 		}
 		try {
-			Integer mes = Integer.parseInt(bean.getFechaCaducidad().substring(
-					0, bean.getFechaCaducidad().indexOf("/")));
-			Integer anio = Integer.parseInt(bean.getFechaCaducidad().substring(
-					bean.getFechaCaducidad().indexOf("/") + 1));
+			Integer mes = Integer.parseInt(bean.getMes());
+			Integer anio = Integer.parseInt(bean.getAnio());
 			System.out.println("mes: " + mes + " anio: " + anio);
 		} catch (Exception e) {
-			return "Debe ingresar una fecha de caducidad válida";
+			return "Debe ingresar una año y mes de caducidad válida";
 		}
 		if (bean.getCodigoSeguridad() <= 0 || bean.getCodigoSeguridad() > 9999) {
 			return "Debe ingresar un código de seguridad válido";
