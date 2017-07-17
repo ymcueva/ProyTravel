@@ -158,27 +158,31 @@
 	</select>
 	
 	<select id="listarTour" parameterClass="tourBean" resultMap="resultTour">
-			select id_tour,
-			       id_destino_ciudad,
-			       duracion,
-			       precio_adulto,
-			       precio_nino,
-			       descripcion,
-			       ifnull(itinerario,'')itinerario,
-			       ifnull(servicios,'')servicios
-			 from tour
-			 where id_destino_ciudad = #idDestinoCiudad#      
+			select t.id_tour,
+			       t.id_destino_ciudad,
+			       t.duracion,
+			       t.precio_adulto,
+			       t.precio_nino,
+			       t.descripcion,
+			       ifnull(t.itinerario,'')itinerario,
+			       ifnull(t.servicios,'')servicios
+			 from tour t
+			 inner join proveedor prov on t.id_proveedor = prov.id_proveedor
+			 where t.id_destino_ciudad = #idDestinoCiudad# and prov.estado = 1 
+			 <isNotEmpty prepend="AND" property="descripcion"> t.descripcion LIKE #descripcion# </isNotEmpty>
+	     	 <isNotEmpty prepend="AND" property="referencia"> t.referencia LIKE #referencia# </isNotEmpty>     
 	</select>	
 	
 	<select id="listarTourBusqueda" parameterClass="tourBean" resultMap="resultTourBusqueda">
-		select id_tour,
-   			   ifnull(flag_deportes,0) + ifnull(flag_cultural,0) + ifnull(flag_playa,0) + ifnull(flag_relajacion,0) flag_servicios,
-   			   descripcion,
-  			   precio_adulto,
-   			   precio_nino,
-   		       duracion
-   		from tour
-   		where id_destino_ciudad = #idDestinoCiudad#
+		select t.id_tour,
+   			   ifnull(t.flag_deportes,0) + ifnull(t.flag_cultural,0) + ifnull(t.flag_playa,0) + ifnull(t.flag_relajacion,0) flag_servicios,
+   			   t.descripcion,
+  			   t.precio_adulto,
+   			   t.precio_nino,
+   		       t.duracion
+   		from tour t
+   		inner join proveedor prov on t.id_proveedor = prov.id_proveedor
+   		where t.id_destino_ciudad = #idDestinoCiudad# and prov.estado = 1
    		order by 2 desc
    		limit 1
 	</select>
@@ -194,10 +198,13 @@
 			from hotel h
 			inner join tipo_alojamiento t on h.id_tipo_alojamiento = t.id_tipo_alojamiento
 			inner join tipo_categoria_alojamiento cat on h.id_categoria_alojamiento = cat.id_tipo
-			where id_destino = #idDestino#
+			inner join proveedor prov on h.id_proveedor = prov.id_proveedor
+			where id_destino = #idDestino# and prov.estado = 1
 			<isGreaterThan compareValue="0" prepend="AND" property="idTipoAlojamiento"> h.id_tipo_alojamiento = #idTipoAlojamiento# </isGreaterThan>
 	        <isGreaterThan compareValue="0" prepend="AND" property="idCategoriaAlojamiento"> h.id_categoria_alojamiento = #idCategoriaAlojamiento# </isGreaterThan>
-	     
+	     	<isNotEmpty prepend="AND" property="descripcion"> h.descripcion LIKE #descripcion# </isNotEmpty>
+	     	<isNotEmpty prepend="AND" property="direccion"> h.direccion LIKE #direccion# </isNotEmpty>
+	     	<isNotEmpty prepend="AND" property="referencia"> h.referencia LIKE #referencia# </isNotEmpty>
 	</select>
 	
 	<select id="listarTipoHabitacion" parameterClass="hotelHabitacionBean" resultMap="resultTipoHabitacion">
@@ -219,8 +226,10 @@
 		               and cot.id_categoria_alojamiento = ho.id_categoria_alojamiento and odes.id_destino = ho.id_destino
    			inner join cotizacion_deta_habitacion chab on(cot.nu_cotiza = chab.id_cotiza)  
    			inner join hotel_habitacion hohab on(ho.id_hotel = hohab.id_hotel) and chab.id_tipo_habitacion = hohab.id_tipo_habitacion
+   			inner join proveedor prov on ho.id_proveedor = prov.id_proveedor
    			where cot.id_cotiza = #idCotiza#
-   			and	  ho.id_destino = #idDestino#	
+   			and	  ho.id_destino = #idDestino#
+   			and   prov.estado = 1	
    			group by id_hotel
    			order by 2
    			limit 1
