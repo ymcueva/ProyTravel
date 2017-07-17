@@ -1,3 +1,4 @@
+<!-- detalle de cotizacion -->
 <div class="panel-heading" >
 	<h3 class="panel-title" align="center" id="tituloCotizacion"></h3>
 </div>
