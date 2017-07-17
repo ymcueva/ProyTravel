@@ -91,11 +91,22 @@
 				var tipo = $("#tipoAlojamiento").val();
 				var categoria = $("#categoriaAlojamiento").val();
 				var destino = $("#hdnRowDestino").val();
+				var tipobusqueda = $("#tipobusqueda").val();
+				var valorbusqueda = $("#txtValorBusqueda").val();
 				
-				buscarHoteles(destino,tipo,categoria);
+				buscarHoteles(destino,tipo,categoria,tipobusqueda,valorbusqueda);
 				
 				
 			});
+			
+			$("#btnBuscarTour").on('click',function(e){
+				var destino = $("#hdnRowDestino").val();
+				var tipobusqueda = $("#tipobusquedaTour").val();
+				var valorbusqueda = $("#txtValorBusquedaTour").val();
+				buscarTour(destino,tipobusqueda,valorbusqueda);
+			});
+			
+			
 			
 			$("#tipoHabitacion").on('change',function(){
 				var valor = $(this).val();
@@ -989,9 +1000,9 @@
 
 		}
 		
-		function buscarHoteles(idDestino,tipo,categoria) {
+		function buscarHoteles(idDestino,tipo,categoria,tipobusqueda,valorbusqueda) {
 			var params = "";
-			params = "?iddestino=" + idDestino + "&tipo=" + tipo + "&categoria=" + categoria;
+			params = "?iddestino=" + idDestino + "&tipo=" + tipo + "&categoria=" + categoria + "&tipobusqueda=" + tipobusqueda + "&valor=" + valorbusqueda;
 			$.ajax({
 				url: '${pageContext.request.contextPath}/verHoteles'+params,
 	           	//data: JSON.stringify(grabarFormParams),	           	
@@ -1059,8 +1070,12 @@
 	            
 		}
 		
-		function buscarTour(idDestino){
+		
+		function buscarTour(idDestino,tipobusqueda,valorbusqueda){
 			params = "?idDestino="+idDestino;
+			params += "&tipobusqueda=" + tipobusqueda;
+			params += "&valorbusqueda=" + valorbusqueda;
+			
 			$.ajax({
 				url: '${pageContext.request.contextPath}/verTours'+params,
 	           	//data: JSON.stringify(grabarFormParams),	           	
@@ -1219,7 +1234,7 @@
 			//alert(origen);
 			//Servicio de Hotel
 			if(idservicio == 6) {
-				buscarHoteles(destino,"","");
+				buscarHoteles(destino,"","","","");
 			}
 			
 			//Servicio Ticket Aereo
@@ -1229,7 +1244,7 @@
 			
 			//Servicio Tour
 			else if(idservicio == 3){
-				buscarTour(destino);
+				buscarTour(destino,"","");
 			}
 			
 			else {

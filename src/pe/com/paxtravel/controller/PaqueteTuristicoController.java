@@ -97,10 +97,25 @@ public class PaqueteTuristicoController {
 		try {
 			modelAndView = new ModelAndView();
 			int idDestino = Integer.parseInt(request.getParameter("idDestino"));
+			String tipobusqueda = request.getParameter("tipobusqueda").toString();
+			String valorbusqueda = request.getParameter("valorbusqueda").toString();
+			
+			
+			
 			System.out.println("IdDestino : " + idDestino);
 			List<TourBean> listaTour = new ArrayList<TourBean>();
 			TourBean tour = new TourBean();
 			tour.setIdDestinoCiudad(idDestino);
+			
+			if(!tipobusqueda.equals("")){
+				if(tipobusqueda.equals("1"))
+					tour.setDescripcion("%" + valorbusqueda + "%");
+				else if(tipobusqueda.equals("2"))
+					tour.setReferencia("%" + valorbusqueda + "%");
+			}
+			
+			
+			
 			listaTour = paqueteTuristicoService.listarTour(tour);
 			
 			if(listaTour != null){
@@ -336,11 +351,17 @@ public class PaqueteTuristicoController {
 			
 			String tipo = request.getParameter("tipo").toString();
 			String categoria = request.getParameter("categoria").toString();
+			String tipoBusqueda = request.getParameter("tipobusqueda").toString();
+			String valor = request.getParameter("valor").toString();
 			
 			
 			System.out.println("IdDestino : " + idDestino);
 			System.out.println("Tipo :" + tipo);
 			System.out.println("Categoria :" + categoria);
+			System.out.println("tipoBusqueda :" + tipoBusqueda);
+			System.out.println("valor :" + valor);
+			
+			
 			
 			List<HotelBean> listaHotel = new ArrayList<HotelBean>();
 			HotelBean hotel = new HotelBean();
@@ -354,6 +375,16 @@ public class PaqueteTuristicoController {
 			if(!categoria.equals("")){
 				System.out.println("Validacion Categoria");
 				hotel.setIdCategoriaAlojamiento(Integer.parseInt(categoria));
+			}
+			
+			if(!tipoBusqueda.equals("")){
+				if(tipoBusqueda.equals("1"))
+					hotel.setDescripcion("%" + valor + "%");
+				else if(tipoBusqueda.equals("2"))
+					hotel.setDireccion("%" + valor + "%");
+				else if(tipoBusqueda.equals("3"))
+					hotel.setReferencia("%" + valor + "%");
+				
 			}
 			
 			
