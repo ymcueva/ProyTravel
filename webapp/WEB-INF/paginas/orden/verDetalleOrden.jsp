@@ -10,7 +10,7 @@
 				<div style="display:none">
 				<span id="idReservaDetalle"></span>
 				</div>
-				<div class="col-sm-5" style="text-align:right; font-weight:bold">SSSSSSSSSN&uacute;mero Reserva:</div>
+				<div class="col-sm-5" style="text-align:right; font-weight:bold">N&uacute;mero Reserva:</div>
 				<div class="col-sm-7" id="divNumReservaDetalle" ></div>
 			</div>
 			
