@@ -90,5 +90,20 @@ public class OrdenServiceImpl implements OrdenService {
 	public int registrarMotivo(OrdenBean ordenBean) {
 		return ordenDAO.registrarMotivo(ordenBean);
 	}
+
+	@Override
+	public OrdenBean obtenerOrdenDetalle(OrdenBean ordenBean) {
+		return ordenDAO.obtenerOrdenDetalle(ordenBean);
+	}
+
+	@Override
+	public List<OrdenBean> listarMotivoViajeDetalle(OrdenBean ordenBean) {
+		return ordenDAO.listarMotivoViajeDetalle(ordenBean);
+	}
+
+	@Override
+	public List<OrdenBean> listarServicioDetalle(OrdenBean ordenBean) {
+		return ordenDAO.listarServicioDetalle(ordenBean);
+	}
 	
 }

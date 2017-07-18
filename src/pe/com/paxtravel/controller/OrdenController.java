@@ -75,7 +75,7 @@ public class OrdenController {
 			
 			String botonBuscar = (request.getParameter("btnBuscar"))!=null?request.getParameter("btnBuscar"):"";
 			
-			mapa.put("titulo", "RESERVA");
+			mapa.put("titulo", "ORDEN");
 			
 			if("1".equals(botonBuscar)){
 				Map<String, Object> parametrosRequest = ControllerUtil.parseRequestToMap(request);
@@ -287,6 +287,51 @@ public class OrdenController {
 			dataJSON.setRespuesta("ok", null, mapa);
 			
 		}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return ControllerUtil.handleJSONResponse(dataJSON, response);
+	}
+	
+	@RequestMapping( value = "/verDetalleOrden", method ={RequestMethod.GET, RequestMethod.POST} )
+	public ModelAndView verDetalleOrden(HttpServletRequest request, HttpServletResponse response){
+		Map<String, Object> mapa = new HashMap<String, Object>();
+		DataJsonBean dataJSON = new DataJsonBean();
+		try {
+			OrdenBean o = new OrdenBean();
+			int idOrden = Integer.parseInt( request.getParameter("idOrden") );
+			o.setIdOrden(idOrden);
+			o = ordenService.obtenerOrdenDetalle(o);
+			
+			String motivoViaje = "";
+			String servicioViaje = "";
+			
+			List<OrdenBean> listaMotivo = new ArrayList<OrdenBean>();
+			listaMotivo = ordenService.listarMotivoViajeDetalle(o);
+			
+			if (listaMotivo.size()>0) {
+				for (OrdenBean ordenBean : listaMotivo) {
+					motivoViaje += ordenBean.getDescripcionMotivoViaje() + ", ";
+				}
+				motivoViaje = motivoViaje.substring(0, motivoViaje.length()-2);
+			}
+			
+			List<OrdenBean> listaServicio = new ArrayList<OrdenBean>();
+			listaServicio = ordenService.listarServicioDetalle(o);
+			
+			if (listaServicio.size()>0) {
+				for (OrdenBean ordenBean : listaServicio) {
+					servicioViaje += ordenBean.getDescripcionServicioViaje() + ", ";
+				}
+				servicioViaje = servicioViaje.substring(0, servicioViaje.length()-2);
+			}
+			
+			
+	        mapa.put("titulo", "Detalle Orden");
+	        mapa.put("motivoViaje", motivoViaje);
+	        mapa.put("servicioViaje", servicioViaje);
+	        mapa.put("orden", o);
+	        dataJSON.setRespuesta("ok", null, mapa);
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
