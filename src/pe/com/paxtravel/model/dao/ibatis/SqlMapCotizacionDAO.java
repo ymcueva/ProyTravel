@@ -9,6 +9,7 @@ import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import pe.com.paxtravel.bean.CiudadBean;
 import pe.com.paxtravel.bean.ClienteBean;
 import pe.com.paxtravel.bean.CotizacionBean;
+import pe.com.paxtravel.bean.CotizacionDetaHabitacionBean;
 import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleDestinosBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
@@ -247,6 +248,14 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements
 		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient())
 				.update("cotizacion.actualizarCotizacionRechazo", cotizacionBean);
 		return 1;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CotizacionDetaHabitacionBean> listarCotizacionDetaHabitacion(CotizacionDetaHabitacionBean cotizacionDetaHabitacionBean) 
+	{
+		return getSqlMapClientTemplate().queryForList(
+				"cotizacion.listarCotizacionDetaHabitacion", cotizacionDetaHabitacionBean);
 	}
 
 }

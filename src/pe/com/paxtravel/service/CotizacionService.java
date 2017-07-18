@@ -5,6 +5,7 @@ import java.util.List;
 import pe.com.paxtravel.bean.CiudadBean;
 import pe.com.paxtravel.bean.ClienteBean;
 import pe.com.paxtravel.bean.CotizacionBean;
+import pe.com.paxtravel.bean.CotizacionDetaHabitacionBean;
 import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
 import pe.com.paxtravel.bean.CotizacionDetalleDestinosBean;
@@ -87,5 +88,7 @@ public interface CotizacionService {
 			int cotizacionId);
 
 	public int actualizarCotizacionRechazo(CotizacionBean cotizacionBean);
+	
+	List<CotizacionDetaHabitacionBean> listarCotizacionDetaHabitacion(CotizacionDetaHabitacionBean cotizacionDetaHabitacionBean);
 
 }

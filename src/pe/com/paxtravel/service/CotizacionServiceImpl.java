@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import pe.com.paxtravel.bean.CiudadBean;
 import pe.com.paxtravel.bean.ClienteBean;
 import pe.com.paxtravel.bean.CotizacionBean;
+import pe.com.paxtravel.bean.CotizacionDetaHabitacionBean;
 import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.CotizacionDetalleDestinosBean;
 import pe.com.paxtravel.bean.CotizacionDetalleTicketVueloBean;
@@ -434,6 +435,13 @@ public class CotizacionServiceImpl implements CotizacionService {
 	@Override
 	public int actualizarCotizacionRechazo(CotizacionBean cotizacionBean) {
 		return cotizacionDAO.actualizarCotizacionRechazo(cotizacionBean);
+	}
+	
+	@Override
+	public List<CotizacionDetaHabitacionBean> listarCotizacionDetaHabitacion(CotizacionDetaHabitacionBean cotizacionDetaHabitacionBean) {
+		List<CotizacionDetaHabitacionBean> listaCotizacion = new ArrayList<CotizacionDetaHabitacionBean>();
+		listaCotizacion = cotizacionDAO.listarCotizacionDetaHabitacion(cotizacionDetaHabitacionBean);
+		return listaCotizacion;
 	}
 
 	// @Override
