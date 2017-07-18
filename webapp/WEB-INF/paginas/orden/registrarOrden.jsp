@@ -12,6 +12,8 @@
 <meta charset="utf-8">
 
     <script src="/a/resources/js/jquery/1.11.2/jquery.min.js"></script>
+	<script src="/a/resources/js/jquery/1.11.2/jquery.maskMoney.js"></script>
+	
     <script src="/a/resources/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	<script src="/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/media/js/jquery.dataTables.min.js"></script>
 	<script src="/a/resources/bootstrap/3.3.2/plugins/datatables-1.10.7/extensions/Responsive/js/dataTables.responsive.js"></script>
@@ -34,6 +36,8 @@
 	<!-- bootstrap validator-->
 	<script src="/a/resources/js/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
 	
+	<script src="/a/resources/bootstrap/3.3.2/plugins/jquery.inputmask-3.1/dist/jquery.inputmask.bundle.js" type="text/javascript"></script>
+	
 	<script>
 	
  	$(document).ready(function(){
@@ -55,11 +59,11 @@
 		$("#chkFlagCantidadDias").change(function () {
 			
 			$("#txtNumeroDiasEstadia").val("");
-			$("#txtNumeroDiasEstadia").focus();
+			
 			if ($("#chkFlagCantidadDias").is(":checked")) {
-				$("#divNumeroDias").css("display","inline");
+				$("#divNumeroDias").show();
 			} else {
-				$("#divNumeroDias").css("display","none");
+				$("#divNumeroDias").hide();
 			}
 			
 		});
@@ -69,6 +73,7 @@
 			var fechasalida =  sumarRestarFecha(90, fechasalida);
 			
             $('#divFechaFinDuracion').data("DateTimePicker").setMaxDate(fechasalida);
+            
 		});
 		
 		
@@ -217,12 +222,12 @@
             bScrollAutoCss: true,
             bStateSave: false,
             bAutoWidth: false,
-            info: false,
             bScrollCollapse: false,
             pagingType: "full_numbers",
-            pageLength: 5,
+            pageLength: 20,
             responsive: true,
             bLengthChange: false,
+			info: false,
 			
             fnDrawCallback: function(oSettings) {
                 if (oSettings.fnRecordsTotal() == 0) {
@@ -233,7 +238,6 @@
             },
             
             fnRowCallback: function (nRow, aData, iDisplayIndex) {
-				alert(aData[0]);
 				$(nRow).attr('id', aData[0]);
 				$(nRow).attr('align', 'center');
 				$(nRow).attr('rowClasses','tableOddRow');
@@ -252,8 +256,21 @@
         });
  	}
 	
+	function makeInputMask( controlQuery, mask, maxlength, valorInicial ) {
+    	var control = $( controlQuery );
+    	control.inputmask( mask, {placeholder: ''});
+		if ( maxlength != null ) {
+			control.prop('maxlength', maxlength);
+		}
+		if ( valorInicial != null ) {
+			control.val( valorInicial );
+		}
+    }
+	
 	function inicia(){
 		
+		$('#txtPresupuestoMaximo').maskMoney();
+		$("#divNumeroDias").hide();
 		$('#divFechaInicioDuracion').datetimepicker({
 			language : 'es',
             autoClose : true,
@@ -264,14 +281,11 @@
 			useCurrent: false
         });
 		
-		
-		
 		/*$('#divFechaInicioDuracion').on('dp.change dp.show', function(e) {
 			var fechasalida = $("#txtFechaPartida").val();
 			alert("fechasalida: " + fechasalida);
 			 $("#id_deadline").datepicker({minDate: dateToday});
 		});*/
-		
 
 		$('#divFechaFinDuracion').datetimepicker({
 			language : 'es',
@@ -282,7 +296,19 @@
             pickTime: false,
 			useCurrent: false
         });
-	}		
+		
+	}
+	
+	function validarNumero(e){
+		var key = window.Event ? e.which : e.keyCode;
+		return ( key >= 48 && key <= 57 );
+ 	}
+	
+	function validarNumeroLetra(e){
+		var key = window.Event ? e.which : e.keyCode;
+		return (  (key >= 44 && key <= 46) || (key >= 48 && key <= 57) || (key==32 ) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90) );
+ 	}
+	
 	
 	function retornaDiferencia(e){
 		e.preventDefault();
@@ -303,18 +329,76 @@
 		return cantidadDias;
 	}
 	
+	function mostrarMensajeValidFormulario(mensaje){
+		$("#divFormularioVacio").html(mensaje);
+		$('#mdlValidaFormulario').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
+	
 	function valid(e){
+		
 		var numDias = $("#txtNumeroDiasEstadia").val();
+		var fPartida = $("#txtFechaPartida").val();
+		var fRetorno = $("#txtFechaRetorno").val();
+		var idServicio = "";
+		var idMotivo = "";
+		var comentario = $("#txtComentarioOrden").val();
+		
+		$(".chkServicio:checked").each(function() {
+			idServicio += $(this).val();
+        });
+		
+		$(".chkMotivo:checked").each(function() {
+			idMotivo += $(this).val();
+        });
+		
+	
+		if (($('#chkFlagCantidadDias').is(':checked')) && numDias == "" ){
+			mostrarMensajeValidFormulario("Ingresar el n\u00FAmero de d\u00EDas");
+			return false;
+		}
+		
+		if (fPartida.length==0 || fRetorno.length==0) {
+			mostrarMensajeValidFormulario("Ingresar las fechas de Partida y de Fecha Retorno");
+			return false;
+		}
+		
+		var difDias = retornaDiferencia(e) + "";
+		if ( difDias.substring(0,1) == "-" ) {
+			mostrarMensajeValidFormulario("La fecha retorno no puede ser mayor a la fecha de partida");
+			return false;
+		}
+		
+		if (idServicio.length==0) {
+			mostrarMensajeValidFormulario("Seleccionar los servicios tur\u00EDsticos");
+			return false;
+		}
+		
+		if (idMotivo.length==0) {
+			mostrarMensajeValidFormulario("Seleccionar los motivos de viaje");
+			return false;
+		}
+		
+		if (comentario == "") {
+			mostrarMensajeValidFormulario("Ingresar comentario");
+			return false;
+		}
+		
 		if (($('#chkFlagCantidadDias').is(':checked')) && numDias !="" ){
-			var cantidadDias = retornaDiferencia(e);
-			var numeroDias = $("#txtNumeroDiasEstadia").val();
-			if (cantidadDias > numeroDias){
+			var cantidadDiasFecha = retornaDiferencia(e);
+			var txtNumeroDias = numDias;
+			
+			if (cantidadDiasFecha > txtNumeroDias){
 				$('#mdlValidaCantidadDias').modal({
 					backdrop: 'static',
 					keyboard: false
 				});
 				
 				return false;
+			} else {
+				cargarConfirmacionRegistro(e);
 			}
 		} else {
 			cargarConfirmacionRegistro(e);
@@ -367,7 +451,6 @@
 	
 	function registrarOrden(){
 		
-		
 		var e = document.createEvent('Event');
 		
 		var flagAutorizacion = 0;
@@ -377,13 +460,15 @@
 		
 		var flagCantidadDias = 0;
 		var numeroDias = 0;
+		
+		
 		if ( $('#chkFlagCantidadDias').is(':checked') && ( $("#txtNumeroDiasEstadia").val() != "")){
 			flagCantidadDias = 1;
 			numeroDias = $("#txtNumeroDiasEstadia").val();
 		} else {
 			numeroDias = retornaDiferencia(e);
 		}
-		alert("numeroDias " + numeroDias);
+		
 		// Validando Busqueda automatica
 		
 		var dataJson = $("#tblDestino").DataTable().rows().data();
@@ -459,12 +544,6 @@
 	    return formularioObject;
 	}
 	
-		
-	function cerraVerDetalle(){
-		$('#divVerDetalleControlAnimal').modal("hide");
-	}	
-		
-	
 </script>
 
 
@@ -537,41 +616,36 @@
 
 									<div class="panel-body">
 										<div class="form-group">
-											<label class="col-sm-3" style="text-align:right;">Fecha Orden:</label>
-											<div class="col-sm-3" id="divCodigoAnimal" >${fechaOrden}
-												<span style="display:none">
-													<input type="text" name="fechaCotizacion" id="fechaCotizacion" value="" />
-												</span>
-											</div>
-											<div class="col-sm-2 alignDerecha">
-												<label class="control-label">
-														<input  type="checkbox" id="chkFlagCantidadDias"  name="flagCantidadDias">&nbsp;
-												Num. D&iacute;as de Estad&iacute;a:</input>
-												</label>
-											</div>
+											<label class="col-md-3" style="text-align:right;">Fecha Orden:</label>
+											<div class="col-md-3">${fechaOrden} </div>
 											
-											<div class="col-sm-3" style="display:none" id="divNumeroDias">
-												<input id="txtNumeroDiasEstadia" name="numeroDiasEstadia"  style="width:150px; height:29px" type="text" class="form-control" />
-											</div>
+											<label class="col-md-2 col-sm-offset-0 control-label alignDerecha">
+													<input  type="checkbox" id="chkFlagCantidadDias"  name="flagCantidadDias">&nbsp;
+											Num. D&iacute;as de Estad&iacute;a:</input>
+											</label>
 											
+											<div class="col-md-3" id="divNumeroDias">
+												<input id="txtNumeroDiasEstadia" name="numeroDiasEstadia" style="width:150px; height:29px" 
+												 onkeypress="return validarNumero(event)" type="text" class="form-control tamanoMaximo" />
+											</div>
 										</div>		
 										
 										<div class="form-group">
-											<label class="col-sm-3 control-label alignDerecha">Fecha Duraci&oacute;n Inicio:</label>
-											<div class="col-sm-3">
+											<label class="col-md-3 control-label alignDerecha">Fecha Partida:</label>
+											<div class="col-md-3">
 												<div class="input-group date tamanoMaximo" id="divFechaInicioDuracion">
 													<input id="txtFechaPartida" name="fechaPartida" type="text" maxlength="30" readonly="yes" class="form-control txtFecha" />
-													<span class="input-group-addon datepickerbutton">
+													<span class="input-group-addon datepickerbutton hidden-xs-down">
 														<span class="glyphicon glyphicon-calendar"></span>
 													</span>
-													<span class="input-group-addon" id="eliminarFecha">
+													<span class="input-group-addon hidden-xs-down" id="eliminarFecha">
 														<span class="glyphicon glyphicon-remove"></span>
 													</span>
 												</div>
 											</div>
 											
-											<label class="col-sm-2 col-sm-offset-0 control-label alignDerecha" >Fecha Duraci&oacute;n Fin:</label>
-											<div class="col-sm-3">
+											<label class="col-md-2 col-sm-offset-0 control-label alignDerecha" >Fecha Retorno:</label>
+											<div class="col-md-3">
 												<div class="input-group date tamanoMaximo" id="divFechaFinDuracion">
 													<input id="txtFechaRetorno" name="fechaRetorno" type="text" maxlength="30" readonly="yes" class="form-control txtFecha" />
 													<span class="input-group-addon datepickerbutton">
@@ -586,8 +660,8 @@
 											
 										<div class="form-group">
 											
-											<div class="col-sm-3 control-label" style="text-align:right; font-weight:bold">Tipo Paquete Tur&iacute;stico:</div>
-											<div class="col-sm-3">
+											<div class="col-md-3 control-label" style="text-align:right; font-weight:bold">Tipo Paquete Tur&iacute;stico:</div>
+											<div class="col-md-3">
 												<select name="idTipoPaqueteTuristico" id="selIdTipoPaqueteTuristico" class="form-control tamanoMaximo"> 
 													<option value="">---Seleccione Documento---</option>
 													<option value="1">Nacional</option>
@@ -596,9 +670,9 @@
 											</div>
 											
 											
-											<label class="col-sm-2 col-sm-offset-0 control-label alignDerecha" >Presupuesto:</label>
-											<div class="col-sm-3">
-												<input type="text" name="presupuestoMaximo" id="txtP<resupuestoMaximo" class="form-control tamanoMaximo" />
+											<label class="col-md-2 col-sm-offset-0 control-label alignDerecha" >Presupuesto:</label>
+											<div class="col-md-3">
+												<input type="text" name="presupuestoMaximo" id="txtPresupuestoMaximo" onclick="$('#txtPresupuestoMaximo').maskMoney('mask')" class="form-control tamanoMaximo" />
 											</div>
 										</div>
 									
@@ -713,9 +787,10 @@
 								</div>
 								
 								<div class="form-group">
-									<label for="comment" class="col-sm-3 control-label alignDerecha">Comentario:</label>
-									<div class="col-sm-9" id="divCodigoAnimal" >
-										<textarea class="form-control" rows="5" id="comment" name="comentarioOrden" id="txtComentarioOrden"></textarea>
+									<label class="col-sm-3 control-label alignDerecha">Comentario:</label>
+									<div class="col-sm-9">
+										<textarea class="form-control" rows="5" name="comentarioOrden" id="txtComentarioOrden" 
+										onkeypress="return validarNumeroLetra(event)"></textarea>
 									</div>
 								</div>	
 								
@@ -731,9 +806,9 @@
 								<div class="form-group">
 									
 									<div class="col-sm-12" style="text-align:center">
+										<input type="button" class="btn btn-primary" value="Aceptar"
+											onclick="valid(event)"></input>
 										
-										<button id="btnRegistrar" class="btn btn-primary" onclick="valid(event)"
-											title="Continuar">Grabar Orden</button>
 									</div>
 								</div>							
 								
@@ -823,6 +898,22 @@
 				<div class="modal-footer">
 					<div class="col-sm-12" align="center">					
 						<input type="button" id="btnAutorizacion" class="btn btn-primary"  onclick="$('#mdlValidaCantidadDias').modal('hide');" value="Aceptar"/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="mdlValidaFormulario" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="panel panel-info">
+			<div class="panel-heading"> <strong>Completar Formulario</strong></div>
+			<div class="panel-body">
+				<div class="modal-body"> <p class="text-center" id="divFormularioVacio"></p></div>
+				<div class="modal-footer">
+					<div class="col-sm-12" align="center">					
+						<input type="button" id="btnAutorizacion" class="btn btn-primary"  onclick="$('#mdlValidaFormulario').modal('hide');" value="Aceptar"/>
 					</div>
 				</div>
 			</div>

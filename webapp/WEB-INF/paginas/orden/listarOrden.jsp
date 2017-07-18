@@ -157,6 +157,7 @@
 			},
 			
 			fnRowCallback: function (nRow, aData, iDisplayIndex) {
+				//alert(aData[5]);
 				$(nRow).attr('id', aData[5]);
 				$(nRow).attr('align', 'center');
 				$(nRow).attr('rowClasses','tableOddRow');
@@ -170,6 +171,7 @@
 				targets: 5,
 				render: function(data, type, row){
 					if (row !=null && typeof row != 'undefined') {
+						
 						var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleOrden(\""+row.idOrden+"\")' title='Ver Orden' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";
 						return VerDetalle;
 						
@@ -196,10 +198,10 @@
 		location.href= '${pageContext.request.contextPath}/cargarFormRegistrarOrden';
 	}
 	
-	function verDetalleOrden(idOrden, idEstadoOrden){
+	function verDetalleOrden(idOrden){
 			
 		$.ajax({
-			url: '${pageContext.request.contextPath}/verDetalleReserva?idReserva='+idReserva+"&idEstadoReserva="+idEstadoReserva,
+			url: '${pageContext.request.contextPath}/verDetalleOrden?idOrden='+idOrden,
 			cache: false,
 			async: true,
 			type: 'GET',
@@ -208,23 +210,19 @@
 			success: function(response) {
 				
 				var rpta = response.dataJson;
-				$("#idReservaDetalle").html(rpta.reserva.idReserva)
-				$("#divNumReservaDetalle").html(rpta.reserva.numeroReserva);
+				$("#idOrdenDetalle").html(rpta.orden.idOrden)
+				$("#divNumOrdenDetalle").html(rpta.orden.numeroOrden);
 				
-				$("#divNumCotizaDetalle").html(rpta.reserva.numeroCotizacion);
-				$("#divFechaCotizaDetalle").html(rpta.reserva.fechaCotizacion);
-				$("#divClienteDetalle").html(rpta.reserva.cliente);
-				$("#divPrecioDetalle").html(rpta.reserva.precioCotizacion);
-								
-				if(idEstadoReserva == 12) {
-					$("#unBotonDetalle").hide();
-					$("#dosBotonesDetalle").show();
-				} else {
-					$("#dosBotonesDetalle").hide();
-					$("#unBotonDetalle").show();
-				}
+				$("#divFechaOrdenDetalle").html(rpta.orden.fechaOrden);
+				$("#divFechaPartidaDetalle").html(rpta.orden.fechaPartida);
+				$("#divFechaRetornoDetalle").html(rpta.orden.fechaRetorno);
+				$("#divPresupuestoMaximoDetalle").html(rpta.orden.presupuestoMaximo);
+				$("#divComentarioDetalle").html(rpta.orden.comentarioOrden);
+				$("#divMotivoViaje").html(rpta.motivoViaje);
+				$("#divServicioTuristico").html(rpta.servicioViaje);
 				
-				$("#divVerDetalleReserva").modal({
+				
+				$("#divVerDetalleOrden").modal({
 					backdrop: 'static',
 					keyboard: false
 				});
@@ -452,7 +450,7 @@
 	</div>
 </div>
 
-<div id="divVerDetalleReserva" class="modal fade" role="dialog" style="text-center:center">
+<div id="divVerDetalleOrden" class="modal fade" role="dialog" style="text-center:center">
 	<div class="modal-dialog">
 		<div class="panel panel-primary">
 			<%@ include file="verDetalleOrden.jsp" %>
