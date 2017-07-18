@@ -12,6 +12,8 @@ public class TourBean {
 	private double precioAdulto;
 	private double precioNino;
 	private int flagServicios;
+	private String referencia;
+	
 	
 	public int getIdTour() {
 		return idTour;
@@ -78,5 +80,11 @@ public class TourBean {
 	}
 	public void setFlagServicios(int flagServicios) {
 		this.flagServicios = flagServicios;
+	}
+	public String getReferencia() {
+		return referencia;
+	}
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
 	}
 }

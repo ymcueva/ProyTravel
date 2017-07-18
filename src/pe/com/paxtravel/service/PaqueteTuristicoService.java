@@ -24,6 +24,8 @@ public interface PaqueteTuristicoService {
 	
 	List<HotelBean> listarHotel(HotelBean hotelBean);
 	
+	List<HotelBean> listarHotelCotizacion(HotelBean hotelBean);
+	
 	List<HotelHabitacionBean> listarTipoHabitacion(HotelHabitacionBean hotelHabitacionBean);
 	
 	List<HotelHabitacionBean> obtenerTipoHabitacion(HotelHabitacionBean hotelHabitacionBean);

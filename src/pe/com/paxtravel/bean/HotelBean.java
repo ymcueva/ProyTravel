@@ -10,6 +10,9 @@ public class HotelBean {
 	private String nomTipo;
 	private String nomCategoria;
 	private double precio;
+	private String direccion;
+	private String referencia;
+	private Integer idCotiza;
 	
 	public int getIdHotel() {
 		return idHotel;
@@ -64,5 +67,23 @@ public class HotelBean {
 	}
 	public void setPrecio(double precio) {
 		this.precio = precio;
+	}
+	public String getDireccion() {
+		return direccion;
+	}
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+	public String getReferencia() {
+		return referencia;
+	}
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
+	}
+	public Integer getIdCotiza() {
+		return idCotiza;
+	}
+	public void setIdCotiza(Integer idCotiza) {
+		this.idCotiza = idCotiza;
 	}
 }

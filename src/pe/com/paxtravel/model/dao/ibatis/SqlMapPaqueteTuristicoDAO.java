@@ -66,6 +66,16 @@ public class SqlMapPaqueteTuristicoDAO extends SqlMapClientDaoSupport implements
 				"paqueteturistico.listarHoteles", hotelBean);
 		return listaHotel;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<HotelBean> listaHotelCotizacion(HotelBean hotelBean) {
+		List<HotelBean> listaHotel = null;
+		listaHotel = getSqlMapClientTemplate().queryForList(
+				"paqueteturistico.listarHotelesCotizacion", hotelBean);
+		return listaHotel;
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	@Override

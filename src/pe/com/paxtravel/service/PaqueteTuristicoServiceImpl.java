@@ -174,6 +174,13 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
 		listaHotel = paqueteTuristicoDAO.listaHotel(hotelBean);
 		return listaHotel;
 	}
+	
+	@Override
+	public List<HotelBean> listarHotelCotizacion(HotelBean hotelBean) {
+		List<HotelBean> listaHotel = new ArrayList<HotelBean>();
+		listaHotel = paqueteTuristicoDAO.listaHotel(hotelBean);
+		return listaHotel;
+	}
 
 	@Override
 	public int actualizarEstadoPaqueteTuristico(

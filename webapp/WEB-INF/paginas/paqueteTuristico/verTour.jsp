@@ -5,6 +5,38 @@
 <div class="panel-body">
 	<div class="row">
 		<div class="col-sm-12">
+		
+			<div class="form-group">
+				<label class="col-sm-4 control-label">Tipo B&uacute;squeda:</label>																														
+				<div class="col-sm-5">
+				     <select name="idTipoBusquedaTour" id="tipobusquedaTour" class="form-control"> 
+							<option value="">---Seleccione---</option>
+							<option value="1">Descripci&oacute;n</option>
+							<option value="2">Referencia</option>																
+					 </select>
+				</div>
+				
+				<div class="col-sm-3">
+				   <button id="btnBuscarTour" type="button"
+						class="btn btn-primary centro" 
+						title="Buscar">Buscar</button>
+				</div>
+				
+		   </div>
+		   
+		   <div class="row">&nbsp;</div>
+		   
+		   <div class="form-group">
+		   		<label class="col-sm-4 control-label">Valor:</label>
+		   		<div class="col-sm-7">
+					<input type="text" class="form-control" name="valorTour" id="txtValorBusquedaTour"/>
+				</div>	
+		   	</div>
+		   
+		   <div class="row">&nbsp;</div>	
+		   <div class="row">&nbsp;</div>
+		   
+		
 			<div id="divListadoTours">
 			    <input type="hidden" id="hdnTour" value="">
 				<div class="col-sm-12">

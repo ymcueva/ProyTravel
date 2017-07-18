@@ -18,7 +18,8 @@
 	<typeAlias alias="paqueteResumeBean" type="pe.com.paxtravel.bean.PaqueteResumeBean" />	
 	<typeAlias alias="expedienteLogBean" type="pe.com.paxtravel.bean.ExpedienteLogBean" />	
 	<!-- Bean Busqueda de Paquetes - Inicio -->	
-	<typeAlias alias="paqueteManagerBean" type="pe.com.paxtravel.tree.data.PaqueteManagerBean" />	
+	<typeAlias alias="paqueteManagerBean" type="pe.com.paxtravel.tree.data.PaqueteManagerBean" />
+	<typeAlias alias="cotizacionDetaHabitacionBean" type="pe.com.paxtravel.bean.CotizacionDetaHabitacionBean" />	
 	<!-- Bean Busqueda de Paquetes - Fin -->	
 	<typeAlias alias="string" type="java.lang.String" />
 	
@@ -283,6 +284,13 @@
         <result property="nuDocumento"                 column="nu_documento" />
         <result property="nomAerolinea"            column="nomAerolinea" />
     </resultMap>
+    
+    <resultMap id="resultCotizacionDetaHabitacion" class="cotizacionDetaHabitacionBean">						
+		<result property="idCotiza"		        column="id_cotiza" />
+		<result property="idTipoHabitacion" 	column="id_tipo_habitacion" />
+		<result property="nuHabitaciones" 		column="nu_habitacion" />	
+		<result property="tipoHabitacion" 		column="tipo_habitacion" />
+	</resultMap>
     
 	<select id="listarCotizacion" parameterClass="cotizacionBean" resultMap="resultCotizacion">
 		SELECT  @rownum:=@rownum+1 AS ca_nume_fila, coti.id_cotiza, coti.nu_cotiza,
@@ -894,5 +902,15 @@
 		where 
 			id_cotiza = #idCotizacion# 
 	</update>
+	
+	<select id="listarCotizacionDetaHabitacion" parameterClass="cotizacionDetaHabitacionBean" resultMap="resultCotizacionDetaHabitacion">
+		select cdh.id_cotiza,
+			   cdh.id_tipo_habitacion,
+			   cdh.nu_habitacion,
+			   t.descripcion tipo_habitacion	
+		from cotizacion_deta_habitacion cdh
+		inner join tipo_habitacion t on cdh.id_tipo_habitacion = t.id_tipo_habitacion
+	    where cdh.id_cotiza = #idCotiza#
+	</select>
 	
 </sqlMap>

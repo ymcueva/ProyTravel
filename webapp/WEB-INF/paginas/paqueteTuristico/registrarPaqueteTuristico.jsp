@@ -91,11 +91,22 @@
 				var tipo = $("#tipoAlojamiento").val();
 				var categoria = $("#categoriaAlojamiento").val();
 				var destino = $("#hdnRowDestino").val();
+				var tipobusqueda = $("#tipobusqueda").val();
+				var valorbusqueda = $("#txtValorBusqueda").val();
 				
-				buscarHoteles(destino,tipo,categoria);
+				buscarHoteles(destino,tipo,categoria,tipobusqueda,valorbusqueda);
 				
 				
 			});
+			
+			$("#btnBuscarTour").on('click',function(e){
+				var destino = $("#hdnRowDestino").val();
+				var tipobusqueda = $("#tipobusquedaTour").val();
+				var valorbusqueda = $("#txtValorBusquedaTour").val();
+				buscarTour(destino,tipobusqueda,valorbusqueda);
+			});
+			
+			
 			
 			$("#tipoHabitacion").on('change',function(){
 				var valor = $(this).val();
@@ -165,6 +176,7 @@
 				var detallehabitacion = "";
 				var cantAdulto = $("#txtcantAdultos").val();
 			    var cantNino = $("#txtcantNinos").val();
+			    var origen = $("#hdnNomOrigen").val();
 
 				
 				$("#tblDestinos tbody > tr").each(function () {
@@ -223,6 +235,8 @@
 						var verEliminarVuelo = "<span> <a href='javascript:;' onclick='eliminarVuelo(this)' title='Eliminar' ><span class='glyphicon glyphicon-trash'></span></a> </span>";
 						
 						detalleAerolinea = "Aerolinea: " + row.find('input[id="tmp_nomAerolinea"]').val();
+						detalleAerolinea+= "<br />";
+						detalleAerolinea+= "Origen: " + origen;
 						detalleAerolinea+= "<br />";
 						detalleAerolinea+= "Precio: " + preciofinal;
 						detalleAerolinea+= "<br />";
@@ -306,6 +320,7 @@
 						row.find("td").eq(2).html(detalleHotel);      
 					}
 					
+					origen = row.find("td").eq(1).text();
 			
 				});
 				
@@ -388,6 +403,8 @@
 			
 			var detalle = "";
 			var totalFilaGasto = parseFloat(0);
+			var origen = $("#hdnNomOrigen").val();
+			
 			
 			$("#tblDestinos tbody > tr").each(function () {
 				var row = $(this);
@@ -408,6 +425,8 @@
 					
 					detalle = "Aerolinea: " + aerolinea;
 					detalle+= "<br />";
+					detalle+= "Origen: " + origen;
+					detalle+= "<br />";
 					detalle+= "Precio: " + preciofinal;
 					detalle+= "<br />";
 					detalle+= "Comision: " + comision;
@@ -416,6 +435,8 @@
 					
 					row.find("td").eq(3).html(detalle);
 				}
+				
+				origen = row.find("td").eq(1).text();
 				
 				totalFilaGasto = totalFilaGasto + parseFloat(row.find('input[id="tmp_precioAerolinea"]').val());
 				
@@ -989,9 +1010,13 @@
 
 		}
 		
-		function buscarHoteles(idDestino,tipo,categoria) {
+		function buscarHoteles(idDestino,tipo,categoria,tipobusqueda,valorbusqueda) {
 			var params = "";
-			params = "?iddestino=" + idDestino + "&tipo=" + tipo + "&categoria=" + categoria;
+			var idcotizacion = $("#hdnIdCotizacion").val();
+			
+			params = "?iddestino=" + idDestino + "&tipo=" + tipo + "&categoria=" + categoria + "&tipobusqueda=" + tipobusqueda + "&valor=" + valorbusqueda;
+			params += "&idcotizacion=" + idcotizacion;
+			
 			$.ajax({
 				url: '${pageContext.request.contextPath}/verHoteles'+params,
 	           	//data: JSON.stringify(grabarFormParams),	           	
@@ -1018,6 +1043,17 @@
 					$("#tipoHabitacion").val("");
 					$("#txtCantidad").val("");
 					$("#tipoHabitacion option").remove();
+					
+					if(rpta.existecotizacion == "1") {
+						$("#txtTipoAlojamiento").val(rpta.tipoalojamiento);
+						$("#txtCategoriaAlojamiento").val(rpta.categorialojamiento);
+					}
+					else {
+						$("#txtTipoAlojamiento").val("");
+						$("#txtCategoriaAlojamiento").val("");
+					}
+					
+					
 	                for(var i = 0;i< listaHotel.length;i++){
 	                	 cont++;
 						 nuevaFila+= "<tr>";
@@ -1059,8 +1095,12 @@
 	            
 		}
 		
-		function buscarTour(idDestino){
+		
+		function buscarTour(idDestino,tipobusqueda,valorbusqueda){
 			params = "?idDestino="+idDestino;
+			params += "&tipobusqueda=" + tipobusqueda;
+			params += "&valorbusqueda=" + valorbusqueda;
+			
 			$.ajax({
 				url: '${pageContext.request.contextPath}/verTours'+params,
 	           	//data: JSON.stringify(grabarFormParams),	           	
@@ -1219,7 +1259,7 @@
 			//alert(origen);
 			//Servicio de Hotel
 			if(idservicio == 6) {
-				buscarHoteles(destino,"","");
+				buscarHoteles(destino,"","","","");
 			}
 			
 			//Servicio Ticket Aereo
@@ -1229,7 +1269,7 @@
 			
 			//Servicio Tour
 			else if(idservicio == 3){
-				buscarTour(destino);
+				buscarTour(destino,"","");
 			}
 			
 			else {
@@ -1404,7 +1444,7 @@
 							 var totalTicket = parseFloat(0);
 							 var cantAdulto = $("#txtcantAdultos").val();
 							 var cantNino = $("#txtcantNinos").val();
-							 
+							 var origen = $("#hdnNomOrigen").val();
 							 
 							 $("#tblDestinos tbody > tr").each(function () {
 									var row = $(this);
@@ -1453,6 +1493,8 @@
 										var verEliminarVuelo = "<span> <a href='javascript:;' onclick='eliminarVuelo(this)' title='Eliminar' ><span class='glyphicon glyphicon-trash'></span></a> </span>";
 										totalTicket = totalTicket + parseFloat(row.find('input[id="tmp_precioAerolinea"]').val());
 										detalleAerolinea = "Aerolinea: " + row.find('input[id="tmp_nomAerolinea"]').val();
+										detalleAerolinea+= "<br />";
+										detalleAerolinea+= "Origen: " + origen;
 										detalleAerolinea+= "<br />";
 										detalleAerolinea+= "Precio: " + preciofinal;
 										detalleAerolinea+= "<br />";
@@ -1543,7 +1585,7 @@
 								   }
 								    
 									
-									
+									origen = row.find("td").eq(1).text();
 							 });		
 							 
 							 
@@ -1714,6 +1756,7 @@
 							$("#hdnTipoPrograma").val("0");
 							$("#hdnIdCotizacion").val("0");
 							$("#hdnIdOrigen").val("0");
+							$("#hdnNomOrigen").val("");
 							$("#mensajeClienteError").html(msj);
 							
 							$('#divMensajeErrorCliente').modal({
@@ -1744,6 +1787,7 @@
 							$("#hdnTipoPrograma").val("0");
 							$("#hdnIdCotizacion").val("0");
 							$("#hdnIdOrigen").val("0");
+							$("#hdnNomOrigen").val("");
 							
 							$("#mensajeClienteError").html(msj);
 							
@@ -1775,6 +1819,7 @@
 						$("#txtDescripcion").val(rpta.motivo);
 						$("#hdnIdCotizacion").val(rpta.idCotizacion);
 						$("#hdnIdOrigen").val(rpta.idOrigen);
+						$("#hdnNomOrigen").val(rpta.nomOrigen);
 						
 						$("#btnBuscarPropuesta").attr("disabled", false);
 						
@@ -1813,6 +1858,7 @@
 						$("#hdnTipoPrograma").val("0");
 						$("#hdnIdCotizacion").val("0");
 						$("#hdnIdOrigen").val("0");
+						$("#hdnNomOrigen").val("0");
 						
 						if(msj != "") {
 							$("#mensajeClienteError").html(msj);
@@ -2193,6 +2239,8 @@
 									<input type="hidden" name="totalHotel" id="hdnTotalHotel" value="${totalHotel}"/>
 									<input type="hidden" name="idCotizacion" id="hdnIdCotizacion" value="${idCotizacion}"/>
 									<input type="hidden" name="idOrigen" id="hdnIdOrigen" value="${idOrigen}"/>
+									<input type="hidden" name="nomOrigen" id="hdnNomOrigen" value="${nomOrigen}"/>
+									
 									
 									
 									<input type="hidden" value="0" id="hdnOrdenValida" />

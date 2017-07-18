@@ -11,6 +11,33 @@
 			<input type="hidden" id="hdnPrecio" value="">
 			<input type="hidden" id="hdnDiasHotel" value="0">
 			
+			<div class="col-sm-12" id="divConfiguracion">
+				<div class="panel panel-primary">
+					<div class="panel-heading">	<strong>Configuraci&oacute;n de Habitaciones</strong></div>
+						<div class="panel-body">
+							 <div class="row">
+								<div class="col-sm-12">
+									 <div class="form-group">
+								   		<label class="col-sm-4 control-label">Tipo Alojamiento:</label>
+								   		<div class="col-sm-6">
+											<input type="text" disabled="disabled" class="form-control" id="txtTipoAlojamiento"/>
+										</div>	
+		   							</div>
+		   							<div class="row">&nbsp;</div>
+		   							<div class="form-group">
+								   		<label class="col-sm-4 control-label">Categor&iacute;a Alojamiento:</label>
+								   		<div class="col-sm-6">
+											<input type="text" disabled="disabled" class="form-control" id="txtCategoriaAlojamiento"/>
+										</div>	
+		   							</div>
+								</div>
+							</div>	
+						
+							
+		   					
+						</div>
+				</div>
+			</div>	
 		
 			<div class="form-group">
 				<label class="col-sm-4 control-label">Tipo Alojamiento:</label>																														
@@ -47,7 +74,29 @@
 				</div>
 		   </div>
 		   
+		   <div class="row">&nbsp;</div>		   
+		   <div class="form-group">
+				<label class="col-sm-4 control-label">Tipo B&uacute;squeda:</label>																														
+				<div class="col-sm-5">
+				     <select name="idTipoBusqueda" id="tipobusqueda" class="form-control"> 
+							<option value="">---Seleccione---</option>
+							<option value="1">Descripci&oacute;n</option>
+							<option value="2">Direcci&oacute;n</option>
+							<option value="3">Referencia</option>																
+					 </select>
+				</div>
+		   </div>
+		   
 		   <div class="row">&nbsp;</div>
+		   
+		   <div class="form-group">
+		   		<label class="col-sm-4 control-label">Valor:</label>
+		   		<div class="col-sm-6">
+					<input type="text" class="form-control" name="valor" id="txtValorBusqueda"/>
+				</div>	
+		   	</div>
+		   
+		   <div class="row">&nbsp;</div>	
 		   <div class="row">&nbsp;</div>
 		   
 		   <div id="divHoteles">
