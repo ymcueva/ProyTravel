@@ -11,6 +11,33 @@
 			<input type="hidden" id="hdnPrecio" value="">
 			<input type="hidden" id="hdnDiasHotel" value="0">
 			
+			<div class="col-sm-12" id="divConfiguracion">
+				<div class="panel panel-primary">
+					<div class="panel-heading">	<strong>Configuraci&oacute;n de Habitaciones</strong></div>
+						<div class="panel-body">
+							 <div class="row">
+								<div class="col-sm-12">
+									 <div class="form-group">
+								   		<label class="col-sm-4 control-label">Tipo Alojamiento:</label>
+								   		<div class="col-sm-6">
+											<input type="text" disabled="disabled" class="form-control" id="txtTipoAlojamiento"/>
+										</div>	
+		   							</div>
+		   							<div class="row">&nbsp;</div>
+		   							<div class="form-group">
+								   		<label class="col-sm-4 control-label">Categor&iacute;a Alojamiento:</label>
+								   		<div class="col-sm-6">
+											<input type="text" disabled="disabled" class="form-control" id="txtCategoriaAlojamiento"/>
+										</div>	
+		   							</div>
+								</div>
+							</div>	
+						
+							
+		   					
+						</div>
+				</div>
+			</div>	
 		
 			<div class="form-group">
 				<label class="col-sm-4 control-label">Tipo Alojamiento:</label>																														

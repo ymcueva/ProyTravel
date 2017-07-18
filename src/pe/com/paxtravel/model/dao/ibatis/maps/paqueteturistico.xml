@@ -207,6 +207,41 @@
 	     	<isNotEmpty prepend="AND" property="referencia"> h.referencia LIKE #referencia# </isNotEmpty>
 	</select>
 	
+	<select id="listarHotelesCotizacion" parameterClass="hotelBean" resultMap="resultHotel">
+			select h.id_hotel,
+				   h.descripcion,
+				   h.id_tipo_alojamiento,
+				   h.id_categoria_alojamiento,
+				   t.descripcion tipo,
+				   cat.nombre categoria,
+				   h.id_proveedor
+			from hotel h
+			inner join tipo_alojamiento t on h.id_tipo_alojamiento = t.id_tipo_alojamiento
+			inner join tipo_categoria_alojamiento cat on h.id_categoria_alojamiento = cat.id_tipo
+			inner join proveedor prov on h.id_proveedor = prov.id_proveedor
+			where h.id_destino = #idDestino# and prov.estado = 1
+			      and h.id_hotel in 
+			      (
+			      	select ho.id_hotel
+		   			from cotizacion cot
+		   			inner join orden ord on(cot.id_cotiza = ord.id_cotiza)
+		   			inner join orden_destino odes on(ord.id_orden = odes.id_orden)
+		   			inner join hotel ho on(cot.id_tipo_alojamiento = ho.id_tipo_alojamiento) 
+				               and cot.id_categoria_alojamiento = ho.id_categoria_alojamiento and odes.id_destino = ho.id_destino
+		   			inner join cotizacion_deta_habitacion chab on(cot.nu_cotiza = chab.id_cotiza)  
+		   			inner join hotel_habitacion hohab on(ho.id_hotel = hohab.id_hotel) and chab.id_tipo_habitacion = hohab.id_tipo_habitacion
+		   			inner join proveedor prov on ho.id_proveedor = prov.id_proveedor
+		   			where cot.id_cotiza = #idCotiza#
+		   			and	  ho.id_destino = #idDestino#
+		   			and   prov.estado = 1	
+			      ) 
+			<isGreaterThan compareValue="0" prepend="AND" property="idTipoAlojamiento"> h.id_tipo_alojamiento = #idTipoAlojamiento# </isGreaterThan>
+	        <isGreaterThan compareValue="0" prepend="AND" property="idCategoriaAlojamiento"> h.id_categoria_alojamiento = #idCategoriaAlojamiento# </isGreaterThan>
+	     	<isNotEmpty prepend="AND" property="descripcion"> h.descripcion LIKE #descripcion# </isNotEmpty>
+	     	<isNotEmpty prepend="AND" property="direccion"> h.direccion LIKE #direccion# </isNotEmpty>
+	     	<isNotEmpty prepend="AND" property="referencia"> h.referencia LIKE #referencia# </isNotEmpty>
+	</select>
+	
 	<select id="listarTipoHabitacion" parameterClass="hotelHabitacionBean" resultMap="resultTipoHabitacion">
 			select h.id_tipo_habitacion,
 				   t.descripcion nombre

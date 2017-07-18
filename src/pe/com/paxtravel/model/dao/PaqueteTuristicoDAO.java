@@ -23,6 +23,8 @@ public interface PaqueteTuristicoDAO {
 	
 	List<HotelBean> listaHotel(HotelBean hotelBean);
 	
+	List<HotelBean> listaHotelCotizacion(HotelBean hotelBean);
+	
 	List<HotelHabitacionBean> listaTipoHabitacion(HotelHabitacionBean hotelHabitacionBean);
 	
 	List<HotelHabitacionBean> obtenerTipoHabitacion(HotelHabitacionBean hotelHabitacionBean);

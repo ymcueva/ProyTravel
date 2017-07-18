@@ -353,7 +353,7 @@ public class PaqueteTuristicoController {
 			String categoria = request.getParameter("categoria").toString();
 			String tipoBusqueda = request.getParameter("tipobusqueda").toString();
 			String valor = request.getParameter("valor").toString();
-			
+			String idCotizacion = request.getParameter("idcotizacion").toString();
 			
 			System.out.println("IdDestino : " + idDestino);
 			System.out.println("Tipo :" + tipo);
@@ -387,8 +387,46 @@ public class PaqueteTuristicoController {
 				
 			}
 			
+			if(idCotizacion.equals("")) {
+				mapa.put("existecotizacion", "0");
+				mapa.put("tipoalojamiento","");
+				mapa.put("categorialojamiento","");
+				listaHotel = paqueteTuristicoService.listarHotel(hotel);
+			}
+			else
+			{
+				hotel.setIdCotiza(Integer.parseInt(idCotizacion));
+				listaHotel = paqueteTuristicoService.listarHotelCotizacion(hotel);
+				
+				CotizacionBean cotizacionBean = new CotizacionBean();
+				cotizacionBean.setIdCotizacion(hotel.getIdCotiza());
+				
+				cotizacionBean = cotizacionService.obtenerCotizacion(cotizacionBean);
+				
+				if(cotizacionBean != null){
+					mapa.put("existecotizacion", "1");
+					mapa.put("tipoalojamiento",cotizacionBean.getTipoAlojamiento());
+					mapa.put("categorialojamiento",cotizacionBean.getCategoriaAlojamiento());
+				}
+				else {
+					mapa.put("existecotizacion", "0");
+					mapa.put("tipoalojamiento","");
+					mapa.put("categoriaalojamiento","");
+				}
+				
+				
+				if(listaHotel.size() > 0) {
+					//Obtener Detalle de Habitaciones
+					
+				}
+				else {
+					hotel.setIdCotiza(0);
+					listaHotel = paqueteTuristicoService.listarHotelCotizacion(hotel);
+				}
+				
+			}
+				
 			
-			listaHotel = paqueteTuristicoService.listarHotel(hotel);
 			
 			if(listaHotel != null){
 				System.out.println("Total Hoteles :" + listaHotel.size());
@@ -445,6 +483,7 @@ public class PaqueteTuristicoController {
 				mapa.put("tipoPrograma", listaOrdenPlanificacion.get(0).getIdTipoPrograma());
 				mapa.put("idCotizacion",listaOrdenPlanificacion.get(0).getIdCotiza());
 				mapa.put("idOrigen",listaOrdenPlanificacion.get(0).getIdOrigen());
+				mapa.put("nomOrigen",listaOrdenPlanificacion.get(0).getNomOrigen());
 				
 				mapa.put("mensaje","");
 				mapa.put("status", "1");
@@ -486,6 +525,7 @@ public class PaqueteTuristicoController {
 				mapa.put("idCotizacion","");
 				mapa.put("idOrigen","");
 				mapa.put("motivo",motivo);
+				mapa.put("nomOrigen", "");
 			}
 			
 			 dataJSON.setRespuesta("ok", null, mapa);
@@ -1014,6 +1054,7 @@ public class PaqueteTuristicoController {
 				double totalHotel = 0d;
 				int idCotizacion = 0;
 				int idOrigen = 0;
+				String nomOrigen = "";
 				String tipoPrograma = "0";
 				
 				//Cargando los datos del paquete cuando se va modificar
@@ -1049,6 +1090,7 @@ public class PaqueteTuristicoController {
 						tipoPrograma = String.valueOf(listaOrden.get(0).getIdTipoPrograma());
 						idCotizacion = listaOrden.get(0).getIdCotiza();
 						idOrigen = listaOrden.get(0).getIdOrigen();
+						nomOrigen = listaOrden.get(0).getNomOrigen();
 						mapaDatos.put("mensaje","");
 						mapaDatos.put("status", "1");
 						
@@ -1082,6 +1124,7 @@ public class PaqueteTuristicoController {
 						tipoPrograma = "0";
 						idCotizacion = 0;
 						idOrigen = 0;
+						nomOrigen = "";
 						mapaDatos.put("mensaje","");
 						mapaDatos.put("status", "0");
 						
@@ -1171,6 +1214,7 @@ public class PaqueteTuristicoController {
 				modelAndView.addObject("totalGasto",totalGasto);
 				modelAndView.addObject("idCotizacion",idCotizacion);
 				modelAndView.addObject("idOrigen",idOrigen);
+				modelAndView.addObject("nomOrigen",nomOrigen);
 				
 				
 				

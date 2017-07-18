@@ -40,7 +40,8 @@
 			<result property="nuNinos"					    column="nu_ninos"/>
 			<result property="idTipoPrograma"				column="id_tipo_programa"/>
 			<result property="nuCotizacion"				    column="nu_cotiza"/>
-			<result property="idOrigen"				        column="id_origen"/>			
+			<result property="idOrigen"				        column="id_origen"/>	
+			<result property="nomOrigen"				    column="origen"/>			
 		</resultMap>
 		
 		<resultMap id="resultOrdenMotivo" class="objBean">
@@ -169,9 +170,11 @@
     			   ord.nu_ninos,
     			   ord.id_tipo_programa,
     			   IfNull(cot.nu_cotiza,'')nu_cotiza,
-    			   ord.id_origen
+    			   ord.id_origen,
+    			   des.descripcion origen
 			FROM orden ord 
 			inner join cliente cli on ord.id_cliente = cli.id_cliente
+			inner join destino_ciudad des on ord.id_origen = des.id_destino_ciudad
 			left outer join cotizacion cot on ord.id_cotiza = cot.id_cotiza
 			where nu_orden= #nuOrden# 
 		</select>  
