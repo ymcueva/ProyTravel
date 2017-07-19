@@ -46,6 +46,7 @@ import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.InseminacionBean;
+import pe.com.paxtravel.bean.OrdenDestinoBean;
 import pe.com.paxtravel.bean.OrdenPlanificacionBean;
 import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoBean;
@@ -495,6 +496,7 @@ public class PaqueteTuristicoController {
 				mapa.put("idCotizacion",listaOrdenPlanificacion.get(0).getIdCotiza());
 				mapa.put("idOrigen",listaOrdenPlanificacion.get(0).getIdOrigen());
 				mapa.put("nomOrigen",listaOrdenPlanificacion.get(0).getNomOrigen());
+				mapa.put("dias",listaOrdenPlanificacion.get(0).getDias());
 				
 				mapa.put("mensaje","");
 				mapa.put("status", "1");
@@ -537,6 +539,7 @@ public class PaqueteTuristicoController {
 				mapa.put("idOrigen","");
 				mapa.put("motivo",motivo);
 				mapa.put("nomOrigen", "");
+				mapa.put("dias","0");
 			}
 			
 			 dataJSON.setRespuesta("ok", null, mapa);
@@ -570,12 +573,16 @@ public class PaqueteTuristicoController {
 			String fechaPartida = "";
 			int idCotizacion = 0;
 			String nuCotizacion = "";
+			Integer diasPaquete = 0;
 			
 			if(request.getParameter("idpaquete") != null)
 				idPaquete = request.getParameter("idpaquete").toString();
 			
 			if(request.getParameter("busInteligente") != null)
 				busqueda = request.getParameter("busInteligente").toString();
+			
+			if(request.getParameter("diasPaquete") != null)
+				diasPaquete = Integer.parseInt(request.getParameter("diasPaquete").toString());
 			
 			//if(request.getParameter("tipoPrograma") != null)
 			//tipoPrograma = request.getParameter("tipoPrograma").toString();
@@ -621,6 +628,22 @@ public class PaqueteTuristicoController {
 				listaOrdenDestino = ordenPlanificacionService.obtenerOrdenDestinoPrograma(orden);
 				
 				System.out.println("Total Destinos Programa :" + listaOrdenDestino.size());
+				
+				if(diasPaquete < 0)
+					diasPaquete = 0;
+				
+				Integer dias_destino = 0;
+				//Proponer dias de destino 
+				while(diasPaquete > 0){
+					for(OrdenPlanificacionBean bean : listaOrdenDestino){
+						dias_destino = bean.getNuDias();
+						dias_destino++;
+						diasPaquete--;
+						bean.setNuDias(dias_destino);
+					}
+				}
+				
+				
 				
 				//Verificar si tienes los servicios de ticket , Tour y hotel
 				List<CotizacionServicioBean> listaCotizacionServicio = new ArrayList<CotizacionServicioBean>();
@@ -1067,6 +1090,7 @@ public class PaqueteTuristicoController {
 				int idOrigen = 0;
 				String nomOrigen = "";
 				String tipoPrograma = "0";
+				Integer dias = 0;
 				
 				//Cargando los datos del paquete cuando se va modificar
 				if(!idPaquete.equals("")){
@@ -1102,6 +1126,7 @@ public class PaqueteTuristicoController {
 						idCotizacion = listaOrden.get(0).getIdCotiza();
 						idOrigen = listaOrden.get(0).getIdOrigen();
 						nomOrigen = listaOrden.get(0).getNomOrigen();
+						dias = listaOrden.get(0).getDias();
 						mapaDatos.put("mensaje","");
 						mapaDatos.put("status", "1");
 						
@@ -1136,6 +1161,7 @@ public class PaqueteTuristicoController {
 						idCotizacion = 0;
 						idOrigen = 0;
 						nomOrigen = "";
+						dias = 0;
 						mapaDatos.put("mensaje","");
 						mapaDatos.put("status", "0");
 						
@@ -1226,6 +1252,7 @@ public class PaqueteTuristicoController {
 				modelAndView.addObject("idCotizacion",idCotizacion);
 				modelAndView.addObject("idOrigen",idOrigen);
 				modelAndView.addObject("nomOrigen",nomOrigen);
+				modelAndView.addObject("dias",dias);
 				
 				
 				

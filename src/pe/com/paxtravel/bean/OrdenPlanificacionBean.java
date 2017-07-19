@@ -77,6 +77,7 @@ public class OrdenPlanificacionBean {
 	private int nuPersonastour;
 	private String nuCotizacion;
     private String urlShop;
+    private Integer dias;
 
 	public String getDestinos() {
 		return destinos;
@@ -521,6 +522,12 @@ public class OrdenPlanificacionBean {
 	}
 	public void setTipoBusqueda(int tipoBusqueda) {
 		this.tipoBusqueda = tipoBusqueda;
+	}
+	public Integer getDias() {
+		return dias;
+	}
+	public void setDias(Integer dias) {
+		this.dias = dias;
 	}
 
 }

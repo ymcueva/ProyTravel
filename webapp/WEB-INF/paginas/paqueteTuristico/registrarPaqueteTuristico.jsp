@@ -1524,11 +1524,13 @@
 				var verActualizar = "<span> <a href='javascript:;' onclick='actualizarCosto(this)' title='Actualizar Servicos' ><span class='glyphicon glyphicon-ok'></span></a> </span>";
 				
 				
+				var diaspaquete = $("#hdnDiasPaquete").val();
 				
 				params = "?nuorden="+numOrden;
 				params += "&idpaquete=" + idPaquete;
 				params += "&busInteligente=" + busInteligente;
 				params += "&tipoPrograma=" + tipoPrograma;
+				params += "&diasPaquete=" + diaspaquete;
 				//alert(params);
 				$.ajax({
 					url: '${pageContext.request.contextPath}/obtenerOrdenDestino'+params,
@@ -1941,6 +1943,7 @@
 							$("#hdnIdCotizacion").val("0");
 							$("#hdnIdOrigen").val("0");
 							$("#hdnNomOrigen").val("");
+							$("#hdnDiasPaquete").val("0");
 							$("#mensajeClienteError").html(msj);
 							
 							$('#divMensajeErrorCliente').modal({
@@ -1972,6 +1975,7 @@
 							$("#hdnIdCotizacion").val("0");
 							$("#hdnIdOrigen").val("0");
 							$("#hdnNomOrigen").val("");
+							$("#hdnDiasPaquete").val("0");
 							
 							$("#mensajeClienteError").html(msj);
 							
@@ -2004,6 +2008,7 @@
 						$("#hdnIdCotizacion").val(rpta.idCotizacion);
 						$("#hdnIdOrigen").val(rpta.idOrigen);
 						$("#hdnNomOrigen").val(rpta.nomOrigen);
+						$("#hdnDiasPaquete").val(rpta.dias);
 						
 						$("#btnBuscarPropuesta").attr("disabled", false);
 						
@@ -2043,6 +2048,7 @@
 						$("#hdnIdCotizacion").val("0");
 						$("#hdnIdOrigen").val("0");
 						$("#hdnNomOrigen").val("0");
+						$("#hdnDiasPaquete").val("0");
 						
 						if(msj != "") {
 							$("#mensajeClienteError").html(msj);
@@ -2424,6 +2430,7 @@
 									<input type="hidden" name="idCotizacion" id="hdnIdCotizacion" value="${idCotizacion}"/>
 									<input type="hidden" name="idOrigen" id="hdnIdOrigen" value="${idOrigen}"/>
 									<input type="hidden" name="nomOrigen" id="hdnNomOrigen" value="${nomOrigen}"/>
+									<input type="hidden" name="diasPaquete" id="hdnDiasPaquete" value="${dias}"/>
 									
 									
 									
