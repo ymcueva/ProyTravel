@@ -96,6 +96,16 @@ public class SqlMapPaqueteTuristicoDAO extends SqlMapClientDaoSupport implements
 				"paqueteturistico.obtenerHotelBusqueda", hotelHabitacionBean);
 		return listaHotelHabitacion;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<HotelHabitacionBean> obtenerHotelBusquedaOrden(
+			HotelHabitacionBean hotelHabitacionBean) {
+		List<HotelHabitacionBean> listaHotelHabitacion = null;
+		listaHotelHabitacion = getSqlMapClientTemplate().queryForList(
+				"paqueteturistico.obtenerHotelBusquedaOrden", hotelHabitacionBean);
+		return listaHotelHabitacion;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -104,6 +114,17 @@ public class SqlMapPaqueteTuristicoDAO extends SqlMapClientDaoSupport implements
 		List<HotelHabitacionBean> listaHotelHabitacion = null;
 		listaHotelHabitacion = getSqlMapClientTemplate().queryForList(
 				"paqueteturistico.listarDetalleHotelBusqueda",
+				hotelHabitacionBean);
+		return listaHotelHabitacion;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<HotelHabitacionBean> listarDetalleHotelBusquedaOrden(
+			HotelHabitacionBean hotelHabitacionBean) {
+		List<HotelHabitacionBean> listaHotelHabitacion = null;
+		listaHotelHabitacion = getSqlMapClientTemplate().queryForList(
+				"paqueteturistico.listarDetalleHotelBusquedaOrden",
 				hotelHabitacionBean);
 		return listaHotelHabitacion;
 	}

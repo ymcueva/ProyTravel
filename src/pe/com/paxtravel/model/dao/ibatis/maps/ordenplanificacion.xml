@@ -41,7 +41,8 @@
 			<result property="idTipoPrograma"				column="id_tipo_programa"/>
 			<result property="nuCotizacion"				    column="nu_cotiza"/>
 			<result property="idOrigen"				        column="id_origen"/>	
-			<result property="nomOrigen"				    column="origen"/>			
+			<result property="nomOrigen"				    column="origen"/>	
+			<result property="dias"				    		column="dias"/>			
 		</resultMap>
 		
 		<resultMap id="resultOrdenMotivo" class="objBean">
@@ -95,6 +96,8 @@
 			<result property="idServicio"			    	column="id_servicio" />			
 			<result property="nomServicio"			    	column="nombre" />				 
 		</resultMap>
+		
+		
 				
 		<resultMap id="resultPais" class="paisBean">
 			<result property="idPais"			    column="id_destino" />
@@ -171,7 +174,8 @@
     			   ord.id_tipo_programa,
     			   IfNull(cot.nu_cotiza,'')nu_cotiza,
     			   ord.id_origen,
-    			   des.descripcion origen
+    			   des.descripcion origen,
+    			   ifnull(datediff(ord.fe_retorno,ord.fe_partida),0) dias 
 			FROM orden ord 
 			inner join cliente cli on ord.id_cliente = cli.id_cliente
 			inner join destino_ciudad des on ord.id_origen = des.id_destino_ciudad
@@ -195,7 +199,7 @@
        			   des.descripcion destino,
        			   ord.id_origen,
        			   od.id_destino,
-       			   od.nu_dias,
+       			   0 nu_dias,
        			   ord.id_cotiza,
        			   ord.nu_adultos,
        			   ord.nu_ninos,
@@ -254,7 +258,9 @@
 			inner join orden ord on os.id_orden = ord.id_orden
 			inner join servicios serv on os.id_servicio = serv.id_servicio
 			where ord.nu_orden = #nuOrden#
-		</select>  
+		</select>
+		
+		  
 
 	<insert id="insertarOrdenDestino" parameterClass="ordenDestinoBean">
 		INSERT INTO orden_destino(
@@ -461,7 +467,8 @@
 	
 	<select id="listarOrdenServicio" parameterClass="ordenServicioBean" resultMap="resultOrdenServicio">
 		select id_orden,
-			   id_servicio
+			   id_servicio,
+			   ifnull(descripcion,'') descripcion
 		from orden_servicio
 		where id_orden = #idOrden#
 		and	  id_servicio = #idServicio# 			

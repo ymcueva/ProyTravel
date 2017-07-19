@@ -48,7 +48,13 @@ public interface PaqueteTuristicoService {
 	
 	List<HotelHabitacionBean> obtenerHotelBusqueda(HotelHabitacionBean hotelHabitacionBean);
 	
+	List<HotelHabitacionBean> obtenerHotelBusquedaOrden(HotelHabitacionBean hotelHabitacionBean);
+	
+	
 	List<HotelHabitacionBean> listarDetalleHotelBusqueda(HotelHabitacionBean hotelHabitacionBean);
+	
+	List<HotelHabitacionBean> listarDetalleHotelBusquedaOrden(HotelHabitacionBean hotelHabitacionBean);
+	
 	
 	List<TourBean> listaTourBusqueda(TourBean tourBean);
 	

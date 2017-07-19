@@ -72,6 +72,15 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
 				.obtenerHotelBusqueda(hotelHabitacionBean);
 		return listaHotelHabitacion;
 	}
+	
+	@Override
+	public List<HotelHabitacionBean> obtenerHotelBusquedaOrden(
+			HotelHabitacionBean hotelHabitacionBean) {
+		List<HotelHabitacionBean> listaHotelHabitacion = new ArrayList<HotelHabitacionBean>();
+		listaHotelHabitacion = paqueteTuristicoDAO
+				.obtenerHotelBusquedaOrden(hotelHabitacionBean);
+		return listaHotelHabitacion;
+	}
 
 	@Override
 	public List<HotelHabitacionBean> listarDetalleHotelBusqueda(
@@ -79,6 +88,15 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
 		List<HotelHabitacionBean> listaHotelHabitacion = new ArrayList<HotelHabitacionBean>();
 		listaHotelHabitacion = paqueteTuristicoDAO
 				.listarDetalleHotelBusqueda(hotelHabitacionBean);
+		return listaHotelHabitacion;
+	}
+	
+	@Override
+	public List<HotelHabitacionBean> listarDetalleHotelBusquedaOrden(
+			HotelHabitacionBean hotelHabitacionBean) {
+		List<HotelHabitacionBean> listaHotelHabitacion = new ArrayList<HotelHabitacionBean>();
+		listaHotelHabitacion = paqueteTuristicoDAO
+				.listarDetalleHotelBusquedaOrden(hotelHabitacionBean);
 		return listaHotelHabitacion;
 	}
 

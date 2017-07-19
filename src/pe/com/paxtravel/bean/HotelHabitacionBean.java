@@ -20,6 +20,7 @@ public class HotelHabitacionBean {
 	private String nomHotel;
 	private String nomTipo;
 	private String nomCategoria;
+	private Integer dias;
 	
 	
 	public String getIdCotiza() {
@@ -129,5 +130,11 @@ public class HotelHabitacionBean {
 	}
 	public void setIdOrden(String idOrden) {
 		this.idOrden = idOrden;
+	}
+	public Integer getDias() {
+		return dias;
+	}
+	public void setDias(Integer dias) {
+		this.dias = dias;
 	}
 }
