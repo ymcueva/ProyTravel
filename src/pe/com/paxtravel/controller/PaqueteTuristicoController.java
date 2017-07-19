@@ -39,6 +39,7 @@ import com.google.gson.reflect.TypeToken;
 import pe.com.paxtravel.bean.AnimalBean;
 import pe.com.paxtravel.bean.CiudadBean;
 import pe.com.paxtravel.bean.CotizacionBean;
+import pe.com.paxtravel.bean.CotizacionDetaHabitacionBean;
 import pe.com.paxtravel.bean.CotizacionServicioBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
 import pe.com.paxtravel.bean.FareInfoBean;
@@ -361,6 +362,8 @@ public class PaqueteTuristicoController {
 			System.out.println("tipoBusqueda :" + tipoBusqueda);
 			System.out.println("valor :" + valor);
 			
+			List<CotizacionDetaHabitacionBean> listaCotizacionDetaHabitacion = new ArrayList<CotizacionDetaHabitacionBean>();
+			CotizacionDetaHabitacionBean cotizacionDetaHabitacionBean = new CotizacionDetaHabitacionBean();
 			
 			
 			List<HotelBean> listaHotel = new ArrayList<HotelBean>();
@@ -417,6 +420,8 @@ public class PaqueteTuristicoController {
 				
 				if(listaHotel.size() > 0) {
 					//Obtener Detalle de Habitaciones
+					cotizacionDetaHabitacionBean.setIdCotiza(cotizacionBean.getNumeroCotizacion());
+					listaCotizacionDetaHabitacion = cotizacionService.listarCotizacionDetaHabitacion(cotizacionDetaHabitacionBean);
 					
 				}
 				else {
@@ -426,7 +431,13 @@ public class PaqueteTuristicoController {
 				
 			}
 				
-			
+			if(listaCotizacionDetaHabitacion != null){
+				mapa.put("listaCotizacionDetaHabitacion", listaCotizacionDetaHabitacion);
+			}
+			else {
+				mapa.put("listaCotizacionDetaHabitacion", null);
+			}
+				
 			
 			if(listaHotel != null){
 				System.out.println("Total Hoteles :" + listaHotel.size());
