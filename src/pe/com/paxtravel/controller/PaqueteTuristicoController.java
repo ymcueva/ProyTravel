@@ -479,6 +479,7 @@ public class PaqueteTuristicoController {
 			listaOrdenPlanificacion = ordenPlanificacionService.obtenerOrdenPlanificacion(orden);
 			System.out.println("Size Orden :" + listaOrdenPlanificacion.size());
 			int idorden = 0;
+			Integer dias = 0;
 			String motivo = "";
 			mapa.put("mensaje","");
 			
@@ -498,7 +499,8 @@ public class PaqueteTuristicoController {
 				mapa.put("idCotizacion",listaOrdenPlanificacion.get(0).getIdCotiza());
 				mapa.put("idOrigen",listaOrdenPlanificacion.get(0).getIdOrigen());
 				mapa.put("nomOrigen",listaOrdenPlanificacion.get(0).getNomOrigen());
-				mapa.put("dias",listaOrdenPlanificacion.get(0).getDias());
+				dias = listaOrdenPlanificacion.get(0).getDias() + 1;
+				mapa.put("dias",dias);
 				
 				mapa.put("mensaje","");
 				mapa.put("status", "1");
@@ -1212,7 +1214,7 @@ public class PaqueteTuristicoController {
 						idCotizacion = listaOrden.get(0).getIdCotiza();
 						idOrigen = listaOrden.get(0).getIdOrigen();
 						nomOrigen = listaOrden.get(0).getNomOrigen();
-						dias = listaOrden.get(0).getDias();
+						dias = listaOrden.get(0).getDias() + 1;
 						mapaDatos.put("mensaje","");
 						mapaDatos.put("status", "1");
 						
@@ -1385,6 +1387,7 @@ public class PaqueteTuristicoController {
 					Map<String, Object> paqueteTuristicoBeanMap = (Map<String, Object>) parametrosRequest.get("paqueteTuristicoBean");
 					PaqueteTuristicoBean objbean = new PaqueteTuristicoBean();
 					OrdenPlanificacionBean ordenPlanificacionBean = new OrdenPlanificacionBean();
+					OrdenDestinoBean ordenDestinoBean = new OrdenDestinoBean();
 					
 					BeanUtils.populate(objbean, paqueteTuristicoBeanMap);
 					
@@ -1458,7 +1461,7 @@ public class PaqueteTuristicoController {
 					
 					int registro = 0;
 					
-					
+					Integer registro_destino = 0;
 					
 					
 					System.out.println(" registro index " + registro);
@@ -1525,6 +1528,14 @@ public class PaqueteTuristicoController {
 								paqueteTuristicoDestino.setFeEstadia(destino[3].toString());
 								
 								paqueteDestino = paqueteTuristicoService.RegistrarPaqueteTuristicoDestino(paqueteTuristicoDestino);
+								
+								ordenDestinoBean = new OrdenDestinoBean();
+								ordenDestinoBean.setIdOrden(objbean.getIdOrden());
+								ordenDestinoBean.setNudias(paqueteTuristicoDestino.getNuDias());
+								ordenDestinoBean.setDestino(paqueteTuristicoDestino.getIdDestinoCiudad());
+								
+								registro_destino = paqueteTuristicoService.actualizaOrdenDestino(ordenDestinoBean);
+								
 							}
 							
 						}

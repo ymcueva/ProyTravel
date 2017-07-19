@@ -4,6 +4,7 @@ import java.util.List;
 
 import pe.com.paxtravel.bean.HotelBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
+import pe.com.paxtravel.bean.OrdenDestinoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoDestinoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoDestinoHotelBean;
@@ -45,6 +46,9 @@ public interface PaqueteTuristicoService {
 	void eliminaDetallePaqueteTuristico(PaqueteTuristicoBean paqueteTuristicoBean);
 	
 	int actualizaPaqueteTuristico(PaqueteTuristicoBean paqueteTuristicoBean);
+	
+	int actualizaOrdenDestino(OrdenDestinoBean ordenDestinoBean);
+	
 	
 	List<HotelHabitacionBean> obtenerHotelBusqueda(HotelHabitacionBean hotelHabitacionBean);
 	

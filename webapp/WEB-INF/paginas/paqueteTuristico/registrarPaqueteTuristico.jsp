@@ -187,7 +187,8 @@
 				var cantAdulto = $("#txtcantAdultos").val();
 			    var cantNino = $("#txtcantNinos").val();
 			    var origen = $("#hdnNomOrigen").val();
-
+			    var dias_anterior = "";
+				var html_dias = "";
 				
 				$("#tblDestinos tbody > tr").each(function () {
 					var row = $(this);
@@ -197,6 +198,11 @@
 					
 					if(modifica == 0) {
 						row.find('.hrefBusqueda').hide();
+						dias_anterior = row.find('input[id="txtNuDias"]').val();
+						row.find("td").eq(2).html("");
+						html_dias = "<input type='text' class='form-control text-center' id='txtNuDias' maxlength='2' value='" + dias_anterior + "' />"
+						row.find("td").eq(2).html(html_dias);
+						row.find('input[id="txtNuDias"]').attr('disabled',true);
 					}
 					//	row.find('td:eq(6)').attr("disabled", true);
 					
@@ -1505,10 +1511,11 @@
 				$("#hdnTotalTicket").val("0");
 				$("#hdnTotalHotel").val("0");
 				
-				if(cotizacion == "0" && busInteligente == 1) {
+				
+				//if(cotizacion == "0" && busInteligente == 1) {
 					//$("#mensajeClienteError").html("Debe tener una cotización asociada para realizar la busqueda historica");
-					$("#chkPropuesta").prop("checked", false);
-					$("#chkPropuesta").attr('disabled','disabled');
+					//$("#chkPropuesta").prop("checked", false);
+					//$("#chkPropuesta").attr('disabled','disabled');
 					
 					/*
 					$('#divMensajeErrorCliente').modal({
@@ -1516,9 +1523,10 @@
 						keyboard: false
 					}); 
 					*/
-					return false;
+					//return false;
 					
-				}
+				//}
+				
 				
 				
 				var verActualizar = "<span> <a href='javascript:;' onclick='actualizarCosto(this)' title='Actualizar Servicos' ><span class='glyphicon glyphicon-ok'></span></a> </span>";
@@ -2136,7 +2144,24 @@
 			
 			if(orden_valida == "0")
 				msj += "Debe ingresar una orden valida <br />\n";
+				
 			
+			var total_dias = parseInt(0);
+			var dias_paquete = $("#hdnDiasPaquete").val();
+			var diastxt = "";
+			$("#tblDestinos tbody > tr").each(function () {		
+				var row = $(this);
+				diastxt = row.find('input[id="txtNuDias"]').val();
+				
+				if(diastxt == "")
+					diastxt = "0";
+				
+				total_dias += parseInt(diastxt);	
+			});
+			
+			
+			if(total_dias > dias_paquete)
+				msj += "El total de días ingresados excede al del paquete  <br />\n";
 			
 				
 			if(msj != "") {

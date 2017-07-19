@@ -465,6 +465,11 @@
 		)
 	</insert>
 	
+	<update id="updateOrdenDestino" parameterClass="ordenDestinoBean">
+		UPDATE orden_destino set nu_dias = #nudias#
+		where id_orden = #idOrden# and id_destino = #destino#
+	</update>
+	
 	<select id="listarOrdenServicio" parameterClass="ordenServicioBean" resultMap="resultOrdenServicio">
 		select id_orden,
 			   id_servicio,

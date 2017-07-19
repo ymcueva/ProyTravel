@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import pe.com.paxtravel.bean.HotelBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
+import pe.com.paxtravel.bean.OrdenDestinoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoDestinoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoDestinoHotelBean;
@@ -205,6 +206,12 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
 			PaqueteTuristicoBean paqueteTuristicoBean) {
 		return paqueteTuristicoDAO
 				.actualizarEstadoPaqueteTuristico(paqueteTuristicoBean);
+	}
+	
+	@Override
+	public int actualizaOrdenDestino(OrdenDestinoBean ordenDestinoBean){
+		return paqueteTuristicoDAO
+				.actualizaOrdenDestino(ordenDestinoBean);
 	}
 
 }
