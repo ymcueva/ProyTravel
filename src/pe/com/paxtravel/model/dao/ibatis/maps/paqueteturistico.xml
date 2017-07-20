@@ -270,18 +270,16 @@
    			limit 1
 	</select>
 	
-	<select id="obtenerHotelBusquedaOrden" parameterClass="hotelHabitacionBean" resultMap="resultHotelBusqueda">
-			
+	<select id="obtenerHotelBusquedaOrden" parameterClass="hotelHabitacionBean" resultMap="resultHotelBusqueda">			
 			select ho.id_hotel ,
-				   sum(hohab.precio)subtotal
+				   hohab.precio subtotal
 			from hotel ho
-			inner join hotel_habitacion hohab on(ho.id_hotel = hohab.id_hotel)
-			inner join proveedor prov on ho.id_proveedor = prov.id_proveedor
+				inner join hotel_habitacion hohab on(ho.id_hotel = hohab.id_hotel)
+				inner join proveedor prov on ho.id_proveedor = prov.id_proveedor
 			where ho.id_tipo_alojamiento = (select value_parametro from parametros where key_parametro = 'TIPAL')
-			and ho.id_categoria_alojamiento = (select value_parametro from parametros where key_parametro = 'CATAL')
-			and hohab.id_tipo_habitacion = (select value_parametro from parametros where key_parametro = 'TIHAB')
-			and prov.estado = 1	 and ho.id_destino = #idDestino#
-   			group by id_hotel
+				and ho.id_categoria_alojamiento = (select value_parametro from parametros where key_parametro = 'CATAL')
+				and hohab.id_tipo_habitacion = (select value_parametro from parametros where key_parametro = 'TIHAB')
+				and prov.estado = 1	 and ho.id_destino = #idDestino#   			
    			order by 2
    			limit 1
 	</select>

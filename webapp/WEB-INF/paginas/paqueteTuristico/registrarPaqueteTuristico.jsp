@@ -722,7 +722,7 @@
 			tr.find('input[id="tmp_preNinoTour"]').val("0");
 			tr.find('input[id="tmp_duracionTour"]').val("0");
 			tr.find('input[id="tmp_totalTour"]').val("0");
-			tr.find('td').eq(4).text("");
+			tr.find('td').eq(5).text("");
 			
 			//Calcular el total gastado y el total por tour
 			var totalGasto = parseFloat(0);
@@ -750,7 +750,7 @@
 			tr.find('input[id="tmp_idCategoriaAlojamiento"]').val("0");
 			tr.find('input[id="tmp_Habitaciones"]').val("");
 			tr.find('input[id="tmp_totalHotel"]').val("0");
-			tr.find('td').eq(2).text("");
+			tr.find('td').eq(3).text("");
 			
 			//Calcular el total gastado y el total por hotel
 			var totalGasto = parseFloat(0);
@@ -882,7 +882,7 @@
 			tr.find('input[id="tmp_nomAerolinea"]').val("");
 			tr.find('input[id="tmp_comision"]').val("0");
 			tr.find('input[id="tmp_totalAerolinea"]').val("0");
-			tr.find('td').eq(3).text("");
+			tr.find('td').eq(4).text("");
 			
 			//Calcular el total gastado y el total por Vuelo
 			var totalGasto = parseFloat(0);
@@ -1200,8 +1200,8 @@
 					$("#txtCategoriaAlojamiento").val("");
 					$("#tblHabitacionesConfiguracion tbody").html("");
 					$("#divConfiguracion").hide();
-					$("#tipoAlojamiento").val("");
-					$("#categoriaAlojamiento").val("");
+					//$("#tipoAlojamiento").val("");
+					//$("#categoriaAlojamiento").val("");
 					
 					
 					if(rpta.existecotizacion == "1") {
