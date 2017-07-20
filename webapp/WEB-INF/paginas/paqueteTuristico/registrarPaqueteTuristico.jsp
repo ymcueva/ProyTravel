@@ -266,6 +266,7 @@
 					}
 					
 					
+					
 					//Mostrando datos del hotel
 					var conthoteles = 0;
 					detallehabitacion = "";
@@ -1198,8 +1199,13 @@
 					$("#txtTipoAlojamiento").val("");
 					$("#txtCategoriaAlojamiento").val("");
 					$("#tblHabitacionesConfiguracion tbody").html("");
+					$("#divConfiguracion").hide();
+					$("#tipoAlojamiento").val("");
+					$("#categoriaAlojamiento").val("");
+					
 					
 					if(rpta.existecotizacion == "1") {
+						$("#divConfiguracion").show();
 						$("#txtTipoAlojamiento").val(rpta.tipoalojamiento);
 						$("#txtCategoriaAlojamiento").val(rpta.categorialojamiento);
 						

@@ -357,8 +357,12 @@ public class PaqueteTuristicoController {
 			String categoria = request.getParameter("categoria").toString();
 			String tipoBusqueda = request.getParameter("tipobusqueda").toString();
 			String valor = request.getParameter("valor").toString();
-			String idCotizacion = request.getParameter("idcotizacion").toString();
+			String idCotizacion = "";
 			
+			if(request.getParameter("idcotizacion") != null)
+				idCotizacion = request.getParameter("idcotizacion").toString();
+			
+			System.out.println("IdCotizacion : " + idCotizacion);
 			System.out.println("IdDestino : " + idDestino);
 			System.out.println("Tipo :" + tipo);
 			System.out.println("Categoria :" + categoria);
@@ -393,7 +397,7 @@ public class PaqueteTuristicoController {
 				
 			}
 			
-			if(idCotizacion.equals("")) {
+			if(idCotizacion.equals("0")) {
 				mapa.put("existecotizacion", "0");
 				mapa.put("tipoalojamiento","");
 				mapa.put("categorialojamiento","");
@@ -999,8 +1003,16 @@ public class PaqueteTuristicoController {
 					mapa.put("statusServicio", "1");
 				}
 				else {
-					mapa.put("listaOrdenServicio", null);
-					mapa.put("statusServicio", "0");
+					listaOrdenServicio = ordenPlanificacionService.obtenerOrdenServicio(ordenServicio);
+					if(listaOrdenServicio.size()  > 0){
+						mapa.put("listaOrdenServicio", listaOrdenServicio);
+						mapa.put("statusServicio", "1");
+					}
+					else {
+						mapa.put("listaOrdenServicio", null);
+						mapa.put("statusServicio", "0");
+					}
+
 				}
 			}
 			else {
