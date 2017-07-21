@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -145,7 +144,8 @@ public class CotizacionController {
 
 				Map<String, Object> parametrosRequest = ControllerUtil
 						.parseRequestToMap(request);
-				Map<String, Object> cotizacionBeanMap = (Map<String, Object>) parametrosRequest.get("cotizacionBean");
+				Map<String, Object> cotizacionBeanMap = (Map<String, Object>) parametrosRequest
+						.get("cotizacionBean");
 
 				// "numeroCotizacion":"","codigoEstadoCotizacion":"1","fechaCotizacion":"14/06/2017","tipoBusqueda":"1","nombreCliente"
 
@@ -270,6 +270,10 @@ public class CotizacionController {
 	public ModelAndView loadRevisarCotizacion(HttpServletRequest request,
 			HttpServletResponse response,
 			@RequestParam(value = "cotizacionId") String cotizacionId) {
+
+		System.out.println("Context: " + request.getContextPath());
+		System.out.println("puerto: " + request.getServerPort());
+		System.out.println("header host: " + request.getHeader("host"));
 
 		ModelAndView modelAndView = new ModelAndView();
 		HashMap<String, Object> mapa = new HashMap<String, Object>();
@@ -458,7 +462,12 @@ public class CotizacionController {
 					// Actualizar flag de validacion email
 					HashMap<String, Object> mapa = new HashMap<String, Object>();
 					mapa.put("resultadoValidarEmail", "OK");
-					String url = "http://localhost:7001/ProyTravel/loadRevisarCotizacion?cotizacionId="
+					String host = request.getHeader("host") == null ? "localhost"
+							+ request.getServerPort()
+							: request.getHeader("host");
+					String contextProyect = request.getContextPath();
+					String url = host + "" + contextProyect
+							+ "/loadRevisarCotizacion?cotizacionId="
 							+ validarEmailBean.getIdCotizacion();
 					mapa.put("url", url);
 					DataJsonBean dataJSON = new DataJsonBean();
@@ -600,9 +609,12 @@ public class CotizacionController {
 					+ authorizeNetBean.getNumeroOperacion();
 			mapa.put("resultadoProcesarPago", resultadoProcesarPago);
 			mapa.put("resultado", "ok");
-			mapa.put("url",
-					"http://localhost:7001/ProyTravel/loadMensajeResultado?mensaje="
-							+ resultadoProcesarPago);
+			String host = request.getHeader("host") == null ? "localhost"
+					+ request.getServerPort() : request.getHeader("host");
+			String contextProyect = request.getContextPath();
+			String url = host + "" + contextProyect
+					+ "/loadMensajeResultado?mensaje=" + resultadoProcesarPago;
+			mapa.put("url", url);
 			DataJsonBean dataJSON = new DataJsonBean();
 			dataJSON.setRespuesta("ok1", null, mapa);
 			return ControllerUtil.handleJSONResponse(dataJSON, response);
@@ -673,9 +685,13 @@ public class CotizacionController {
 			String resultadoRechazarCotizacion = "LA COTIZACION HA SIDO RECHAZADA";
 			mapa.put("resultadoRechazarCotizacion", resultadoRechazarCotizacion);
 			mapa.put("resultado", "ok");
-			mapa.put("url",
-					"http://localhost:7001/ProyTravel/loadMensajeResultado?mensaje="
-							+ resultadoRechazarCotizacion);
+			String host = request.getHeader("host") == null ? "localhost"
+					+ request.getServerPort() : request.getHeader("host");
+			String contextProyect = request.getContextPath();
+			String url = host + contextProyect
+					+ "/loadMensajeResultado?mensaje="
+					+ resultadoRechazarCotizacion;
+			mapa.put("url", url);
 			DataJsonBean dataJSON = new DataJsonBean();
 			dataJSON.setRespuesta("ok1", null, mapa);
 			return ControllerUtil.handleJSONResponse(dataJSON, response);
