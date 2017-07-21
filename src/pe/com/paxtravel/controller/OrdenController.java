@@ -114,9 +114,10 @@ public class OrdenController {
 			List<PaisBean> lista = new ArrayList<PaisBean>();
 
 			PaisBean bean = new PaisBean();
-			int codigoPais = Integer.parseInt( request.getParameter("idTipoPaquete") );
+			int codigoPaquete = Integer.parseInt( request.getParameter("idTipoPaquete") );
 			
-			bean.setIdPais( codigoPais );
+			bean.setIdDestino(codigoPaquete);
+			
 			
 			lista = cotizacionService.listarPais(bean);
 
@@ -178,7 +179,7 @@ public class OrdenController {
 			String idDestino = request.getParameter("idDestino");
 			String idServicio = request.getParameter("idServicio");
 			String idMotivo = request.getParameter("idMotivo");
-			int flagAutorizacion = Integer.parseInt( request.getParameter("flagAutorizacion") );
+			
 			int flagCantidadDias = Integer.parseInt( request.getParameter("flagCantidadDias") );
 			int numeroDias = Integer.parseInt( request.getParameter("numeroDias") );
 			
@@ -189,7 +190,7 @@ public class OrdenController {
 			BeanUtils.populate(ordenBean, ordenBeanMap);
 
 			// flag autorizacion
-			ordenBean.setAutorizacion(flagAutorizacion);
+			
 						
 			// numero de dias de estadia
 			ordenBean.setFlagCantidadDias(flagCantidadDias);
