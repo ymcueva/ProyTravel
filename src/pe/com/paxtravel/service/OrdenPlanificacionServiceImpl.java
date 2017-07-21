@@ -33,6 +33,13 @@ public class OrdenPlanificacionServiceImpl implements OrdenPlanificacionService 
 		ordenes = objDAO.obtenerOrdenDestinoPrograma(objBean);
 		return ordenes;
 	}
+	
+	@Override
+	public List<OrdenDestinoBean> obtenerOrdenDestinoVerifica(OrdenDestinoBean ordenDestinoBean){
+		List<OrdenDestinoBean> ordenes = new ArrayList<OrdenDestinoBean>();
+		ordenes = objDAO.obtenerOrdenDestinoVerifica(ordenDestinoBean);
+		return ordenes;
+	}
 
 	@Override
 	public String generarNumeroOrden() {
@@ -42,6 +49,11 @@ public class OrdenPlanificacionServiceImpl implements OrdenPlanificacionService 
 	@Override
 	public int registrarMotivo(MotivoViajeBean motivoViajeBean) {
 		return objDAO.registrarMotivo(motivoViajeBean);
+	}
+	
+	@Override
+	public int registrarOrdenDestinoOrigen(OrdenDestinoBean ordenDestinoBean){
+		return objDAO.registrarOrdenDestinoOrigen(ordenDestinoBean);
 	}
 
 	@Override

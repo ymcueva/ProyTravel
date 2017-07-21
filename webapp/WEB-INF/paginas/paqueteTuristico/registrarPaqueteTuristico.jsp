@@ -195,6 +195,7 @@
 					var destinoRow = row.find('input[id="tmp_idDestino"]').val();
 					var idAerolinea = row.find('input[id="tmp_idAerolinea"]').val();
 					var idTour = row.find('input[id="tmp_idTour"]').val();
+					var vuelta = row.find('input[id="tmp_vuelta"]').val();
 					
 					if(modifica == 0) {
 						row.find('.hrefBusqueda').hide();
@@ -204,6 +205,15 @@
 						row.find("td").eq(2).html(html_dias);
 						row.find('input[id="txtNuDias"]').attr('disabled',true);
 					}
+					
+					if(modifica == 1 && vuelta == "1") {
+						dias_anterior = row.find('input[id="txtNuDias"]').val();
+						row.find("td").eq(2).html("");
+						html_dias = "<input type='text' class='form-control text-center' id='txtNuDias' maxlength='2' value='" + dias_anterior + "' />"
+						row.find("td").eq(2).html(html_dias);
+						row.find('input[id="txtNuDias"]').attr('disabled',true);
+					}
+					
 					//	row.find('td:eq(6)').attr("disabled", true);
 					
 					//Mostrando datos del tour
@@ -1419,17 +1429,46 @@
 			var html = $(item).parents("tr").html();
 			
 			var diash = tr.find('input[id="txtNuDias"]').val();
+			var vuelta = tr.find('input[id="tmp_vuelta"]').val();
 			
-			if(diash == "" || diash == "0") {
-				msj = "Debe Ingresar los días de estadía";
-				$("#mensajeClienteError").html(msj);
-				$('#divMensajeErrorCliente').modal({
-					backdrop: 'static',
-					keyboard: false
-				}); 
-				
-				return false;
+			if(vuelta == "0") {
+				if(diash == "" || diash == "0") {
+					msj = "Debe Ingresar los días de estadía";
+					$("#mensajeClienteError").html(msj);
+					$('#divMensajeErrorCliente').modal({
+						backdrop: 'static',
+						keyboard: false
+					}); 
+					
+					return false;
+				}	
 			}
+			else {
+				
+				if(idservicio == 6) {
+					msj = "No puede ingresar servicio de hotel al origen";
+					$("#mensajeClienteError").html(msj);
+					$('#divMensajeErrorCliente').modal({
+						backdrop: 'static',
+						keyboard: false
+					}); 
+					
+					return false;
+				}
+				
+				if(idservicio == 3) {
+					msj = "No puede ingresar servicio de tour al origen";
+					$("#mensajeClienteError").html(msj);
+					$('#divMensajeErrorCliente').modal({
+						backdrop: 'static',
+						keyboard: false
+					}); 
+					
+					return false;
+				}
+			}
+			
+			
 			
 			
 			tr.find('input[id="tmp_dias"]').val(diash);
@@ -1445,6 +1484,8 @@
 			$("#hdnDiasHotel").val(dias);
 			
 			$("#hdnRowDestino").val(destino);
+			
+			
 			
 			//alert(origen);
 			//Servicio de Hotel
@@ -1539,12 +1580,14 @@
 				
 				
 				var diaspaquete = $("#hdnDiasPaquete").val();
+				var origen = $("#hdnIdOrigen").val();
 				
 				params = "?nuorden="+numOrden;
 				params += "&idpaquete=" + idPaquete;
 				params += "&busInteligente=" + busInteligente;
 				params += "&tipoPrograma=" + tipoPrograma;
 				params += "&diasPaquete=" + diaspaquete;
+				params += "&origen=" + origen;
 				//alert(params);
 				$.ajax({
 					url: '${pageContext.request.contextPath}/obtenerOrdenDestino'+params,
@@ -1587,6 +1630,7 @@
 									 nuevaFila+= "<input type='hidden' id='tmp_isoOrigen' value='" + listaOrdenDestino[i].isoOrigen + "' />";
 									 nuevaFila+= "<input type='hidden' id='tmp_isoDestino' value='" + listaOrdenDestino[i].isoDestino + "' />";
 									 nuevaFila+= "<input type='hidden' id='tmp_fechaPartida' value='" + listaOrdenDestino[i].fePartidaDestino + "' />";
+									 nuevaFila+= "<input type='hidden' id='tmp_vuelta' value='" + listaOrdenDestino[i].vuelta + "' />";
 									 
 									 
 									
@@ -1618,8 +1662,17 @@
 											
 									 
 									 nuevaFila+= "<td class='text-center'>" + listaOrdenDestino[i].nomDestino + "</td>";
-									 nuevaFila+= "<td class='text-right'>" + "<input type='text' class='form-control text-center' id='txtNuDias' maxlength='2' value='" + listaOrdenDestino[i].nuDias + "' onclick='soloNumeros(\""+obj+"\",\""+evt+"\");' />"; 
-									 nuevaFila+= "<br />" + verActualizar + "</td>";
+									 
+									 if(listaOrdenDestino[i].vuelta == "0") {
+										 nuevaFila+= "<td class='text-right'>" + "<input type='text' class='form-control text-center' id='txtNuDias' maxlength='2' value='" + listaOrdenDestino[i].nuDias + "' onclick='soloNumeros(\""+obj+"\",\""+evt+"\");' />"; 
+										 nuevaFila+= "<br />" + verActualizar + "</td>";	 
+									 }
+									 else {
+										 nuevaFila+= "<td class='text-right'>" + "<input type='text' class='form-control text-center' id='txtNuDias' disabled='true' maxlength='2' value='" + listaOrdenDestino[i].nuDias + "' onclick='soloNumeros(\""+obj+"\",\""+evt+"\");' />"; 
+										 nuevaFila+= "</td>";
+									 }
+									 
+									 
 									 nuevaFila+= "<td class='text-left'>" + "" + "</td>";
 									 nuevaFila+= "<td class='text-left'>" + "" + "</td>";
 									 nuevaFila+= "<td class='text-left'>" + "" + "</td>";

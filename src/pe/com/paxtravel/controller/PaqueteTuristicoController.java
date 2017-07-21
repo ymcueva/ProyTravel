@@ -589,6 +589,7 @@ public class PaqueteTuristicoController {
 			Integer ninos = 0;
 			Integer adultos = 0;
 			Integer personas = 0;
+			Integer origen = 0;
 			
 			if(request.getParameter("idpaquete") != null)
 				idPaquete = request.getParameter("idpaquete").toString();
@@ -599,6 +600,8 @@ public class PaqueteTuristicoController {
 			if(request.getParameter("diasPaquete") != null)
 				diasPaquete = Integer.parseInt(request.getParameter("diasPaquete").toString());
 			
+			if(request.getParameter("origen") != null)
+				origen = Integer.parseInt(request.getParameter("origen").toString());
 			//if(request.getParameter("tipoPrograma") != null)
 			//tipoPrograma = request.getParameter("tipoPrograma").toString();
 			
@@ -607,6 +610,7 @@ public class PaqueteTuristicoController {
 			System.out.println("Busqueda :" + busqueda);
 			//System.out.println("TipoPrograma :" + tipoPrograma);
 			System.out.println("nuOrden :" + nuOrden);
+			System.out.println("origen :" + origen);
 			
 			orden.setNuOrden(nuOrden);
 			System.out.println("Asignando Num Orden :" + orden.getNuOrden());
@@ -636,6 +640,31 @@ public class PaqueteTuristicoController {
 			else
 				orden.setIdPaquete(0);
 			
+			
+			//Validando si no tiene en la tabla destinos el origen lo inserto
+			
+			List<OrdenDestinoBean> listOrdenDestinoVerifica = new ArrayList<OrdenDestinoBean>();
+			OrdenDestinoBean ordenDestinoVerifica = new OrdenDestinoBean();
+			Integer registroOrdenDestino = 0;
+			ordenDestinoVerifica.setIdOrden(idOrden);
+			ordenDestinoVerifica.setDestino(origen);
+			listOrdenDestinoVerifica = ordenPlanificacionService.obtenerOrdenDestinoVerifica(ordenDestinoVerifica);
+			
+			if(listOrdenDestinoVerifica.size() > 0)
+				System.out.println("Size Orden Destino Verifica :" + listOrdenDestinoVerifica.size());
+			else {
+				System.out.println("Size Orden Destino Verifica :" + listOrdenDestinoVerifica.size());
+				//Insertar en destinos el origen
+				ordenDestinoVerifica.setIdOrden(idOrden);
+				ordenDestinoVerifica.setDestino(origen);
+				ordenDestinoVerifica.setOrigen(origen);
+				ordenDestinoVerifica.setNudias(0);
+				ordenDestinoVerifica.setVuelta(1);
+				registroOrdenDestino = ordenPlanificacionService.registrarOrdenDestinoOrigen(ordenDestinoVerifica);
+			}
+				
+			
+			
 			System.out.println("Haciendo la verificacion del tipo de busqueda");
 			//Hacer la busqueda inteligente y registrar el paquete
 			if(busqueda.equals("1")) {
@@ -655,12 +684,14 @@ public class PaqueteTuristicoController {
 				//Proponer dias de destino 
 				while(diasPaquete > 0){
 					for(OrdenPlanificacionBean bean : listaOrdenDestino){
-						System.out.println("Dias Inicial :" + bean.getNuDias());
-						dias_destino = bean.getNuDias();
-						dias_destino++;
-						diasPaquete--;
-						bean.setNuDias(dias_destino);
-						System.out.println("Dias Final :" + bean.getNuDias());
+						if(bean.getVuelta().equals(0)) {
+							System.out.println("Dias Inicial :" + bean.getNuDias());
+							dias_destino = bean.getNuDias();
+							dias_destino++;
+							diasPaquete--;
+							bean.setNuDias(dias_destino);
+							System.out.println("Dias Final :" + bean.getNuDias());
+						}
 					}
 				}
 				
@@ -791,7 +822,7 @@ public class PaqueteTuristicoController {
 					bean.setComision(0);
 					
 					//Obtener Hotel y sus habitaciones si tiene el servicio de hotel
-					if(tieneHotel == true){
+					if(tieneHotel == true && bean.getVuelta().equals(0)){
 						hotel.setIdCotiza(String.valueOf(idCotizacion));
 						hotel.setIdDestino(bean.getIdDestino());
 						hotel.setDias(bean.getNuDias());
@@ -872,7 +903,7 @@ public class PaqueteTuristicoController {
 					}
 					
 					//Obtener tour si tiene tour
-					if(tieneTour == true){
+					if(tieneTour == true && bean.getVuelta().equals(0)){
 						System.out.println("Verificando si tiene tours disponibles");
 						tour.setIdDestinoCiudad(bean.getIdDestino());
 						listaTour = paqueteTuristicoService.listaTourBusqueda(tour);
