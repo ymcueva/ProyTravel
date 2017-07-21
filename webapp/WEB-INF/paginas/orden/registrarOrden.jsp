@@ -69,11 +69,11 @@
 		});
 		
 		$("#divFechaInicioDuracion").on("dp.change", function (e) {
+			var fechaInicio = $("#txtFechaPartida").val();
 			var fechasalida = $("#txtFechaPartida").val();
 			var fechasalida =  sumarRestarFecha(90, fechasalida);
-			
             $('#divFechaFinDuracion').data("DateTimePicker").setMaxDate(fechasalida);
-            
+			$('#divFechaFinDuracion').data("DateTimePicker").setMinDate(fechaInicio);
 		});
 		
 		
@@ -269,13 +269,14 @@
 	
 	function inicia(){
 		
+		var fechaActual = new Date();
+		
 		$('#txtPresupuestoMaximo').maskMoney();
 		$("#divNumeroDias").hide();
 		$('#divFechaInicioDuracion').datetimepicker({
 			language : 'es',
             autoClose : true,
- 			minDate: '01/01/2000',
-			
+ 			minDate: fechaActual,
             format: 'DD/MM/YYYY',
             pickTime: false,
 			useCurrent: false
@@ -291,7 +292,7 @@
 			language : 'es',
             autoClose : true,
  			maxDate: '01/01/2999',
-			
+			minDate: fechaActual,
             format: 'DD/MM/YYYY',
             pickTime: false,
 			useCurrent: false
@@ -343,18 +344,12 @@
 		var fPartida = $("#txtFechaPartida").val();
 		var fRetorno = $("#txtFechaRetorno").val();
 		var idServicio = "";
-		var idMotivo = "";
 		var comentario = $("#txtComentarioOrden").val();
 		
 		$(".chkServicio:checked").each(function() {
 			idServicio += $(this).val();
         });
 		
-		$(".chkMotivo:checked").each(function() {
-			idMotivo += $(this).val();
-        });
-		
-	
 		if (($('#chkFlagCantidadDias').is(':checked')) && numDias == "" ){
 			mostrarMensajeValidFormulario("Ingresar el n\u00FAmero de d\u00EDas");
 			return false;
@@ -376,17 +371,14 @@
 			return false;
 		}
 		
-		if (idMotivo.length==0) {
-			mostrarMensajeValidFormulario("Seleccionar los motivos de viaje");
-			return false;
-		}
-		
 		if (comentario == "") {
 			mostrarMensajeValidFormulario("Ingresar comentario");
 			return false;
 		}
 		
-		if (($('#chkFlagCantidadDias').is(':checked')) && numDias !="" ){
+		cargarConfirmacionRegistro(e);
+		
+		/*if (($('#chkFlagCantidadDias').is(':checked')) && numDias !="" ){
 			var cantidadDiasFecha = retornaDiferencia(e);
 			var txtNumeroDias = numDias;
 			
@@ -402,7 +394,7 @@
 			}
 		} else {
 			cargarConfirmacionRegistro(e);
-		}
+		}*/
 		
 	}
 	
@@ -410,7 +402,11 @@
 		
 		e.preventDefault();
 		
-		if ( ! ($('#chkAutorizacion').is(':checked')) ){
+		$('#mdlConfirmaRegistro').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+		/*if ( ! ($('#chkAutorizacion').is(':checked')) ){
 			$("#divMensajeBusquedaAutomatica").modal({
 				backdrop: 'static',
 				keyboard: false,
@@ -420,12 +416,27 @@
 				backdrop: 'static',
 				keyboard: false
 			});
-		}	
+		}*/
 	}
 	
 	var contador = 0;
-	
+	var arregloPaises = [];
 	function agregarDestino(){
+		var idCiudad = $("#selIdDestinoCiudad").val();
+		var nombreCiudad = $("#selIdDestinoCiudad option:selected").text();
+		
+		if (arregloPaises.length > 0) {
+			if ( arregloPaises.indexOf(idCiudad) >= 0){
+				$("#mensajeError").html("La ciudad " + nombreCiudad + " ya fue registrada."); 
+				
+				$("#divMensaje").modal({
+					backdrop: 'static',
+					keyboard: false,
+				});
+				
+				return false;
+			}
+		}
 		
 		var idFila = $("#selIdDestinoCiudad option:selected").val();
 		var pais = $("#selIdDestinoPais option:selected").text();
@@ -433,7 +444,7 @@
 		
 		contador += 1;
 			
-		var botonEliminar ="<button name='"+contador+"' id='"+contador+"'  type='button' class='btn btn-default' onclick='eliminarDestino(this.name)'>";
+		var botonEliminar ="<button name='"+contador+"' id='"+contador+"'  type='button' class='btn btn-default' onclick='eliminarDestino(this.name,"+idCiudad+")'>";
 			 botonEliminar +="<span class='glyphicon glyphicon-remove' aria-hidden='true'></span></button>";
  		
  		var data = [contador,pais,ciudad,botonEliminar,idFila];
@@ -441,9 +452,15 @@
 		
 		row.add(data).draw( false );
 		
+		arregloPaises[contador] = "" +idCiudad;
 	}
 	
-	function eliminarDestino(fila){
+	function eliminarDestino(fila, idCiudad){
+		
+		var codigoCiudad = "" + idCiudad;
+		var indice = arregloPaises.indexOf(codigoCiudad);
+		arregloPaises.splice(indice, 1); 
+		contador -= 1;
 		var tabla = $('#tblDestino').DataTable();
 		tabla.row('#'+fila).remove().draw( false );
 	}
@@ -452,11 +469,6 @@
 	function registrarOrden(){
 		
 		var e = document.createEvent('Event');
-		
-		var flagAutorizacion = 0;
-		if ( $('#chkAutorizacion').is(':checked') ){
-			flagAutorizacion = 1;
-		}
 		
 		var flagCantidadDias = 0;
 		var numeroDias = 0;
@@ -493,7 +505,7 @@
 			'ordenBean' : formToObject( '#frmOrden' ),
 		};
 		
-		var params = "?idServicio="+idServicio+"&idMotivo="+idMotivo+"&idDestino="+idDestino+"&flagAutorizacion="+flagAutorizacion+"&flagCantidadDias="+flagCantidadDias+"&numeroDias="+numeroDias;
+		var params = "?idServicio="+idServicio+"&idMotivo="+idMotivo+"&idDestino="+idDestino+"&flagCantidadDias="+flagCantidadDias+"&numeroDias="+numeroDias;
 		
 		$.ajax({
 			url: '${pageContext.request.contextPath}/grabarOrden'+params,
@@ -794,12 +806,13 @@
 									</div>
 								</div>	
 								
+								<!--
 								<div class="form-group">
 									<label for="chkAutorizacion" class="col-sm-8 control-label ">
 										<input style="margin-left:-330px;" type="checkbox" id="chkAutorizacion" name="autorizacion">&nbsp;
 										B&uacute;squeda autom&aacute;tica de informaci&oacute;n:</input>
 									</label>
-								</div>
+								</div>-->
 								
 								<br />
 								
@@ -914,6 +927,22 @@
 				<div class="modal-footer">
 					<div class="col-sm-12" align="center">					
 						<input type="button" id="btnAutorizacion" class="btn btn-primary"  onclick="$('#mdlValidaFormulario').modal('hide');" value="Aceptar"/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="divMensaje" class="modal fade" role="error">
+	<div class="modal-dialog">
+		<div class="panel panel-info">
+			<div class="panel-heading"> <strong>Validaci&oacute;n</strong></div>
+			<div class="panel-body">
+				<div class="modal-body"> <p class="text-center" id="mensajeError"></p></div>
+				<div class="modal-footer">
+					<div class="col-md-12" align="center">					
+						<input type="button" id="btnRegistro" class="btn btn-primary" onclick="$('#divMensaje').modal('hide');" value="Aceptar"/>
 					</div>
 				</div>
 			</div>
