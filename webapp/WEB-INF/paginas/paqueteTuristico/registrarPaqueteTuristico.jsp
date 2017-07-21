@@ -919,10 +919,12 @@
 			
 			//Calculando subtotal
 			var total = 0;
+			var totalCantidad = parseInt(0);
 			$("#tblTipoHabitacion tbody > tr").each(function () {
 				var row = $(this);
 				
 				var subtotal = parseFloat(row.find("td").eq(3).text());
+				totalCantidad += parseInt(row.find("td").eq(1).text());
 				
 				total += subtotal;
 				
@@ -931,7 +933,7 @@
 			
 			var trhotel = $("#tblHoteles tbody").find('input[name="optSelHotel"]:checked').closest('tr');
 			trhotel.find("td").eq(2).text(total);
-			
+			$("#hdnNumHabitaciones").val(totalCantidad);
 			
 		}
 		
