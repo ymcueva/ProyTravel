@@ -253,7 +253,7 @@
 	
 	<select id="obtenerHotelBusqueda" parameterClass="hotelHabitacionBean" resultMap="resultHotelBusqueda">
 			select ho.id_hotel , 
-			       sum(hohab.precio * chab.nu_habitacion * odes.nu_dias) subtotal
+			       sum(hohab.precio * chab.nu_habitacion) subtotal
    			from cotizacion cot
    			inner join orden ord on(cot.id_cotiza = ord.id_cotiza)
    			inner join orden_destino odes on(ord.id_orden = odes.id_orden)
@@ -266,6 +266,20 @@
    			and	  ho.id_destino = #idDestino#
    			and   prov.estado = 1	
    			group by id_hotel
+   			order by 2
+   			limit 1
+	</select>
+	
+	<select id="obtenerHotelBusquedaOrden" parameterClass="hotelHabitacionBean" resultMap="resultHotelBusqueda">			
+			select ho.id_hotel ,
+				   hohab.precio subtotal
+			from hotel ho
+				inner join hotel_habitacion hohab on(ho.id_hotel = hohab.id_hotel)
+				inner join proveedor prov on ho.id_proveedor = prov.id_proveedor
+			where ho.id_tipo_alojamiento = (select value_parametro from parametros where key_parametro = 'TIPAL')
+				and ho.id_categoria_alojamiento = (select value_parametro from parametros where key_parametro = 'CATAL')
+				and hohab.id_tipo_habitacion = (select value_parametro from parametros where key_parametro = 'TIHAB')
+				and prov.estado = 1	 and ho.id_destino = #idDestino#   			
    			order by 2
    			limit 1
 	</select>
@@ -294,6 +308,33 @@
    			where cot.id_cotiza = #idCotiza#
    			and	  ho.id_destino = #idDestino#	
 			and	  ho.id_hotel   = #idHotel#	
+	
+	</select>
+	
+	<select id="listarDetalleHotelBusquedaOrden" parameterClass="hotelHabitacionBean" resultMap="resultDetalleHotelBusqueda">
+			select ho.id_hotel ,
+		   ho.id_proveedor,
+	       ho.id_tipo_alojamiento,
+	       ho.id_categoria_alojamiento,
+	       hohab.id_hotel_habitacion,
+	       hohab.id_tipo_habitacion,
+		   hohab.precio	,
+	       0 cantidad,
+	       ho.descripcion nomHotel,
+	       tipo.descripcion nomtipo,
+		   cat.nombre categoria
+			from hotel ho
+			inner join hotel_habitacion hohab on(ho.id_hotel = hohab.id_hotel)
+			inner join proveedor prov on ho.id_proveedor = prov.id_proveedor
+			inner join tipo_alojamiento tipo on ho.id_tipo_alojamiento = tipo.id_tipo_alojamiento
+			inner join tipo_categoria_alojamiento cat on ho.id_categoria_alojamiento = cat.id_tipo
+			where ho.id_tipo_alojamiento = (select value_parametro from parametros where key_parametro = 'TIPAL')
+			and ho.id_categoria_alojamiento = (select value_parametro from parametros where key_parametro = 'CATAL')
+			and hohab.id_tipo_habitacion = (select value_parametro from parametros where key_parametro = 'TIHAB')
+			and	  ho.id_destino = #idDestino#	
+			and	  ho.id_hotel   = #idHotel#	
+			and prov.estado = 1	
+		
 	
 	</select>
 	

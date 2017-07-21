@@ -39,13 +39,16 @@ import com.google.gson.reflect.TypeToken;
 import pe.com.paxtravel.bean.AnimalBean;
 import pe.com.paxtravel.bean.CiudadBean;
 import pe.com.paxtravel.bean.CotizacionBean;
+import pe.com.paxtravel.bean.CotizacionDetaHabitacionBean;
 import pe.com.paxtravel.bean.CotizacionServicioBean;
 import pe.com.paxtravel.bean.EmpleadoBean;
 import pe.com.paxtravel.bean.FareInfoBean;
 import pe.com.paxtravel.bean.HotelBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
 import pe.com.paxtravel.bean.InseminacionBean;
+import pe.com.paxtravel.bean.OrdenDestinoBean;
 import pe.com.paxtravel.bean.OrdenPlanificacionBean;
+import pe.com.paxtravel.bean.OrdenServicioBean;
 import pe.com.paxtravel.bean.PaisBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoDestinoBean;
@@ -59,6 +62,7 @@ import pe.com.paxtravel.service.CotizacionService;
 import pe.com.paxtravel.service.EmpleadoService;
 import pe.com.paxtravel.service.InseminacionService;
 import pe.com.paxtravel.service.OrdenPlanificacionService;
+import pe.com.paxtravel.service.OrdenService;
 import pe.com.paxtravel.service.PaqueteTuristicoService;
 //import pe.com.paxtravel.service.ProduccionService;
 import pe.com.paxtravel.util.ControllerUtil;
@@ -353,14 +357,20 @@ public class PaqueteTuristicoController {
 			String categoria = request.getParameter("categoria").toString();
 			String tipoBusqueda = request.getParameter("tipobusqueda").toString();
 			String valor = request.getParameter("valor").toString();
-			String idCotizacion = request.getParameter("idcotizacion").toString();
+			String idCotizacion = "";
 			
+			if(request.getParameter("idcotizacion") != null)
+				idCotizacion = request.getParameter("idcotizacion").toString();
+			
+			System.out.println("IdCotizacion : " + idCotizacion);
 			System.out.println("IdDestino : " + idDestino);
 			System.out.println("Tipo :" + tipo);
 			System.out.println("Categoria :" + categoria);
 			System.out.println("tipoBusqueda :" + tipoBusqueda);
 			System.out.println("valor :" + valor);
 			
+			List<CotizacionDetaHabitacionBean> listaCotizacionDetaHabitacion = new ArrayList<CotizacionDetaHabitacionBean>();
+			CotizacionDetaHabitacionBean cotizacionDetaHabitacionBean = new CotizacionDetaHabitacionBean();
 			
 			
 			List<HotelBean> listaHotel = new ArrayList<HotelBean>();
@@ -387,7 +397,7 @@ public class PaqueteTuristicoController {
 				
 			}
 			
-			if(idCotizacion.equals("")) {
+			if(idCotizacion.equals("0")) {
 				mapa.put("existecotizacion", "0");
 				mapa.put("tipoalojamiento","");
 				mapa.put("categorialojamiento","");
@@ -417,6 +427,8 @@ public class PaqueteTuristicoController {
 				
 				if(listaHotel.size() > 0) {
 					//Obtener Detalle de Habitaciones
+					cotizacionDetaHabitacionBean.setIdCotiza(cotizacionBean.getNumeroCotizacion());
+					listaCotizacionDetaHabitacion = cotizacionService.listarCotizacionDetaHabitacion(cotizacionDetaHabitacionBean);
 					
 				}
 				else {
@@ -426,7 +438,13 @@ public class PaqueteTuristicoController {
 				
 			}
 				
-			
+			if(listaCotizacionDetaHabitacion != null){
+				mapa.put("listaCotizacionDetaHabitacion", listaCotizacionDetaHabitacion);
+			}
+			else {
+				mapa.put("listaCotizacionDetaHabitacion", null);
+			}
+				
 			
 			if(listaHotel != null){
 				System.out.println("Total Hoteles :" + listaHotel.size());
@@ -465,6 +483,7 @@ public class PaqueteTuristicoController {
 			listaOrdenPlanificacion = ordenPlanificacionService.obtenerOrdenPlanificacion(orden);
 			System.out.println("Size Orden :" + listaOrdenPlanificacion.size());
 			int idorden = 0;
+			Integer dias = 0;
 			String motivo = "";
 			mapa.put("mensaje","");
 			
@@ -484,6 +503,8 @@ public class PaqueteTuristicoController {
 				mapa.put("idCotizacion",listaOrdenPlanificacion.get(0).getIdCotiza());
 				mapa.put("idOrigen",listaOrdenPlanificacion.get(0).getIdOrigen());
 				mapa.put("nomOrigen",listaOrdenPlanificacion.get(0).getNomOrigen());
+				dias = listaOrdenPlanificacion.get(0).getDias() + 1;
+				mapa.put("dias",dias);
 				
 				mapa.put("mensaje","");
 				mapa.put("status", "1");
@@ -526,6 +547,7 @@ public class PaqueteTuristicoController {
 				mapa.put("idOrigen","");
 				mapa.put("motivo",motivo);
 				mapa.put("nomOrigen", "");
+				mapa.put("dias","0");
 			}
 			
 			 dataJSON.setRespuesta("ok", null, mapa);
@@ -553,12 +575,21 @@ public class PaqueteTuristicoController {
 			List<OrdenPlanificacionBean> listaOrden = new ArrayList<OrdenPlanificacionBean>();
 			String nuOrden = request.getParameter("nuorden");
 			
+			List<OrdenServicioBean> listaOrdenServicios = new ArrayList<OrdenServicioBean>();
+			OrdenServicioBean ordenServicioBean = new OrdenServicioBean();
+			
 			String idPaquete = "";
 			String busqueda = "";
 			String tipoPrograma = "";
 			String fechaPartida = "";
 			int idCotizacion = 0;
 			String nuCotizacion = "";
+			Integer diasPaquete = 0;
+			Integer idOrden = 0;
+			Integer ninos = 0;
+			Integer adultos = 0;
+			Integer personas = 0;
+			Integer origen = 0;
 			
 			if(request.getParameter("idpaquete") != null)
 				idPaquete = request.getParameter("idpaquete").toString();
@@ -566,6 +597,11 @@ public class PaqueteTuristicoController {
 			if(request.getParameter("busInteligente") != null)
 				busqueda = request.getParameter("busInteligente").toString();
 			
+			if(request.getParameter("diasPaquete") != null)
+				diasPaquete = Integer.parseInt(request.getParameter("diasPaquete").toString());
+			
+			if(request.getParameter("origen") != null)
+				origen = Integer.parseInt(request.getParameter("origen").toString());
 			//if(request.getParameter("tipoPrograma") != null)
 			//tipoPrograma = request.getParameter("tipoPrograma").toString();
 			
@@ -574,6 +610,7 @@ public class PaqueteTuristicoController {
 			System.out.println("Busqueda :" + busqueda);
 			//System.out.println("TipoPrograma :" + tipoPrograma);
 			System.out.println("nuOrden :" + nuOrden);
+			System.out.println("origen :" + origen);
 			
 			orden.setNuOrden(nuOrden);
 			System.out.println("Asignando Num Orden :" + orden.getNuOrden());
@@ -585,6 +622,10 @@ public class PaqueteTuristicoController {
 				fechaPartida = listaOrden.get(0).getFePartida();
 				nuCotizacion = listaOrden.get(0).getNuCotizacion();
 				tipoPrograma = String.valueOf(listaOrden.get(0).getIdTipoPrograma());
+				idOrden = listaOrden.get(0).getIdOrden();
+				adultos = listaOrden.get(0).getNuAdultos();
+				ninos = listaOrden.get(0).getNuNinos();
+				personas = adultos + ninos;
 			}
 			
 			System.out.println("Id Cotizacion:" + idCotizacion);
@@ -599,6 +640,31 @@ public class PaqueteTuristicoController {
 			else
 				orden.setIdPaquete(0);
 			
+			
+			//Validando si no tiene en la tabla destinos el origen lo inserto
+			
+			List<OrdenDestinoBean> listOrdenDestinoVerifica = new ArrayList<OrdenDestinoBean>();
+			OrdenDestinoBean ordenDestinoVerifica = new OrdenDestinoBean();
+			Integer registroOrdenDestino = 0;
+			ordenDestinoVerifica.setIdOrden(idOrden);
+			ordenDestinoVerifica.setDestino(origen);
+			listOrdenDestinoVerifica = ordenPlanificacionService.obtenerOrdenDestinoVerifica(ordenDestinoVerifica);
+			
+			if(listOrdenDestinoVerifica.size() > 0)
+				System.out.println("Size Orden Destino Verifica :" + listOrdenDestinoVerifica.size());
+			else {
+				System.out.println("Size Orden Destino Verifica :" + listOrdenDestinoVerifica.size());
+				//Insertar en destinos el origen
+				ordenDestinoVerifica.setIdOrden(idOrden);
+				ordenDestinoVerifica.setDestino(origen);
+				ordenDestinoVerifica.setOrigen(origen);
+				ordenDestinoVerifica.setNudias(0);
+				ordenDestinoVerifica.setVuelta(1);
+				registroOrdenDestino = ordenPlanificacionService.registrarOrdenDestinoOrigen(ordenDestinoVerifica);
+			}
+				
+			
+			
 			System.out.println("Haciendo la verificacion del tipo de busqueda");
 			//Hacer la busqueda inteligente y registrar el paquete
 			if(busqueda.equals("1")) {
@@ -611,6 +677,26 @@ public class PaqueteTuristicoController {
 				
 				System.out.println("Total Destinos Programa :" + listaOrdenDestino.size());
 				
+				if(diasPaquete < 0)
+					diasPaquete = 0;
+				
+				Integer dias_destino = 0;
+				//Proponer dias de destino 
+				while(diasPaquete > 0){
+					for(OrdenPlanificacionBean bean : listaOrdenDestino){
+						if(bean.getVuelta().equals(0)) {
+							System.out.println("Dias Inicial :" + bean.getNuDias());
+							dias_destino = bean.getNuDias();
+							dias_destino++;
+							diasPaquete--;
+							bean.setNuDias(dias_destino);
+							System.out.println("Dias Final :" + bean.getNuDias());
+						}
+					}
+				}
+				
+				
+				
 				//Verificar si tienes los servicios de ticket , Tour y hotel
 				List<CotizacionServicioBean> listaCotizacionServicio = new ArrayList<CotizacionServicioBean>();
 				CotizacionServicioBean cotizacionServicioBean = new CotizacionServicioBean();
@@ -621,33 +707,72 @@ public class PaqueteTuristicoController {
 			    int contTours = 0;
 			    int contHoteles = 0;
 				
-				cotizacionServicioBean.setIdCotiza(nuCotizacion);
 				
-				//Verifica tiene tour
-				cotizacionServicioBean.setIdServicio(3);
-				listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
-				System.out.println("Total Servicios Cotizacion :" + listaCotizacionServicio.size());
-				if(listaCotizacionServicio.size() > 0 ){
-					tieneTour = true;
-				}
-				System.out.println("Tiene Tour :" + tieneTour);
+			    
+			    if(!nuCotizacion.equals("")) {
+			    	System.out.println("Busqueda Inteligente por Cotizacion");
+			    	cotizacionServicioBean.setIdCotiza(nuCotizacion);
 					
-				//Verifica tiene ticket
-				cotizacionServicioBean.setIdServicio(2);
-				listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
-				if(listaCotizacionServicio.size() > 0 ){
-					tieneTicket = true;
-				}
-				System.out.println("Tiene Ticket :" + tieneTicket);
+					//Verifica tiene tour
+					cotizacionServicioBean.setIdServicio(3);
+					listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
+					System.out.println("Total Servicios Cotizacion :" + listaCotizacionServicio.size());
+					if(listaCotizacionServicio.size() > 0 ){
+						tieneTour = true;
+					}
+					System.out.println("Tiene Tour :" + tieneTour);
+						
+					//Verifica tiene ticket
+					cotizacionServicioBean.setIdServicio(2);
+					listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
+					if(listaCotizacionServicio.size() > 0 ){
+						tieneTicket = true;
+					}
+					System.out.println("Tiene Ticket :" + tieneTicket);
+					
+						
+					//Verifica tiene hotel
+					cotizacionServicioBean.setIdServicio(6);
+					listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
+					if(listaCotizacionServicio.size() > 0 ){
+						tieneHotel = true;
+					}
+					System.out.println("Tiene Hotel :" + tieneHotel);
+					
+			    }
+			    else {
+			    	System.out.println("Busqueda Inteligente por Orden");
+			    	ordenServicioBean.setIdOrden(idOrden.toString());
+			    	
+			    	//Verifica tiene tour
+			    	ordenServicioBean.setIdServicio(3);
+			    	listaOrdenServicios = ordenPlanificacionService.listarOrdenServicio(ordenServicioBean);
+					System.out.println("Total Servicios Orden :" + listaOrdenServicios.size());
+					if(listaOrdenServicios.size() > 0 ){
+						tieneTour = true;
+					}
+					System.out.println("Tiene Tour :" + tieneTour);
+					
+					//Verifica tiene ticket
+					ordenServicioBean.setIdServicio(2);
+					listaOrdenServicios = ordenPlanificacionService.listarOrdenServicio(ordenServicioBean);
+					if(listaOrdenServicios.size() > 0 ){
+						tieneTicket = true;
+					}
+					System.out.println("Tiene Ticket :" + tieneTicket);
+					
+					//Verifica tiene hotel
+					ordenServicioBean.setIdServicio(6);
+					listaOrdenServicios = ordenPlanificacionService.listarOrdenServicio(ordenServicioBean);
+					if(listaOrdenServicios.size() > 0 ){
+						tieneHotel = true;
+					}
+					System.out.println("Tiene Hotel :" + tieneHotel);
+					
+			    	
+			    }
+			    
 				
-					
-				//Verifica tiene hotel
-				cotizacionServicioBean.setIdServicio(6);
-				listaCotizacionServicio = cotizacionService.listarCotizacionServicio(cotizacionServicioBean);
-				if(listaCotizacionServicio.size() > 0 ){
-					tieneHotel = true;
-				}
-				System.out.println("Tiene Hotel :" + tieneHotel);
 					
 				List<HotelHabitacionBean> listaHotel = new ArrayList<HotelHabitacionBean>();
 				List<HotelHabitacionBean> listaHabitaciones = new ArrayList<HotelHabitacionBean>();
@@ -675,6 +800,7 @@ public class PaqueteTuristicoController {
 					bean.setFePartidaDestino(parseador.format(fechaDate).toString());
 					System.out.println("Fecha Parseada :" + parseador.format(fechaDate));
 					System.out.println("Id Destino : " +bean.getIdDestino() + " Fecha partida :" +  bean.getFePartidaDestino());
+					System.out.println("Nu Dias :" + bean.getNuDias());
 					dias = bean.getNuDias();
 					
 					//Inicializar variables de hotel
@@ -696,21 +822,48 @@ public class PaqueteTuristicoController {
 					bean.setComision(0);
 					
 					//Obtener Hotel y sus habitaciones si tiene el servicio de hotel
-					if(tieneHotel == true){
+					if(tieneHotel == true && bean.getVuelta().equals(0)){
 						hotel.setIdCotiza(String.valueOf(idCotizacion));
 						hotel.setIdDestino(bean.getIdDestino());
-						listaHotel = paqueteTuristicoService.obtenerHotelBusqueda(hotel);
+						hotel.setDias(bean.getNuDias());
+						
+						if(!nuCotizacion.equals(""))
+							listaHotel = paqueteTuristicoService.obtenerHotelBusqueda(hotel);
+						else
+							listaHotel = paqueteTuristicoService.obtenerHotelBusquedaOrden(hotel);
+						
 						
 						System.out.println("Destino : " + hotel.getIdDestino() + " Total Hoteles :" + listaHotel.size());
 						if(listaHotel.size()>0){
 							contHoteles = listaHotel.size();
 							idHotel = listaHotel.get(0).getIdHotel();
-							subtotal = listaHotel.get(0).getSubtotal();
+							System.out.println("Subtotal :" + listaHotel.get(0).getSubtotal());
+							System.out.println("Nu Cotizacion :" + nuCotizacion);
+							
+							if(!nuCotizacion.equals("")){
+								System.out.println("Calcular subtotal para la busqueda por cotizacion");
+								subtotal = listaHotel.get(0).getSubtotal() * bean.getNuDias();
+								
+							}
+							else{
+								System.out.println("Calcular subtotal para la busqueda por orden");
+								subtotal = listaHotel.get(0).getSubtotal() * personas * bean.getNuDias();	
+							}
+							
+							System.out.println("Subtotal :" + subtotal);
+							
+							
 							hotel.setIdHotel(idHotel);
 							bean.setIdHotel(idHotel);
 							bean.setTotalHotel(subtotal);
+							
 							//Obtener las habitaciones del hotel 
-							listaHabitaciones = paqueteTuristicoService.listarDetalleHotelBusqueda(hotel);
+							if(!nuCotizacion.equals(""))
+								listaHabitaciones = paqueteTuristicoService.listarDetalleHotelBusqueda(hotel);
+							else
+								listaHabitaciones = paqueteTuristicoService.listarDetalleHotelBusquedaOrden(hotel);
+							
+							
 							System.out.println("Id Hotel :" + idHotel);
 							System.out.println("Total Habitaciones :" + listaHabitaciones.size());
 							
@@ -724,6 +877,10 @@ public class PaqueteTuristicoController {
 								bean.setNomTipoAlojamiento(hotelHabitacion.getNomTipo());
 								bean.setNomCatAlojamiento(hotelHabitacion.getNomCategoria());
 								
+								if(nuCotizacion.equals("")) {
+									hotelHabitacion.setCantidad(personas);
+								}
+									
 								filaHabitacion = String.valueOf(hotelHabitacion.getIdHotelHabitacion()) + "-" ;
 								filaHabitacion += String.valueOf(hotelHabitacion.getIdTipo()) + "-";
 								filaHabitacion += String.valueOf(hotelHabitacion.getPrecio()) + "-";
@@ -746,7 +903,7 @@ public class PaqueteTuristicoController {
 					}
 					
 					//Obtener tour si tiene tour
-					if(tieneTour == true){
+					if(tieneTour == true && bean.getVuelta().equals(0)){
 						System.out.println("Verificando si tiene tours disponibles");
 						tour.setIdDestinoCiudad(bean.getIdDestino());
 						listaTour = paqueteTuristicoService.listaTourBusqueda(tour);
@@ -877,8 +1034,16 @@ public class PaqueteTuristicoController {
 					mapa.put("statusServicio", "1");
 				}
 				else {
-					mapa.put("listaOrdenServicio", null);
-					mapa.put("statusServicio", "0");
+					listaOrdenServicio = ordenPlanificacionService.obtenerOrdenServicio(ordenServicio);
+					if(listaOrdenServicio.size()  > 0){
+						mapa.put("listaOrdenServicio", listaOrdenServicio);
+						mapa.put("statusServicio", "1");
+					}
+					else {
+						mapa.put("listaOrdenServicio", null);
+						mapa.put("statusServicio", "0");
+					}
+
 				}
 			}
 			else {
@@ -1056,6 +1221,7 @@ public class PaqueteTuristicoController {
 				int idOrigen = 0;
 				String nomOrigen = "";
 				String tipoPrograma = "0";
+				Integer dias = 0;
 				
 				//Cargando los datos del paquete cuando se va modificar
 				if(!idPaquete.equals("")){
@@ -1091,6 +1257,7 @@ public class PaqueteTuristicoController {
 						idCotizacion = listaOrden.get(0).getIdCotiza();
 						idOrigen = listaOrden.get(0).getIdOrigen();
 						nomOrigen = listaOrden.get(0).getNomOrigen();
+						dias = listaOrden.get(0).getDias() + 1;
 						mapaDatos.put("mensaje","");
 						mapaDatos.put("status", "1");
 						
@@ -1125,6 +1292,7 @@ public class PaqueteTuristicoController {
 						idCotizacion = 0;
 						idOrigen = 0;
 						nomOrigen = "";
+						dias = 0;
 						mapaDatos.put("mensaje","");
 						mapaDatos.put("status", "0");
 						
@@ -1215,6 +1383,7 @@ public class PaqueteTuristicoController {
 				modelAndView.addObject("idCotizacion",idCotizacion);
 				modelAndView.addObject("idOrigen",idOrigen);
 				modelAndView.addObject("nomOrigen",nomOrigen);
+				modelAndView.addObject("dias",dias);
 				
 				
 				
@@ -1261,6 +1430,7 @@ public class PaqueteTuristicoController {
 					Map<String, Object> paqueteTuristicoBeanMap = (Map<String, Object>) parametrosRequest.get("paqueteTuristicoBean");
 					PaqueteTuristicoBean objbean = new PaqueteTuristicoBean();
 					OrdenPlanificacionBean ordenPlanificacionBean = new OrdenPlanificacionBean();
+					OrdenDestinoBean ordenDestinoBean = new OrdenDestinoBean();
 					
 					BeanUtils.populate(objbean, paqueteTuristicoBeanMap);
 					
@@ -1334,7 +1504,7 @@ public class PaqueteTuristicoController {
 					
 					int registro = 0;
 					
-					
+					Integer registro_destino = 0;
 					
 					
 					System.out.println(" registro index " + registro);
@@ -1401,6 +1571,14 @@ public class PaqueteTuristicoController {
 								paqueteTuristicoDestino.setFeEstadia(destino[3].toString());
 								
 								paqueteDestino = paqueteTuristicoService.RegistrarPaqueteTuristicoDestino(paqueteTuristicoDestino);
+								
+								ordenDestinoBean = new OrdenDestinoBean();
+								ordenDestinoBean.setIdOrden(objbean.getIdOrden());
+								ordenDestinoBean.setNudias(paqueteTuristicoDestino.getNuDias());
+								ordenDestinoBean.setDestino(paqueteTuristicoDestino.getIdDestinoCiudad());
+								
+								registro_destino = paqueteTuristicoService.actualizaOrdenDestino(ordenDestinoBean);
+								
 							}
 							
 						}

@@ -4,6 +4,7 @@ import java.util.List;
 
 import pe.com.paxtravel.bean.HotelBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
+import pe.com.paxtravel.bean.OrdenDestinoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoDestinoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoDestinoHotelBean;
@@ -48,9 +49,17 @@ public interface PaqueteTuristicoDAO {
 	
 	int actualizaPaqueteTuristico(PaqueteTuristicoBean paqueteTuristicoBean);
 	
+	int actualizaOrdenDestino(OrdenDestinoBean ordenDestinoBean);
+	
 	List<HotelHabitacionBean> obtenerHotelBusqueda(HotelHabitacionBean hotelHabitacionBean);
 	
+	List<HotelHabitacionBean> obtenerHotelBusquedaOrden(HotelHabitacionBean hotelHabitacionBean);
+	
+	
 	List<HotelHabitacionBean> listarDetalleHotelBusqueda(HotelHabitacionBean hotelHabitacionBean);
+	
+
+	List<HotelHabitacionBean> listarDetalleHotelBusquedaOrden(HotelHabitacionBean hotelHabitacionBean);
 	
 	List<TourBean> listaTourBusqueda(TourBean tourBean);
 	

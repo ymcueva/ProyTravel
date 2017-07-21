@@ -21,4 +21,10 @@ public interface OrdenService {
 	
 	public int registrarMotivo(OrdenBean ordenBean);
 	
+	public OrdenBean obtenerOrdenDetalle(OrdenBean ordenBean);
+	
+	public List<OrdenBean> listarMotivoViajeDetalle(OrdenBean ordenBean);
+	
+	public List<OrdenBean> listarServicioDetalle(OrdenBean ordenBean);
+	
 }

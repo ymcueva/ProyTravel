@@ -100,9 +100,6 @@ public class ReservaController {
 				
 				listarReserva = reservaService.listarReserva(reservaBean);
 				
-				System.out.println("size:... " + listarReserva.size());
-				
-				
 				mapa.put("listaReserva",  listarReserva);
 				
 				dataJSON.setRespuesta("ok", null, mapa);
@@ -222,7 +219,6 @@ public class ReservaController {
 		        	String fechaCotizacion = obtenerCotizacion.get(0).getFechaCotizacion();
 		        	SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
 		        	String fechaActual = formateador.format(new Date());
-		        	
 		        	
 		            String anio = fechaCotizacion.substring(0, 4);
 		            String mes = fechaCotizacion.substring(5, 7);
@@ -421,6 +417,8 @@ public class ReservaController {
 				mapa.put("resultado", "1");
 				mapa.put("nombresPasajero", reservaBean.getNombresPasajero());
 				mapa.put("apellidosPasajero", reservaBean.getApellidosPasajero());
+				mapa.put("fechaNacimiento", reservaBean.getFechaNacimiento());
+				mapa.put("idParentesco", reservaBean.getIdParentesco());
 			} else {
 				mapa.put("resultado", "0");
 			}

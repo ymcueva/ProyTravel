@@ -106,8 +106,22 @@ public class ReservaBean {
 	private String numeroDocumentoPasajero;
 	private String nombresPasajero;
 	private String apellidosPasajero;
+	private String fechaNacimiento;
+	private String idParentesco;
 	
 	
+	public String getFechaNacimiento() {
+		return fechaNacimiento;
+	}
+	public void setFechaNacimiento(String fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
+	public String getIdParentesco() {
+		return idParentesco;
+	}
+	public void setIdParentesco(String idParentesco) {
+		this.idParentesco = idParentesco;
+	}
 	public String getNombresPasajero() {
 		return nombresPasajero;
 	}

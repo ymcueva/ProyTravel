@@ -53,5 +53,8 @@ public interface OrdenPlanificacionDAO {
     public List<OrdenPlanificacionBean> obtenerOrdenMotivo(OrdenPlanificacionBean objBean);
     public List<OrdenPlanificacionBean> obtenerOrdenDestino(OrdenPlanificacionBean objBean);
     public List<OrdenPlanificacionBean> obtenerOrdenServicio(OrdenPlanificacionBean objBean);
+    public List<OrdenDestinoBean> obtenerOrdenDestinoVerifica(OrdenDestinoBean objBean);
+    
+    int registrarOrdenDestinoOrigen(OrdenDestinoBean ordenDestinoBean);
 
 }

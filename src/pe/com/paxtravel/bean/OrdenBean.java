@@ -28,7 +28,38 @@ public class OrdenBean {
 	private int flagCantidadDias;
 	private int numeroDias;
 	
+	private int idMotivoViaje;
+	private String descripcionMotivoViaje;
 	
+	private int idServicioViaje;
+	private String descripcionServicioViaje;
+	
+	
+	public String getDescripcionMotivoViaje() {
+		return descripcionMotivoViaje;
+	}
+	public void setDescripcionMotivoViaje(String descripcionMotivoViaje) {
+		this.descripcionMotivoViaje = descripcionMotivoViaje;
+	}
+	public String getDescripcionServicioViaje() {
+		return descripcionServicioViaje;
+	}
+	public void setDescripcionServicioViaje(String descripcionServicioViaje) {
+		this.descripcionServicioViaje = descripcionServicioViaje;
+	}
+	public int getIdServicioViaje() {
+		return idServicioViaje;
+	}
+	public void setIdServicioViaje(int idServicioViaje) {
+		this.idServicioViaje = idServicioViaje;
+	}
+
+	public int getIdMotivoViaje() {
+		return idMotivoViaje;
+	}
+	public void setIdMotivoViaje(int idMotivoViaje) {
+		this.idMotivoViaje = idMotivoViaje;
+	}
 	
 	public int getFlagCantidadDias() {
 		return flagCantidadDias;

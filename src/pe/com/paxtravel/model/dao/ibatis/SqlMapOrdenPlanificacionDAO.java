@@ -30,6 +30,14 @@ public class SqlMapOrdenPlanificacionDAO extends SqlMapClientDaoSupport
 		ordenes = getSqlMapClientTemplate().queryForList("ordenplanificacion.obtenerOrdenDestinoPrograma", objBean);
 		return ordenes;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<OrdenDestinoBean> obtenerOrdenDestinoVerifica(OrdenDestinoBean objBean) {
+		List<OrdenDestinoBean> ordenes = new ArrayList<OrdenDestinoBean>();
+		ordenes = getSqlMapClientTemplate().queryForList("ordenplanificacion.obtenerOrdenDestinoVerifica", objBean);
+		return ordenes;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -57,6 +65,13 @@ public class SqlMapOrdenPlanificacionDAO extends SqlMapClientDaoSupport
 	public int registrarMotivo(MotivoViajeBean motivoViajeBean) {
 		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).update("ordenplanificacion.insertarMotivoViaje",
 						motivoViajeBean);
+		return 1;
+	}
+	
+	@Override
+	public int registrarOrdenDestinoOrigen(OrdenDestinoBean ordenDestinoBean) {
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).insert("ordenplanificacion.insertarOrdenDestinoOrigen",
+				ordenDestinoBean);
 		return 1;
 	}
 

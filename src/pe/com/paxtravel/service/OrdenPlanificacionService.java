@@ -55,5 +55,8 @@ public interface OrdenPlanificacionService {
     public List<OrdenPlanificacionBean> obtenerOrdenMotivo(OrdenPlanificacionBean objBean);
     public List<OrdenPlanificacionBean> obtenerOrdenDestino(OrdenPlanificacionBean objBean);
     public List<OrdenPlanificacionBean> obtenerOrdenServicio(OrdenPlanificacionBean objBean);
+    public List<OrdenDestinoBean> obtenerOrdenDestinoVerifica(OrdenDestinoBean ordenDestinoBean);
+    
+    int registrarOrdenDestinoOrigen(OrdenDestinoBean ordenDestinoBean);
 
 }

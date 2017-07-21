@@ -7,6 +7,7 @@ import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
 import pe.com.paxtravel.bean.HotelBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
+import pe.com.paxtravel.bean.OrdenDestinoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoDestinoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoDestinoHotelBean;
@@ -96,6 +97,16 @@ public class SqlMapPaqueteTuristicoDAO extends SqlMapClientDaoSupport implements
 				"paqueteturistico.obtenerHotelBusqueda", hotelHabitacionBean);
 		return listaHotelHabitacion;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<HotelHabitacionBean> obtenerHotelBusquedaOrden(
+			HotelHabitacionBean hotelHabitacionBean) {
+		List<HotelHabitacionBean> listaHotelHabitacion = null;
+		listaHotelHabitacion = getSqlMapClientTemplate().queryForList(
+				"paqueteturistico.obtenerHotelBusquedaOrden", hotelHabitacionBean);
+		return listaHotelHabitacion;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -104,6 +115,17 @@ public class SqlMapPaqueteTuristicoDAO extends SqlMapClientDaoSupport implements
 		List<HotelHabitacionBean> listaHotelHabitacion = null;
 		listaHotelHabitacion = getSqlMapClientTemplate().queryForList(
 				"paqueteturistico.listarDetalleHotelBusqueda",
+				hotelHabitacionBean);
+		return listaHotelHabitacion;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<HotelHabitacionBean> listarDetalleHotelBusquedaOrden(
+			HotelHabitacionBean hotelHabitacionBean) {
+		List<HotelHabitacionBean> listaHotelHabitacion = null;
+		listaHotelHabitacion = getSqlMapClientTemplate().queryForList(
+				"paqueteturistico.listarDetalleHotelBusquedaOrden",
 				hotelHabitacionBean);
 		return listaHotelHabitacion;
 	}
@@ -156,6 +178,15 @@ public class SqlMapPaqueteTuristicoDAO extends SqlMapClientDaoSupport implements
 		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient())
 				.update("paqueteturistico.actualizaPaqueteTuristico",
 						paqueteTuristicoBean);
+		return 1;
+	}
+	
+	@Override
+	public int actualizaOrdenDestino(
+			OrdenDestinoBean ordenDestinoBean) {
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient())
+				.update("ordenplanificacion.updateOrdenDestino",
+						ordenDestinoBean);
 		return 1;
 	}
 

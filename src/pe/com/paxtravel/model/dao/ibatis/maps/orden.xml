@@ -6,17 +6,40 @@
 	
 	<typeAlias alias="ordenBean" type="pe.com.paxtravel.bean.OrdenBean" />
 
-	<resultMap id="resultOrden" class="ordenBean">		 	
+  	<resultMap id="resultOrden" class="ordenBean">		 	
 		<result property="numeroFila"			    		column="ca_nume_fila" />			
 		<result property="numeroOrden" 		    		column="nu_orden" />			
+		<result property="idOrden" 		    		column="id_orden" />
 		<result property="fechaOrden" 		    			column="fe_order" />			 
 		<result property="descripcionOrden" 		    		column="descripcion" />			
 		<result property="descripcionEstadoOrden" 		    	column="no_estado" />
 	</resultMap>
 	
+	<resultMap id="resultOrdenDetalle" class="ordenBean">		 	
+		<result property="idOrden"			    				column="id_orden" />			
+		<result property="numeroOrden" 		    				column="nu_orden" />			
+		<result property="fechaOrden" 		    				column="fe_order" />			 
+		<result property="fechaPartida" 		    			column="fe_partida" />			
+		<result property="fechaRetorno" 						column="fe_retorno" />
+		<result property="presupuestoMaximo" 		    		column="im_presupuesto_maximo" />
+		<result property="comentarioOrden" 		    			column="observacion" />
+	</resultMap>
+	
+	<resultMap id="resultMotivoViajeDetalle" class="ordenBean">		 	
+		<result property="idOrden"			    				column="id_orden" />			
+		<result property="idMotivoViaje" 		    			column="id_motivo" />			
+		<result property="descripcionMotivoViaje" 		    	column="descripcion" />			 
+	</resultMap>
+	
+	<resultMap id="resultServicioDetalle" class="ordenBean">		 	
+		<result property="idOrden"			    				column="id_orden" />			
+		<result property="idServicioViaje" 		    			column="id_servicio" />			
+		<result property="descripcionServicioViaje" 		    	column="nombre" />			 
+	</resultMap>
+	
 	<select id="obtenerOrden" parameterClass="ordenBean" resultMap="resultOrden">	
-		SELECT @rownum:=@rownum+1 AS ca_nume_fila, a.nu_orden,
-		       DATE_FORMAT(a.fe_order,'%d-%m-%Y') fe_order, 
+		SELECT @rownum:=@rownum+1 AS ca_nume_fila, a.nu_orden, id_orden,
+		       DATE_FORMAT(a.fe_order,'%d-%m-%Y') fe_order,
 		       IFNULL(a.descripcion,'') descripcion, b.no_estado
 		  FROM (SELECT @rownum:=0) r,orden a
          INNER JOIN estado b ON a.id_estado=b.id_estado
@@ -90,5 +113,33 @@
 			#idMotivo#
 		)
 	</insert>
+	
+	<select id="obtenerOrdenDetalle" parameterClass="ordenBean" resultMap="resultOrdenDetalle">
+		 SELECT id_orden, nu_orden, DATE_FORMAT(o.fe_order,'%d-%m-%Y') fe_order, 
+		 		DATE_FORMAT(o.fe_partida,'%d-%m-%Y') fe_partida,
+		 		DATE_FORMAT(o.fe_retorno,'%d-%m-%Y') fe_retorno, 
+		        im_presupuesto_maximo, observacion  
+		   FROM orden o
+		  WHERE 1=1
+		<isNotEmpty prepend="AND" property="idOrden"> o.id_orden = #idOrden# </isNotEmpty>
+	</select>
+	
+	
+	<select id="listarMotivoViajeDetalle" parameterClass="ordenBean" resultMap="resultMotivoViajeDetalle">
+		 SELECT a.id_orden, a.id_motivo , b.descripcion
+           FROM orden_motivo a INNER JOIN motivo_viaje b ON a.id_motivo=b.id_motivo
+		  WHERE 1=1
+		<isNotEmpty prepend="AND" property="idOrden"> a.id_orden = #idOrden# </isNotEmpty>
+	</select>
+	
+	
+	<select id="listarServicioDetalle" parameterClass="ordenBean" resultMap="resultServicioDetalle">
+		 SELECT a.id_orden, a.id_servicio, b.nombre
+           FROM orden_servicio a INNER JOIN servicios b ON a.id_servicio=b.id_servicio
+		  WHERE 1=1
+		<isNotEmpty prepend="AND" property="idOrden"> a.id_orden = #idOrden# </isNotEmpty>
+	</select>
+	
+	
 
 </sqlMap>

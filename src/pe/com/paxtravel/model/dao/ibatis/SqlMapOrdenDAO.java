@@ -52,5 +52,24 @@ public class SqlMapOrdenDAO extends SqlMapClientDaoSupport implements OrdenDAO{
 		return ordenBean.getIdOrden();
 	}
 	
-
+	@Override
+	public OrdenBean obtenerOrdenDetalle(OrdenBean ordenBean) {
+		return (OrdenBean) getSqlMapClientTemplate().queryForObject("orden.obtenerOrdenDetalle", ordenBean);
+	}
+	
+	@Override
+	public List<OrdenBean> listarMotivoViajeDetalle(OrdenBean ordenBean) {
+		List<OrdenBean> listaMotivo = null;
+		listaMotivo = getSqlMapClientTemplate().queryForList("orden.listarMotivoViajeDetalle", ordenBean);
+		return listaMotivo;
+	}
+	
+	@Override
+	public List<OrdenBean> listarServicioDetalle(OrdenBean ordenBean) {
+		List<OrdenBean> listaServicio = null;
+		listaServicio = getSqlMapClientTemplate().queryForList("orden.listarServicioDetalle", ordenBean);
+		return listaServicio;
+	}
+	
+	
 }

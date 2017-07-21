@@ -70,7 +70,7 @@
 		
  		$("#btnBuscarReserva").on('click', function(e){
  			e.preventDefault();
-  			buscarReserva();
+  			buscarReserva(e);
  		})
 		
  	});
@@ -113,7 +113,44 @@
 		return ( (key==32 ) || (key >= 97 && key <= 122) || (key >= 65 && key <= 90) );
  	}
  	
-	function buscarReserva(){
+	function mostrarMensajeValidFormBusqueda(mensaje){
+		$("#divMensaje").html(mensaje);
+		$('#mdlValidaFormulario').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
+	
+	function buscarReserva(e){
+		
+		var fIni = $("#txtFechaCotizacionBusq").val();
+		var fFin = $("#txtFechaFinBusq").val();
+		var numeroReserva = $("#txtNumeroReserva").val();
+		var numeroCotizacion = $("#txtNumeroCotizacion").val();
+		var estadoReserva = $("#selcodigoEstadoCotizacion").val();
+		var tipoBusqCliente = $("#selTipoBusqueda").val();
+		var nombreCliente = $("#txtNombreCliente").val();
+		
+		
+		if(numeroReserva == "" && numeroCotizacion == "" && 
+		  (tipoBusqCliente == "" || nombreCliente == "") && fIni == "" && fFin == "" && estadoReserva == ""){
+			mostrarMensajeValidFormBusqueda("Ingrese y/o seleccione un filtro para realizar la b&uacute;squeda.");
+			return false;
+		}
+		
+		if((fIni != "" || fFin != "") ) {
+			if ( ( (fIni != "" && fFin == "") || (fIni == "" && fFin != "") )  ){
+				mostrarMensajeValidFormBusqueda("Seleccionar el rango de Fecha de Inicio y Fecha Fin para realizar la b&uacute;squeda.")
+				return false;
+			}
+		}
+		
+		var diferenciaDias = retornaDiferencia(e, fIni, fFin) + "";
+		
+		if ( diferenciaDias.substring(0,1) == "-" ) {
+			mostrarMensajeValidFormBusqueda("La Fecha Fin no puede ser mayor a la Fecha de Inicio.")
+			return false;
+		}
 		
 		var grabarFormParams = {
 			'reservaBean' : formToObject( '#formConsuReserva' )
@@ -140,6 +177,25 @@
 			error: function(data, textStatus, errorThrown) {
 			}
 		});
+	}
+	
+	function retornaDiferencia(e, fIni, fFin){
+		e.preventDefault();
+		
+		var fInicio = fIni;
+		var fFin = fFin;
+		
+		fInicio = fInicio.substring(6) + "-" +  fInicio.substring(3,5) + "-"  +  fInicio.substring(0,2);
+		fFin = fFin.substring(6) + "-" +  fFin.substring(3,5) + "-"  +  fFin.substring(0,2);
+		
+		var fechaInicio = new Date( fInicio ).getTime();
+		var fechaFin = new Date( fFin ).getTime();
+		
+		var diferenciaDias = fechaFin - fechaInicio;
+		
+		var cantidadDias = diferenciaDias/(1000*60*60*24);
+		
+		return cantidadDias;
 	}
 	
  	function construirTablaListaReserva( dataGrilla ){
@@ -341,16 +397,16 @@
 
 
 <div id="container" class="container" style="width: 100%">
-	<div class="col-sm-12" id="divConsForm" style="margin:0px 0px 0px 0px;">
-		<div class="col-sm-7">&nbsp;</div>
-		<div class="col-sm-3">
+	<div class="col-md-12" id="divConsForm" style="margin:0px 0px 0px 0px;">
+		<div class="col-md-7">&nbsp;</div>
+		<div class="col-md-3">
 			<span style="color:#337ab7">Usuario: <%=session.getAttribute("codigoUsuario")%></span>
 		</div>
-		<div class="col-sm-2">
+		<div class="col-md-2">
 			<a href="logout">Cerrar Sesion</a>
 		</div>
 	</div>
-	<div class="row col-sm-offset-0 col-sm-12">
+	<div class="row col-md-offset-0 col-md-12">
 		<div class="principal">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
@@ -358,31 +414,31 @@
 				</div>
 				<div class="panel-body">
 					
-					<div class="col-sm-12" id="divSecBusquedaReserva">
+					<div class="col-md-12" id="divSecBusquedaReserva">
 						<div class="panel panel-primary">
 							<div class="panel-heading">	<strong>Consulta de Reservas</strong></div>
 							
 							<div class="panel-body">
 												
 								<div class="row">
-									<div class="col-sm-12">
+									<div class="col-md-12">
 										<form id="formConsuReserva" class="form-horizontal" method="POST">
 
 											<div class="form-group">
-												<label class="col-sm-3 control-label alignDerecha">Nro. Reserva:</label>
-												<div class="col-sm-3">
-													<input id="txtNumero" name="numeroReserva" type="text" maxlength="30" class="form-control">
+												<label class="col-md-3 control-label alignDerecha">Reserva:</label>
+												<div class="col-md-3">
+													<input id="txtNumeroReserva" name="numeroReserva" type="text" maxlength="30" class="form-control">
 												</div>
 												
-												<label class="col-sm-3 control-label alignDerecha">Nro. Cotizaci&oacute;n:</label>
-												<div class="col-sm-3">
-													<input id="txtNumero" name="numeroCotizacion" type="text" maxlength="30" class="form-control">
+												<label class="col-md-1 control-label alignDerecha">Cotizaci&oacute;n.:</label>
+												<div class="col-md-3">
+													<input id="txtNumeroCotizacion" name="numeroCotizacion" type="text" maxlength="30" class="form-control">
 												</div>
 											</div>
 												
 											<div class="form-group">
-												<label class="col-sm-3 control-label alignDerecha">Cliente:</label>
-												<div class="col-sm-3">
+												<label class="col-md-3 control-label alignDerecha">Cliente:</label>
+												<div class="col-md-3">
 													<select name="tipoBusqueda" id="selTipoBusqueda" class="form-control tamanoMaximo"> 
 														<option value="">--- Seleccione ---</option>
 														<option value="1">DNI</option>
@@ -390,15 +446,17 @@
 													</select>
 												</div>
 												
-												<div class="col-sm-6">
+												<div class="col-md-4">
 													<input name="cliente" id="txtNombreCliente"  type="text" maxlength="30" class="form-control" />
+												</div>
+												<div class="col-md-2">
 												</div>
 												
 											</div>
 											
 											<div class="form-group">
-												<label class="col-sm-2 control-label alignDerecha">Fecha Inicio</label>
-												<div class="col-sm-2">
+												<label class="col-md-3 control-label alignDerecha">Fecha Inicio:</label>
+												<div class="col-md-3">
 													<div class="input-group date tamanoMaximo" id="divFechaCotizacionBusq">
 														<input id="txtFechaCotizacionBusq" name="fechaInicio" type="text" maxlength="30" readonly="yes" class="form-control txtFecha" />
 														<span class="input-group-addon datepickerbutton">
@@ -410,8 +468,8 @@
 													</div>
 												</div>
 												
-												<label class="col-sm-2 control-label alignDerecha">Fecha Fin</label>
-												<div class="col-sm-2">
+												<label class="col-md-1 control-label alignDerecha">Fecha Fin:</label>
+												<div class="col-md-3">
 													<div class="input-group date tamanoMaximo" id="divFechaFinBusq">
 														<input id="txtFechaFinBusq" name="fechaFin" type="text" maxlength="30" readonly="yes" class="form-control txtFecha" />
 														<span class="input-group-addon datepickerbutton">
@@ -422,27 +480,26 @@
 														</span>
 													</div>
 												</div>
-												
-												<label class="col-sm-2 control-label alignDerecha">Estado:</label>
-												<div class="col-sm-2">
+												<div class="col-md-2"></div>
+											</div>
+											<div class="form-group">
+												<label class="col-md-3 control-label alignDerecha">Estado:</label>
+												<div class="col-md-3">
 													<select name="idEstadoReserva" id="selcodigoEstadoCotizacion" class="form-control tamanoMaximo"> 
 														<option value="">--- Seleccione ---</option>
 														<option value="12">Confirmado</option>
 														<option value="13">Emitido</option> 
 													</select>
 												</div>
-												
+												<div class="col-md-6"></div>
 												
 												
 											</div>
 											
 											<div class="form-group">
-												<div class="col-sm-10" style="text-align:center">
+												<div class="col-md-12" style="text-align:center">
 													<button id="btnBuscarReserva" class="btn btn-primary" title="Buscar">Buscar</button>
 													<button id="btnLimpiarReserva" class="btn btn-primary" title="Limpiar">Limpiar</button>
-												</div>
-												
-												<div class="col-sm-2" align="right">
 													<input type="button" class="btn btn-primary" value="Nuevo" id="btnRegistrarReserva" onclick="registrarReserva()"></input>
 												</div>
 											</div>
@@ -456,14 +513,14 @@
 					
 					
 					
-					<div class="col-sm-12" id="divSecDatosReserva">
+					<div class="col-md-12" id="divSecDatosReserva">
 						<div class="panel panel-primary">
 <!-- 							<div class="panel-heading">	<strong>Lista de Coti</strong></div> -->
 							
 							<div class="panel-body">
 												
 								<div id="dvSubSecReserva">
-									<div class="col-sm-12" id="divTblListaReserva">
+									<div class="col-md-12" id="divTblListaReserva">
 										
 										<table id ="tblListaReserva" class="table table-bordered responsive" style="width:100%">
 											<thead>
@@ -501,7 +558,7 @@
 			<div class="panel-body">
 				<div class="modal-body"> <p class="text-center">&iquest;Desea Eliminar?</p></div>
 				<div class="modal-footer">
-					<div class="col-sm-12" align="center">
+					<div class="col-md-12" align="center">
 						<input type="button" class="btn btn-primary" intermediateChanges="false" data-dismiss="" value="Si"
 							onclick="eliminarInseminacion();" id="btnEliminaRegistro"></input>
 						<button type="button" id="btnEliminaNo" class="btn btn-primary" data-dismiss="modal">No</button>
@@ -528,7 +585,7 @@
 			<div class="panel-body">
 				<div class="modal-body"> <p class="text-center">El cliente no tiene registrado un correo electr&oacute;nico<br />No se puede enviar la reserva.</p></div>
 				<div class="modal-footer">
-					<div class="col-sm-12" align="center">
+					<div class="col-md-12" align="center">
 						<input type="button" class="btn btn-primary" intermediateChanges="false" data-dismiss="" value="Aceptar"
 							onclick="cerrarPopupReserva();"></input>
 					</div>
@@ -546,9 +603,25 @@
 			<div class="panel-body">
 				<div class="modal-body"> <p class="text-center" id="msjEnviaReserva"></p></div>
 				<div class="modal-footer">
-					<div class="col-sm-12" align="center">
+					<div class="col-md-12" align="center">
 						<input type="button" class="btn btn-primary" intermediateChanges="false" data-dismiss="" value="Aceptar"
 							onclick="cerrarPopupReserva();"></input>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="mdlValidaFormulario" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="panel panel-info">
+			<div class="panel-heading"> <strong>B&uacute;squeda</strong></div>
+			<div class="panel-body">
+				<div class="modal-body"> <p class="text-center" id="divMensaje"></p></div>
+				<div class="modal-footer">
+					<div class="col-sm-12" align="center">					
+						<input type="button" id="btnAutorizacion" class="btn btn-primary"  onclick="$('#mdlValidaFormulario').modal('hide');" value="Aceptar"/>
 					</div>
 				</div>
 			</div>

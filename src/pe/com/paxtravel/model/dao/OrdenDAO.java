@@ -18,4 +18,11 @@ public interface OrdenDAO {
 	int registrarServicio(OrdenBean ordenBean);
 	
 	int registrarMotivo(OrdenBean ordenBean);
+	
+	OrdenBean obtenerOrdenDetalle(OrdenBean ordenBean);
+	
+	List<OrdenBean> listarMotivoViajeDetalle(OrdenBean ordenBean);
+	
+	List<OrdenBean> listarServicioDetalle(OrdenBean ordenBean);
+	
 }

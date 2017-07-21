@@ -5,6 +5,7 @@ public class OrdenDestinoBean {
 	private int idDetalle;
 	private int idOrden;
 	private int destino;	
+	private int origen;
 	private int cantidadNino;
 	private int cantidadAdulto;
 	private int nudias;
@@ -12,6 +13,9 @@ public class OrdenDestinoBean {
 	private String fechaRetorno;
 	private int ruta;
 	private int tiIda;
+	private Integer vuelta;
+	
+	
 	public int getIdDetalle() {
 		return idDetalle;
 	}
@@ -71,6 +75,18 @@ public class OrdenDestinoBean {
 	}
 	public void setTiIda(int tiIda) {
 		this.tiIda = tiIda;
+	}
+	public Integer getVuelta() {
+		return vuelta;
+	}
+	public void setVuelta(Integer vuelta) {
+		this.vuelta = vuelta;
+	}
+	public int getOrigen() {
+		return origen;
+	}
+	public void setOrigen(int origen) {
+		this.origen = origen;
 	}
 	
 }

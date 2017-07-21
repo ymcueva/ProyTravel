@@ -45,8 +45,8 @@ public class OrdenPlanificacionController {
 	public void setJsonView(String jsonView) {
 		this.jsonView = jsonView;
 	}
-	@RequestMapping( value = "/verDetalleOrden", method ={RequestMethod.GET, RequestMethod.POST} )
-	public ModelAndView verDetalleOrden(HttpServletRequest request, HttpServletResponse response){
+	@RequestMapping( value = "/verDetalleOrdenxxxxx", method ={RequestMethod.GET, RequestMethod.POST} )
+	public ModelAndView verDetalleOrdenxxxxx(HttpServletRequest request, HttpServletResponse response){
 		Map<String, Object> mapa = new HashMap<String, Object>();
 		DataJsonBean dataJSON = new DataJsonBean();
 		try {
@@ -59,6 +59,7 @@ public class OrdenPlanificacionController {
 	        dataJSON.setRespuesta("ok", null, mapa);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		return ControllerUtil.handleJSONResponse(dataJSON, response);
 	}

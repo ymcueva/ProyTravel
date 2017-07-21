@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import pe.com.paxtravel.bean.HotelBean;
 import pe.com.paxtravel.bean.HotelHabitacionBean;
+import pe.com.paxtravel.bean.OrdenDestinoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoDestinoBean;
 import pe.com.paxtravel.bean.PaqueteTuristicoDestinoHotelBean;
@@ -72,6 +73,15 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
 				.obtenerHotelBusqueda(hotelHabitacionBean);
 		return listaHotelHabitacion;
 	}
+	
+	@Override
+	public List<HotelHabitacionBean> obtenerHotelBusquedaOrden(
+			HotelHabitacionBean hotelHabitacionBean) {
+		List<HotelHabitacionBean> listaHotelHabitacion = new ArrayList<HotelHabitacionBean>();
+		listaHotelHabitacion = paqueteTuristicoDAO
+				.obtenerHotelBusquedaOrden(hotelHabitacionBean);
+		return listaHotelHabitacion;
+	}
 
 	@Override
 	public List<HotelHabitacionBean> listarDetalleHotelBusqueda(
@@ -79,6 +89,15 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
 		List<HotelHabitacionBean> listaHotelHabitacion = new ArrayList<HotelHabitacionBean>();
 		listaHotelHabitacion = paqueteTuristicoDAO
 				.listarDetalleHotelBusqueda(hotelHabitacionBean);
+		return listaHotelHabitacion;
+	}
+	
+	@Override
+	public List<HotelHabitacionBean> listarDetalleHotelBusquedaOrden(
+			HotelHabitacionBean hotelHabitacionBean) {
+		List<HotelHabitacionBean> listaHotelHabitacion = new ArrayList<HotelHabitacionBean>();
+		listaHotelHabitacion = paqueteTuristicoDAO
+				.listarDetalleHotelBusquedaOrden(hotelHabitacionBean);
 		return listaHotelHabitacion;
 	}
 
@@ -187,6 +206,12 @@ public class PaqueteTuristicoServiceImpl implements PaqueteTuristicoService {
 			PaqueteTuristicoBean paqueteTuristicoBean) {
 		return paqueteTuristicoDAO
 				.actualizarEstadoPaqueteTuristico(paqueteTuristicoBean);
+	}
+	
+	@Override
+	public int actualizaOrdenDestino(OrdenDestinoBean ordenDestinoBean){
+		return paqueteTuristicoDAO
+				.actualizaOrdenDestino(ordenDestinoBean);
 	}
 
 }

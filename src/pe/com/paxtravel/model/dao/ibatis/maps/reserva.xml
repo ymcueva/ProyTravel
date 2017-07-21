@@ -81,6 +81,8 @@
 		<result property="numeroDocumentoPasajero"			    column="nu_documento" />
 		<result property="nombresPasajero"			    column="nombres" />
 		<result property="apellidosPasajero"			    column="apellidos" />
+		<result property="fechaNacimiento"			    column="fecha_nacimiento" />
+		<result property="idParentesco"			    column="id_parentesco" />
 	</resultMap>
 	
 	<select id="listarReserva" parameterClass="reservaBean" resultMap="listadoReserva">		
@@ -141,7 +143,7 @@
 				c.ti_ida,
 				IF (c.ti_ida=1,'Solo Ida','Ida y Vuelta') AS vuelo, 
 				c.fe_partida,
-				ifNull(c.fe_retorno,'') AS fe_retorno
+				c.fe_retorno
 			FROM (SELECT @rownum:=0) r, `cotizacion_deta` AS c  	
 				INNER JOIN `cotizacion` AS co ON ( co.nu_cotiza=c.id_cotiza )
 				LEFT JOIN destino_ciudad AS dcorigen ON (c.id_destino_origen=dcorigen.id_destino_ciudad)
@@ -269,7 +271,7 @@
 	</select>
 	
 	<select id="buscaPasajeroXReserva" parameterClass="reservaBean" resultMap="listaDatosPasajero">
-		SELECT nu_documento, nombres, apellidos FROM reserva_pasajero a
+		SELECT nu_documento, nombres, apellidos, fecha_nacimiento, id_parentesco FROM reserva_pasajero a
 		 WHERE 1=1
 		<isNotEmpty prepend="AND" property="numeroDocumentoPasajero"> a.nu_documento = #numeroDocumentoPasajero# </isNotEmpty>
 		ORDER BY fe_registro DESC

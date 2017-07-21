@@ -78,6 +78,16 @@
 		.txtFecha{
 			background-color: #FFF !important;
 		}
+		
+		
+		/* Important part */
+		
+		
+		#popupHoteles{
+		    height: 750px;
+		    overflow-y: auto;
+		}
+		
 	</style>
 	
 <script>
@@ -177,17 +187,33 @@
 				var cantAdulto = $("#txtcantAdultos").val();
 			    var cantNino = $("#txtcantNinos").val();
 			    var origen = $("#hdnNomOrigen").val();
-
+			    var dias_anterior = "";
+				var html_dias = "";
 				
 				$("#tblDestinos tbody > tr").each(function () {
 					var row = $(this);
 					var destinoRow = row.find('input[id="tmp_idDestino"]').val();
 					var idAerolinea = row.find('input[id="tmp_idAerolinea"]').val();
 					var idTour = row.find('input[id="tmp_idTour"]').val();
+					var vuelta = row.find('input[id="tmp_vuelta"]').val();
 					
 					if(modifica == 0) {
 						row.find('.hrefBusqueda').hide();
+						dias_anterior = row.find('input[id="txtNuDias"]').val();
+						row.find("td").eq(2).html("");
+						html_dias = "<input type='text' class='form-control text-center' id='txtNuDias' maxlength='2' value='" + dias_anterior + "' />"
+						row.find("td").eq(2).html(html_dias);
+						row.find('input[id="txtNuDias"]').attr('disabled',true);
 					}
+					
+					if(modifica == 1 && vuelta == "1") {
+						dias_anterior = row.find('input[id="txtNuDias"]').val();
+						row.find("td").eq(2).html("");
+						html_dias = "<input type='text' class='form-control text-center' id='txtNuDias' maxlength='2' value='" + dias_anterior + "' />"
+						row.find("td").eq(2).html(html_dias);
+						row.find('input[id="txtNuDias"]').attr('disabled',true);
+					}
+					
 					//	row.find('td:eq(6)').attr("disabled", true);
 					
 					//Mostrando datos del tour
@@ -215,7 +241,7 @@
 							detalleTour += verEliminarTour;
 						
 						
-						row.find("td").eq(4).html(detalleTour);
+						row.find("td").eq(5).html(detalleTour);
 					}
 					
 					
@@ -246,8 +272,9 @@
 							detalleAerolinea+= verEliminarVuelo;
 						
 						
-						row.find("td").eq(3).html(detalleAerolinea);
+						row.find("td").eq(4).html(detalleAerolinea);
 					}
+					
 					
 					
 					//Mostrando datos del hotel
@@ -317,7 +344,7 @@
 						if(modifica == 1)
 							detalleHotel += verEliminarHotel;
 						
-						row.find("td").eq(2).html(detalleHotel);      
+						row.find("td").eq(3).html(detalleHotel);      
 					}
 					
 					origen = row.find("td").eq(1).text();
@@ -433,7 +460,7 @@
 					detalle+= "<br />";
 					detalle+= verEliminar;
 					
-					row.find("td").eq(3).html(detalle);
+					row.find("td").eq(4).html(detalle);
 				}
 				
 				origen = row.find("td").eq(1).text();
@@ -478,6 +505,7 @@
 			
 			var detalle = "";
 			var fila = "";
+			var totalCantidad = parseInt(0);
 			
 			$("#tblTipoHabitacion tbody > tr").each(function () {
 				var row = $(this);
@@ -488,6 +516,8 @@
 				
 				fila = idhotelhabitacion + "-" + idtipo + "-" + precio + "-" + cantidad;
 				detallehabitacion += fila + "|";
+				
+				totalCantidad += parseInt(cantidad);
 				
 				cont++;
 			});
@@ -522,9 +552,9 @@
 					row.find('input[id="tmp_idCategoriaAlojamiento"]').val(idcategoria);
 					row.find('input[id="tmp_Habitaciones"]').val(detallehabitacion);
 					row.find('input[id="tmp_totalHotel"]').val(costo);
-					row.find('input[id="tmp_nomTipoAlojamiento"]').val(costo);
-					row.find('input[id="tmp_nomCategoriaAlojamiento"]').val(costo);
-					row.find('input[id="tmp_nomHotel"]').val(costo);
+					row.find('input[id="tmp_nomTipoAlojamiento"]').val(tipo);
+					row.find('input[id="tmp_nomCategoriaAlojamiento"]').val(categoria);
+					row.find('input[id="tmp_nomHotel"]').val(nomhotel);
 					
 
 					var dias = row.find('input[id="tmp_dias"]').val();
@@ -556,7 +586,7 @@
 					detalle += "<br />";
 					detalle += verEliminar;
 					
-					row.find("td").eq(2).html(detalle);
+					row.find("td").eq(3).html(detalle);
 				}
 				
 				totalFilaGasto = totalFilaGasto + parseFloat(row.find('input[id="tmp_totalHotel"]').val());
@@ -655,7 +685,7 @@
 					
 					//row.children('td')[6].innerHTML(detalle);
 					//row.find('label[id="tmp-tour"]').text(detalle);
-					row.find("td").eq(4).html(detalle);
+					row.find("td").eq(5).html(detalle);
 				}
 				
 				totalFilaGasto = totalFilaGasto + parseFloat(row.find('input[id="tmp_totalTour"]').val());
@@ -702,7 +732,7 @@
 			tr.find('input[id="tmp_preNinoTour"]').val("0");
 			tr.find('input[id="tmp_duracionTour"]').val("0");
 			tr.find('input[id="tmp_totalTour"]').val("0");
-			tr.find('td').eq(4).text("");
+			tr.find('td').eq(5).text("");
 			
 			//Calcular el total gastado y el total por tour
 			var totalGasto = parseFloat(0);
@@ -730,7 +760,7 @@
 			tr.find('input[id="tmp_idCategoriaAlojamiento"]').val("0");
 			tr.find('input[id="tmp_Habitaciones"]').val("");
 			tr.find('input[id="tmp_totalHotel"]').val("0");
-			tr.find('td').eq(2).text("");
+			tr.find('td').eq(3).text("");
 			
 			//Calcular el total gastado y el total por hotel
 			var totalGasto = parseFloat(0);
@@ -750,6 +780,109 @@
 			
 		}
 		
+		function actualizarCosto(fila){
+			var tr = $(fila).closest('tr');
+			var dias = tr.find('input[id="txtNuDias"]').val();
+			var msj = "Debe Ingresar Los días de estadía";
+			
+			if(dias == "" || dias == "0") {
+				$("#mensajeClienteError").html(msj);
+				
+				$('#divMensajeErrorCliente').modal({
+					backdrop: 'static',
+					keyboard: false
+				}); 
+				
+				return false;
+			}
+			
+			tr.find('input[id="tmp_dias"]').val(dias);
+			
+			var subtotal = parseFloat(0);
+			var totalHotel = parseFloat(0);
+			var totalFilaGasto = parseFloat(0);
+			var row_detalle = "";
+			var fila = "";
+			var tabla = "";
+			var precio = parseFloat(0);
+			var cantidad = parseInt(0);
+			//Actualizar Hotel
+			if(tr.find("td").eq(3).text() != "") {
+				var detalle = tr.find('input[id="tmp_Habitaciones"]').val();
+				var indice = parseInt(detalle.length) - 1;
+				//alert(indice);
+				detalle = detalle.substring(0,indice);
+				
+				
+				tabla = detalle.split('|');
+				
+				
+				
+				for(var i = 0; i < tabla.length; i++) {
+					if(tabla[i] != "") {
+						fila = tabla[i].split('-');
+						precio = fila[2];
+						cantidad = fila[3];
+						subtotal = (precio * cantidad) * dias;
+						totalHotel += subtotal;
+					}
+				}
+				
+				//Actualizando valores en la grilla
+				var noches = dias - 1 ;		
+				var estadia = "";
+				estadia = dias + " dias";
+				
+				if(noches > 0){
+					if(noches == 1)
+						estadia += " y " + noches + " noche";
+					else
+						estadia += " y " + noches + " noches";
+				}
+				
+				var verEliminar = "<span> <a href='javascript:;' onclick='eliminarHotel(this)' title='Eliminar' ><span class='glyphicon glyphicon-trash'></span></a> </span>";
+				var nomhotel = tr.find('input[id="tmp_nomHotel"]').val();
+				var tipo = tr.find('input[id="tmp_nomTipoAlojamiento"]').val();
+				var categoria = tr.find('input[id="tmp_nomTipoAlojamiento"]').val();
+				tr.find('input[id="tmp_totalHotel"]').val(totalHotel);
+				
+				row_detalle = "Hotel :" + nomhotel;
+				row_detalle += "<br />";
+				row_detalle +="Estadia :" + estadia;
+				row_detalle += "<br />";
+				row_detalle +="Costo :" + totalHotel; 
+				row_detalle += "<br />";
+				row_detalle +="Tipo Alojamiento :" + tipo; 
+				row_detalle += "<br />";
+				row_detalle +="Categoria Alojamiento :" + categoria; 
+				row_detalle += "<br />";
+				row_detalle += verEliminar;
+				
+				tr.find("td").eq(3).html(row_detalle);
+				
+				//Recalcular el total
+				$("#tblDestinos tbody > tr").each(function () {
+					var costo = parseFloat(row.find('input[id="tmp_totalHotel"]').val());
+					totalFilaGasto += costo;
+				});
+				
+				$("#hdnTotalHotel").val(totalFilaGasto);
+				var totalTour = parseFloat($("#hdnTotalTour").val());
+				var totalTicket = parseFloat($("#hdnTotalTicket").val());
+				var totalHotel = parseFloat($("#hdnTotalHotel").val());
+				var total_destino = totalTour + totalTicket + totalHotel;
+				
+				$("#txtTotalGasto").val(total_destino);		
+			
+				
+			}
+			
+			
+			
+		
+			
+		}
+		
 		function eliminarVuelo(fila){
 			var tr = $(fila).closest('tr');
 			tr.find('input[id="tmp_idAerolinea"]').val("0");
@@ -759,7 +892,7 @@
 			tr.find('input[id="tmp_nomAerolinea"]').val("");
 			tr.find('input[id="tmp_comision"]').val("0");
 			tr.find('input[id="tmp_totalAerolinea"]').val("0");
-			tr.find('td').eq(3).text("");
+			tr.find('td').eq(4).text("");
 			
 			//Calcular el total gastado y el total por Vuelo
 			var totalGasto = parseFloat(0);
@@ -835,6 +968,11 @@
 				return false;
 			}
 			
+			var cantAdulto = parseInt($("#txtcantAdultos").val());
+			var cantNino = parseInt($("#txtcantNinos").val());
+			var personas = cantAdulto + cantNino;
+			
+			
 			var idhotelhabitacion = $("#hdnHotelHabitacion").val();
         	var nomtipo = $("#hdnNomTipoHabitacion").val();
         	var precio = $("#hdnPrecio").val();        	
@@ -867,7 +1005,7 @@
 			
 			var total = 0;
 			var encontro = "0";
-			
+			var totalCantidad = parseInt(0);
 			//validando que no se ingresedos veces el mismo tipo de habitacion
 			$("#tblTipoHabitacion tbody > tr").each(function () {
 				var row = $(this);
@@ -888,7 +1026,22 @@
 				}
 				
 				
+				
 			});
+			
+			var cantidadHab = parseInt($("#hdnNumHabitaciones").val()) + parseInt(cantidad) ;
+			
+			if(cantidadHab > personas) {
+				msj = "El número de habitaciones no puede ser mayor al de personas";
+				$("#mensajeClienteError").html(msj);
+				
+				$('#divMensajeErrorCliente').modal({
+					backdrop: 'static',
+					keyboard: false
+				}); 
+				
+				return false;
+			}
 			
 			
 			if (encontro == "0"){
@@ -908,9 +1061,13 @@
 				var subtotal = parseFloat(row.find("td").eq(3).text());				
 				console.log("each subtotal");
 				console.log(subtotal);				
-				total += subtotal;				
+				total += subtotal;	
+				totalCantidad += parseInt(row.find("td").eq(1).text());
+				
 				
 			});
+			
+			$("#hdnNumHabitaciones").val(totalCantidad);
 			
 			console.log("creando fila:");
 			var tr = $("#tblHoteles tbody").find('input[name="optSelHotel"]:checked').closest('tr');			
@@ -984,7 +1141,7 @@
 	                	
 	                }
 					
-	                $("#tblTipoHabitacion tbody").html();
+	                $("#tblTipoHabitacion tbody").html("");
 					
 	                
 	            },
@@ -1028,31 +1185,57 @@
 	            success: function(response) {
 	            	var rpta = response.dataJson;
 	            	var listaHotel = [];
+	            	var listaCotizacionDetaHabitacion = [];
 	                
 	                if (rpta.listaHotel != null) {
 	                	listaHotel = rpta.listaHotel;
 	                }
 	                
+	                if (rpta.listaCotizacionDetaHabitacion != null) {
+	                	listaCotizacionDetaHabitacion = rpta.listaCotizacionDetaHabitacion;
+	                }
+	                
+	                
 	                //Construir tabla
 	                var nuevaFila = "";
 					var cont = 0;
-					
+					var conthabitacion = 0;
 					
 					$("#tblHoteles tbody").html("");
 					$("#tblTipoHabitacion tbody").html("");
 					$("#tipoHabitacion").val("");
 					$("#txtCantidad").val("");
 					$("#tipoHabitacion option").remove();
+					$("#txtTipoAlojamiento").val("");
+					$("#txtCategoriaAlojamiento").val("");
+					$("#tblHabitacionesConfiguracion tbody").html("");
+					$("#divConfiguracion").hide();
+					//$("#tipoAlojamiento").val("");
+					//$("#categoriaAlojamiento").val("");
+					
 					
 					if(rpta.existecotizacion == "1") {
+						$("#divConfiguracion").show();
 						$("#txtTipoAlojamiento").val(rpta.tipoalojamiento);
 						$("#txtCategoriaAlojamiento").val(rpta.categorialojamiento);
+						
+						for(var i = 0; i<listaCotizacionDetaHabitacion.length;i++){
+							conthabitacion++;
+							nuevaFila+= "<tr>";
+							nuevaFila+= "<td class='text-center'>" + conthabitacion + "</td>";
+							nuevaFila+= "<td class='text-center'>" + listaCotizacionDetaHabitacion[i].tipoHabitacion + "</td>";
+							nuevaFila+= "<td class='text-center'>" + listaCotizacionDetaHabitacion[i].nuHabitaciones + "</td>";
+							nuevaFila+="</tr>";
+						}
+						$("#tblHabitacionesConfiguracion tbody").append(nuevaFila);
+						
 					}
 					else {
 						$("#txtTipoAlojamiento").val("");
 						$("#txtCategoriaAlojamiento").val("");
 					}
 					
+					nuevaFila = "";
 					
 	                for(var i = 0;i< listaHotel.length;i++){
 	                	 cont++;
@@ -1240,9 +1423,55 @@
 			}
 			
 			
+			
+			
 			var tr = $(item).parents("tr");
 			var html = $(item).parents("tr").html();
 			
+			var diash = tr.find('input[id="txtNuDias"]').val();
+			var vuelta = tr.find('input[id="tmp_vuelta"]').val();
+			
+			if(vuelta == "0") {
+				if(diash == "" || diash == "0") {
+					msj = "Debe Ingresar los días de estadía";
+					$("#mensajeClienteError").html(msj);
+					$('#divMensajeErrorCliente').modal({
+						backdrop: 'static',
+						keyboard: false
+					}); 
+					
+					return false;
+				}	
+			}
+			else {
+				
+				if(idservicio == 6) {
+					msj = "No puede ingresar servicio de hotel al origen";
+					$("#mensajeClienteError").html(msj);
+					$('#divMensajeErrorCliente').modal({
+						backdrop: 'static',
+						keyboard: false
+					}); 
+					
+					return false;
+				}
+				
+				if(idservicio == 3) {
+					msj = "No puede ingresar servicio de tour al origen";
+					$("#mensajeClienteError").html(msj);
+					$('#divMensajeErrorCliente').modal({
+						backdrop: 'static',
+						keyboard: false
+					}); 
+					
+					return false;
+				}
+			}
+			
+			
+			
+			
+			tr.find('input[id="tmp_dias"]').val(diash);
 			//var fechapartida = $("#txtFechaPartida").val();
 			var origen = tr.find('input[id="tmp_idOrigen"]').val();
 			var destino = tr.find('input[id="tmp_idDestino"]').val();
@@ -1255,6 +1484,8 @@
 			$("#hdnDiasHotel").val(dias);
 			
 			$("#hdnRowDestino").val(destino);
+			
+			
 			
 			//alert(origen);
 			//Servicio de Hotel
@@ -1327,10 +1558,11 @@
 				$("#hdnTotalTicket").val("0");
 				$("#hdnTotalHotel").val("0");
 				
-				if(cotizacion == "0" && busInteligente == 1) {
+				
+				//if(cotizacion == "0" && busInteligente == 1) {
 					//$("#mensajeClienteError").html("Debe tener una cotización asociada para realizar la busqueda historica");
-					$("#chkPropuesta").prop("checked", false);
-					$("#chkPropuesta").attr('disabled','disabled');
+					//$("#chkPropuesta").prop("checked", false);
+					//$("#chkPropuesta").attr('disabled','disabled');
 					
 					/*
 					$('#divMensajeErrorCliente').modal({
@@ -1338,17 +1570,24 @@
 						keyboard: false
 					}); 
 					*/
-					return false;
+					//return false;
 					
-				}
+				//}
 				
 				
 				
+				var verActualizar = "<span> <a href='javascript:;' onclick='actualizarCosto(this)' title='Actualizar Servicos' ><span class='glyphicon glyphicon-ok'></span></a> </span>";
+				
+				
+				var diaspaquete = $("#hdnDiasPaquete").val();
+				var origen = $("#hdnIdOrigen").val();
 				
 				params = "?nuorden="+numOrden;
 				params += "&idpaquete=" + idPaquete;
 				params += "&busInteligente=" + busInteligente;
 				params += "&tipoPrograma=" + tipoPrograma;
+				params += "&diasPaquete=" + diaspaquete;
+				params += "&origen=" + origen;
 				//alert(params);
 				$.ajax({
 					url: '${pageContext.request.contextPath}/obtenerOrdenDestino'+params,
@@ -1361,6 +1600,9 @@
 		            success: function(response) {
 		                
 						var rpta = response.dataJson;
+						var obj = "#txtNuDias";
+						var evt = "keypress";
+						
 						$("#tblDestinos tbody").html("");
 						$("#tblServiciosTuristicos tbody").html("");
 						if(rpta.status == 1){
@@ -1388,6 +1630,7 @@
 									 nuevaFila+= "<input type='hidden' id='tmp_isoOrigen' value='" + listaOrdenDestino[i].isoOrigen + "' />";
 									 nuevaFila+= "<input type='hidden' id='tmp_isoDestino' value='" + listaOrdenDestino[i].isoDestino + "' />";
 									 nuevaFila+= "<input type='hidden' id='tmp_fechaPartida' value='" + listaOrdenDestino[i].fePartidaDestino + "' />";
+									 nuevaFila+= "<input type='hidden' id='tmp_vuelta' value='" + listaOrdenDestino[i].vuelta + "' />";
 									 
 									 
 									
@@ -1418,8 +1661,18 @@
 									 nuevaFila+= "<input type='hidden' id=tmp_nomHotel value='" + listaOrdenDestino[i].nomHotel + "' />";
 											
 									 
-									 
 									 nuevaFila+= "<td class='text-center'>" + listaOrdenDestino[i].nomDestino + "</td>";
+									 
+									 if(listaOrdenDestino[i].vuelta == "0") {
+										 nuevaFila+= "<td class='text-right'>" + "<input type='text' class='form-control text-center' id='txtNuDias' maxlength='2' value='" + listaOrdenDestino[i].nuDias + "' onclick='soloNumeros(\""+obj+"\",\""+evt+"\");' />"; 
+										 nuevaFila+= "<br />" + verActualizar + "</td>";	 
+									 }
+									 else {
+										 nuevaFila+= "<td class='text-right'>" + "<input type='text' class='form-control text-center' id='txtNuDias' disabled='true' maxlength='2' value='" + listaOrdenDestino[i].nuDias + "' onclick='soloNumeros(\""+obj+"\",\""+evt+"\");' />"; 
+										 nuevaFila+= "</td>";
+									 }
+									 
+									 
 									 nuevaFila+= "<td class='text-left'>" + "" + "</td>";
 									 nuevaFila+= "<td class='text-left'>" + "" + "</td>";
 									 nuevaFila+= "<td class='text-left'>" + "" + "</td>";
@@ -1474,7 +1727,7 @@
 										detalleTour += "Costo :" + totalTour;
 										detalleTour += "<br />";
 										detalleTour += verEliminarTour;
-										row.find("td").eq(4).html(detalleTour);
+										row.find("td").eq(5).html(detalleTour);
 									}
 									
 									
@@ -1500,7 +1753,7 @@
 										detalleAerolinea+= "<br />";
 										detalleAerolinea+= "Comision: " + row.find('input[id="tmp_comision"]').val();
 										detalleAerolinea+= verEliminarVuelo;
-										row.find("td").eq(3).html(detalleAerolinea);
+										row.find("td").eq(4).html(detalleAerolinea);
 									}
 									
 									
@@ -1575,7 +1828,7 @@
 											detalleHotel += "<br />";
 											detalleHotel += verEliminarHotel;
 											
-											row.find("td").eq(2).html(detalleHotel);      
+											row.find("td").eq(3).html(detalleHotel);      
 										}
 										
 										
@@ -1757,6 +2010,7 @@
 							$("#hdnIdCotizacion").val("0");
 							$("#hdnIdOrigen").val("0");
 							$("#hdnNomOrigen").val("");
+							$("#hdnDiasPaquete").val("0");
 							$("#mensajeClienteError").html(msj);
 							
 							$('#divMensajeErrorCliente').modal({
@@ -1788,6 +2042,7 @@
 							$("#hdnIdCotizacion").val("0");
 							$("#hdnIdOrigen").val("0");
 							$("#hdnNomOrigen").val("");
+							$("#hdnDiasPaquete").val("0");
 							
 							$("#mensajeClienteError").html(msj);
 							
@@ -1820,6 +2075,7 @@
 						$("#hdnIdCotizacion").val(rpta.idCotizacion);
 						$("#hdnIdOrigen").val(rpta.idOrigen);
 						$("#hdnNomOrigen").val(rpta.nomOrigen);
+						$("#hdnDiasPaquete").val(rpta.dias);
 						
 						$("#btnBuscarPropuesta").attr("disabled", false);
 						
@@ -1859,6 +2115,7 @@
 						$("#hdnIdCotizacion").val("0");
 						$("#hdnIdOrigen").val("0");
 						$("#hdnNomOrigen").val("0");
+						$("#hdnDiasPaquete").val("0");
 						
 						if(msj != "") {
 							$("#mensajeClienteError").html(msj);
@@ -1946,7 +2203,24 @@
 			
 			if(orden_valida == "0")
 				msj += "Debe ingresar una orden valida <br />\n";
+				
 			
+			var total_dias = parseInt(0);
+			var dias_paquete = $("#hdnDiasPaquete").val();
+			var diastxt = "";
+			$("#tblDestinos tbody > tr").each(function () {		
+				var row = $(this);
+				diastxt = row.find('input[id="txtNuDias"]').val();
+				
+				if(diastxt == "")
+					diastxt = "0";
+				
+				total_dias += parseInt(diastxt);	
+			});
+			
+			
+			if(total_dias > dias_paquete)
+				msj += "El total de días ingresados excede al del paquete  <br />\n";
 			
 				
 			if(msj != "") {
@@ -2240,6 +2514,7 @@
 									<input type="hidden" name="idCotizacion" id="hdnIdCotizacion" value="${idCotizacion}"/>
 									<input type="hidden" name="idOrigen" id="hdnIdOrigen" value="${idOrigen}"/>
 									<input type="hidden" name="nomOrigen" id="hdnNomOrigen" value="${nomOrigen}"/>
+									<input type="hidden" name="diasPaquete" id="hdnDiasPaquete" value="${dias}"/>
 									
 									
 									
@@ -2451,6 +2726,7 @@
 																			<tr>
 																				<th width="5%" class="text-center">Item</td>
 																				<th width="10%" class="text-center">Destino</td>
+																				<th width="10%" class="text-center">D&iacute;as</td>
 																				<th width="15%" class="text-center">Hotel</td>
 																				<th width="15%" class="text-center">Vuelo</td>
 																				<th width="15%" class="text-center">Tour</td>

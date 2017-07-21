@@ -2,7 +2,7 @@
 	<h3 class="panel-title" align="center">Hotel</h3>
 </div>
 
-<div class="panel-body">
+<div class="panel-body" id="popupHoteles">
 	<div class="row">
 		<div class="col-sm-12">
 			<input type="hidden" id="hdnHotelHabitacion" value="">
@@ -10,14 +10,14 @@
 			<input type="hidden" id="hdnNomTipoHabitacion" value="">
 			<input type="hidden" id="hdnPrecio" value="">
 			<input type="hidden" id="hdnDiasHotel" value="0">
+			<input type="hidden" id="hdnNumHabitaciones" value="0">
+			
 			
 			<div class="col-sm-12" id="divConfiguracion">
 				<div class="panel panel-primary">
 					<div class="panel-heading">	<strong>Configuraci&oacute;n de Habitaciones</strong></div>
 						<div class="panel-body">
-							 <div class="row">
-								<div class="col-sm-12">
-									 <div class="form-group">
+									<div class="form-group">
 								   		<label class="col-sm-4 control-label">Tipo Alojamiento:</label>
 								   		<div class="col-sm-6">
 											<input type="text" disabled="disabled" class="form-control" id="txtTipoAlojamiento"/>
@@ -30,8 +30,26 @@
 											<input type="text" disabled="disabled" class="form-control" id="txtCategoriaAlojamiento"/>
 										</div>	
 		   							</div>
-								</div>
-							</div>	
+		   							<div class="row">&nbsp;</div>	
+		  							<div class="row">&nbsp;</div>
+		   
+										   <div id="divHabitacionesConfiguracion">
+												<div class="col-sm-12">
+													<table id ="tblHabitacionesConfiguracion" class="table table-bordered responsive" style="width:100%">
+														<thead>
+															<tr>																								
+																<th width="10%" class="text-center">Nro</td>
+																<th width="20%" class="text-center">Tipo Habitaci&oacute;n</td>
+																<th width="15%" class="text-center">Cantidad</td>												
+															</tr>
+															<tbody>
+															</tbody>
+														</thead>
+													</table>
+													
+												</div>
+											</div>
+							
 						
 							
 		   					
