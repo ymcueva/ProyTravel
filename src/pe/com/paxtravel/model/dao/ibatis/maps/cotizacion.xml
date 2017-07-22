@@ -48,11 +48,16 @@
 		<result property="fechaRetorno"			    column="fe_retorno" />
 		<result property="cantidadPasajeros"			    column="cantidad" />		
 	</resultMap>
+	
+	
+	<resultMap id="resultOrden" class="cotizacionBean">
+		<result property="numeroOrden"		    column="nu_orden" />	
+	</resultMap>
 
 	<resultMap id="resultCotizacion" class="cotizacionBean">
 		<result property="numeroFila"			    column="ca_nume_fila" />
 		<result property="idCotizacion"			    column="id_cotiza" />
-		<result property="numeroCotizacion"		    column="nu_cotiza" />
+		<result property="numeroCotizacion"		    column="nu_cotiza" />		
 		<result property="fechaCotizacion" 		    column="fe_cotiza" />
 		<result property="nombreCliente" 		    column="cliente" />
 		<result property="nombreEstadoCotizacion" 	column="no_estado" />
@@ -383,7 +388,8 @@
 			id_cliente,
 			id_estado,
 			fe_ins,
-			fe_expiracion_cotiza
+			fe_expiracion_cotiza,
+			fe_max_aprob_cotiza
 		) VALUES (
 			#numeroCotizacion#,
 			#fechaCotizacion#,						
@@ -402,7 +408,14 @@
 			#idCliente#,
 			#idEstado#,
 			sysdate(),
-			(SELECT DATE (DATE_ADD(NOW(), INTERVAL (Select value_parametro from `parametros` where id_parametro = 5) DAY) ))
+			(SELECT DATE (DATE_ADD(NOW(), 
+			INTERVAL 				
+				<![CDATA[IF((SELECT DATEDIFF(#fechaSalida#, sysdate()) -1 <= 0), 0, 1)]]> 	
+			DAY) )),
+			(SELECT DATE (DATE_ADD(NOW(), 
+			INTERVAL 
+				<![CDATA[IF( (SELECT DATEDIFF(#fechaSalida#, sysdate()) -2 <= 0), IF( (SELECT DATEDIFF(#fechaSalida#, sysdate()) -1 <= 0), 0, 1), 2)]]>
+			DAY) ))
 		)
 		<selectKey keyProperty="idCotizacion" resultClass="int">
             select LAST_INSERT_ID();
@@ -912,5 +925,34 @@
 		inner join tipo_habitacion t on cdh.id_tipo_habitacion = t.id_tipo_habitacion
 	    where cdh.id_cotiza = #idCotiza#
 	</select>
+	
+	<insert id="insertarOrden" parameterClass="cotizacionBean">		
+		insert into orden 
+			(nu_orden, descripcion, id_cotiza, fe_partida, fe_retorno, id_origen, observacion, id_cliente, id_estado, id_tipo_programa,
+			nu_adultos, nu_ninos, im_presupuesto_maximo, nu_estadia, fe_order, id_usuario_ins) 
+		select 
+			(SELECT CONCAT( MAX(nu_orden)+1, "") AS nu_orden FROM orden), CONCAT('Orden generada a partir de la cotizacion ', nu_cotiza), 
+			id_cotiza, fe_partida, fe_retorno, origen_partida, observacion, id_cliente, 6, id_tipo_programa, nu_adultos, nu_ninos,
+			im_presupuesto_maximo, (SELECT DATEDIFF(fe_retorno, fe_partida)) + 1 , sysdate(), 0 from cotizacion where id_cotiza like #idCotizacion#		
+		<selectKey keyProperty="idOrden" resultClass="int">
+            select LAST_INSERT_ID();
+        </selectKey>            
+	</insert>
+	  
+	<insert id="insertarOrdenMotivo" parameterClass="cotizacionBean">
+		INSERT INTO orden_motivo (id_orden, id_motivo) SELECT #idOrden#, id_motivo FROM `cotizacion_motivo` WHERE id_cotiza = #numeroCotizacion#
+	</insert>
+	
+	<insert id="insertarOrdenDestino" parameterClass="cotizacionBean">
+		INSERT INTO orden_destino (id_orden, id_destino) SELECT #idOrden#, id_destino FROM cotizacion_deta WHERE id_cotiza = #numeroCotizacion#		
+	</insert>
+	
+	<insert id="insertarOrdenServicio" parameterClass="cotizacionBean">
+		INSERT INTO orden_servicio (id_orden, id_servicio) SELECT #idOrden#, id_servicio FROM cotizacion_servicio WHERE id_cotiza = #numeroCotizacion#
+	</insert>
+	
+	<select id="obtenerNumeroOrden" parameterClass="cotizacionBean" resultMap="resultOrden">
+		SELECT nu_orden FROM orden WHERE id_orden = #idOrden#
+	</select>	
 	
 </sqlMap>

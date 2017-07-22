@@ -1865,6 +1865,35 @@ public class CotizacionController {
 			mapa.put("listaPaquetes", tm2);
 			mapa.put("cantidadPaquetes", tm2.getRows().size());
 			mapa.put("destinos", resumeDestinos);
+			mapa.put("nuOrden", 0);
+			
+			//generar orden si el sistema no encontro paquete para la cotizacion
+			
+			if ( tm2.getRows().size() <= 0 ) {			
+				System.out.println("################# Generar Orden");
+				
+				System.out.println("idCotizacion");
+				System.out.println(cotizacionBean.getIdCotizacion());
+				System.out.println("numeroCotizacion");			
+				System.out.println(cotizacionBean.getNumeroCotizacion());
+				
+				cotizacionService.registrarOrden(cotizacionBean);
+					
+				System.out.println("idOrden");
+				System.out.println(cotizacionBean.getIdOrden());
+				
+				cotizacionService.registrarOrdenDestino(cotizacionBean);
+				cotizacionService.registrarOrdenMotivo(cotizacionBean);
+				cotizacionService.registrarOrdenServicio(cotizacionBean);
+				
+				CotizacionBean beanOrden = cotizacionService.obtenerNumeroOrden(cotizacionBean);				
+
+				System.out.println("nuOrden");
+				System.out.println(beanOrden.getNumeroOrden());
+				
+				mapa.put("nuOrden", beanOrden.getNumeroOrden());
+				
+			}
 
 			// Return bean Paquete escogido
 			dataJSON.setRespuesta("ok", null, mapa);

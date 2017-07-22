@@ -509,9 +509,17 @@
 
 													});
 								} else {
-									mensajeHTML = "<strong>No se encontraron Paquetes disponibles.</strong>";
+									
+									mensajeHTML = "<strong>No se encontro Paquete disponible.</strong><br />";
+									
+									console.log("Orden Num:");
+									console.log(response.dataJson.nuOrden);
+									
+									mensajeHTML += "<strong>El sistema genero la Orden Nro. "+ response.dataJson.nuOrden +" para la creación del Paquete Turístico.</strong>";
+									
 									$("#btnGuardarPaquete").css("display",
 											"none");
+									
 								}
 
 								$("#divInfoDetalleCotizacion").css("display",

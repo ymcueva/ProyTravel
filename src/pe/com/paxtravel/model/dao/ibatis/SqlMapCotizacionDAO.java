@@ -258,4 +258,41 @@ public class SqlMapCotizacionDAO extends SqlMapClientDaoSupport implements
 				"cotizacion.listarCotizacionDetaHabitacion", cotizacionDetaHabitacionBean);
 	}
 
+	@Override
+	public int registrarOrden(CotizacionBean cotizacionBean) {		
+		System.out.println("Iniciando Ibatis (Generar Orden)...");
+		System.out.println("Id:"
+				+ getSqlMapClientTemplate().insert(
+						"cotizacion.insertarOrden", cotizacionBean));
+		System.out.println("BeanId: " + cotizacionBean.getIdOrden());
+		return cotizacionBean.getIdOrden();
+	}
+	
+	@Override
+	public int registrarOrdenMotivo(CotizacionBean cotizacionBean) {
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient())
+				.update("cotizacion.insertarOrdenMotivo", cotizacionBean);
+		return 1;
+	}
+	
+	@Override
+	public int registrarOrdenServicio(CotizacionBean cotizacionBean) {
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient())
+				.update("cotizacion.insertarOrdenServicio", cotizacionBean);
+		return 1;
+	}
+	
+	@Override
+	public int registrarOrdenDestino(CotizacionBean cotizacionBean) {
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient())
+				.update("cotizacion.insertarOrdenDestino", cotizacionBean);
+		return 1;
+	}
+	
+	@Override
+	public CotizacionBean obtenerNumeroOrden(CotizacionBean cotizacionBean) {
+		return (CotizacionBean) getSqlMapClientTemplate().queryForObject(
+				"cotizacion.obtenerNumeroOrden", cotizacionBean);
+	}
+	
 }

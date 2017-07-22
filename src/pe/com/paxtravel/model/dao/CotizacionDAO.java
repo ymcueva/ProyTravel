@@ -85,4 +85,14 @@ public interface CotizacionDAO {
 	
 	List<CotizacionDetaHabitacionBean> listarCotizacionDetaHabitacion(CotizacionDetaHabitacionBean cotizacionDetaHabitacionBean);
 
+	int registrarOrden(CotizacionBean cotizacionBean);
+	 
+	int registrarOrdenDestino(CotizacionBean cotizacionBean);
+	
+	int registrarOrdenServicio(CotizacionBean cotizacionBean);
+	
+	int registrarOrdenMotivo(CotizacionBean cotizacionBean);
+	
+	CotizacionBean obtenerNumeroOrden(CotizacionBean cotizacionBean);
+	
 }

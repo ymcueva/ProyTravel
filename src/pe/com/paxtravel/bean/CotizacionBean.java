@@ -75,6 +75,28 @@ public class CotizacionBean {
 	
 	private String feMaxAprobCotiza;
 	private String feUpd;
+	
+	private int idOrden;
+	
+	private int numeroOrden;
+	
+	
+
+	public int getNumeroOrden() {
+		return numeroOrden;
+	}
+
+	public void setNumeroOrden(int numeroOrden) {
+		this.numeroOrden = numeroOrden;
+	}
+
+	public int getIdOrden() {
+		return idOrden;
+	}
+	
+	public void setIdOrden(int idOrden) {
+		this.idOrden = idOrden;
+	}
 
 	public int getCantidadAdultosTicket() {
 		return cantidadAdultosTicket;

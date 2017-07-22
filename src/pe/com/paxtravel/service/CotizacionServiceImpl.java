@@ -443,7 +443,32 @@ public class CotizacionServiceImpl implements CotizacionService {
 		listaCotizacion = cotizacionDAO.listarCotizacionDetaHabitacion(cotizacionDetaHabitacionBean);
 		return listaCotizacion;
 	}
-
+	
+	@Override
+	public int registrarOrden(CotizacionBean cotizacionBean) {
+		return cotizacionDAO.registrarOrden(cotizacionBean);
+	}
+	
+	@Override
+	public int registrarOrdenMotivo(CotizacionBean cotizacionBean) {
+		return cotizacionDAO.registrarOrdenMotivo(cotizacionBean);
+	}
+	
+	@Override
+	public int registrarOrdenServicio(CotizacionBean cotizacionBean) {
+		return cotizacionDAO.registrarOrdenServicio(cotizacionBean);
+	}
+	
+	@Override
+	public int registrarOrdenDestino(CotizacionBean cotizacionBean) {
+		return cotizacionDAO.registrarOrdenDestino(cotizacionBean);
+	}
+	
+	@Override
+	public CotizacionBean obtenerNumeroOrden(CotizacionBean cotizacionBean) {
+		return cotizacionDAO.obtenerNumeroOrden(cotizacionBean);
+	}
+	
 	// @Override
 	// public void exportarExcel(List<EmpleadoBean> lista, OutputStream
 	// outputStream) throws Exception {

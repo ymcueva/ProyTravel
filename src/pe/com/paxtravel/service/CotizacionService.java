@@ -89,6 +89,16 @@ public interface CotizacionService {
 
 	public int actualizarCotizacionRechazo(CotizacionBean cotizacionBean);
 	
-	List<CotizacionDetaHabitacionBean> listarCotizacionDetaHabitacion(CotizacionDetaHabitacionBean cotizacionDetaHabitacionBean);
+	public List<CotizacionDetaHabitacionBean> listarCotizacionDetaHabitacion(CotizacionDetaHabitacionBean cotizacionDetaHabitacionBean);
+	
+	public int registrarOrden(CotizacionBean cotizacionBean);
+	
+	public int registrarOrdenDestino(CotizacionBean cotizacionBean);
+	
+	public int registrarOrdenServicio(CotizacionBean cotizacionBean);
+	
+	public int registrarOrdenMotivo(CotizacionBean cotizacionBean);
+	
+	public CotizacionBean obtenerNumeroOrden(CotizacionBean cotizacionBean);
 
 }
