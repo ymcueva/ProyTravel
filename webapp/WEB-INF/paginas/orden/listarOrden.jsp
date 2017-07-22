@@ -62,10 +62,7 @@
 		
  		inicia();
  				
-		console.log("Ingresooooooooooo");
-		
 		var listaOrden = ${listaOrden};
-		
 		
 		construirTablaListaOrden(listaOrden);
 		
@@ -157,7 +154,7 @@
 			},
 			
 			fnRowCallback: function (nRow, aData, iDisplayIndex) {
-				//alert(aData[5]);
+				
 				$(nRow).attr('id', aData[5]);
 				$(nRow).attr('align', 'center');
 				$(nRow).attr('rowClasses','tableOddRow');
@@ -418,7 +415,7 @@
 <div id="mdlValidaCorreoCliente" class="modal fade" role="dialog">
 	<div class="modal-dialog">
 		<div class="panel panel-info">
-			<div class="panel-heading"> <strong>Cliente no tiene correo electrónico:</strong></div>
+			<div class="panel-heading"> <strong>Cliente no tiene correo electrï¿½nico:</strong></div>
 			<div class="panel-body">
 				<div class="modal-body"> <p class="text-center">El cliente no tiene registrado un correo electr&oacute;nico<br />No se puede enviar la reserva.</p></div>
 				<div class="modal-footer">

@@ -63,7 +63,7 @@
  	    	fe_retorno, 
  	    	im_presupuesto_maximo, 
  	    	id_tipo_programa,
- 	    	autorizacion,
+ 	    	id_origen,
  	    	flag_nu_estadia,
  	    	nu_estadia
 		) VALUES (
@@ -75,7 +75,7 @@
 			#fechaRetorno#,
 			#presupuestoMaximo#,
 			#idTipoPaqueteTuristico#,
-			#autorizacion#,
+			1,
 			#flagCantidadDias#,
 			#numeroDias#
 		)

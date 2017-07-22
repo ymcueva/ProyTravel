@@ -42,7 +42,9 @@
 			<result property="nuCotizacion"				    column="nu_cotiza"/>
 			<result property="idOrigen"				        column="id_origen"/>	
 			<result property="nomOrigen"				    column="origen"/>	
-			<result property="dias"				    		column="dias"/>			
+			<result property="dias"				    		column="dias"/>
+			<result property="nuEstadia"				    column="dias_estadia"/>
+						
 		</resultMap>
 		
 		<resultMap id="resultOrdenMotivo" class="objBean">
@@ -184,7 +186,8 @@
     			   IfNull(cot.nu_cotiza,'')nu_cotiza,
     			   ord.id_origen,
     			   des.descripcion origen,
-    			   ifnull(datediff(ord.fe_retorno,ord.fe_partida),0) dias 
+    			   ifnull(datediff(ord.fe_retorno,ord.fe_partida),0) dias,
+    			   ifnull(ord.nu_estadia,0) dias_estadia 
 			FROM orden ord 
 			inner join cliente cli on ord.id_cliente = cli.id_cliente
 			inner join destino_ciudad des on ord.id_origen = des.id_destino_ciudad
@@ -242,7 +245,7 @@
        			   des.descripcion destino,
        			   ord.id_origen,
        			   od.id_destino,
-       			   od.nu_dias,
+       			   case when pq.id_paquete is not null then od.nu_dias else 0 end nu_dias,
        			   ifnull(pt.id_tour,0) id_tour,
        			   ifnull(pt.descripcion,'') destour,
        			   ifnull(pt.nu_personas,0) personastour,

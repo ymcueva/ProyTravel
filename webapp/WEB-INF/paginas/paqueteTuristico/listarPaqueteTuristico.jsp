@@ -199,7 +199,7 @@
 				}
 			}],
 			columns: [
-				{data: "numeroFila"},
+				{data: "numeroFila", "class" : "hidden"},
 				{data: "nuOrden"},
 				{data: "fechRango"},
 				{data: "noCliente"},

@@ -4,6 +4,16 @@ public class PaisBean {
 
 	private int idPais;
 	private String nomPais;
+	private int idDestino;
+	
+
+	public int getIdDestino() {
+		return idDestino;
+	}
+
+	public void setIdDestino(int idDestino) {
+		this.idDestino = idDestino;
+	}
 
 	public int getIdPais() {
 		return idPais;
