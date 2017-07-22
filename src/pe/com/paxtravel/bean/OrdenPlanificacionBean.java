@@ -79,6 +79,7 @@ public class OrdenPlanificacionBean {
     private String urlShop;
     private Integer dias;
     private Integer vuelta;
+    private Integer nuEstadia;
     
 
 	public String getDestinos() {
@@ -536,6 +537,12 @@ public class OrdenPlanificacionBean {
 	}
 	public void setVuelta(Integer vuelta) {
 		this.vuelta = vuelta;
+	}
+	public Integer getNuEstadia() {
+		return nuEstadia;
+	}
+	public void setNuEstadia(Integer nuEstadia) {
+		this.nuEstadia = nuEstadia;
 	}
 
 }

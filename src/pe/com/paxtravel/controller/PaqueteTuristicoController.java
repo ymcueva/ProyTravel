@@ -626,12 +626,14 @@ public class PaqueteTuristicoController {
 				adultos = listaOrden.get(0).getNuAdultos();
 				ninos = listaOrden.get(0).getNuNinos();
 				personas = adultos + ninos;
+				diasPaquete = listaOrden.get(0).getNuEstadia();
 			}
 			
 			System.out.println("Id Cotizacion:" + idCotizacion);
 			System.out.println("Fecha Partida:" + fechaPartida);
 			System.out.println("Numero Cotizacion:" + nuCotizacion);
 			System.out.println("Tipo Programa:" + nuCotizacion);
+			System.out.println("Dias paquete:" + diasPaquete);
 			
 			fechaPartida = fechaPartida.replace("/", "-");
 			
@@ -685,11 +687,17 @@ public class PaqueteTuristicoController {
 				while(diasPaquete > 0){
 					for(OrdenPlanificacionBean bean : listaOrdenDestino){
 						if(bean.getVuelta().equals(0)) {
+							System.out.println("Dias restantes :" + diasPaquete);
 							System.out.println("Dias Inicial :" + bean.getNuDias());
-							dias_destino = bean.getNuDias();
-							dias_destino++;
-							diasPaquete--;
-							bean.setNuDias(dias_destino);
+							
+							if(diasPaquete> 0){
+								dias_destino = bean.getNuDias();
+								dias_destino++;
+								diasPaquete--;
+								bean.setNuDias(dias_destino);
+							}
+							
+							
 							System.out.println("Dias Final :" + bean.getNuDias());
 						}
 					}
@@ -984,6 +992,36 @@ public class PaqueteTuristicoController {
 			else {
 				System.out.println("Busqueda No Inteligente");
 				listaOrdenDestino = ordenPlanificacionService.obtenerOrdenDestino(orden);
+				
+				if(diasPaquete < 0)
+					diasPaquete = 0;
+				
+				Integer dias_destino = 0;
+				//Proponer dias de destino 
+				
+				
+				
+				if(idPaquete.equals("") || idPaquete.equals("0")){
+					while(diasPaquete > 0){
+						for(OrdenPlanificacionBean bean : listaOrdenDestino){
+							if(bean.getVuelta().equals(0)) {
+								System.out.println("Dias restantes :" + diasPaquete);
+								System.out.println("Dias Inicial :" + bean.getNuDias());
+								
+								if(diasPaquete> 0){
+									dias_destino = bean.getNuDias();
+									dias_destino++;
+									diasPaquete--;
+									bean.setNuDias(dias_destino);
+								}
+								
+								
+								System.out.println("Dias Final :" + bean.getNuDias());
+							}
+						}
+					}
+				}
+				
 				
 				//Asignando fechas de partida para todos los destinos
 				int dias = 0;
