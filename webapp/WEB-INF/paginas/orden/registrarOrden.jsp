@@ -271,7 +271,7 @@
 		
 		var fechaActual = new Date();
 		
-		$('#txtPresupuestoMaximo').maskMoney();
+		
 		$("#divNumeroDias").hide();
 		$('#divFechaInicioDuracion').datetimepicker({
 			language : 'es',
@@ -684,7 +684,7 @@
 											
 											<label class="col-md-2 col-sm-offset-0 control-label alignDerecha" >Presupuesto:</label>
 											<div class="col-md-3">
-												<input type="text" name="presupuestoMaximo" id="txtPresupuestoMaximo" onclick="$('#txtPresupuestoMaximo').maskMoney('mask')" class="form-control tamanoMaximo" />
+												<input type="text" name="presupuestoMaximo" id="txtPresupuestoMaximo" class="form-control tamanoMaximo" />
 											</div>
 										</div>
 									
