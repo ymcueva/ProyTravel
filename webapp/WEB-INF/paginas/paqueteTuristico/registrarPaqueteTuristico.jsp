@@ -2550,21 +2550,21 @@
 													  
 															<div class="form-group">
 															    <label class="col-sm-2 control-label">Nro.Orden:</label>																														
-																<div class="col-sm-1">
-																	<input type="text" class="form-control tamanoMaximo" name="codigoOrden" id="txtcodOrden" value="${nuOrden}" />
-																</div>	
-																
-																																													
 																<div class="col-sm-2">
+																	<input type="text" class="form-control tamanoMaximo" name="codigoOrden" id="txtcodOrden" value="${nuOrden}" maxlength="8" />
+																</div>																	
+																																													
+																<div class="col-sm-3">
 																	<input id="txtDescripcionOrden" readonly="readonly" onkeypress="return validarNumeroLetra(event)" name="descripcionOrden" value="${descripcion}" type="text" maxlength="30" class="form-control" />
 																</div>
 																
-																<div class="col-sm-2">
+																<div class="col-sm-1">
 																<!--	<button id="btnBuscarOrdenPlanificacion" class="btn btn-primary btn-block"  title="Buscar">Buscar</button> -->
 																	<button id="btnBuscarOrdenPlanificacion" type="button" class="btn btn-primary centro" onclick="buscarOrdenesPlanificacion()" title="Buscar Orden">Buscar</button>
 																</div>
 																
-																<label class="col-sm-2 control-label">Fecha Orden:</label>	
+																<label class="col-sm-1 control-label">Fecha Orden:</label>	
+																
 																<div class="col-sm-2">
 																	<input id="txtFechaOrden" readonly="readonly" name="fechaOrden" type="text" maxlength="10" class="form-control" value="${fechaorden}" />	
 																
@@ -2624,9 +2624,10 @@
 																	<div class="col-sm-3">
 																		<input id="txtcantAdultos" readonly="readonly" name="nuNinos" type="text" maxlength="30" class="form-control" value="${nuaultos}" placeholder="Cantidad Adultos">
 																	</div>
+																	
 																	<label class=" control-label col-sm-2 col-md-offset-2">Cantidad Ninos:</label>	
 																
-																	<div class="col-sm-2">
+																	<div class="col-sm-3">
 																		<input id="txtcantNinos" readonly="readonly" name="nuAdultos" type="text" maxlength="30" class="form-control" value="${nuninos}" placeholder="Cantidad Ninos">
 																	</div>		
 															</div>
@@ -2652,16 +2653,18 @@
 											<div class="panel-body">
 																
 												<div class="row">
-													<div class="col-sm-12">
-													  
+													<div class="col-sm-12">													
 														<div class="form-group">
-																
-																<label class="col-sm-6 control-label alignDerecha checkbox-inline">Propuesta de Busqueda de Informacion Historica:
-																  <input style="margin-left:-330px;" type="checkbox" id="chkPropuesta" name="chkPropuesta" />
+															<div class="col-sm-8">
+																<label class="control-label alignDerecha checkbox-inline">																	
+																	Propuesta de B&uacute;squeda Autom&aacute;tica de Informaci&oacute;n: <input type="checkbox" id="chkPropuesta" name="chkPropuesta" />																  					
 																</label>	
-																<div class="col-sm-2">
-																	<button id="btnBuscarPropuesta" class="btn btn-primary btn-block" title="Buscar" >Buscar</button>
-																</div>														
+															</div>	
+															<div class="col-sm-1">&nbsp;</div>
+															<div class="col-sm-2">
+																<button id="btnBuscarPropuesta" class="btn btn-primary btn-block" title="Buscar" >Buscar</button>
+															</div>								
+															<div class="col-sm-1">&nbsp;</div>						
 														</div>		
 													</div>
 												</div>

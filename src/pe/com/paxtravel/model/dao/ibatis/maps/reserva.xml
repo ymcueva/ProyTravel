@@ -143,7 +143,7 @@
 				c.ti_ida,
 				IF (c.ti_ida=1,'Solo Ida','Ida y Vuelta') AS vuelo, 
 				c.fe_partida,
-				c.fe_retorno
+				IFNULL(c.fe_retorno, '') fe_retorno
 			FROM (SELECT @rownum:=0) r, `cotizacion_deta` AS c  	
 				INNER JOIN `cotizacion` AS co ON ( co.nu_cotiza=c.id_cotiza )
 				LEFT JOIN destino_ciudad AS dcorigen ON (c.id_destino_origen=dcorigen.id_destino_ciudad)
