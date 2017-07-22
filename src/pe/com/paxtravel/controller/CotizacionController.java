@@ -206,6 +206,7 @@ public class CotizacionController {
 
 				listarCotizacion = cotizacionService
 						.listarCotizacion(cotizacionBean);
+				
 				modelAndView.addObject("listaCotizacion",
 						SojoUtil.toJson(listarCotizacion));
 

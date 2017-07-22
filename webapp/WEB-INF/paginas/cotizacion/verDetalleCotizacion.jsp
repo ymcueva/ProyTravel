@@ -61,6 +61,12 @@
 				<div class="col-sm-12">&nbsp;</div>
 			</div>
 			
+			<div id="divPaqueteTuristico" style="display: none;">
+				<div class="col-sm-5" style="text-align:right; font-weight:bold">Paquete Tur&iacutestico:</div>
+				<div class="col-sm-7" id="divPaqueteTuristicoDetail"></div>
+				<div class="col-sm-12">&nbsp;</div>
+			</div>
+			
 			<div id="divBotonCotizacionBuscar" style="display: none;">							
 				<div class="form-group">
 					<div class="col-sm-12" style="text-align: center">

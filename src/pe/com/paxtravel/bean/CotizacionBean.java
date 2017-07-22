@@ -80,7 +80,29 @@ public class CotizacionBean {
 	
 	private int numeroOrden;
 	
+	private String nombrePaquete;
+	private String precioPaquete;
 	
+	
+	
+	
+	
+
+	public String getNombrePaquete() {
+		return nombrePaquete;
+	}
+
+	public void setNombrePaquete(String nombrePaquete) {
+		this.nombrePaquete = nombrePaquete;
+	}
+
+	public String getPrecioPaquete() {
+		return precioPaquete;
+	}
+
+	public void setPrecioPaquete(String precioPaquete) {
+		this.precioPaquete = precioPaquete;
+	}
 
 	public int getNumeroOrden() {
 		return numeroOrden;

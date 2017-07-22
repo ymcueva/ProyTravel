@@ -1283,7 +1283,10 @@ public class PaqueteTuristicoController {
 						idEstado = String.valueOf(listaOrden.get(0).getIdEstado());
 						descripcion = listaOrden.get(0).getDescripcion();
 						comentario = listaOrden.get(0).getObservacion();
-						presupuestomin = listaOrden.get(0).getImPresupuestoMinimo().toString();
+						
+						//presupuestomin = listaOrden.get(0).getImPresupuestoMinimo().toString();
+						presupuestomin = "0";
+						
 						presupuestomax = listaOrden.get(0).getImPresupuestoMaximo().toString();
 						cliente = listaOrden.get(0).getNombreCliente();
 						fechaorden = listaOrden.get(0).getFeOrder();
@@ -1433,6 +1436,7 @@ public class PaqueteTuristicoController {
 				
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
+				e.printStackTrace();
 			}
 			return modelAndView;
 		}

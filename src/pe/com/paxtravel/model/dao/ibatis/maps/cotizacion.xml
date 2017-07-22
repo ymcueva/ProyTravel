@@ -193,6 +193,11 @@
 		<result property="deportes" column="deportes" />
 		<result property="relajacion" column="relajacion" />
 		<result property="playa" column="playa" />
+		<result property="fechaSalida" column="fe_partida" />
+		<result property="fechaRetorno" column="fe_retorno" />
+		<result property="precioPaquete" column="precioPaquete" />
+		<result property="nombrePaquete" column="nombrePaquete" />
+		<result property="idPaquete" column="id_paquete" />
 	</resultMap>
 	
 	<resultMap id="resultPaqueteResume" class="paqueteResumeBean">
@@ -676,7 +681,15 @@
 			IfNull(( SELECT 1 FROM cotizacion_motivo where id_motivo = 1 AND id_cotiza = c.nu_cotiza),0) AS cultural,
 			IfNull(( SELECT 1 FROM cotizacion_motivo where id_motivo = 2 AND id_cotiza = c.nu_cotiza),0) AS deportes,
 			IfNull(( SELECT 1 FROM cotizacion_motivo where id_motivo = 3 AND id_cotiza = c.nu_cotiza),0) AS relajacion,
-			IfNull(( SELECT 1 FROM cotizacion_motivo where id_motivo = 4 AND id_cotiza = c.nu_cotiza),0) AS playa
+			IfNull(( SELECT 1 FROM cotizacion_motivo where id_motivo = 4 AND id_cotiza = c.nu_cotiza),0) AS playa,
+			
+			IFNULL(pa.fe_partida, '') fe_partida,
+			IFNULL(pa.fe_retorno, '') fe_retorno,
+			
+			IFNULL(pa.total_gasto, '') precioPaquete,
+			IFNULL(pa.nombre, '') nombrePaquete,
+			IFNULL(pa.id_paquete, 0) id_paquete 
+			
 		FROM `cotizacion` as c 
 			INNER JOIN `cliente` AS cli ON (c.id_cliente = cli.id_cliente)
 		    INNER JOIN `tipo_cotizacion` AS tc ON (c.id_tipo_cotiza=tc.id_tipo)    
@@ -691,7 +704,8 @@
 		    LEFT JOIN `tipo_habitacion` AS th ON (cdh.id_tipo_habitacion=th.id_tipo_habitacion)
 		    LEFT JOIN `servicios` AS s ON (cs.id_servicio=s.id_servicio)
 		    LEFT JOIN `destino_ciudad` AS d ON (cd.id_destino=d.id_destino_ciudad)
-		    LEFT JOIN `motivo_viaje` AS tm ON (cm.id_motivo=tm.id_motivo) 
+		    LEFT JOIN `motivo_viaje` AS tm ON (cm.id_motivo=tm.id_motivo)
+		    LEFT JOIN `paquete_turistico` AS pa ON (c.id_paquete=pa.id_paquete) 
 		WHERE
 			c.id_cotiza = #idCotizacion#
 		GROUP BY c.nu_cotiza

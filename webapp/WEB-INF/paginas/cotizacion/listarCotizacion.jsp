@@ -254,8 +254,10 @@
 		$("#divContenedorServicios").css("display", "none");
 		$("#divContenedorMotivos").css("display", "none");
 
-		$
-				.ajax({
+		$("#divPaqueteTuristico").css("display", "none");		
+		$("#divPaqueteTuristicoDetail").html("");
+		
+				$.ajax({
 					url : '${pageContext.request.contextPath}/verDetalleCotizacion?idCotizacion='
 							+ idCotizacion,
 					cache : false,
@@ -303,7 +305,21 @@
 								$("#divContenedorServicios").css("display",
 										"inline");
 								$("#divContenedorMotivos").css("display",
-										"inline");
+								"inline");
+								
+								
+								console.log("idPaquete", response.dataJson.cotizacion.idPaquete);
+								
+								
+								if (response.dataJson.cotizacion.idPaquete > 0) {
+									
+									$("#divPaqueteTuristico").css("display", "inline");
+									
+									$("#divPaqueteTuristicoDetail").html(
+											"<b>" + response.dataJson.cotizacion.nombrePaquete + "</b>" + " / USD " + response.dataJson.cotizacion.precioPaquete + "<br />" + 
+											"(" + response.dataJson.cotizacion.fechaSalida + " / " + response.dataJson.cotizacion.fechaRetorno + ")"											
+									);								
+								}
 							}
 
 							$("#divTipo")
@@ -490,20 +506,20 @@
 														console
 																.log(row.aerolinea);
 
-														mensajeHTML += "<strong>"
-																+ (i + 1)
-																+ " "
+														mensajeHTML += "/ <strong>"
+																+ (i + 1) 
+																+ " / "
 																+ row.destinos
 																+ "</strong>: <i>";
 
 														if (row.hotel) {
-															mensajeHTML += row.hotel;
+															mensajeHTML += row.hotel + " / ";
 														}
 														if (row.tour) {
-															mensajeHTML += row.tour;
+															mensajeHTML += row.tour  + " / ";
 														}
 														if (row.aerolinea) {
-															mensajeHTML += row.aerolinea;
+															mensajeHTML += row.aerolinea  + " /";
 														}
 														mensajeHTML += "</i><br />";
 
