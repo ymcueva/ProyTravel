@@ -503,7 +503,7 @@ public class PaqueteTuristicoController {
 				mapa.put("idCotizacion",listaOrdenPlanificacion.get(0).getIdCotiza());
 				mapa.put("idOrigen",listaOrdenPlanificacion.get(0).getIdOrigen());
 				mapa.put("nomOrigen",listaOrdenPlanificacion.get(0).getNomOrigen());
-				dias = listaOrdenPlanificacion.get(0).getDias() + 1;
+				dias = listaOrdenPlanificacion.get(0).getNuEstadia();
 				mapa.put("dias",dias);
 				
 				mapa.put("mensaje","");
@@ -1607,6 +1607,7 @@ public class PaqueteTuristicoController {
 								paqueteTuristicoDestino.setItem(Integer.parseInt(destino[1].toString()));
 								paqueteTuristicoDestino.setNuDias(Integer.parseInt(destino[2].toString()));
 								paqueteTuristicoDestino.setFeEstadia(destino[3].toString());
+								paqueteTuristicoDestino.setIdOrigen(Integer.parseInt(destino[4].toString()));
 								
 								paqueteDestino = paqueteTuristicoService.RegistrarPaqueteTuristicoDestino(paqueteTuristicoDestino);
 								

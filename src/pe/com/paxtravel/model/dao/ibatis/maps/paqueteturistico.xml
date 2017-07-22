@@ -426,13 +426,13 @@
          inner JOIN cliente clie ON orden.id_cliente=clie.id_cliente
          inner join estado est on paquete.id_estado = est.id_estado                
 		 WHERE 1 = 1
-		 <isGreaterThan compareValue="0" prepend="AND" property="idOrden"> orden.nu_orden = #nuOrden# </isGreaterThan>
+		 <isGreaterThan compareValue="0" prepend="AND" property="nuOrden"> orden.nu_orden = #nuOrden# </isGreaterThan>
 	     <isGreaterThan compareValue="0" prepend="AND" property="idEstado"> paquete.id_estado = #idEstado# </isGreaterThan>
 		 <isNotEmpty prepend="AND" property="noCliente"> CONCAT(clie.nombres,' ',clie.apellidos) LIKE #noCliente# </isNotEmpty>
 		 <isNotEmpty prepend="AND" property="numDocCliente"> clie.nu_documento = #numDocCliente# </isNotEmpty>
 		 <isNotEmpty prepend="AND" property="feInicio" >
-	         <isNotEmpty property="feFin" >
-	            DATE_FORMAT(paquete.fecha,'%Y-%m-%d') between #feInicio# AND #feFin#
+	         <isNotEmpty  property="feFin" >
+	           <![CDATA[DATE_FORMAT(paquete.fe_partida,'%Y-%m-%d')>=#feInicio# and DATE_FORMAT(paquete.fe_retorno,'%Y-%m-%d')<=#feFin#]]>
 	         </isNotEmpty>
    		 </isNotEmpty>
 		 order by paquete.id_paquete desc
@@ -490,7 +490,8 @@
 			id_destino_ciudad,
 			item,
 			nu_dias,
-			fe_estadia
+			fe_estadia,
+			id_origen
 		) 
 		VALUES 
 		(
@@ -498,7 +499,8 @@
 			#idDestinoCiudad#,
 			#item#,
 			#nuDias#,
-			#feEstadia#		
+			#feEstadia#	,
+			#idOrigen#	
 		)
 		
 	</insert>

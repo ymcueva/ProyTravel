@@ -7,6 +7,7 @@ public class PaqueteTuristicoDestinoBean {
 	private int item;
 	private int nuDias;
 	private String feEstadia;
+	private Integer idOrigen;
 	
 	public int getIdPaqueteDestino() {
 		return idPaqueteDestino;
@@ -43,6 +44,12 @@ public class PaqueteTuristicoDestinoBean {
 	}
 	public void setFeEstadia(String feEstadia) {
 		this.feEstadia = feEstadia;
+	}
+	public Integer getIdOrigen() {
+		return idOrigen;
+	}
+	public void setIdOrigen(Integer idOrigen) {
+		this.idOrigen = idOrigen;
 	}
 	
 

@@ -1700,6 +1700,7 @@
 							 var cantAdulto = $("#txtcantAdultos").val();
 							 var cantNino = $("#txtcantNinos").val();
 							 var origen = $("#hdnNomOrigen").val();
+							 var idorigen = $("#hdnIdOrigen").val();
 							 
 							 $("#tblDestinos tbody > tr").each(function () {
 									var row = $(this);
@@ -1707,6 +1708,8 @@
 									var idAerolinea = row.find('input[id="tmp_idAerolinea"]').val();
 									var idTour = row.find('input[id="tmp_idTour"]').val();
 									var idHotel = row.find('input[id="tmp_idHotel"]').val();
+									
+									row.find('input[id="tmp_idOrigen"]').val(idorigen);
 									
 									//Mostrando datos del tour
 									if(idTour != "0"){
@@ -1841,6 +1844,7 @@
 								    
 									
 									origen = row.find("td").eq(1).text();
+									idorigen = row.find('input[id="tmp_idDestino"]').val();
 							 });		
 							 
 							 
@@ -2288,13 +2292,14 @@
 				var idcatalojamiento = row.find('input[id="tmp_idCategoriaAlojamiento"]').val();
 				var habitaciones = row.find('input[id="tmp_Habitaciones"]').val();
 				var desHotel = "";
+				var idorigen = row.find('input[id="tmp_idOrigen"]').val();
 				
 				
 				var item = row.find('td').eq(0).text();
 				
 				//registrando destinos 
 				
-				filaDestino = destinoRow + "," + item + "," + dias + "," + fechaPartida;
+				filaDestino = destinoRow + "," + item + "," + dias + "," + fechaPartida + "," + idorigen;
 				
 				destinos += filaDestino + ";";
 				
