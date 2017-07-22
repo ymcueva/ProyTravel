@@ -466,9 +466,13 @@ public class CotizacionController {
 							+ request.getServerPort()
 							: request.getHeader("host");
 					String contextProyect = request.getContextPath();
-					String url = host + "" + contextProyect
+					String url = "http://" + host + "" + contextProyect
 							+ "/loadRevisarCotizacion?cotizacionId="
 							+ validarEmailBean.getIdCotizacion();
+					// String url =
+					// "http://localhost:7001/ProyTravel/loadRevisarCotizacion?cotizacionId="
+					// + validarEmailBean.getIdCotizacion();
+					System.out.println("url: " + url);
 					mapa.put("url", url);
 					DataJsonBean dataJSON = new DataJsonBean();
 					dataJSON.setRespuesta("ok1", null, mapa);
@@ -612,8 +616,9 @@ public class CotizacionController {
 			String host = request.getHeader("host") == null ? "localhost"
 					+ request.getServerPort() : request.getHeader("host");
 			String contextProyect = request.getContextPath();
-			String url = host + "" + contextProyect
+			String url = "http://" + host + "" + contextProyect
 					+ "/loadMensajeResultado?mensaje=" + resultadoProcesarPago;
+			System.out.println("url: " + url);
 			mapa.put("url", url);
 			DataJsonBean dataJSON = new DataJsonBean();
 			dataJSON.setRespuesta("ok1", null, mapa);
@@ -688,9 +693,10 @@ public class CotizacionController {
 			String host = request.getHeader("host") == null ? "localhost"
 					+ request.getServerPort() : request.getHeader("host");
 			String contextProyect = request.getContextPath();
-			String url = host + contextProyect
+			String url = "http://" + host + contextProyect
 					+ "/loadMensajeResultado?mensaje="
 					+ resultadoRechazarCotizacion;
+			System.out.println("url: " + url);
 			mapa.put("url", url);
 			DataJsonBean dataJSON = new DataJsonBean();
 			dataJSON.setRespuesta("ok1", null, mapa);

@@ -109,21 +109,17 @@
 			success : function(response) {
 				var rpta = response.dataJson; // OK
  				var rptaRes = rpta.resultadoValidarEmail;
-// 				console.log("respuesta procesar pago: " + rptaRes);
+				console.log("respuesta procesar pago: ");
 // 				$("#resultadoProcesarPago").html(rptaRes);
-				console.log("rpta...");
-				console.log(rptaRes);
 				if(rptaRes == "ERROR"){
 					console.log("es error");
 					$("#resultadoValidarEmail").html("El email no corresponde al cliente");
 				} else {
-					console.log("es ok redirect");
-					console.log(rpta.url);
 					window.location.replace(rpta.url);
 				}
-				console.log("saliendo del if");
 			},
 			error : function(data, textStatus, errorThrown) {
+				console.log("entro error");
 			}
 		});
 	}
