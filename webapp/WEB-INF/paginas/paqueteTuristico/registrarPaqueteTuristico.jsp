@@ -2627,13 +2627,13 @@
 																	<label class=" control-label col-sm-2">Cantidad adultos:</label>	
 																
 																	<div class="col-sm-3">
-																		<input id="txtcantAdultos" readonly="readonly" name="nuNinos" type="text" maxlength="30" class="form-control" value="${nuaultos}" placeholder="Cantidad Adultos">
+																		<input id="txtcantAdultos" readonly="readonly" name="nuAdultos" type="text" maxlength="30" class="form-control" value="${nuaultos}" placeholder="Cantidad Adultos">
 																	</div>
 																	
 																	<label class=" control-label col-sm-2 col-md-offset-2">Cantidad Ninos:</label>	
 																
 																	<div class="col-sm-2">
-																		<input id="txtcantNinos" readonly="readonly" name="nuAdultos" type="text" maxlength="30" class="form-control" value="${nuninos}" placeholder="Cantidad Ninos">
+																		<input id="txtcantNinos" readonly="readonly" name="nuNinos" type="text" maxlength="30" class="form-control" value="${nuninos}" placeholder="Cantidad Ninos">
 																	</div>		
 															</div>
 																		

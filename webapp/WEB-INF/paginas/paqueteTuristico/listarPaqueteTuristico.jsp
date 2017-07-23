@@ -324,7 +324,7 @@
 											<div class="form-group">
 												<label class="col-sm-2 control-label alignDerecha">Nro. Orden:</label>
 												<div class="col-sm-3">
-													<input id="txtNumero" name="idOrden" type="text" maxlength="30" class="form-control">
+													<input id="txtNumero" name="nuOrden" type="text" maxlength="30" class="form-control">
 												</div>
 												
 												<label class="col-sm-1 control-label alignDerecha">Cliente:</label>
