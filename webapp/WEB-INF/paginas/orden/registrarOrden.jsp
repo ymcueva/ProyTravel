@@ -703,15 +703,15 @@
 										<div class="form-group">
 											
 											<label for="chkServicio1" class="col-sm-2 col-sm-offset-2 control-label ">
-												<input style="margin-left:-330px;" type="checkbox" id="chkServicio1" value="1" class="chkServicio" name="chkServicio">&nbsp;Ticket A&eacute;reo</input>
+												<input style="margin-left:-330px;" type="checkbox" id="chkServicio1" value="2" class="chkServicio" name="chkServicio">&nbsp;Ticket A&eacute;reo</input>
 											</label>
 											
 											<label for="chkServicio2" class="col-sm-2 control-label ">
-												<input style="margin-left:-330px;" type="checkbox" id="chkServicio2" value="2" class="chkServicio" name="chkServicio">&nbsp;Tour</input>
+												<input style="margin-left:-330px;" type="checkbox" id="chkServicio2" value="3" class="chkServicio" name="chkServicio">&nbsp;Tour</input>
 											</label>
 											
 											<label for="chkServicio3" class="col-sm-2 control-label ">
-												<input style="margin-left:-330px;" type="checkbox" id="chkServicio3" value="3" class="chkServicio" name="chkServicio">&nbsp;Hotel</input>
+												<input style="margin-left:-330px;" type="checkbox" id="chkServicio3" value="6" class="chkServicio" name="chkServicio">&nbsp;Hotel</input>
 											</label>
 											
 										</div>

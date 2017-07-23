@@ -2660,13 +2660,16 @@
 												<div class="row">
 													<div class="col-sm-12">													
 														<div class="form-group">
-															<div class="col-sm-8">
+															<div class="col-sm-2"> </div>
+															<div class="col-sm-3">
 																<label class="control-label alignDerecha checkbox-inline">																	
-																	Propuesta de B&uacute;squeda Autom&aacute;tica de Informaci&oacute;n: <input type="checkbox" id="chkPropuesta" name="chkPropuesta" />																  					
+																	Propuesta de B&uacute;squeda Autom&aacute;tica de Informaci&oacute;n: 																  					
 																</label>	
 															</div>	
-															<div class="col-sm-1">&nbsp;</div>
-															<div class="col-sm-2">
+															<div class="col-sm-1">&nbsp;
+																<input type="checkbox" id="chkPropuesta" name="chkPropuesta" />
+															</div>
+															<div class="col-sm-1">
 																<button id="btnBuscarPropuesta" class="btn btn-primary btn-block" title="Buscar" >Buscar</button>
 															</div>								
 															<div class="col-sm-1">&nbsp;</div>						
