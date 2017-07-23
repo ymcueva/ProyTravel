@@ -29,7 +29,7 @@
 		   <div class="form-group">
 		   		<label class="col-sm-4 control-label">Valor:</label>
 		   		<div class="col-sm-7">
-					<input type="text" class="form-control" name="valorTour" id="txtValorBusquedaTour"/>
+					<input type="text" class="form-control" name="valorTour" id="txtValorBusquedaTour" maxlength="50"/>
 				</div>	
 		   	</div>
 		   
@@ -65,7 +65,7 @@
 				<div class="form-group">
 					<div class="col-sm-2" style="text-align:right; font-weight:bold">Itinerario:</div>
 						<div class="col-sm-9" id="divItinerario">
-							<textarea class="form-control" name="itinerario" id="txtItinerario" onkeypress="return validarNumeroLetra(event)" rows="3" cols="98"  placeholder="Itinerario"/></textarea>
+							<textarea class="form-control" name="itinerario" id="txtItinerario" placeholder="Itinerario" disabled="disabled"/></textarea>
 					     </div>
 				</div>
 				
@@ -76,7 +76,7 @@
 				<div class="form-group">
 					<div class="col-sm-2" style="text-align:right; font-weight:bold">Servicios:</div>
 						<div class="col-sm-9" id="divServicios">
-							<textarea class="form-control" name="servicios" id="txtServicios" onkeypress="return validarNumeroLetra(event)" rows="3" cols="98"  placeholder="Itinerario"/></textarea>
+							<textarea class="form-control" name="servicios" id="txtServicios" placeholder="Servicios" disabled="disabled"/></textarea>
 					     </div>
 				</div>
 				

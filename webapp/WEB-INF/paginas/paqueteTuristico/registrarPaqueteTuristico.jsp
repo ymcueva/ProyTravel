@@ -2632,7 +2632,7 @@
 																	
 																	<label class=" control-label col-sm-2 col-md-offset-2">Cantidad Ninos:</label>	
 																
-																	<div class="col-sm-3">
+																	<div class="col-sm-2">
 																		<input id="txtcantNinos" readonly="readonly" name="nuAdultos" type="text" maxlength="30" class="form-control" value="${nuninos}" placeholder="Cantidad Ninos">
 																	</div>		
 															</div>
@@ -2660,15 +2660,12 @@
 												<div class="row">
 													<div class="col-sm-12">													
 														<div class="form-group">
-															<div class="col-sm-2"> </div>
-															<div class="col-sm-3">
+															<div class="col-sm-6">
 																<label class="control-label alignDerecha checkbox-inline">																	
-																	Propuesta de B&uacute;squeda Autom&aacute;tica de Informaci&oacute;n: 																  					
-																</label>	
+																	Propuesta de B&uacute;squeda Autom&aacute;tica de Informaci&oacute;n:&nbsp;&nbsp;
+																	<input type="checkbox" id="chkPropuesta" name="chkPropuesta" />																	
+																</label>
 															</div>	
-															<div class="col-sm-1">&nbsp;
-																<input type="checkbox" id="chkPropuesta" name="chkPropuesta" />
-															</div>
 															<div class="col-sm-1">
 																<button id="btnBuscarPropuesta" class="btn btn-primary btn-block" title="Buscar" >Buscar</button>
 															</div>								
