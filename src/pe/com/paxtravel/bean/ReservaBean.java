@@ -12,7 +12,53 @@ public class ReservaBean {
 	private String idEstadoReserva;
 	private String nombreEstadoReserva;
 	private String comentarioReserva;
+	private String nombreTipoReserva;
 	
+	
+	private int motivoAnulacion;
+	private double penalidadTotal;
+	
+	private int idTipoPenalidad;
+	private double pcPenalidad;
+	private double imPenalidad;	
+	
+	
+	public int getIdTipoPenalidad() {
+		return idTipoPenalidad;
+	}
+	public void setIdTipoPenalidad(int idTipoPenalidad) {
+		this.idTipoPenalidad = idTipoPenalidad;
+	}
+	public double getPcPenalidad() {
+		return pcPenalidad;
+	}
+	public void setPcPenalidad(double pcPenalidad) {
+		this.pcPenalidad = pcPenalidad;
+	}
+	public double getImPenalidad() {
+		return imPenalidad;
+	}
+	public void setImPenalidad(double imPenalidad) {
+		this.imPenalidad = imPenalidad;
+	}
+	public int getMotivoAnulacion() {
+		return motivoAnulacion;
+	}
+	public void setMotivoAnulacion(int motivoAnulacion) {
+		this.motivoAnulacion = motivoAnulacion;
+	}
+	public double getPenalidadTotal() {
+		return penalidadTotal;
+	}
+	public void setPenalidadTotal(double penalidadTotal) {
+		this.penalidadTotal = penalidadTotal;
+	}
+	public String getNombreTipoReserva() {
+		return nombreTipoReserva;
+	}
+	public void setNombreTipoReserva(String nombreTipoReserva) {
+		this.nombreTipoReserva = nombreTipoReserva;
+	}
 	public String getComentarioReserva() {
 		return comentarioReserva;
 	}

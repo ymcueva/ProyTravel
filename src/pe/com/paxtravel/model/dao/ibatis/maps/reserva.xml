@@ -18,6 +18,7 @@
 		<result property="cliente" 				column="cliente" />
 		<result property="nombreEstadoReserva" 		    	column="no_estado" />
 		<result property="idEstadoReserva" 		    	column="id_estado_reserva" />
+		<result property="nombreTipoReserva" 		    	column="tipo_reserva" />		
 	</resultMap>
 	
 	<resultMap id="resultReservaResume" class="reservaBean">
@@ -48,6 +49,10 @@
 		<result property="idTipoCotizacion" 		    	column="id_tipo_cotiza" />
 		<result property="numeroCotizacion" 		    	column="nu_cotiza" />
 		<result property="idEstadoCotizacion" 		    	column="id_estado_cotizacion" />
+		<result property="idEstadoReserva" 		    	column="id_estado_reserva" />
+		<result property="numeroReserva"			    column="nu_reserva" />
+		<result property="nombreEstadoReserva" 		    	column="no_estado_reserva" />
+		<result property="fechaReserva" 		    	column="fe_reserva" />		
 	</resultMap>
 	
 	<resultMap id="listaTicketAereoCotizacion" class="reservaBean">
@@ -94,7 +99,8 @@
 			a.fe_reserva, 
 			CONCAT(d.nombres, ' ', d.apellidos) cliente,
 			c.no_estado,
-			a.id_estado id_estado_reserva
+			a.id_estado id_estado_reserva,
+			IF(a.id_tipo_reserva=1,'Nacional', 'Internacional') tipo_reserva 
 			 FROM (SELECT @rownum:=0) r, reserva a 
 			INNER JOIN cotizacion b ON a.id_cotiza=b.id_cotiza
 			INNER JOIN estado c ON a.id_estado=c.id_estado
@@ -115,19 +121,23 @@
 	</select>
 	
 	<select id="obtenerCotizacion" parameterClass="reservaBean" resultMap="obtieneCotizacion">
-		SELECT 
-		CONCAT(b.nombres, ' ', b.apellidos) cliente, b.nu_documento, b.direccion, b.telefono, 
-		a.fe_cotiza, c.nombre no_tipo_cotizacion,
-		d.no_estado no_estado_cotizacion, a.nu_adultos, a.nu_ninos, a.im_precio, 
-		a.id_cotiza, a.id_cliente, a.id_tipo_cotiza,
-		a.nu_cotiza, a.id_estado id_estado_cotizacion
-		FROM cotizacion a
-		INNER JOIN cliente b ON a.id_cliente=b.id_cliente
-		INNER JOIN tipo_cotizacion c ON a.id_tipo_cotiza=c.id_tipo
-		INNER JOIN estado d ON a.id_estado=d.id_estado
-		 WHERE 1 = 1
-		 <isNotEmpty prepend="AND" property="numeroCotizacion"> a.nu_cotiza = #numeroCotizacion# </isNotEmpty>
-		 
+		SELECT 		
+			CONCAT(b.nombres, ' ', b.apellidos) cliente, b.nu_documento, b.direccion, b.telefono, 
+			a.fe_cotiza, c.nombre no_tipo_cotizacion, 
+			d.no_estado no_estado_cotizacion, a.nu_adultos, a.nu_ninos, a.im_precio,  
+			a.id_cotiza, a.id_cliente, a.id_tipo_cotiza, 
+			a.nu_cotiza, a.id_estado id_estado_cotizacion,
+			IFNULL(r.nu_reserva, '') nu_reserva, IFNULL(r.id_estado, '') id_estado_reserva, 
+			IFNULL(dr.no_estado, '') no_estado_reserva, IFNULL(r.fe_reserva, '') fe_reserva					 
+				FROM cotizacion a 				
+			INNER JOIN cliente b ON a.id_cliente=b.id_cliente
+			INNER JOIN tipo_cotizacion c ON a.id_tipo_cotiza=c.id_tipo
+			INNER JOIN estado d ON a.id_estado=d.id_estado
+			LEFT JOIN reserva r ON a.id_cotiza=r.id_cotiza
+			LEFT JOIN estado dr ON r.id_estado=dr.id_estado			
+		 		WHERE 1 = 1		 		
+		 	<isNotEmpty prepend="AND" property="numeroCotizacion"> a.nu_cotiza = #numeroCotizacion# </isNotEmpty>
+		 	<isGreaterThan prepend="AND" property="idReserva" compareValue="0"> r.id_reserva = #idReserva# </isGreaterThan>
 	</select>
 	
 	<select id="listarTicketAereoCotizacion" parameterClass="reservaBean" resultMap="listaTicketAereoCotizacion">
@@ -195,6 +205,24 @@
                ) AS NRO_RESERVA
          FROM RESERVA;
 	</select>
+	
+	<insert id="insertarReservaPenalidad" parameterClass="reservaBean">
+			INSERT INTO reserva_penalidad (
+				id_reserva,
+				id_tipo_penalidad, 
+				pc_penalidad, 
+				im_penalidad
+			) VALUES (
+				#idReserva#, #idTipoPenalidad#, #pcPenalidad#, #imPenalidad#
+			)			
+	</insert>
+	
+	<update id="actualizarReserva" parameterClass="reservaBean" >
+			UPDATE reserva 
+				SET comentario_anulacion=#comentarioReserva#, fe_upd=sysdate(), 
+					im_penalidad_total=#penalidadTotal#, id_usuario_upd='0', id_motivo_anulacion=#motivoAnulacion#, id_estado='14'  
+			WHERE id_reserva=#idReserva#
+	</update>
 	
 	<insert id="insertarReserva" parameterClass="reservaBean" >
 		INSERT INTO reserva(

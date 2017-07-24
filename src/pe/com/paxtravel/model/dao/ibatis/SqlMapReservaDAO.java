@@ -83,6 +83,19 @@ public class SqlMapReservaDAO extends SqlMapClientDaoSupport implements ReservaD
 	public ReservaBean buscarDocumentoXPasajero(ReservaBean reservaBean) {
 		return (ReservaBean) getSqlMapClientTemplate().queryForObject("reserva.buscaPasajeroXReserva", reservaBean);
 	}
+	
+	@Override
+	public int registrarReservaPenalidad(ReservaBean reservaBean) {
+		new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).update("reserva.insertarReservaPenalidad", reservaBean);
+		return 1;
+	}
+
+	
+	@Override
+	public int actualizarReserva(ReservaBean reservaBean) {
+		return new SqlMapClientTemplate(getSqlMapClientTemplate().getSqlMapClient()).update("reserva.actualizarReserva", reservaBean);		
+	}
+
 		
 
 }

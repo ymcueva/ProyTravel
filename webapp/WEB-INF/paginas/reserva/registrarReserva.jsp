@@ -168,7 +168,7 @@
 
 		var idCotizacion = $("#txtIdCotizacion").val();
 		var idCliente = $("#txtIdCliente").val();
-		var idTipoCotizacion = $("#txtIdCotizacion").val();
+		var idTipoCotizacion = $("#txtIdTipoCotizacion").val();
 		var params = "?datosPasajeros="+datosPasajeros+"&idCotizacion="+idCotizacion+"&idCliente="+idCliente+"&idTipoCotizacion="+idTipoCotizacion;
 		
 		$("#txtNroCotizacion").html("");

@@ -122,4 +122,14 @@ public class ReservaServiceImpl implements ReservaService {
 		return reservaDAO.buscarDocumentoXPasajero(reservaBean);
 	}
 	
+	@Override
+	public int actualizarReserva(ReservaBean reservaBean) {
+		return reservaDAO.actualizarReserva(reservaBean);
+	}
+
+	@Override
+	public int registrarReservaPenalidad(ReservaBean reservaBean) {
+		return reservaDAO.registrarReservaPenalidad(reservaBean);
+	}
+	
 }

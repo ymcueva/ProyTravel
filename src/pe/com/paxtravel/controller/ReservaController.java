@@ -26,6 +26,7 @@ import pe.com.paxtravel.bean.AnimalBean;
 import pe.com.paxtravel.bean.CotizacionBean;
 import pe.com.paxtravel.bean.CotizacionDetalleBean;
 import pe.com.paxtravel.bean.ExpedienteLogBean;
+import pe.com.paxtravel.bean.MotivoViajeBean;
 import pe.com.paxtravel.bean.ReservaBean;
 import pe.com.paxtravel.bean.ReservaPasajeroDetalleBean;
 import pe.com.paxtravel.service.CotizacionService;
@@ -56,6 +57,308 @@ public class ReservaController {
 	public void setJsonView(String jsonView) {
 		this.jsonView = jsonView;
 	}
+	
+	@RequestMapping( value = "/admin/listarReserva", method ={RequestMethod.GET, RequestMethod.POST} )
+	public ModelAndView listarAdminReserva(HttpServletRequest request, HttpServletResponse response){
+	
+		ModelAndView modelAndView = null;
+		HashMap<String, Object> mapa = new HashMap<String, Object>();
+
+		List<ReservaBean> listarReserva = new ArrayList<ReservaBean>();
+		ReservaBean reservaBean = new ReservaBean();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		boolean flag = false;
+		DataJsonBean dataJSON = new DataJsonBean();
+
+		try {
+			modelAndView = new ModelAndView();
+			
+			String botonBuscar = (request.getParameter("btnBuscar"))!=null?request.getParameter("btnBuscar"):"";
+			
+			mapa.put("titulo", "RESERVA");
+			
+			if("1".equals(botonBuscar)){
+				Map<String, Object> parametrosRequest = ControllerUtil.parseRequestToMap(request);
+				Map<String, Object> paqueteBeanMap = (Map<String, Object>) parametrosRequest.get("reservaBean");
+//				// inserta en el bean todos los valores del mapa (property vs keys)
+				BeanUtils.populate(reservaBean, paqueteBeanMap);
+				
+				if (!"".equals(reservaBean.getFechaInicio() ) ) {
+					String fechaini = Utils.stringToStringyyyyMMdd(reservaBean.getFechaInicio());
+					reservaBean.setFechaInicio(fechaini);
+				}
+				
+				if (!"".equals(reservaBean.getFechaFin())) {
+					String fechafin = Utils.stringToStringyyyyMMdd(reservaBean.getFechaFin());
+					reservaBean.setFechaFin(fechafin);
+				}
+				
+				if(reservaBean.getTipoBusqueda() == 1)
+					reservaBean.setNumeroDocumento(reservaBean.getCliente());
+				else if(reservaBean.getTipoBusqueda() == 2)
+					reservaBean.setCliente("%" + reservaBean.getCliente() + "%");
+				
+				listarReserva = reservaService.listarReserva(reservaBean);
+				
+				mapa.put("listaReserva",  listarReserva);
+				
+				dataJSON.setRespuesta("ok", null, mapa);
+				flag = true; 
+				
+			} else {
+				
+				listarReserva = reservaService.listarReserva(reservaBean);
+//				
+				modelAndView.addObject("listaReserva", SojoUtil.toJson(listarReserva) );
+//				modelAndView.addObject("mapaDatos", mapa);
+				modelAndView.setViewName("reserva/admin/listarReserva");
+				
+				
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		if (flag) {
+			return ControllerUtil.handleJSONResponse(dataJSON, response);
+		} else {
+			return modelAndView;
+		}
+	}
+	
+	
+	@RequestMapping( value = "/cargarFormAnularReserva", method ={RequestMethod.GET, RequestMethod.POST} )
+	public ModelAndView cargarFormAnularReserva(HttpServletRequest request, HttpServletResponse response){
+
+		Map<String, Object> mapa = new HashMap<String, Object>();
+		//DataJsonBean dataJSON = new DataJsonBean();
+		ModelAndView modelAndView = null;
+		
+		try {
+			
+			modelAndView = new ModelAndView();
+
+			List<ReservaBean> obtenerCotizacion = new ArrayList<ReservaBean>();
+			List<ReservaBean> listaTicketAereo = new ArrayList<ReservaBean>();
+			List<ReservaBean> listaPaqueteTuristico = new ArrayList<ReservaBean>();
+			
+			ReservaBean reservaBean = new ReservaBean();			
+			
+			if ( request.getParameter("idReserva") != null ) {
+				
+				int idReserva = Integer.valueOf(request.getParameter("idReserva"));
+			
+				reservaBean.setNumeroCotizacion("");
+				reservaBean.setIdReserva(idReserva);
+				
+				obtenerCotizacion = reservaService.obtenerCotizacion(reservaBean);
+	
+				mapa.put("titulo", "Cliente");
+				
+		        if (obtenerCotizacion.size() > 0){
+		        	//String idEstadoCotizacion = obtenerCotizacion.get(0).getIdEstadoCotizacion();
+		        	String numeroCotizacion= obtenerCotizacion.get(0).getNumeroCotizacion();
+		        	String numeroReserva= obtenerCotizacion.get(0).getNumeroReserva();
+		        	String idEstadoReserva = obtenerCotizacion.get(0).getIdEstadoReserva();
+		        	
+		        	mapa.put("numeroReserva", numeroReserva);
+		        	mapa.put("numeroCotizacion", numeroCotizacion);
+		        	
+		        	System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+		        	System.out.println("Estado Reserva: " + idEstadoReserva);
+		        	
+			        if ( idEstadoReserva.equals("14") ) {
+			        	
+			        	mapa.put("flagCotiEncontrada", "1");
+			        	mapa.put("flagEstadoCotizacion", "1");
+			        	
+			        	System.out.println("La reserva se encuentra anulada");
+			        	
+			        } else {
+			        	
+			        	System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+			        	System.out.println("Se encontro la reserva: " + numeroReserva);
+			        	
+			        	String fechaReserva = obtenerCotizacion.get(0).getFechaReserva();
+			        	SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
+			        	String fechaActual = formateador.format(new Date());
+			        	
+			            String anio = fechaReserva.substring(0, 4);
+			            String mes = fechaReserva.substring(5, 7);
+			            String dia = fechaReserva.substring(8 ,10);
+			            fechaReserva = dia + "/" + mes + "/" + anio;
+			        	
+			        	int resultadoFecha = compararFechasConDate(fechaActual, fechaReserva);
+			        	
+			        	System.out.println("Se compara fechas: " + fechaReserva + "(fecha reserva)" + "/" + fechaActual + "(fecha sistema)");
+			        	
+			        	if ( resultadoFecha != 1 ){
+			        		
+			        		mapa.put("flagFechaValida", "0");
+			        		//mapa.put("numeroCotizacion", numeroCotizacion);
+			        		
+			        	} else {
+			        		
+			        		System.out.println("La fecha fue validada");
+				        	
+			        		mapa.put("flagFechaValida", "1");			        						        	
+				        	
+					        mapa.put("nombreCliente", obtenerCotizacion.get(0).getCliente());
+					        mapa.put("documentoCliente", obtenerCotizacion.get(0).getNumeroDocumento());
+					        mapa.put("direccionCliente", obtenerCotizacion.get(0).getDireccion());
+					        mapa.put("telefonoCliente", obtenerCotizacion.get(0).getTelefonoCliente());
+					        mapa.put("fechaCotizacion", obtenerCotizacion.get(0).getFechaCotizacion());
+					        mapa.put("tipoCotizacion", obtenerCotizacion.get(0).getNombreTipoCotizacion());
+					        mapa.put("estadoCotizacion", obtenerCotizacion.get(0).getEstadoCotizacion());
+					        mapa.put("estadoReserva", obtenerCotizacion.get(0).getNombreEstadoReserva());
+					        mapa.put("numeroAdultos", obtenerCotizacion.get(0).getNumeroAdultos());
+					        mapa.put("numeroNinos", obtenerCotizacion.get(0).getNumeroNinos());
+					        
+					        mapa.put("numeroPasajeros", (Integer.parseInt(obtenerCotizacion.get(0).getNumeroAdultos()) + Integer.parseInt(obtenerCotizacion.get(0).getNumeroNinos())));
+					        mapa.put("precioCotizacion", obtenerCotizacion.get(0).getPrecioCotizacion());
+					        mapa.put("idCotizacion", obtenerCotizacion.get(0).getIdCotizacion());
+					        mapa.put("idCliente", obtenerCotizacion.get(0).getIdCliente());
+					        mapa.put("idTipoCotizacion", obtenerCotizacion.get(0).getIdTipoCotizacion());
+					        mapa.put("status", "1");
+					        mapa.put("idReserva", idReserva);
+				        
+				        	mapa.put("flagCotiEncontrada", "");
+				        	mapa.put("flagEstadoCotizacion", "");			
+				        	
+				        	reservaBean.setNumeroCotizacion(numeroCotizacion);
+	
+					        listaTicketAereo = reservaService.obtenerTicketAereoCotizacion(reservaBean);
+					        listaPaqueteTuristico = reservaService.listarPaqueteCotizacion(reservaBean);
+					        
+							mapa.put("listaTicketAereo", SojoUtil
+									.toJson(listaTicketAereo));
+							
+							mapa.put("listaPaqueteTuristico", SojoUtil
+									.toJson(listaPaqueteTuristico));
+							
+							mapa.put("fechaReserva", fechaReserva);
+			        	}
+			        }
+	
+		        } else {
+		        	
+		        	mapa.put("status", "0");
+		        	mapa.put("nombreCliente", "");
+			        mapa.put("idCliente", "" );
+			        mapa.put("mensajeCliente", "No se encontro el cliente. ");
+			        
+			        mapa.put("numeroReserva", "");
+			        mapa.put("numeroCotizacion", "");
+			        mapa.put("flagCotiEncontrada", "2");
+			        mapa.put("flagFechaValida", "");
+			        
+		        }
+
+			}												
+			
+	        //dataJSON.setRespuesta("ok", null, mapa);
+			modelAndView.addObject("reservaBean", mapa);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		modelAndView.addObject("titulo", "ANULAR RESERVA");
+		modelAndView.addObject("fechaAnularReserva", Utils.dateUtilToStringDDMMYYYY( new Date() )) ;
+		modelAndView.setViewName("reserva/admin/registrarReserva");
+		
+		//return ControllerUtil.handleJSONResponse(dataJSON, response);
+		return modelAndView;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/anularReserva")
+	public ModelAndView anularReserva(HttpServletRequest request, HttpServletResponse response) {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Map<String, Object> mapa = new HashMap<String, Object>();
+		DataJsonBean dataJSON = new DataJsonBean();
+		String status = "ok";
+
+		try {
+			
+			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");			
+			System.out.println("Iniciando anulacion de reserva");
+
+			Map<String, Object> parametrosRequest = ControllerUtil.parseRequestToMap(request);
+			
+			Map<String, Object> reservaBeanMap = (Map<String, Object>) parametrosRequest.get("reservaBean");
+			
+			reservaBeanMap.remove("reservaPenalidad[]");
+
+			ReservaBean reservaBean = new ReservaBean();
+			BeanUtils.populate(reservaBean, reservaBeanMap);											
+			
+			System.out.println( "actualizar reserva..... " + reservaService.actualizarReserva(reservaBean) );
+			
+			System.out.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+			
+			int idReserva = reservaBean.getIdReserva();
+			
+			mapa.put("idReserva", idReserva);
+
+			// Obtenemos los penalidades aplicadas por get
+			String reservaPenalidad = request.getParameter("reservaPenalidad");
+				
+			if (reservaPenalidad.length() > 0) {
+		
+				reservaPenalidad = reservaPenalidad.substring(0, reservaPenalidad.length() - 1);		
+				System.out.println("Penalidades: " + reservaPenalidad);
+		
+				String penalidad[] = reservaPenalidad.split(",");
+				
+				System.out.println("Cantidad de Penalidades: " + penalidad.length);
+				
+				ReservaBean oReservaPenalidad = null;
+						
+				if (penalidad.length > 0) {
+					
+					for (int i = 0; i < penalidad.length; i++) {		
+						
+						System.out.println("penalidad " + i + ": " + penalidad[i]);	
+						
+						String itemMotivo[] = penalidad[i].toString().split("-");
+						
+						if ( itemMotivo[0] != null && itemMotivo[1] != null ) {
+							
+							oReservaPenalidad = new ReservaBean();							
+							oReservaPenalidad.setIdReserva(idReserva);
+							oReservaPenalidad.setIdTipoPenalidad(Integer.parseInt(itemMotivo[0]));
+							oReservaPenalidad.setPcPenalidad(Double.parseDouble(itemMotivo[1]));
+							oReservaPenalidad.setImPenalidad(0);
+							reservaService.registrarReservaPenalidad(oReservaPenalidad);
+							
+						}						
+					}
+					
+				}
+		
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+
+		dataJSON.setRespuesta(status, null, mapa);
+		
+		return ControllerUtil.handleJSONResponse(dataJSON, response);
+		
+	}
+		
+		
+	
+	
+	
 	
 	@RequestMapping( value = "/listarReserva", method ={RequestMethod.GET, RequestMethod.POST} )
 	public ModelAndView listarPaqueteTuristico(HttpServletRequest request, HttpServletResponse response){

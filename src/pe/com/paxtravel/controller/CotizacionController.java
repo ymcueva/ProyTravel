@@ -314,7 +314,7 @@ public class CotizacionController {
 							cotizacionBean.getFeMaxAprobCotiza(), currentDate) > 0) {
 						modelAndView
 								.addObject("mensajeResultado",
-										"No puede acceder a esta cotización porque no no tiene fecha vigente");
+										"No puede acceder a esta cotización porque no tiene fecha vigente");
 						modelAndView.setViewName("cotizacion/mensajeResultado");
 						return modelAndView;
 					}

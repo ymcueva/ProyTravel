@@ -211,7 +211,7 @@
 			bAutoWidth: false,
 			bScrollCollapse: false,
 			pagingType: "full_numbers",
-			iDisplayLength: 10,
+			iDisplayLength: 20,
 			responsive: true,
 			bLengthChange: false,
 			info: false,
@@ -235,10 +235,18 @@
 			},
 			
 			columnDefs: [{
-				targets: 6,
+				targets: 7,
 				render: function(data, type, row){
 					if (row !=null && typeof row != 'undefined') {
-						var VerDetalle = "<span> <a href='javascript:;' onclick='verDetalleReserva(\""+row.idReserva+"\",\""+row.idEstadoReserva+"\")' title='Ver Reserva' ><span class='glyphicon glyphicon-eye-open'></span></a> </span>";
+						
+						var VerDetalle = "<span> ";
+						
+						if(row.idEstadoReserva != 14) {							
+							VerDetalle += "<a href='javascript:;' onclick='anularReserva(\""+row.idReserva+"\")' title='Anular Reserva' ><span class='glyphicon glyphicon-floppy-remove'></span></a>&nbsp;&nbsp;" ;
+						}
+						
+						VerDetalle += "<a href='javascript:;' onclick='verDetalleReserva(\""+row.idReserva+"\")' title='Ver Reserva' ><span class='glyphicon glyphicon-eye-open'></span></a></span>";
+						
 						return VerDetalle;
 					}
 					return '';
@@ -246,8 +254,9 @@
 			}],
 	
 			columns: [
-				{data: "numeroFila"},
+				{data: "numeroFila", "class" : "hidden"},
 				{data: "numeroReserva"},
+				{data: "nombreTipoReserva"},
 				{data: "numeroCotizacion"},
 				{data: "fechaReserva"},
 				{data: "cliente"},
@@ -271,6 +280,10 @@
 	
 	function registrarReserva(){
 		location.href= '${pageContext.request.contextPath}/cargarFormRegistrarReserva';
+	}
+	
+	function anularReserva(idReserva){
+		location.href= '${pageContext.request.contextPath}/cargarFormAnularReserva?idReserva='+idReserva;
 	}
 	
 	function verDetalleReserva(idReserva, idEstadoReserva){
@@ -455,7 +468,7 @@
 											</div>
 											
 											<div class="form-group">
-												<label class="col-md-3 control-label alignDerecha">Fecha Inicio:</label>
+												<label class="col-md-3 control-label alignDerecha">Fecha Reserva: Desde</label>
 												<div class="col-md-3">
 													<div class="input-group date tamanoMaximo" id="divFechaCotizacionBusq">
 														<input id="txtFechaCotizacionBusq" name="fechaInicio" type="text" maxlength="30" readonly="yes" class="form-control txtFecha" />
@@ -468,7 +481,7 @@
 													</div>
 												</div>
 												
-												<label class="col-md-1 control-label alignDerecha">Fecha Fin:</label>
+												<label class="col-md-1 control-label alignDerecha">Hasta:</label>
 												<div class="col-md-3">
 													<div class="input-group date tamanoMaximo" id="divFechaFinBusq">
 														<input id="txtFechaFinBusq" name="fechaFin" type="text" maxlength="30" readonly="yes" class="form-control txtFecha" />
@@ -500,8 +513,7 @@
 											<div class="form-group">
 												<div class="col-md-12" style="text-align:center">
 													<button id="btnBuscarReserva" class="btn btn-primary" title="Buscar">Buscar</button>
-													<button id="btnLimpiarReserva" class="btn btn-primary" title="Limpiar">Limpiar</button>
-													<input type="button" class="btn btn-primary" value="Nuevo" id="btnRegistrarReserva" onclick="registrarReserva()"></input>
+													<button id="btnLimpiarReserva" class="btn btn-primary" title="Limpiar">Limpiar</button>													
 												</div>
 											</div>
 										</form>
@@ -527,11 +539,12 @@
 											<thead>
 												<tr>
 													<th width="5%" class="text-center">N&deg;</td>
-													<th width="15%" class="text-center">N&deg; Reserva</td>
+													<th width="10%" class="text-center">N&deg; Reserva</td>
+													<th width="10%" class="text-center">Tipo Reserva</td>													
 													<th width="15%" class="text-center">N&deg; Cotizaci&oacute;n</td>
-													<th width="20%" class="text-center">Fecha Reserva</td>
-													<th width="30%" class="text-center">Cliente</td>
-													<th width="20%" class="text-center">Estado</td>
+													<th width="10%" class="text-center">Fecha Reserva</td>
+													<th width="25%" class="text-center">Cliente</td>
+													<th width="15%" class="text-center">Estado</td>
 													<th width="10%" class="text-center">Opcion</td>
 												</tr>
 											</thead>
@@ -633,7 +646,7 @@
 <div id="divVerDetalleReserva" class="modal fade" role="dialog" style="text-center:center">
 	<div class="modal-dialog">
 		<div class="panel panel-primary">
-			<%@ include file="verDetalleReserva.jsp" %>
+			<%@ include file="../verDetalleReserva.jsp" %>
 		</div>
 	</div>
 </div>

@@ -28,4 +28,8 @@ public interface ReservaDAO {
 	String validaCorreo(ReservaBean reservaBean);
 	
 	ReservaBean buscarDocumentoXPasajero(ReservaBean reservaBean);
+	
+	int actualizarReserva(ReservaBean reservaBean);
+	
+	int registrarReservaPenalidad(ReservaBean reservaBean);
 }
